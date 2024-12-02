@@ -1,27 +1,30 @@
 #include <Arduino.h>
 #include <WiFi.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+
+#include "task1.h"
+#include "task2.h"
 
 // put function declarations here:
 void setup_wifi();
-
 
 //Variables
 const char* ssid = "DIRKG"; //WIFI SSID
 const char* password = "07537978646248256575"; //WIFI password
 
-
-
 void setup() {
   // put your setup code here, to run once:
   //setup_wifi();
+  Serial.begin(115200);
+  setup_wifi();
+  startTask1code();
+  startTask2code();
+
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-  Serial.print("Anybody there??????");
-}
+void loop() { }
 
-// put function definitions here:
 void setup_wifi() {
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
@@ -34,3 +37,5 @@ void setup_wifi() {
   Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
 }
+
+
