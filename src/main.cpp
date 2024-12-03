@@ -5,6 +5,7 @@
 
 #include "task1.h"
 #include "task2.h"
+#include "task_web.h"
 
 // put function declarations here:
 void setup_wifi();
@@ -17,9 +18,14 @@ void setup() {
   // put your setup code here, to run once:
   //setup_wifi();
   Serial.begin(115200);
+
+  pinMode(2, OUTPUT);
+  digitalWrite(2, LOW);
+
   setup_wifi();
   startTask1code();
   startTask2code();
+  startTaskwebcode();
 
 }
 
@@ -36,6 +42,7 @@ void setup_wifi() {
   Serial.println();
   Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
+
 }
 
 
