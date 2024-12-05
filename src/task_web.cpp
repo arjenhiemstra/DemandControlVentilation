@@ -1,9 +1,8 @@
 #include <ESPAsyncWebServer.h>
 #include <AsyncTCP.h>
-
+#include <LittleFS.h>
 
 #include "task_web.h"
-
 
 TaskHandle_t Task_web;
 
@@ -19,7 +18,15 @@ void startTaskwebcode(void) {
 void Taskwebcode(void * pvParameters)
 {
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "text/html", index_html);
+    request->send(LittleFS, "text/html", "/html/index.html");
+    });
+
+    server.on("/css/styles.css", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(LittleFS, "text/html", "/css/styles.css");
+    });
+
+    server.on("/js/ui.js", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(LittleFS, "text/html", "/js/ui.js");
     });
 
     // Start server
