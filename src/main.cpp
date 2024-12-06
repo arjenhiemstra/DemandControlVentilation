@@ -12,8 +12,8 @@
 void setup_wifi();
 
 //Variables
-const char* ssid = "DIRKG"; //WIFI SSID
-const char* password = "07537978646248256575"; //WIFI password
+const char* ssid = "DIRK3"; //WIFI SSID
+const char* password = "095679706460482465742852"; //WIFI password
 
 void setup() {
 
