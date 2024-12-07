@@ -2,8 +2,11 @@
 #define TASK_WEB_H
 
 #include <Arduino.h>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+#include <ESPAsyncWebServer.h>
+#include <AsyncTCP.h>
+#include <LittleFS.h>
 
 void startTaskwebcode(void);
 void Taskwebcode(void *pvParameters);

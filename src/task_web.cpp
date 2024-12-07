@@ -1,7 +1,3 @@
-#include <ESPAsyncWebServer.h>
-#include <AsyncTCP.h>
-#include <LittleFS.h>
-
 #include "task_web.h"
 
 TaskHandle_t Task_web;
