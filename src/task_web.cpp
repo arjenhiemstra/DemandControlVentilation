@@ -1,5 +1,9 @@
 #include "task_web.h"
 
+const char* PARAM_INPUT_1 = "ssid";
+
+
+
 TaskHandle_t Task_web;
 
 // Create AsyncWebServer object on port 80
