@@ -20,20 +20,25 @@ void setup() {
   Serial.begin(115200);
 
   // Begin LittleFS
-  if (!LittleFS.begin())
-  {
-    Serial.println("An Error has occurred while mounting LittleFS");
-    return;
-  }
+  //if (!LittleFS.begin())
+  //{
+  //  Serial.println("An Error has occurred while mounting LittleFS");
+  //  return;
+  //}
 
-  setup_wifi();
-  startTask1code();
-  startTask2code();
-  startTaskwebcode();
+  //setup_wifi();
+  //startTask1code();
+  //startTask2code();
+  //startTaskwebcode();
 
 }
 
-void loop() { }
+void loop() { 
+
+  Serial.print("test");
+  delay(2000);
+
+}
 
 void setup_wifi() {
   WiFi.mode(WIFI_STA);

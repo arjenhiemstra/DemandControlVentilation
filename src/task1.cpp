@@ -10,7 +10,7 @@ void startTask1code(void) {
 
 void Task1code(void * pvParameters)
 {
-  for( int i = 0;i<10;i++ ) {
+  for( int i = 0;i<1000;i++ ) {
     Serial.print("\n\nTask1 running on core: ");
     Serial.print(xPortGetCoreID());
     vTaskDelay(500);
