@@ -25,6 +25,10 @@ void Taskwebcode(void *pvParameters)
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(LittleFS, "/html//index.html", "text/html");
     });
+
+    server.on("/#valvecontrol", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(LittleFS, "/html/valvecontrol.html", "text/html");
+    });
     
     server.on("/css/styles.css", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(LittleFS, "/css/styles.css", "text/css");
