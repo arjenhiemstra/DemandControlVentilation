@@ -37,77 +37,39 @@
         </div>
 
         <div class="content">
-            <h2 class="content-subhead">Store actual valve position(s) in JSON file</h2>
-            <p>
-                The application should not start before the actual positions are set in the web interface to prevent they are operate outside their range. The range is  (fully closed) to 24 (fully open). At first startup, the position of all valves should be entered after calibration (see below). After storing the complete set, a single valve position can be stored in the status file.
-            </p>
-            <p>
-                <form class="pure-form pure-form-stacked" method="POST">
-                    <fieldset>
-                        <div class="pure-g">
-                            <div class="pure-u-1 pure-u-md-1-2">
-                                <label for="valve0-position-set">Valve0 positions to store:</label>
-                                <input type="number" placeholder="number" class="pure-input-1-2" name="valve0-position-set" id="valve0-position-set" />
-                            </div>
-                            <div class="pure-u-1 pure-u-md-1-2">
-                                <label for="valve0-position-set">Valve1 positions to store:</label>
-                                <input type="number" placeholder="number" class="pure-input-1-2" name="valve1-position-set" id="valve1-position-set" />
-                            </div>
-                            <div class="pure-u-1 pure-u-md-1-2">
-                                <label for="valve0-position-set">Valve2 positions to store:</label>
-                                <input type="number" placeholder="number" class="pure-input-1-2" name="valve2-position-set" id="valve2-position-set" />
-                            </div>
-                            <div class="pure-u-1 pure-u-md-1-2">
-                                <label for="valve0-position-set">Valve3 positions to store:</label>
-                                <input type="number" placeholder="number" class="pure-input-1-2" name="valve3-position-set" id="valve3-position-set" />
-                            </div>
-                            <div class="pure-u-1 pure-u-md-1-2">
-                                <label for="valve0-position-set">Valve4 positions to store:</label>
-                                <input type="number" placeholder="number" class="pure-input-1-2" name="valve4-position-set" id="valve4-position-set" />
-                            </div>
-                            <div class="pure-u-1 pure-u-md-1-2">
-                                <label for="valve0-position-set">Valve5 positions to move:</label>
-                                <input type="number" placeholder="number" class="pure-input-1-2" name="valve5-position-set" id="valve5-position-set" />
-                            </div>
-                        </div>
-                        <input type="submit" value="Send" onclick="submitData()">
-                    </fieldset>
-                </form>
-            </p>
-
             <h2 class="content-subhead">Manually move valves</h2>
             <p>
                 This section is to manually move the valves to a position <b>without</b> registering this change in de settings file. This can be used to calibrate the valve positions, e.g. set the valves to the fully closed position (0) and then store these positions in the valve position status file JSON. You can move multiple valves at the same time and empty values are ignored (i.e. move 0 positions forward)
             </p>
 
             <p>
-                <form class="pure-form pure-form-stacked" method="POST" action="html/valvecontrol.html">
+                <form class="pure-form pure-form-stacked" method="POST" action="/">
                     <fieldset>
                         <div class="pure-g">
                             <div class="pure-u-1 pure-u-md-1-2">
                                 <label for="valve0-position-move">Valve0 positions to move:</label>
-                                <input type="number" placeholder="number" class="pure-input-1-2" name="valve0-position-move" id="valve0-position-move" />
+                                <input type="number" placeholder="number" class="pure-input-1-2" name="valve0_position_move" id="valve0_position_move" />
                             </div>
                             <div class="pure-u-1 pure-u-md-1-2">
                                 <label for="direction-valve0">Direction:</label>
-                                <select id="direction-valve0" name="direction-valve0" class="pure-input-1-2">
+                                <select id="direction-valve0" name="direction_valve0" id="direction_valve0" class="pure-input-1-2">
                                     <option>Forward</option>
                                     <option>Backwards</option>
                                 </select>
                             </div>
                             <div class="pure-u-1 pure-u-md-1-2">
                                 <label for="valve1-position-move">Valve1 positions to move:</label>
-                                <input type="number" placeholder="number" class="pure-input-1-2" name="valve1-position-move" id="valve1-position-move" />
+                                <input type="number" placeholder="number" class="pure-input-1-2" name="valve1_position_move" id="valve1_position_move" />
                             </div>
                             <div class="pure-u-1 pure-u-md-1-2">
                                 <label for="direction_valve1">Direction:</label>
-                                <select id="direction-valve1" name="direction_valve1" class="pure-input-1-2">
+                                <select id="direction-valve1" name="direction_valve1" id="direction_valve1" class="pure-input-1-2">
                                     <option>Forward</option>
                                     <option>Backwards</option>
                                 </select>
                             </div>
                         </div>
-                        <input type="submit" value="Send" onclick="submitData()">
+                        <input type="submit" value="Update valve position">
                     </fieldset>
                 </form>
             </p>

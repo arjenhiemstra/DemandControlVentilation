@@ -27,8 +27,8 @@ void setup() {
   }
 
   setup_wifi();
-  startTask1code();
-  startTask2code();
+  //startTask1code();
+  //startTask2code();
   startTaskwebcode();
 
 }
