@@ -10,6 +10,8 @@ const char* VALVE0_DIRECTION = "valve0_direction";
 const char* VALVE1_POSITION_MOVE = "valve1_position_move";
 const char* VALVE1_DIRECTION = "valve1_direction";
 
+char output[256];
+
 String valve0_position_move = "0";
 String valve0_direction = "0";
 String valve1_position_move = "0";
@@ -76,7 +78,8 @@ void Taskwebcode(void *pvParameters)
           }
         }
       }
-      request->send(200, "text/plain", "Done.");
+      //request->send(200, "text/plain", "Done.");
+      request->send(LittleFS, "/html/valvecontrol.html", "text/html");
 
       //No need to check if within operating range
       enable_valve_position_check = false;
@@ -87,9 +90,11 @@ void Taskwebcode(void *pvParameters)
       valve_movement_data["valve0_move_direction"] = valve0_direction;
       valve_movement_data["valve1_position_change"] = valve1_position_move;
       valve_movement_data["valve1_move_direction"] = valve1_direction;
-      
+
+      serializeJson(valve_movement_data, output);
+    
       //call function to move valve
-      move_valve(valve_movement_data);
+      move_valve(output);
     });
 
     // Start server

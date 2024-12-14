@@ -1,6 +1,6 @@
 #include "valvecontrol.h"
 
-void move_valve(JsonDocument valve_movement_data) {
+void move_valve(char* output) {
 
     //this function calls all other functions to control the valves. These are the steps:
     //  1. receive input data:
@@ -10,7 +10,8 @@ void move_valve(JsonDocument valve_movement_data) {
     //  3. Recalculate valve movement if check is enabled 
     //  4. Call the valvecontrol function
 
-    //Serial.print(valve_movement_data);
+    Serial.print(output);
+    
     //JsonDocument input;
     //deserializeJson(valve_movement_data, input);
 

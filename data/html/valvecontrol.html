@@ -51,19 +51,17 @@
                                 <input type="number" placeholder="number" class="pure-input-1-2" name="valve0_position_move" id="valve0_position_move" />
                             </div>
                             <div class="pure-u-1 pure-u-md-1-2">
-                                <label for="direction-valve0">Direction:</label>
-                                <select id="direction-valve0" name="direction_valve0" id="direction_valve0" class="pure-input-1-2">
-                                    <option>Forward</option>
-                                    <option>Backwards</option>
-                                </select>
+                                <label for="valve0_direction">Direction:</label>
+                                <input type="hidden"   name="valve0_direction" id="valve0_direction" value="false" />
+                                <input type="checkbox" name="valve0_direction" id="valve0_direction" value="true" />
                             </div>
                             <div class="pure-u-1 pure-u-md-1-2">
                                 <label for="valve1-position-move">Valve1 positions to move:</label>
                                 <input type="number" placeholder="number" class="pure-input-1-2" name="valve1_position_move" id="valve1_position_move" />
                             </div>
                             <div class="pure-u-1 pure-u-md-1-2">
-                                <label for="direction_valve1">Direction:</label>
-                                <select id="direction-valve1" name="direction_valve1" id="direction_valve1" class="pure-input-1-2">
+                                <label for="valve1_direction">Direction:</label>
+                                <select id="valve1_direction" name="valve1_direction" id="valve1_direction" class="pure-input-1-2">
                                     <option>Forward</option>
                                     <option>Backwards</option>
                                 </select>
