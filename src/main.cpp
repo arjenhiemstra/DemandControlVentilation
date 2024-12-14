@@ -12,8 +12,12 @@
 void setup_wifi();
 
 //Variables
-const char* ssid = "DIRK3"; //WIFI SSID
-const char* password = "095679706460482465742852"; //WIFI password
+//const char* ssid = "DIRK3"; //WIFI SSID
+//const char* password = "095679706460482465742852"; //WIFI password
+
+const char* ssid = "Peter\'s iPhone";
+const char* password = "r1A4-93ze-DO66-X0dV";
+
 
 void setup() {
 

@@ -1,9 +1,5 @@
 #include "task_web.h"
 
-const char* PARAM_INPUT_1 = "ssid";
-
-
-
 TaskHandle_t Task_web;
 
 // Create AsyncWebServer object on port 80
@@ -14,16 +10,14 @@ const char* VALVE0_DIRECTION = "valve0_direction";
 const char* VALVE1_POSITION_MOVE = "valve1_position_move";
 const char* VALVE1_DIRECTION = "valve1_direction";
 
-String valve0_position_move;
-String valve0_direction;
-String valve1_position_move;
-String valve1_direction;
+String valve0_position_move = "0";
+String valve0_direction = "0";
+String valve1_position_move = "0";
+String valve1_direction = "0";
 
+JsonDocument valve_movement_data;
 
-/* void notFound(AsyncWebServerRequest *request)
-{
-  request->send(404, "text/plain", "Not found");
-} */
+bool enable_valve_position_check;   //True when check is required if valve moves within operating range
 
 void startTaskwebcode(void) {
 
@@ -62,32 +56,40 @@ void Taskwebcode(void *pvParameters)
         if(p->isPost()){
           if (p->name() == VALVE0_POSITION_MOVE) {
             valve0_position_move = p->value().c_str();
-            Serial.print(i);
             Serial.print("Valve0 position move with: ");
             Serial.println(valve0_position_move);
           }
           if (p->name() == VALVE0_DIRECTION) {
             valve0_direction = p->value().c_str();
-            Serial.print(i);
             Serial.print("Valve0 direction is: ");
             Serial.println(valve0_direction);
           }
           if (p->name() == VALVE1_POSITION_MOVE) {
             valve1_position_move = p->value().c_str();
-            Serial.print(i);
             Serial.print("Valve1 position move with:: ");
             Serial.println(valve1_position_move);
           }
           if (p->name() == VALVE1_DIRECTION) {
             valve1_direction = p->value().c_str();
-            Serial.print(i);
             Serial.print("Valve1 direction is: ");
             Serial.println(valve1_direction);
           }
         }
       }
       request->send(200, "text/plain", "Done.");
-      Serial.println(valve1_direction);
+
+      //No need to check if within operating range
+      enable_valve_position_check = false;
+
+      //assemble JSON from form input
+      valve_movement_data["enable_valve_position_change"] = enable_valve_position_check;
+      valve_movement_data["valve0_position_change"] = valve0_position_move;
+      valve_movement_data["valve0_move_direction"] = valve0_direction;
+      valve_movement_data["valve1_position_change"] = valve1_position_move;
+      valve_movement_data["valve1_move_direction"] = valve1_direction;
+      
+      //call function to move valve
+      move_valve(valve_movement_data);
     });
 
     // Start server

@@ -6,7 +6,11 @@
 
 
 //Function definitions
-void valvecontrol(void);
+void move_valve(JsonDocument);
+void valvecontrol(int, int, int, int, int, int);
+void write_valve_position_to_file(int, int);
+void all_outputs_off(int, int, int);
+
 void read_position_file(void);
 void check_valve_position_file(void);
 
