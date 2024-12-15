@@ -4,7 +4,6 @@
 #include <LittleFS.h>
 #include <ArduinoJson.h>
 
-
 //Function definitions
 void move_valve(char*);
 void valvecontrol(int, int, int, int, int, int);

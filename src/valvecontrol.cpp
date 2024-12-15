@@ -1,15 +1,19 @@
 #include "valvecontrol.h"
 
 //Data pins for 74HC595
-int clockPin1 = 13; //Pin connected to SH_CP (11) of 74HC595
-int latchPin1 = 12; //Pin connected to ST_CP (12) of 74HC595
-int dataPin1 = 14; //Pin connected to DS (14) of 74HC595
+int clockPin1 = 16; // D13 Pin connected to SH_CP (11) of 74HC595
+int latchPin1 = 17; // D12 Pin connected to ST_CP (12) of 74HC595
+int dataPin1 = 18;  // D14 Pin connected to DS (14) of 74HC595
 
 //Data pins for 74HC595
-int clockPin2 = 26; //Pin connected to SH_CP (11) of 74HC595
-int latchPin2 = 25; //Pin connected to ST_CP (12) of 74HC595
-int dataPin2 = 27; //Pin connected to DS (14) of 74HC595
+int clockPin2 = 5; // D26 Pin connected to SH_CP (11) of 74HC595
+int latchPin2 = 6; // D25 Pin connected to ST_CP (12) of 74HC595
+int dataPin2 = 7;  // D27 Pin connected to DS (14) of 74HC595
 
+int clockPin;
+int latchPin;
+int dataPin;
+int valve_number = 0;
 
 void move_valve(char* output) {
 
@@ -21,28 +25,47 @@ void move_valve(char* output) {
     //  3. Recalculate valve movement if check is enabled 
     //  4. Call the valvecontrol function
 
-    //pinMode(latchPin1, OUTPUT);
-    //pinMode(clockPin1, OUTPUT);
-    //pinMode(dataPin1, OUTPUT);
+    pinMode(latchPin1, OUTPUT);
+    pinMode(clockPin1, OUTPUT);
+    pinMode(dataPin1, OUTPUT);
 
-    //pinMode(latchPin2, OUTPUT);
-    //pinMode(clockPin2, OUTPUT);
-    //pinMode(dataPin2, OUTPUT);
+    pinMode(latchPin2, OUTPUT);
+    pinMode(clockPin2, OUTPUT);
+    pinMode(dataPin2, OUTPUT);
 
-    //all_outputs_off(dataPin1, clockPin1, latchPin1);
-    //all_outputs_off(dataPin2, clockPin2, latchPin2);
+    all_outputs_off(dataPin1, clockPin1, latchPin1);
+    all_outputs_off(dataPin2, clockPin2, latchPin2);
 
     Serial.print(output);
     
-    //JsonDocument input;
-    //deserializeJson(valve_movement_data, input);
+    JsonDocument input;
+    deserializeJson(input, output);
 
-    //int valve0_move = input["valve0_position_change"];
-    //int valve0_direction= input["valve0_direction"];
-    //int valve1_move = input["valve0_position_change"];
-    //int valve1_direction= input["valve0_direction"];
+    int valve0_move = input["valve0_position_move"];
+    int valve0_direction = input["valve0_direction"];
+    int valve1_move = input["valve1_position_move"];
+    int valve1_direction = input["valve1_direction"];
 
+    //String valve_number;
+    //valve_number = strtok(stng, "valve");
+    //valve_number = strtok(valve_number, "")
 
+    
+
+    //Serial.print(valve0_move);
+
+    if (valve_number < 6) {
+        latchPin = latchPin1;
+        clockPin = clockPin1;
+        dataPin = dataPin1;
+    }
+    else {
+        latchPin = latchPin2;
+        clockPin = clockPin2;
+        dataPin = dataPin2;
+    }
+
+    valvecontrol(input["valve0_direction"], input["valve0_position_change"], 0, latchPin, clockPin, dataPin);
 
 }
 
@@ -63,7 +86,7 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
     int k;                          // Counter to iterate through output array
 
     // Variables which are application settings
-    int cycles = 48;        //the number if cycles to complete one rotation of thre shaft
+    int cycles = 24;        //the number if cycles to complete one rotation of thre shaft
 
     //switching pattern for steppermotor in 8 bits.
     int pattern[4] = { B00000101, B00001001, B00001010, B00000110 };
