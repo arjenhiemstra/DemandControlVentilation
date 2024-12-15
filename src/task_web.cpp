@@ -9,13 +9,53 @@ const char* VALVE0_POSITION_MOVE = "valve0_position_move";
 const char* VALVE0_DIRECTION = "valve0_direction";
 const char* VALVE1_POSITION_MOVE = "valve1_position_move";
 const char* VALVE1_DIRECTION = "valve1_direction";
+const char* VALVE2_POSITION_MOVE = "valve2_position_move";
+const char* VALVE2_DIRECTION = "valve2_direction";
+const char* VALVE3_POSITION_MOVE = "valve3_position_move";
+const char* VALVE3_DIRECTION = "valve3_direction";
+const char* VALVE4_POSITION_MOVE = "valve4_position_move";
+const char* VALVE4_DIRECTION = "valve4_direction";
+const char* VALVE5_POSITION_MOVE = "valve5_position_move";
+const char* VALVE5_DIRECTION = "valve5_direction";
+const char* VALVE6_POSITION_MOVE = "valve6_position_move";
+const char* VALVE6_DIRECTION = "valve6_direction";
+const char* VALVE7_POSITION_MOVE = "valve7_position_move";
+const char* VALVE7_DIRECTION = "valve7_direction";
+const char* VALVE8_POSITION_MOVE = "valve8_position_move";
+const char* VALVE8_DIRECTION = "valve8_direction";
+const char* VALVE9_POSITION_MOVE = "valve9_position_move";
+const char* VALVE9_DIRECTION = "valve9_direction";
+const char* VALVE10_POSITION_MOVE = "valve10_position_move";
+const char* VALVE10_DIRECTION = "valve10_direction";
+const char* VALVE11_POSITION_MOVE = "valve11_position_move";
+const char* VALVE11_DIRECTION = "valve11_direction";
 
-char output[256];
+char output[1024];
 
 String valve0_position_move = "0";
 String valve0_direction = "0";
 String valve1_position_move = "0";
 String valve1_direction = "0";
+String valve2_position_move = "0";
+String valve2_direction = "0";
+String valve3_position_move = "0";
+String valve3_direction = "0";
+String valve4_position_move = "0";
+String valve4_direction = "0";
+String valve5_position_move = "0";
+String valve5_direction = "0";
+String valve6_position_move = "0";
+String valve6_direction = "0";
+String valve7_position_move = "0";
+String valve7_direction = "0";
+String valve8_position_move = "0";
+String valve8_direction = "0";
+String valve9_position_move = "0";
+String valve9_direction = "0";
+String valve10_position_move = "0";
+String valve10_direction = "0";
+String valve11_position_move = "0";
+String valve11_direction = "0";
 
 JsonDocument valve_movement_data;
 
@@ -58,23 +98,75 @@ void Taskwebcode(void *pvParameters)
         if(p->isPost()){
           if (p->name() == VALVE0_POSITION_MOVE) {
             valve0_position_move = p->value().c_str();
-            Serial.print("Valve0 position move with: ");
-            Serial.println(valve0_position_move);
           }
           if (p->name() == VALVE0_DIRECTION) {
             valve0_direction = p->value().c_str();
-            Serial.print("Valve0 direction is: ");
-            Serial.println(valve0_direction);
           }
           if (p->name() == VALVE1_POSITION_MOVE) {
             valve1_position_move = p->value().c_str();
-            Serial.print("Valve1 position move with:: ");
-            Serial.println(valve1_position_move);
           }
           if (p->name() == VALVE1_DIRECTION) {
             valve1_direction = p->value().c_str();
-            Serial.print("Valve1 direction is: ");
-            Serial.println(valve1_direction);
+          }
+          if (p->name() == VALVE2_POSITION_MOVE) {
+            valve2_position_move = p->value().c_str();
+          }
+          if (p->name() == VALVE2_DIRECTION) {
+            valve2_direction = p->value().c_str();
+          }
+          if (p->name() == VALVE3_POSITION_MOVE) {
+            valve3_position_move = p->value().c_str();
+          }
+          if (p->name() == VALVE3_DIRECTION) {
+            valve3_direction = p->value().c_str();
+          }
+          if (p->name() == VALVE4_POSITION_MOVE) {
+            valve4_position_move = p->value().c_str();
+          }
+          if (p->name() == VALVE4_DIRECTION) {
+            valve4_direction = p->value().c_str();
+          }
+          if (p->name() == VALVE5_POSITION_MOVE) {
+            valve5_position_move = p->value().c_str();
+          }
+          if (p->name() == VALVE5_DIRECTION) {
+            valve5_direction = p->value().c_str();
+          }
+          if (p->name() == VALVE6_POSITION_MOVE) {
+            valve6_position_move = p->value().c_str();
+          }
+          if (p->name() == VALVE6_DIRECTION) {
+            valve6_direction = p->value().c_str();
+          }
+          if (p->name() == VALVE7_POSITION_MOVE) {
+            valve7_position_move = p->value().c_str();
+          }
+          if (p->name() == VALVE7_DIRECTION) {
+            valve7_direction = p->value().c_str();
+          }
+          if (p->name() == VALVE8_POSITION_MOVE) {
+            valve8_position_move = p->value().c_str();
+          }
+          if (p->name() == VALVE8_DIRECTION) {
+            valve8_direction = p->value().c_str();
+          }
+          if (p->name() == VALVE9_POSITION_MOVE) {
+            valve9_position_move = p->value().c_str();
+          }
+          if (p->name() == VALVE9_DIRECTION) {
+            valve9_direction = p->value().c_str();
+          }
+          if (p->name() == VALVE10_POSITION_MOVE) {
+            valve10_position_move = p->value().c_str();
+          }
+          if (p->name() == VALVE10_DIRECTION) {
+            valve10_direction = p->value().c_str();
+          }
+          if (p->name() == VALVE11_POSITION_MOVE) {
+            valve11_position_move = p->value().c_str();
+          }
+          if (p->name() == VALVE11_DIRECTION) {
+            valve11_direction = p->value().c_str();
           }
         }
       }
@@ -90,6 +182,26 @@ void Taskwebcode(void *pvParameters)
       valve_movement_data["valve0_move_direction"] = valve0_direction;
       valve_movement_data["valve1_position_change"] = valve1_position_move;
       valve_movement_data["valve1_move_direction"] = valve1_direction;
+      valve_movement_data["valve2_position_change"] = valve2_position_move;
+      valve_movement_data["valve2_move_direction"] = valve2_direction;
+      valve_movement_data["valve3_position_change"] = valve3_position_move;
+      valve_movement_data["valve3_move_direction"] = valve3_direction;
+      valve_movement_data["valve4_position_change"] = valve4_position_move;
+      valve_movement_data["valve4_move_direction"] = valve4_direction;
+      valve_movement_data["valve5_position_change"] = valve5_position_move;
+      valve_movement_data["valve5_move_direction"] = valve5_direction;
+      valve_movement_data["valve6_position_change"] = valve6_position_move;
+      valve_movement_data["valve6_move_direction"] = valve6_direction;
+      valve_movement_data["valve7_position_change"] = valve7_position_move;
+      valve_movement_data["valve7_move_direction"] = valve7_direction;
+      valve_movement_data["valve8_position_change"] = valve8_position_move;
+      valve_movement_data["valve8_move_direction"] = valve8_direction;
+      valve_movement_data["valve9_position_change"] = valve9_position_move;
+      valve_movement_data["valve9_move_direction"] = valve9_direction;
+      valve_movement_data["valve10_position_change"] = valve10_position_move;
+      valve_movement_data["valve10_move_direction"] = valve10_direction;
+      valve_movement_data["valve11_position_change"] = valve11_position_move;
+      valve_movement_data["valve11_move_direction"] = valve11_direction;
 
       serializeJson(valve_movement_data, output);
     

@@ -47,21 +47,136 @@
                     <fieldset>
                         <div class="pure-g">
                             <div class="pure-u-1 pure-u-md-1-2">
-                                <label for="valve0-position-move">Valve0 positions to move:</label>
-                                <input type="number" placeholder="number" class="pure-input-1-2" name="valve0_position_move" id="valve0_position_move" />
+                                <label for="valve0_position_move">Valve0 positions to move:</label>
+                                <input type="number" placeholder="number" value="0" min="0" max="24" class="pure-input-1-2" name="valve0_position_move" id="valve0_position_move" />
                             </div>
                             <div class="pure-u-1 pure-u-md-1-2">
-                                <label for="valve0_direction">Direction:</label>
+                                <label for="valve0_direction">Valve0 direction:</label>
+                                <select id="valve0_direction" name="valve0_direction" id="valve0_direction" class="pure-input-1-2">
+                                    <option>Forward</option>
+                                    <option>Backwards</option>
+                                </select>
+                                <!-- <label for="valve0_direction">Direction:</label>
                                 <input type="hidden"   name="valve0_direction" id="valve0_direction" value="false" />
-                                <input type="checkbox" name="valve0_direction" id="valve0_direction" value="true" />
+                                <input type="checkbox" name="valve0_direction" id="valve0_direction" value="true" /> -->
                             </div>
                             <div class="pure-u-1 pure-u-md-1-2">
-                                <label for="valve1-position-move">Valve1 positions to move:</label>
-                                <input type="number" placeholder="number" class="pure-input-1-2" name="valve1_position_move" id="valve1_position_move" />
+                                <label for="valve1_position_move">Valve1 positions to move:</label>
+                                <input type="number" placeholder="number" value="0" min="0" max="24" class="pure-input-1-2" name="valve1_position_move" id="valve1_position_move" />
                             </div>
                             <div class="pure-u-1 pure-u-md-1-2">
-                                <label for="valve1_direction">Direction:</label>
+                                <label for="valve1_direction">Valve1 direction:</label>
                                 <select id="valve1_direction" name="valve1_direction" id="valve1_direction" class="pure-input-1-2">
+                                    <option>Forward</option>
+                                    <option>Backwards</option>
+                                </select>
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="valve2_position_move">Valve2 positions to move:</label>
+                                <input type="number" placeholder="number" value="0" min="0" max="24" class="pure-input-1-2" name="valve2_position_move" id="valve2_position_move" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="valve2_direction">Valve2 direction:</label>
+                                <select id="valve2_direction" name="valve2_direction" id="valve2_direction" class="pure-input-1-2">
+                                    <option>Forward</option>
+                                    <option>Backwards</option>
+                                </select>
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="valve3_position_move">Valve3 positions to move:</label>
+                                <input type="number" placeholder="number" value="0" min="0" max="24" class="pure-input-1-2" name="valve3_position_move" id="valve3_position_move" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="valve3_direction">Valve3 direction:</label>
+                                <select id="valve3_direction" name="valve3_direction" id="valve3_direction" class="pure-input-1-2">
+                                    <option>Forward</option>
+                                    <option>Backwards</option>
+                                </select>
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="valve4_position_move">Valve4 positions to move:</label>
+                                <input type="number" placeholder="number" value="0" min="0" max="24" class="pure-input-1-2" name="valve4_position_move" id="valve4_position_move" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="valve4_direction">Valve4 direction:</label>
+                                <select id="valve4_direction" name="valve4_direction" id="valve4_direction" class="pure-input-1-2">
+                                    <option>Forward</option>
+                                    <option>Backwards</option>
+                                </select>
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="valve5_position_move">Valve5 positions to move:</label>
+                                <input type="number" placeholder="number" value="0" min="0" max="24" class="pure-input-1-2" name="valve5_position_move" id="valve5_position_move" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="valve5_direction">Vavle5 direction:</label>
+                                <select id="valve5_direction" name="valve5_direction" id="valve5_direction" class="pure-input-1-2">
+                                    <option>Forward</option>
+                                    <option>Backwards</option>
+                                </select>
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="valve6_position_move">Valve6 positions to move:</label>
+                                <input type="number" placeholder="number" value="0" min="0" max="24" class="pure-input-1-2" name="valve6_position_move" id="valve6_position_move" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="valve6_direction">Valve6 direction:</label>
+                                <select id="valve6_direction" name="valve6_direction" id="valve6_direction" class="pure-input-1-2">
+                                    <option>Forward</option>
+                                    <option>Backwards</option>
+                                </select>
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="valve7_position_move">Valve7 positions to move:</label>
+                                <input type="number" placeholder="number" value="0" min="0" max="24" class="pure-input-1-2" name="valve7_position_move" id="valve7_position_move" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="valve7_direction">Valve7 direction:</label>
+                                <select id="valve7_direction" name="valve7_direction" id="valve7_direction" class="pure-input-1-2">
+                                    <option>Forward</option>
+                                    <option>Backwards</option>
+                                </select>
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="valve8_position_move">Valve8 positions to move:</label>
+                                <input type="number" placeholder="number" value="0" min="0" max="24" class="pure-input-1-2" name="valve8_position_move" id="valve8_position_move" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="valve8_direction">Valve8 direction:</label>
+                                <select id="valve8_direction" name="valve8_direction" id="valve8_direction" class="pure-input-1-2">
+                                    <option>Forward</option>
+                                    <option>Backwards</option>
+                                </select>
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="valve9_position_move">Valve9 positions to move:</label>
+                                <input type="number" placeholder="number" value="0" min="0" max="24" class="pure-input-1-2" name="valve9_position_move" id="valve9_position_move" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="valve9_direction">Valve 9 direction:</label>
+                                <select id="valve9_direction" name="valve9_direction" id="valve9_direction" class="pure-input-1-2">
+                                    <option>Forward</option>
+                                    <option>Backwards</option>
+                                </select>
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="valve10_position_move">Valve10 positions to move:</label>
+                                <input type="number" placeholder="number" value="0" min="0" max="24" class="pure-input-1-2" name="valve10_position_move" id="valve10_position_move" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="valve10_direction">Valve10 direction:</label>
+                                <select id="valve10_direction" name="valve10_direction" id="valve10_direction" class="pure-input-1-2">
+                                    <option>Forward</option>
+                                    <option>Backwards</option>
+                                </select>
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="valve11_position_move">Valve11 positions to move:</label>
+                                <input type="number" placeholder="number" value="0" min="0" max="24" class="pure-input-1-2" name="valve11_position_move" id="valve11_position_move" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="valve1_direction">Valve11 direction:</label>
+                                <select id="valve11_direction" name="valve11_direction" id="valve11_direction" class="pure-input-1-2">
                                     <option>Forward</option>
                                     <option>Backwards</option>
                                 </select>

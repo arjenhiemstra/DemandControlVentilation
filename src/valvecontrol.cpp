@@ -1,5 +1,16 @@
 #include "valvecontrol.h"
 
+//Data pins for 74HC595
+int clockPin1 = 13; //Pin connected to SH_CP (11) of 74HC595
+int latchPin1 = 12; //Pin connected to ST_CP (12) of 74HC595
+int dataPin1 = 14; //Pin connected to DS (14) of 74HC595
+
+//Data pins for 74HC595
+int clockPin2 = 26; //Pin connected to SH_CP (11) of 74HC595
+int latchPin2 = 25; //Pin connected to ST_CP (12) of 74HC595
+int dataPin2 = 27; //Pin connected to DS (14) of 74HC595
+
+
 void move_valve(char* output) {
 
     //this function calls all other functions to control the valves. These are the steps:
@@ -9,6 +20,17 @@ void move_valve(char* output) {
     //  2. Iterate through the JSON file. Valve number decides which dataPin, clockpin and latchPin to use
     //  3. Recalculate valve movement if check is enabled 
     //  4. Call the valvecontrol function
+
+    //pinMode(latchPin1, OUTPUT);
+    //pinMode(clockPin1, OUTPUT);
+    //pinMode(dataPin1, OUTPUT);
+
+    //pinMode(latchPin2, OUTPUT);
+    //pinMode(clockPin2, OUTPUT);
+    //pinMode(dataPin2, OUTPUT);
+
+    //all_outputs_off(dataPin1, clockPin1, latchPin1);
+    //all_outputs_off(dataPin2, clockPin2, latchPin2);
 
     Serial.print(output);
     
