@@ -13,17 +13,23 @@ int dataPin2 = 7;  // D27 Pin connected to DS (14) of 74HC595
 int clockPin;
 int latchPin;
 int dataPin;
-int valve_number = 0;
 
 void move_valve(char* output) {
 
     //this function calls all other functions to control the valves. These are the steps:
     //  1. receive input data:
-    //      a. JSON file with all valve positions and direction per valve
+    //      a. JSON file with valve control data which includes valve number, requested valve move and direction
     //      b. enable valve position check, yes or no
-    //  2. Iterate through the JSON file. Valve number decides which dataPin, clockpin and latchPin to use
-    //  3. Recalculate valve movement if check is enabled 
-    //  4. Call the valvecontrol function
+    //  2.  Iterate through the JSON file. Valve number decides which dataPin, clockpin and latchPin to use
+    //      if 
+    //        position check is required:
+    //              a. Open position file
+    //              b. Calculate new valve move positions (either as requested or max/min)
+    //              c. Call valve move function to make actual move
+    //              d. Write new positions to file
+    //      else
+    //        call valve movement function
+
 
     pinMode(latchPin1, OUTPUT);
     pinMode(clockPin1, OUTPUT);
@@ -33,6 +39,13 @@ void move_valve(char* output) {
     pinMode(clockPin2, OUTPUT);
     pinMode(dataPin2, OUTPUT);
 
+    // Initialize LittleFS
+    if (!LittleFS.begin(true)) {
+    Serial.println("An error occurred while mounting LittleFS");
+    return;
+    }
+
+
     all_outputs_off(dataPin1, clockPin1, latchPin1);
     all_outputs_off(dataPin2, clockPin2, latchPin2);
 
@@ -41,35 +54,25 @@ void move_valve(char* output) {
     JsonDocument input;
     deserializeJson(input, output);
 
-    int valve0_move = input["valve0_position_move"];
-    int valve0_direction = input["valve0_direction"];
-    int valve1_move = input["valve1_position_move"];
-    int valve1_direction = input["valve1_direction"];
+    for(i=0;i<12;i++) {
 
-    //String valve_number;
-    //valve_number = strtok(stng, "valve");
-    //valve_number = strtok(valve_number, "")
+        if (input["valve"+String(i)+"_data"][0] < 6) {
+            latchPin = latchPin1;
+            clockPin = clockPin1;
+            dataPin = dataPin1;
+        }
+        else {
+            latchPin = latchPin2;
+            clockPin = clockPin2;
+            dataPin = dataPin2;
+        }
 
-    
-
-    //Serial.print(valve0_move);
-
-    if (valve_number < 6) {
-        latchPin = latchPin1;
-        clockPin = clockPin1;
-        dataPin = dataPin1;
+        //Only call function if actual move requested is >0
+        if(input["valve"+String(i)+"_data"][1] > 0) {
+            valvecontrol(input["valve"+String(i)+"_data"][2], input["valve"+String(i)+"_data"][1], input["valve"+String(i)+"_data"][0] , latchPin, clockPin, dataPin);
+        }
     }
-    else {
-        latchPin = latchPin2;
-        clockPin = clockPin2;
-        dataPin = dataPin2;
-    }
-
-    valvecontrol(input["valve0_direction"], input["valve0_position_change"], 0, latchPin, clockPin, dataPin);
-
 }
-
-
 
 void valvecontrol(int direction, int position_change, int valve_number, int dataPin, int clockPin, int latchPin ) {
 
@@ -194,16 +197,19 @@ void all_outputs_off(int dataPin, int clockPin, int latchPin) {
     digitalWrite(latchPin, HIGH);
 }
 
+void read_position_file(void) {
+
+
+}
+
+
+
 void write_valve_position_to_file(int valve_number, int moved_positions){
 
 
 }
 
-void read_position_file(void) {
 
-    // Web interface can also create default settings
-
-}
 
 
 void check_valve_position_file(void) {
