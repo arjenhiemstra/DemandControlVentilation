@@ -14,6 +14,8 @@ int clockPin;
 int latchPin;
 int dataPin;
 
+int i;
+
 void move_valve(char* output) {
 
     //this function calls all other functions to control the valves. These are the steps:
@@ -41,10 +43,9 @@ void move_valve(char* output) {
 
     // Initialize LittleFS
     if (!LittleFS.begin(true)) {
-    Serial.println("An error occurred while mounting LittleFS");
-    return;
+        Serial.println("An error occurred while mounting LittleFS");
+        return;
     }
-
 
     all_outputs_off(dataPin1, clockPin1, latchPin1);
     all_outputs_off(dataPin2, clockPin2, latchPin2);
@@ -163,9 +164,6 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
           delay(10); // This delay decides the speed of turning in ms
         }
       }
-    
-    //After running the valve position should be updated
-
     //after running all outputs should be off
     all_outputs_off(dataPin, clockPin, latchPin);
   }
