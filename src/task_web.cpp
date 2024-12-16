@@ -57,11 +57,9 @@ String valve10_direction;
 String valve11_position_move;
 String valve11_direction;
 
-JsonDocument valve_movement_data;
+JsonDocument valve_control_data;
 
 bool enable_valve_position_check;   //True when check is required if valve moves within operating range
-
-//int i;
 
 void startTaskwebcode(void) {
 
