@@ -37,9 +37,20 @@
         </div>
 
         <div class="content">
+            <h2 class="content-subhead">Valve positions in file</h2>
+            <p>
+                The position of the valves is:
+            </p>
+
+            <h2 class="content-subhead">Create file with positions of the valves</h2>
+            <p>
+                The first step of calibration is to create a file which contains a JSON structure of the existing valve positions. The default file has the following data:
+                {"valve0":0, "valve1":0, "valve2":0, "valve3":0, "valve4":0, "valve5":0, "valve6":0, "valve7":0, "valve8":0, "valve9":0, "valve10":0, "valve11":0}. A second button is available to delete the file and redo the calibration.
+            </p>
+
             <h2 class="content-subhead">Manually move valves</h2>
             <p>
-                This section is to manually move the valves to a position <b>without</b> registering this change in de settings file. This can be used to calibrate the valve positions, e.g. set the valves to the fully closed position (0) and then store these positions in the valve position status file JSON. You can move multiple valves at the same time and empty values are ignored (i.e. move 0 positions forward)
+                The second step of calibration is to manually move the valves to a position which corresponds with what is stored in the file created above <b>without</b> registering this change in de settings file unless the checkbox is ticked. This can be used to calibrate the valve positions, e.g. set the valves to the fully closed position (0) and then store these positions in the valve position status file JSON. You can move multiple valves at the same time and empty values are ignored (i.e. move 0 positions forward)
             </p>
 
             <p>
@@ -182,6 +193,10 @@
                                 </select>
                             </div>
                         </div>
+                        <label for="store_valve_position">Store valve position:</label>
+                        <input type="hidden"   name="store_valve_position" id="store_valve_position" value="false" />
+                        <input type="checkbox" name="store_valve_position" id="store_valve_position" value="true" />
+                        <br><br>
                         <input type="submit" value="Update valve position">
                     </fieldset>
                 </form>

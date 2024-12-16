@@ -29,6 +29,7 @@ const char* VALVE10_POSITION_MOVE = "valve10_position_move";
 const char* VALVE10_DIRECTION = "valve10_direction";
 const char* VALVE11_POSITION_MOVE = "valve11_position_move";
 const char* VALVE11_DIRECTION = "valve11_direction";
+const char* STORE_VALVE_POSITION = "store_valve_position";
 
 char output[1024];
 
@@ -56,6 +57,7 @@ String valve10_position_move;
 String valve10_direction;
 String valve11_position_move;
 String valve11_direction;
+String store_valve_position;
 
 JsonDocument valve_control_data;
 
