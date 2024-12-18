@@ -213,6 +213,7 @@ void Taskwebcode(void *pvParameters)
 
       //No need to check if within operating range
       enable_valve_position_check = false;
+      valve_control_data["enable_valve_position_check"] = enable_valve_position_check;
 
       serializeJson(valve_control_data, output);
     

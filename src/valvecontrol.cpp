@@ -55,6 +55,8 @@ void move_valve(char* output) {
     JsonDocument input;
     deserializeJson(input, output);
 
+
+
     for(i=0;i<12;i++) {
 
         if (input["valve"+String(i)+"_data"][0] < 6) {
@@ -195,30 +197,44 @@ void all_outputs_off(int dataPin, int clockPin, int latchPin) {
     digitalWrite(latchPin, HIGH);
 }
 
-void read_position_file(void) {
+void read_position_file(fs::FS &fs, const char *path) {
 
+  Serial.printf("Reading file: %s\r\n", path);
 
+  File file = fs.open(path);
+  if (!file || file.isDirectory()) {
+    Serial.println("- failed to open file for reading");
+    return;
+  }
+
+  Serial.println("- read from file:");
+  while (file.available()) {
+    Serial.write(file.read());
+  }
+  file.close();
 }
 
 
 
-void write_valve_position_to_file(int valve_number, int moved_positions){
+void write_valve_position_to_file(int valve_number, int moved_positions) { }
 
 
+
+bool check_file_exist(void) {
+
+    if (LittleFS.exists("/valvepositions.txt")) {
+        Serial.println("File exists");
+        return true;
+    } 
+    else {
+        Serial.println("File does not exist");
+        return false;
+    }
 }
 
 
 
-
-void check_valve_position_file(void) {
-
-    //littlefs should already be mounted (in main.cpp)
-
-    //if json file exists then read the File
-
-    //else create the file and put the default
-
-}
+void check_valve_position_file(void) { }
 
 
 /* Python example
@@ -236,3 +252,7 @@ def checkValvePositionFile():
     else:
         print("\nValve status file not found. Creating new default one")
         defaultValvePositions() */
+
+
+
+        

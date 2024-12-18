@@ -31,6 +31,12 @@ void setup() {
   //startTask2code();
   startTaskwebcode();
 
+  //create position fil with all positions set to zero
+  //
+  // { valve0:0, valve1:0, valve2:0, valve3:0, valve4:0, valve5:0, valve6:0, valve7:0, valve8:0, valve9:0, valve10:0, valve11:0 }
+
+  
+
 }
 
 void loop() { }

@@ -12,6 +12,7 @@ void all_outputs_off(int, int, int);
 
 void read_position_file(void);
 void check_valve_position_file(void);
+bool check_file_exist(void);
 
 #endif
 
