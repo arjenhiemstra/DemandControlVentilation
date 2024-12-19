@@ -209,7 +209,11 @@ void Taskwebcode(void *pvParameters)
           }
           if (p->name() == STORE_VALVE_POSITION_IN_FILE) {
             store_valve_position_in_file = p->value().c_str();
-            valve_control_data["store_valve_position_in_file"][2] = store_valve_position_in_file;
+            valve_control_data["checks"][0] = store_valve_position_in_file;
+          }
+          if (p->name() == CHECK_VALVE_POSITION) {
+            check_valve_position = p->value().c_str();
+            valve_control_data["checks"][1] = check_valve_position;
           }
         }
       }
