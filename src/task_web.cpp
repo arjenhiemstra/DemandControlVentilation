@@ -29,7 +29,8 @@ const char* VALVE10_POSITION_MOVE = "valve10_position_move";
 const char* VALVE10_DIRECTION = "valve10_direction";
 const char* VALVE11_POSITION_MOVE = "valve11_position_move";
 const char* VALVE11_DIRECTION = "valve11_direction";
-const char* STORE_VALVE_POSITION = "store_valve_position";
+const char* STORE_VALVE_POSITION_IN_FILE = "store_valve_position_in_file";
+const char* CHECK_VALVE_POSITION = "check_valve_position";
 
 char output[1024];
 
@@ -57,11 +58,11 @@ String valve10_position_move;
 String valve10_direction;
 String valve11_position_move;
 String valve11_direction;
-String store_valve_position;
+
+bool check_valve_position;            // True when check is required if valve moves within operating range
+bool store_valve_position_in_file;    // True to enable storing of new position in valve position file
 
 JsonDocument valve_control_data;
-
-bool enable_valve_position_check;   //True when check is required if valve moves within operating range
 
 void startTaskwebcode(void) {
 
@@ -205,6 +206,10 @@ void Taskwebcode(void *pvParameters)
           if (p->name() == VALVE11_DIRECTION) {
             valve11_direction = p->value().c_str();
             valve_control_data["valve11_data"][2] = valve11_direction;
+          }
+          if (p->name() == STORE_VALVE_POSITION_IN_FILE) {
+            store_valve_position_in_file = p->value().c_str();
+            valve_control_data["store_valve_position_in_file"][2] = store_valve_position_in_file;
           }
         }
       }
