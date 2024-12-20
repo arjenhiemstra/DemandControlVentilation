@@ -50,7 +50,7 @@ void move_valve(char* output) {
     JsonDocument input;
     deserializeJson(input, output);
 
-    for(i=0;i<12;i++) {
+    /*for(i=0;i<12;i++) {
 
         if (input["valve"+String(i)+"_data"][0] < 6) {
             latchPin = latchPin1;
@@ -62,37 +62,37 @@ void move_valve(char* output) {
             clockPin = clockPin2;
             dataPin = dataPin2;
         }
+    }*/
 
-        valve_position_file_exists = check_valve_position file_exists();
-        valve_position file_contents_valid = verify_valve_position file_contents();
+    valve_position_file_exists = check_valve_position file_exists();
+    valve_position file_contents_valid = verify_valve_position file_contents();
 
-        // Check position if operating limits check is enabled
-        if (input["checks"][1]) == true) {
-            //Check was enabled so need to check if file exists and if contents is correct. If not abort moving valves
-            if (valve_position_file_exists == false || valve_position file_contents_valid == false ) {
-                Serial.print("Valve position check was enabled but valve position file does not exist or is not valid. Moving the valves is aborted")
-            }
-            else {
-                //Valve position file is ok.
-                
-                //Code to calculate how much the valves can move
-                
-                //Move valves if movement is more than 0
-                //if(input["valve"+String(i)+"_data"][1] > 0) {
-                    //valvecontrol(input["valve"+String(i)+"_data"][2], input["valve"+String(i)+"_data"][1], input["valve"+String(i)+"_data"][0] , latchPin, clockPin, dataPin);
-                //}
-
-                if (input["checks"][0]) == true) {
-                    //Write new positions to file
-                    write_new_valve_positions_to file(char* output)
-                }
-            }
+    // Check position if operating limits check is enabled
+    if (input["checks"][1]) == true) {
+        //Check was enabled so need to check if file exists and if contents is correct. If not abort moving valves
+        if (valve_position_file_exists == false || valve_position file_contents_valid == false ) {
+            Serial.print("Valve position check was enabled but valve position file does not exist or is not valid. Moving the valves is aborted")
         }
         else {
-            //Check was not enables so valves can be moved. Only call function to move if actual move requested is >0. Registration of new valve position is also not needed
-            if(input["valve"+String(i)+"_data"][1] > 0) {
-                valvecontrol(input["valve"+String(i)+"_data"][2], input["valve"+String(i)+"_data"][1], input["valve"+String(i)+"_data"][0] , latchPin, clockPin, dataPin);
+            //Valve position file is ok.
+                
+            //Code to calculate how much the valves can move
+                
+            //Move valves if movement is more than 0
+            //if(input["valve"+String(i)+"_data"][1] > 0) {
+                //valvecontrol(input["valve"+String(i)+"_data"][2], input["valve"+String(i)+"_data"][1], input["valve"+String(i)+"_data"][0] , latchPin, clockPin, dataPin);
+            //}
+
+            if (input["checks"][0]) == true) {
+                //Write new positions to file
+                write_new_valve_positions_to file(char* output)
             }
+        }
+    }
+    else {
+        //Check was not enables so valves can be moved. Only call function to move if actual move requested is >0. Registration of new valve position is also not needed
+        if(input["valve"+String(i)+"_data"][1] > 0) {
+            valvecontrol(input["valve"+String(i)+"_data"][2], input["valve"+String(i)+"_data"][1], input["valve"+String(i)+"_data"][0] , latchPin, clockPin, dataPin);
         }
     }
 }
