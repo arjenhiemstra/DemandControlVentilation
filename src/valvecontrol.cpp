@@ -41,12 +41,6 @@ void move_valve(char* output) {
     pinMode(clockPin2, OUTPUT);
     pinMode(dataPin2, OUTPUT);
 
-    // Initialize LittleFS
-    if (!LittleFS.begin(true)) {
-        Serial.println("An error occurred while mounting LittleFS");
-        return;
-    }
-
     all_outputs_off(dataPin1, clockPin1, latchPin1);
     all_outputs_off(dataPin2, clockPin2, latchPin2);
 
@@ -54,8 +48,6 @@ void move_valve(char* output) {
     
     JsonDocument input;
     deserializeJson(input, output);
-
-
 
     for(i=0;i<12;i++) {
 
