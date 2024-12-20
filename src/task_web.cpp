@@ -58,9 +58,8 @@ String valve10_position_move;
 String valve10_direction;
 String valve11_position_move;
 String valve11_direction;
-
-bool check_valve_position;            // True when check is required if valve moves within operating range
-bool store_valve_position_in_file;    // True to enable storing of new position in valve position file
+String check_valve_position;            // True when check is required if valve moves within operating range
+String store_valve_position_in_file;    // True to enable storing of new position in valve position file
 
 JsonDocument valve_control_data;
 
@@ -71,6 +70,9 @@ void startTaskwebcode(void) {
 
 void Taskwebcode(void *pvParameters)
 {
+    int i;
+    int params;
+    
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(LittleFS, "/html//index.html", "text/html");
     });
@@ -89,14 +91,19 @@ void Taskwebcode(void *pvParameters)
     });
 
     //Valve control web pages processing
+    server.on("/settings", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(LittleFS, "/html/settings.html", "text/html");
+    });
+
+    //Valve control web pages processing
     server.on("/valvecontrol", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(LittleFS, "/html/valvecontrol.html", "text/html");
     });
 
     //Response for POST action in webform valvecontrol manual move valves
     server.on("/", HTTP_POST, [](AsyncWebServerRequest *request) {
-      int params = request->params();
-      for(int i=0;i<params;i++){
+      params = request->params();
+      for(i=0;i<params;i++){
         AsyncWebParameter* p = request->getParam(i);
         if(p->isPost()){
           if (p->name() == VALVE0_POSITION_MOVE) {
@@ -219,10 +226,6 @@ void Taskwebcode(void *pvParameters)
       }
       //request->send(200, "text/plain", "Done.");
       request->send(LittleFS, "/html/valvecontrol.html", "text/html");
-
-      //No need to check if within operating range
-      enable_valve_position_check = false;
-      valve_control_data["enable_valve_position_check"] = enable_valve_position_check;
 
       serializeJson(valve_control_data, output);
     
