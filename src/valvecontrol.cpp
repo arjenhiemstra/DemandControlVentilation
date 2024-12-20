@@ -73,6 +73,7 @@ void move_valve(char* output) {
                 Serial.print("Valve position check was enabled but valve position file does not exist or is not valid. Moving the valves is aborted")
             }
             else {
+                //Valve position file is ok.
                 
                 //Code to calculate how much the valves can move
                 
