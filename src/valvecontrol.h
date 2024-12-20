@@ -7,12 +7,10 @@
 //Function definitions
 void move_valve(char*);
 void valvecontrol(int, int, int, int, int, int);
-void write_valve_position_to_file(int, int);
 void all_outputs_off(int, int, int);
-
-void read_position_file(void);
-void check_valve_position_file(void);
-bool check_file_exist(void);
+bool check_valve_position file_exists(void);
+bool verify_valve_position file_contents(void);
+void write_new_valve_positions_to file(void);
 
 #endif
 
