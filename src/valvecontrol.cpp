@@ -31,6 +31,8 @@ void move_valve(char* output) {
     int dataPin;
 
     int i;
+    bool valve_position_file_exists;
+    bool valve_position file_contents_valid;
 
     pinMode(latchPin1, OUTPUT);
     pinMode(clockPin1, OUTPUT);
@@ -61,9 +63,35 @@ void move_valve(char* output) {
             dataPin = dataPin2;
         }
 
-        //Only call function if actual move requested is >0
-        if(input["valve"+String(i)+"_data"][1] > 0) {
-            valvecontrol(input["valve"+String(i)+"_data"][2], input["valve"+String(i)+"_data"][1], input["valve"+String(i)+"_data"][0] , latchPin, clockPin, dataPin);
+        valve_position_file_exists = check_valve_position file_exists();
+        valve_position file_contents_valid = verify_valve_position file_contents();
+
+        // Check position if operating limits check is enabled
+        if (input["checks"][1]) == true) {
+            //Check was enabled so need to check if file exists and if contents is correct. If not abort moving valves
+            if (valve_position_file_exists == false || valve_position file_contents_valid == false ) {
+                Serial.print("Valve position check was enabled but valve position file does not exist or is not valid. Moving the valves is aborted")
+            }
+            else {
+                
+                //Code to calculate how much the valves can move
+                
+                //Move valves if movement is more than 0
+                //if(input["valve"+String(i)+"_data"][1] > 0) {
+                    //valvecontrol(input["valve"+String(i)+"_data"][2], input["valve"+String(i)+"_data"][1], input["valve"+String(i)+"_data"][0] , latchPin, clockPin, dataPin);
+                //}
+
+                if (input["checks"][0]) == true) {
+                    //Write new positions to file
+                    write_new_valve_positions_to file(char* output)
+                }
+            }
+        }
+        else {
+            //Check was not enables so valves can be moved. Only call function to move if actual move requested is >0. Registration of new valve position is also not needed
+            if(input["valve"+String(i)+"_data"][1] > 0) {
+                valvecontrol(input["valve"+String(i)+"_data"][2], input["valve"+String(i)+"_data"][1], input["valve"+String(i)+"_data"][0] , latchPin, clockPin, dataPin);
+            }
         }
     }
 }
@@ -188,7 +216,63 @@ void all_outputs_off(int dataPin, int clockPin, int latchPin) {
     digitalWrite(latchPin, HIGH);
 }
 
-void read_position_file(fs::FS &fs, const char *path) {
+bool check_valve_position file_exists(void) {
+
+    if (LittleFS.exists("/valvepositions.json")) {
+        Serial.println("File exists");
+        return true;
+    } 
+    else {
+        Serial.println("File does not exist");
+        return false;
+    }
+}
+
+bool verify_valve_position file_contents(void) {
+
+    //Assumes file exists
+    File file = LittleFS.open("/valvepositions.json", "r");
+    if(!file) {
+        Serial.println("Failed to open file");
+        return false;
+    }
+    
+    StaticJsonDocument<200> doc;
+    DeserializationError error = deserializeJson(doc, file);
+
+    if (error) {
+        Serial.print("deserializeJson() failed: ");
+        Serial.println(error.c_str());
+        return false;
+    }
+
+    // Access the JSON data
+    //const char* valve0_pos = doc["valve0"];
+    for(i=0;i<12;i++) {
+        const char* ("valve" + i + "_pos") = doc[("valve" + i)];
+        if (("valve" + i + "_pos") >= 0 || ("valve" + i + "_pos") <25) {
+            return true;
+        }
+        else {
+            return false;
+            break;
+        }
+    }
+    
+    file.close();
+}
+
+void write_new_valve_positions_to file(void) {
+
+
+
+
+}
+
+
+
+
+/*void read_position_file(fs::FS &fs, const char *path) {
 
   Serial.printf("Reading file: %s\r\n", path);
 
@@ -203,30 +287,7 @@ void read_position_file(fs::FS &fs, const char *path) {
     Serial.write(file.read());
   }
   file.close();
-}
-
-
-
-void write_valve_position_to_file(int valve_number, int moved_positions) { }
-
-
-
-bool check_file_exist(void) {
-
-    if (LittleFS.exists("/valvepositions.txt")) {
-        Serial.println("File exists");
-        return true;
-    } 
-    else {
-        Serial.println("File does not exist");
-        return false;
-    }
-}
-
-
-
-void check_valve_position_file(void) { }
-
+}*/
 
 /* Python example
 
