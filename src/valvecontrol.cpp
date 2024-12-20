@@ -1,21 +1,5 @@
 #include "valvecontrol.h"
 
-//Data pins for 74HC595
-int clockPin1 = 16; // D13 Pin connected to SH_CP (11) of 74HC595
-int latchPin1 = 17; // D12 Pin connected to ST_CP (12) of 74HC595
-int dataPin1 = 18;  // D14 Pin connected to DS (14) of 74HC595
-
-//Data pins for 74HC595
-int clockPin2 = 5; // D26 Pin connected to SH_CP (11) of 74HC595
-int latchPin2 = 6; // D25 Pin connected to ST_CP (12) of 74HC595
-int dataPin2 = 7;  // D27 Pin connected to DS (14) of 74HC595
-
-int clockPin;
-int latchPin;
-int dataPin;
-
-int i;
-
 void move_valve(char* output) {
 
     //this function calls all other functions to control the valves. These are the steps:
@@ -32,6 +16,21 @@ void move_valve(char* output) {
     //      else
     //        call valve movement function
 
+    //Data pins for 74HC595
+    int clockPin1 = 16; // D13 Pin connected to SH_CP (11) of 74HC595
+    int latchPin1 = 17; // D12 Pin connected to ST_CP (12) of 74HC595
+    int dataPin1 = 18;  // D14 Pin connected to DS (14) of 74HC595
+
+    //Data pins for 74HC595
+    int clockPin2 = 5; // D26 Pin connected to SH_CP (11) of 74HC595
+    int latchPin2 = 6; // D25 Pin connected to ST_CP (12) of 74HC595
+    int dataPin2 = 7;  // D27 Pin connected to DS (14) of 74HC595
+
+    int clockPin;
+    int latchPin;
+    int dataPin;
+
+    int i;
 
     pinMode(latchPin1, OUTPUT);
     pinMode(clockPin1, OUTPUT);
