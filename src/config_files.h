@@ -5,7 +5,8 @@
 #include <ArduinoJson.h>
 
 //Function definitions
-void test(void);
+void valve_status_file_create(void);
+void valve_status_file_delete(void);
 
 
 #endif

@@ -1,4 +1,5 @@
 #include "task_web.h"
+#include "config_files.h"
 
 TaskHandle_t Task_web;
 
@@ -31,6 +32,8 @@ const char* VALVE11_POSITION_MOVE = "valve11_position_move";
 const char* VALVE11_DIRECTION = "valve11_direction";
 const char* STORE_VALVE_POSITION_IN_FILE = "store_valve_position_in_file";
 const char* CHECK_VALVE_POSITION = "check_valve_position";
+const char* DELETE_VALVE_STATUS_FILE = "delete_valve_status_file";
+const char* CREATE_VALVE_STATUS_FILE = "create_valve_status_file";
 
 char output[1024];
 
@@ -60,6 +63,11 @@ String valve11_position_move;
 String valve11_direction;
 String check_valve_position;            // True when check is required if valve moves within operating range
 String store_valve_position_in_file;    // True to enable storing of new position in valve position file
+String delete_valve_status_file;
+String create_valve_status_file;
+
+int i;
+int params;
 
 JsonDocument valve_control_data;
 
@@ -70,9 +78,6 @@ void startTaskwebcode(void) {
 
 void Taskwebcode(void *pvParameters)
 {
-    int i;
-    int params;
-    
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(LittleFS, "/html//index.html", "text/html");
     });
@@ -224,13 +229,21 @@ void Taskwebcode(void *pvParameters)
           }
         }
       }
-      //request->send(200, "text/plain", "Done.");
       request->send(LittleFS, "/html/valvecontrol.html", "text/html");
 
       serializeJson(valve_control_data, output);
     
-      //call function to move valve
       move_valve(output);
+    });
+
+    server.on("/create_config_file", HTTP_POST, [](AsyncWebServerRequest *request) {
+      request->send(LittleFS, "/html/valvecontrol.html", "text/html");
+      valve_status_file_create();
+    });
+    
+    server.on("/delete_config_file", HTTP_POST, [](AsyncWebServerRequest *request) {
+      request->send(LittleFS, "/html/valvecontrol.html", "text/html");
+      valve_status_file_delete();
     });
 
     // Start server
