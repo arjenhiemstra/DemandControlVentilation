@@ -45,6 +45,7 @@ void move_valve(char* output) {
     all_outputs_off(dataPin1, clockPin1, latchPin1);
     all_outputs_off(dataPin2, clockPin2, latchPin2);
 
+    Serial.print("\n\n");
     Serial.print(output);
     
     JsonDocument input;
@@ -64,6 +65,7 @@ void move_valve(char* output) {
         }
     }*/
 
+    /*
     valve_position_file_exists = check_valve_position_file_exists();
     valve_position_file_contents_valid = verify_valve_position_file_contents();
 
@@ -94,7 +96,7 @@ void move_valve(char* output) {
         if(input["valve"+String(i)+"_data"][1] > 0) {
             valvecontrol(input["valve"+String(i)+"_data"][2], input["valve"+String(i)+"_data"][1], input["valve"+String(i)+"_data"][0] , latchPin, clockPin, dataPin);
         }
-    }
+    }*/
 }
 
 void valvecontrol(int direction, int position_change, int valve_number, int dataPin, int clockPin, int latchPin ) {

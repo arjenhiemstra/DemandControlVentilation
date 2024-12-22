@@ -32,8 +32,7 @@ const char* VALVE11_POSITION_MOVE = "valve11_position_move";
 const char* VALVE11_DIRECTION = "valve11_direction";
 const char* STORE_VALVE_POSITION_IN_FILE = "store_valve_position_in_file";
 const char* CHECK_VALVE_POSITION = "check_valve_position";
-const char* DELETE_VALVE_STATUS_FILE = "delete_valve_status_file";
-const char* CREATE_VALVE_STATUS_FILE = "create_valve_status_file";
+
 
 char output[1024];
 
@@ -63,8 +62,6 @@ String valve11_position_move;
 String valve11_direction;
 String check_valve_position;            // True when check is required if valve moves within operating range
 String store_valve_position_in_file;    // True to enable storing of new position in valve position file
-String delete_valve_status_file;
-String create_valve_status_file;
 
 int i;
 int params;
