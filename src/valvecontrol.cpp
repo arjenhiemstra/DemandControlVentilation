@@ -219,18 +219,6 @@ void all_outputs_off(int dataPin, int clockPin, int latchPin) {
     digitalWrite(latchPin, HIGH);
 }
 
-bool check_valve_position_file_exists(void) {
-
-    if (LittleFS.exists("/valvepositions.json")) {
-        Serial.println("File exists");
-        return true;
-    } 
-    else {
-        Serial.println("File does not exist");
-        return false;
-    }
-}
-
 bool verify_valve_position_file_contents(void) {
 
     int i;

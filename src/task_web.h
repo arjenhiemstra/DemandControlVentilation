@@ -11,6 +11,7 @@
 #include <valvecontrol.h>
 
 void startTaskwebcode(void);
+String processor(const String&);
 void Taskwebcode(void *pvParameters);
 //void notFound(AsyncWebServerRequest *request)
 
