@@ -249,10 +249,11 @@ void Taskwebcode(void *pvParameters)
     
   server.on("/delete_config_file", HTTP_POST, [](AsyncWebServerRequest *request) {
     request->send(LittleFS, "/html/valvecontrol.html", "text/html");
-    valve_status_file_delete();
+    const char* path = "/valvepositions.json";
+    valve_status_file_delete(path);
   });
 
-    // Start server
+  // Start server
   server.begin();
   vTaskDelete(NULL);
 }

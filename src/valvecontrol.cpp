@@ -219,56 +219,9 @@ void all_outputs_off(int dataPin, int clockPin, int latchPin) {
     digitalWrite(latchPin, HIGH);
 }
 
-bool verify_valve_position_file_contents(void) {
-
-    int i;
-    File file;
-
-    //Assumes file exists
-    file = LittleFS.open("/valvepositions.json", "r");
-    if(!file) {
-        Serial.println("Failed to open file");
-        return false;
-    }
-    
-    JsonDocument doc;
-    DeserializationError error = deserializeJson(doc, file);
-
-    if (error) {
-        Serial.print("deserializeJson() failed: ");
-        Serial.println(error.c_str());
-        return false;
-    }
-
-    // Access the JSON data
-    //const char* valve0_pos = doc["valve0"];
-    int valve0_pos;
-    for(i=0;i<12;i++) {
-         "valve" + String(i) + "_pos" = 0;
-        Serial.print(valve0_pos);
-        
-        //= doc[("valve" + String(i))];
-        //int valve0_pos = doc[("valve" + i)];
-        //if (("valve" + String(i) + "_pos") >= 0 || ("valve" + String(i) + "_pos") <25) {
-        // if (valve0_pos >= 0 || valve0_pos <25) {
-        //     return true;
-        // }
-        // else {
-        //     return false;
-        //     break;
-        // }
-    }
-    
-    file.close();
-    return 0;
-}
-
-void write_new_valve_positions_to_file(void) {
 
 
 
-
-}
 
 
 
