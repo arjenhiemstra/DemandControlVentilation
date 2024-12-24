@@ -7,8 +7,9 @@
 
 //Function definitions
 void valve_status_file_create(void);
-void valve_status_file_delete(const char*);
-bool check_valve_position_file_exists(void);
+void delete_file(const char*);
+bool check_valve_position_file_exists(const char*);
+String read_config_file(const char*);
 bool verify_valve_position_file_contents(void);
 void write_new_valve_positions_to_file(void);
 

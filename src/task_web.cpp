@@ -32,7 +32,7 @@ const char* VALVE11_POSITION_MOVE = "valve11_position_move";
 const char* VALVE11_DIRECTION = "valve11_direction";
 const char* STORE_VALVE_POSITION_IN_FILE = "store_valve_position_in_file";
 const char* CHECK_VALVE_POSITION = "check_valve_position";
-
+const char* STATUS_VALVE_POSITION_FILE;
 
 char output[1024];
 
@@ -67,6 +67,7 @@ int i;
 int params;
 
 JsonDocument valve_control_data;
+JsonDocument doc;
 
 void startTaskwebcode(void) {
 
@@ -75,12 +76,70 @@ void startTaskwebcode(void) {
 
 String processor(const String& var) {
 
-  //Read position file
+  const char* path = "/valvepositions.json";
+  const char* status;
+  bool status_file_present;
+  String json;
+  JsonDocument doc;
+  
+  status_file_present = check_valve_position_file_exists(path);
+  json = read_config_file(path);
+  //Serial.print(json);
+
+  deserializeJson(doc, json);
+  
+  String valve0_pos = doc[String("valve0")];
+  String valve1_pos = doc[String("valve1")];
+  String valve2_pos = doc[String("valve2")];
+  String valve3_pos = doc[String("valve3")];
+  String valve4_pos = doc[String("valve4")];
+  String valve5_pos = doc[String("valve5")];
+  String valve6_pos = doc[String("valve6")];
+  String valve7_pos = doc[String("valve7")];
+  String valve8_pos = doc[String("valve8")];
+  String valve9_pos = doc[String("valve9")];
+  String valve10_pos = doc[String("valve10")];
+  String valve11_pos = doc[String("valve11")];
+  
+  //Serial.print(status_file_present);
+  
+  if (status_file_present == 1) {
+    status = "Valve status file found.";
+    if (var == "STATUS_VALVE_POSITION_FILE")
+      return F(status);
+  }
+  else {
+    status = "Valve status file not found. Create a file with button below.";
+    if (var == "STATUS_VALVE_POSITION_FILE")
+      return F(status);
+  }
 
   if(var == "VALVE0_POS")
-    return F("Hello world!");
-  return String();
+    return (valve0_pos);
+  if(var == "VALVE1_POS")
+    return (valve1_pos);
+  if(var == "VALVE2_POS")
+    return (valve2_pos);
+  if(var == "VALVE3_POS")
+    return (valve3_pos);
+  if(var == "VALVE4_POS")
+    return (valve4_pos);
+  if(var == "VALVE5_POS")
+      return (valve5_pos);
+  if(var == "VALVE6_POS")
+    return (valve6_pos);
+  if(var == "VALVE7_POS")
+    return (valve7_pos);
+  if(var == "VALVE8_POS")
+    return (valve8_pos);
+  if(var == "VALVE9_POS")
+      return (valve9_pos);
+  if(var == "VALVE10_POS")
+    return (valve10_pos);
+  if(var == "VALVE11_POS")
+    return (valve11_pos);
 
+  return String();
 }
 
 void Taskwebcode(void *pvParameters)
@@ -109,7 +168,8 @@ void Taskwebcode(void *pvParameters)
 
   //Valve control web pages processing
   server.on("/valvecontrol", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(LittleFS, "/html/valvecontrol.html", "text/html");
+    //request->send(LittleFS, "/html/valvecontrol.html", "text/html");
+    request->send(LittleFS, "/html/valvecontrol.html", String(), false, processor);
   });
 
   //Response for POST action in webform valvecontrol manual move valves
@@ -243,14 +303,16 @@ void Taskwebcode(void *pvParameters)
   });
 
   server.on("/create_config_file", HTTP_POST, [](AsyncWebServerRequest *request) {
-    request->send(LittleFS, "/html/valvecontrol.html", "text/html");
+    //request->send(LittleFS, "/html/valvecontrol.html", "text/html");
     valve_status_file_create();
+    request->send(LittleFS, "/html/valvecontrol.html", String(), false, processor);
   });
     
   server.on("/delete_config_file", HTTP_POST, [](AsyncWebServerRequest *request) {
-    request->send(LittleFS, "/html/valvecontrol.html", "text/html");
+    //request->send(LittleFS, "/html/valvecontrol.html", "text/html");
     const char* path = "/valvepositions.json";
-    valve_status_file_delete(path);
+    delete_file(path);
+    request->send(LittleFS, "/html/valvecontrol.html", String(), false, processor);
   });
 
   // Start server

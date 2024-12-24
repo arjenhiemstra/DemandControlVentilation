@@ -5,7 +5,7 @@ File file;
 void valve_status_file_create() {
     
     const char* default_valve_position_file;
-    default_valve_position_file = "{\"valve0\":0, \"valve1\":0, \"valve2\":0, \"valve3\":0, \"valve4\":0, \"valve5\":0, \"valve6\":0, \"valve7\":0, \"valve8\":0, \"valve9\":0, \"valve10\":0, \"valve11\":0}";
+    default_valve_position_file = "{\"valve0\":1, \"valve1\":2, \"valve2\":3, \"valve3\":4, \"valve4\":5, \"valve5\":6, \"valve6\":7, \"valve7\":8, \"valve8\":9, \"valve9\":10, \"valve10\":11, \"valve11\":12}";
     
     file = LittleFS.open("/valvepositions.json", "w");
     if(!file) {
@@ -23,7 +23,7 @@ void valve_status_file_create() {
     file.close();
 }
 
-void valve_status_file_delete(const char* path) {
+void delete_file(const char* path) {
     
     if (LittleFS.remove("/valvepositions.json")) {
         Serial.println("File deleted");
@@ -33,7 +33,7 @@ void valve_status_file_delete(const char* path) {
     }
 }
 
-bool check_valve_position_file_exists(void) {
+bool check_valve_position_file_exists(const char* path) {
 
     if (LittleFS.exists("/valvepositions.json")) {
         Serial.println("File exists");
@@ -43,6 +43,24 @@ bool check_valve_position_file_exists(void) {
         Serial.println("File does not exist");
         return false;
     }
+}
+
+String read_config_file(const char* path) {
+
+    // Functions read config file from file with file path as input and return the contents of the file as a string. 
+    // Assumes presents of fule was checked.
+
+    File file = LittleFS.open(path, "r");
+    String valve_positions;
+    int i;
+
+    while(file.available()) {
+        valve_positions = file.readString();
+    }
+    file.close();
+
+    return valve_positions;
+
 }
 
 bool verify_valve_position_file_contents(void) {
