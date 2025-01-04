@@ -1,5 +1,16 @@
 #include "valvecontrol.h"
 
+//Data pins for 74HC595
+int clockPin1 = 11; // IO11 on ESP32-S3 and D13 on ESP32, connected to SH_CP (11) of 74HC595
+int latchPin1 = 12; // IO12 on ESP32-S3 and D12 on ESP32, connected to ST_CP (12) of 74HC595
+int dataPin1 = 13;  // IO13 on ESP32-S3 and D14 on ESP32, connected to DS (14) of 74HC595
+
+//Data pins for 74HC595
+int clockPin2 = 14; // IO14 on ESP32-S3 and D26 on ESP32, connected to SH_CP (11) of 74HC595
+int latchPin2 = 15; // IO15 on ESP32-S3 and D25 on ESP32, connected to ST_CP (12) of 74HC595
+int dataPin2 = 16;  // IO16 on ESP32-S3 and D27 on ESP32, connected to DS (14) of 74HC595
+
+
 void move_valve(char* output) {
 
     //this function calls all other functions to control the valves. These are the steps:
@@ -15,16 +26,15 @@ void move_valve(char* output) {
     //              d. Write new positions to file
     //      else
     //        call valve movement function
+ 
+    //Still required, already happens at init. Try if can be removed if outputs work
+    pinMode(latchPin1, OUTPUT);
+    pinMode(clockPin1, OUTPUT);
+    pinMode(dataPin1, OUTPUT);
 
-    //Data pins for 74HC595
-    int clockPin1 = 16; // D13 Pin connected to SH_CP (11) of 74HC595
-    int latchPin1 = 17; // D12 Pin connected to ST_CP (12) of 74HC595
-    int dataPin1 = 18;  // D14 Pin connected to DS (14) of 74HC595
-
-    //Data pins for 74HC595
-    int clockPin2 = 5; // D26 Pin connected to SH_CP (11) of 74HC595
-    int latchPin2 = 6; // D25 Pin connected to ST_CP (12) of 74HC595
-    int dataPin2 = 7;  // D27 Pin connected to DS (14) of 74HC595
+    pinMode(latchPin2, OUTPUT);
+    pinMode(clockPin2, OUTPUT);
+    pinMode(dataPin2, OUTPUT);
 
     int clockPin;
     int latchPin;
@@ -34,36 +44,50 @@ void move_valve(char* output) {
     bool valve_position_file_exists;
     bool valve_position_file_contents_valid;
 
-    pinMode(latchPin1, OUTPUT);
-    pinMode(clockPin1, OUTPUT);
-    pinMode(dataPin1, OUTPUT);
-
-    pinMode(latchPin2, OUTPUT);
-    pinMode(clockPin2, OUTPUT);
-    pinMode(dataPin2, OUTPUT);
-
-    all_outputs_off(dataPin1, clockPin1, latchPin1);
-    all_outputs_off(dataPin2, clockPin2, latchPin2);
-
     Serial.print("\n\n");
     Serial.print(output);
     
-    JsonDocument input;
-    deserializeJson(input, output);
+    JsonDocument doc;
+    deserializeJson(doc, output);
 
-    /*for(i=0;i<12;i++) {
+    int valve_number;
+    int move_positions;
+    String direction;
+    String temp;
+      
+    //Serial.print("\n\n");
+    //Serial.print(valve0_data[2]);
+    
+    //String valve0_pos = doc[String("valve0")];
 
-        if (input["valve"+String(i)+"_data"][0] < 6) {
+    //Serial.print(input["valve"+String(i)+"_data"][String(0)]);
+    //Serial.print("\n");
+
+    for(i=0;i<12;i++) {
+
+        temp = "valve"+String(i)+"_data";
+        valve_number = doc[temp][0];
+
+        Serial.print("\n");
+        Serial.print(temp + ": ");
+        Serial.print(valve_number);
+        
+        //move_positions = doc[temp][1];
+        //direction = doc[temp][2];
+
+
+        if (doc["valve"+String(i)+"_data"][0] < 6) {
             latchPin = latchPin1;
             clockPin = clockPin1;
             dataPin = dataPin1;
+            //Serial.print(latchPin + clockPin + dataPin + "valvenumber: " + input["valve"+String(i)+"_data"][0] + "postions to move: " + input["valve"+String(i)+"_data"][1] + "direction: " + input["valve"+String(i)+"_data"][0]);
         }
         else {
             latchPin = latchPin2;
             clockPin = clockPin2;
             dataPin = dataPin2;
         }
-    }*/
+    }
 
     /*
     valve_position_file_exists = check_valve_position_file_exists();

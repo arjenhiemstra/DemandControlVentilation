@@ -71,7 +71,7 @@ JsonDocument doc;
 
 void startTaskwebcode(void) {
 
-    xTaskCreatePinnedToCore(Taskwebcode, "Task1", 10000, NULL, 1, &Task_web, 0);
+    xTaskCreatePinnedToCore(Taskwebcode, "Task_web", 10000, NULL, 1, &Task_web, 0);
 }
 
 String processor(const String& var) {
@@ -83,61 +83,60 @@ String processor(const String& var) {
   JsonDocument doc;
   
   status_file_present = check_valve_position_file_exists(path);
-  json = read_config_file(path);
-  //Serial.print(json);
 
-  deserializeJson(doc, json);
-  
-  String valve0_pos = doc[String("valve0")];
-  String valve1_pos = doc[String("valve1")];
-  String valve2_pos = doc[String("valve2")];
-  String valve3_pos = doc[String("valve3")];
-  String valve4_pos = doc[String("valve4")];
-  String valve5_pos = doc[String("valve5")];
-  String valve6_pos = doc[String("valve6")];
-  String valve7_pos = doc[String("valve7")];
-  String valve8_pos = doc[String("valve8")];
-  String valve9_pos = doc[String("valve9")];
-  String valve10_pos = doc[String("valve10")];
-  String valve11_pos = doc[String("valve11")];
-  
-  //Serial.print(status_file_present);
-  
   if (status_file_present == 1) {
-    status = "Valve status file found.";
+    status = "<b><font color=\"green\">Valve status file found.</font></b>";
     if (var == "STATUS_VALVE_POSITION_FILE")
       return F(status);
-  }
-  else {
-    status = "Valve status file not found. Create a file with button below.";
-    if (var == "STATUS_VALVE_POSITION_FILE")
-      return F(status);
+
+    json = read_config_file(path);
+
+    deserializeJson(doc, json);
+  
+    String valve0_pos = doc[String("valve0")];
+    String valve1_pos = doc[String("valve1")];
+    String valve2_pos = doc[String("valve2")];
+    String valve3_pos = doc[String("valve3")];
+    String valve4_pos = doc[String("valve4")];
+    String valve5_pos = doc[String("valve5")];
+    String valve6_pos = doc[String("valve6")];
+    String valve7_pos = doc[String("valve7")];
+    String valve8_pos = doc[String("valve8")];
+    String valve9_pos = doc[String("valve9")];
+    String valve10_pos = doc[String("valve10")];
+    String valve11_pos = doc[String("valve11")];
+
+    if(var == "VALVE0_POS")
+      return (valve0_pos);
+    if(var == "VALVE1_POS")
+      return (valve1_pos);
+    if(var == "VALVE2_POS")
+      return (valve2_pos);
+    if(var == "VALVE3_POS")
+      return (valve3_pos);
+    if(var == "VALVE4_POS")
+      return (valve4_pos);
+    if(var == "VALVE5_POS")
+      return (valve5_pos);
+    if(var == "VALVE6_POS")
+      return (valve6_pos);
+    if(var == "VALVE7_POS")
+      return (valve7_pos);
+    if(var == "VALVE8_POS")
+      return (valve8_pos);
+    if(var == "VALVE9_POS")
+      return (valve9_pos);
+    if(var == "VALVE10_POS")
+      return (valve10_pos);
+    if(var == "VALVE11_POS")
+      return (valve11_pos);
   }
 
-  if(var == "VALVE0_POS")
-    return (valve0_pos);
-  if(var == "VALVE1_POS")
-    return (valve1_pos);
-  if(var == "VALVE2_POS")
-    return (valve2_pos);
-  if(var == "VALVE3_POS")
-    return (valve3_pos);
-  if(var == "VALVE4_POS")
-    return (valve4_pos);
-  if(var == "VALVE5_POS")
-      return (valve5_pos);
-  if(var == "VALVE6_POS")
-    return (valve6_pos);
-  if(var == "VALVE7_POS")
-    return (valve7_pos);
-  if(var == "VALVE8_POS")
-    return (valve8_pos);
-  if(var == "VALVE9_POS")
-      return (valve9_pos);
-  if(var == "VALVE10_POS")
-    return (valve10_pos);
-  if(var == "VALVE11_POS")
-    return (valve11_pos);
+  else {
+    status = "<b><font color=\"red\">Valve status file not found. Create a file with button below.</font></b>";
+    if (var == "STATUS_VALVE_POSITION_FILE")
+      return F(status);
+  }
 
   return String();
 }
@@ -156,12 +155,12 @@ void Taskwebcode(void *pvParameters)
     request->send(LittleFS, "/js/ui.js", "text/javascript");
   });
 
-    //Not found handling
+  //Not found handling
   server.onNotFound([](AsyncWebServerRequest *request){
     request->send(404, "text/plain", "The content you are looking for was not found.");
   });
 
-  //Valve control web pages processing
+  //Settings web pages processing
   server.on("/settings", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(LittleFS, "/html/settings.html", "text/html");
   });
@@ -302,6 +301,7 @@ void Taskwebcode(void *pvParameters)
     move_valve(output);
   });
 
+  //POST on button create config file - name must match with action of the form submit
   server.on("/create_config_file", HTTP_POST, [](AsyncWebServerRequest *request) {
     //request->send(LittleFS, "/html/valvecontrol.html", "text/html");
     valve_status_file_create();
