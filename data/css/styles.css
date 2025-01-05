@@ -73,7 +73,6 @@ The content `<div>` is where all your content goes.
 }
 
 
-
 /*
 The `#menu` `<div>` is the parent `<div>` that contains the `.pure-menu` that
 appears on the left side of the page.
@@ -102,8 +101,8 @@ appears on the left side of the page.
     /*
     Remove all background/borders, since we are applying them to #menu.
     */
-     #menu .pure-menu,
-     #menu .pure-menu ul {
+    #menu .pure-menu,
+    #menu .pure-menu ul {
         border: none;
         background: transparent;
     }

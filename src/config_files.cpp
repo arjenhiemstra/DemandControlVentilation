@@ -43,6 +43,26 @@ bool check_valve_position_file_exists(const char* path) {
     }
 }
 
+String read_config_file(const char* path) {
+
+    // Functions read config file from file with file path as input and return the contents of the file as a string. 
+    // Assumes presents of fule was checked.
+
+    File file = LittleFS.open(path, "r");
+    String valve_positions;
+    int i;
+
+    while(file.available()) {
+        valve_positions = file.readString();
+    }
+    file.close();
+
+    return valve_positions;
+
+}
+
+void write_new_valve_positions_to_file(void) { }
+
 bool verify_valve_position_file_contents(void) {
 
     int i;
@@ -87,27 +107,3 @@ bool verify_valve_position_file_contents(void) {
     return 0;
 }
 
-String read_config_file(const char* path) {
-
-    // Functions read config file from file with file path as input and return the contents of the file as a string. 
-    // Assumes presents of fule was checked.
-
-    File file = LittleFS.open(path, "r");
-    String valve_positions;
-    int i;
-
-    while(file.available()) {
-        valve_positions = file.readString();
-    }
-    file.close();
-
-    return valve_positions;
-
-}
-
-void write_new_valve_positions_to_file(void) {
-
-
-
-
-}

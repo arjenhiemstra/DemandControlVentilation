@@ -71,7 +71,7 @@ JsonDocument doc;
 
 void startTaskwebcode(void) {
 
-    xTaskCreatePinnedToCore(Taskwebcode, "Task_web", 10000, NULL, 1, &Task_web, 0);
+    xTaskCreatePinnedToCore(Taskwebcode, "Task_web", 10000, NULL, 1, &Task_web, 1);
 }
 
 String processor(const String& var) {
@@ -184,7 +184,12 @@ void Taskwebcode(void *pvParameters)
         }
         if (p->name() == VALVE0_DIRECTION) {
           valve0_direction = p->value().c_str();
-          valve_control_data["valve0_data"][2] = valve0_direction;
+          if (valve0_direction == "Forward") {
+            valve_control_data["valve0_data"][2] = 0;
+          }
+          else {
+            valve_control_data["valve0_data"][2] = 1;
+          }
         }
         if (p->name() == VALVE1_POSITION_MOVE) {
           valve1_position_move = p->value().c_str();
@@ -193,7 +198,12 @@ void Taskwebcode(void *pvParameters)
         }
         if (p->name() == VALVE1_DIRECTION) {
           valve1_direction = p->value().c_str();
-          valve_control_data["valve1_data"][2] = valve1_direction;
+          if (valve1_direction == "Forward") {
+            valve_control_data["valve1_data"][2] = 0;
+          }
+          else {
+            valve_control_data["valve1_data"][2] = 1;
+          }
         }
         if (p->name() == VALVE2_POSITION_MOVE) {
           valve2_position_move = p->value().c_str();
@@ -202,7 +212,12 @@ void Taskwebcode(void *pvParameters)
         }
         if (p->name() == VALVE2_DIRECTION) {
           valve2_direction = p->value().c_str();
-          valve_control_data["valve2_data"][2] = valve2_direction;
+          if (valve2_direction == "Forward") {
+            valve_control_data["valve2_data"][2] = 0;
+          }
+          else {
+            valve_control_data["valve2_data"][2] = 1;
+          }
         }
         if (p->name() == VALVE3_POSITION_MOVE) {
           valve3_position_move = p->value().c_str();
@@ -211,7 +226,12 @@ void Taskwebcode(void *pvParameters)
         }
         if (p->name() == VALVE3_DIRECTION) {
           valve3_direction = p->value().c_str();
-          valve_control_data["valve3_data"][2] = valve3_direction;
+          if (valve3_direction == "Forward") {
+            valve_control_data["valve3_data"][2] = 0;
+          }
+          else {
+            valve_control_data["valve3_data"][2] = 1;
+          }
         }
         if (p->name() == VALVE4_POSITION_MOVE) {
           valve4_position_move = p->value().c_str();
@@ -220,7 +240,12 @@ void Taskwebcode(void *pvParameters)
         }
         if (p->name() == VALVE4_DIRECTION) {
           valve4_direction = p->value().c_str();
-          valve_control_data["valve4_data"][2] = valve4_direction;
+          if (valve4_direction == "Forward") {
+            valve_control_data["valve4_data"][2] = 0;
+          }
+          else {
+            valve_control_data["valve4_data"][2] = 1;
+          }
         }
         if (p->name() == VALVE5_POSITION_MOVE) {
           valve5_position_move = p->value().c_str();
@@ -229,7 +254,12 @@ void Taskwebcode(void *pvParameters)
         }
         if (p->name() == VALVE5_DIRECTION) {
           valve5_direction = p->value().c_str();
-          valve_control_data["valve5_data"][2] = valve5_direction;
+          if (valve5_direction == "Forward") {
+            valve_control_data["valve5_data"][2] = 0;
+          }
+          else {
+            valve_control_data["valve5_data"][2] = 1;
+          }
         }
         if (p->name() == VALVE6_POSITION_MOVE) {
           valve6_position_move = p->value().c_str();
@@ -238,7 +268,12 @@ void Taskwebcode(void *pvParameters)
         }
         if (p->name() == VALVE6_DIRECTION) {
           valve6_direction = p->value().c_str();
-          valve_control_data["valve6_data"][2] = valve6_direction;
+          if (valve6_direction == "Forward") {
+            valve_control_data["valve6_data"][2] = 0;
+          }
+          else {
+            valve_control_data["valve6_data"][2] = 1;
+          }
         }
         if (p->name() == VALVE7_POSITION_MOVE) {
           valve7_position_move = p->value().c_str();
@@ -247,7 +282,12 @@ void Taskwebcode(void *pvParameters)
         }
         if (p->name() == VALVE7_DIRECTION) {
           valve7_direction = p->value().c_str();
-          valve_control_data["valve7_data"][2] = valve7_direction;
+          if (valve7_direction == "Forward") {
+            valve_control_data["valve7_data"][2] = 0;
+          }
+          else {
+            valve_control_data["valve7_data"][2] = 1;
+          }
         }
         if (p->name() == VALVE8_POSITION_MOVE) {
           valve8_position_move = p->value().c_str();
@@ -256,7 +296,12 @@ void Taskwebcode(void *pvParameters)
         }
         if (p->name() == VALVE8_DIRECTION) {
           valve8_direction = p->value().c_str();
-          valve_control_data["valve8_data"][2] = valve8_direction;
+          if (valve8_direction == "Forward") {
+            valve_control_data["valve8_data"][2] = 0;
+          }
+          else {
+            valve_control_data["valve8_data"][2] = 1;
+          }
         }
         if (p->name() == VALVE9_POSITION_MOVE) {
           valve9_position_move = p->value().c_str();
@@ -265,7 +310,12 @@ void Taskwebcode(void *pvParameters)
         }
         if (p->name() == VALVE9_DIRECTION) {
           valve9_direction = p->value().c_str();
-          valve_control_data["valve9_data"][2] = valve9_direction;
+          if (valve9_direction == "Forward") {
+            valve_control_data["valve9_data"][2] = 0;
+          }
+          else {
+            valve_control_data["valve9_data"][2] = 1;
+          }
         }
         if (p->name() == VALVE10_POSITION_MOVE) {
           valve10_position_move = p->value().c_str();
@@ -274,7 +324,12 @@ void Taskwebcode(void *pvParameters)
         }
         if (p->name() == VALVE10_DIRECTION) {
           valve10_direction = p->value().c_str();
-          valve_control_data["valve10_data"][2] = valve10_direction;
+          if (valve10_direction == "Forward") {
+            valve_control_data["valve10_data"][2] = 0;
+          }
+          else {
+            valve_control_data["valve10_data"][2] = 1;
+          }
         }
         if (p->name() == VALVE11_POSITION_MOVE) {
           valve11_position_move = p->value().c_str();
@@ -283,15 +338,30 @@ void Taskwebcode(void *pvParameters)
         }
         if (p->name() == VALVE11_DIRECTION) {
           valve11_direction = p->value().c_str();
-          valve_control_data["valve11_data"][2] = valve11_direction;
+          if (valve11_direction == "Forward") {
+            valve_control_data["valve11_data"][2] = 0;
+          }
+          else {
+            valve_control_data["valve11_data"][2] = 1;
+          }
         }
         if (p->name() == STORE_VALVE_POSITION_IN_FILE) {
           store_valve_position_in_file = p->value().c_str();
-          valve_control_data["checks"][0] = store_valve_position_in_file;
+          if (store_valve_position_in_file == "true") {
+            valve_control_data["checks"][0] = 1;
+          }
+          else {
+            valve_control_data["checks"][0] = 0;
+          }
         }
         if (p->name() == CHECK_VALVE_POSITION) {
           check_valve_position = p->value().c_str();
-          valve_control_data["checks"][1] = check_valve_position;
+          if (check_valve_position == "true") {
+            valve_control_data["checks"][1] = 1;
+          }
+          else {
+            valve_control_data["checks"][1] = 0;
+          }
         }
       }
     }

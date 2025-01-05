@@ -1,33 +1,22 @@
 #include "valvecontrol.h"
 
-//Data pins for 74HC595
-int clockPin1 = 11; // IO11 on ESP32-S3 and D13 on ESP32, connected to SH_CP (11) of 74HC595
-int latchPin1 = 12; // IO12 on ESP32-S3 and D12 on ESP32, connected to ST_CP (12) of 74HC595
-int dataPin1 = 13;  // IO13 on ESP32-S3 and D14 on ESP32, connected to DS (14) of 74HC595
-
-//Data pins for 74HC595
-int clockPin2 = 14; // IO14 on ESP32-S3 and D26 on ESP32, connected to SH_CP (11) of 74HC595
-int latchPin2 = 15; // IO15 on ESP32-S3 and D25 on ESP32, connected to ST_CP (12) of 74HC595
-int dataPin2 = 16;  // IO16 on ESP32-S3 and D27 on ESP32, connected to DS (14) of 74HC595
-
-
 void move_valve(char* output) {
 
-    //this function calls all other functions to control the valves. These are the steps:
-    //  1. receive input data:
-    //      a. JSON file with valve control data which includes valve number, requested valve move and direction
-    //      b. enable valve position check, yes or no
-    //  2.  Iterate through the JSON file. Valve number decides which dataPin, clockpin and latchPin to use
-    //      if 
-    //        position check is required:
-    //              a. Open position file
-    //              b. Calculate new valve move positions (either as requested or max/min)
-    //              c. Call valve move function to make actual move
-    //              d. Write new positions to file
-    //      else
-    //        call valve movement function
- 
-    //Still required, already happens at init. Try if can be removed if outputs work
+    //Data pins for 74HC595
+    int clockPin1 = 11; // IO11 on ESP32-S3 and D13 on ESP32, connected to SH_CP (11) of 74HC595
+    int latchPin1 = 12; // IO12 on ESP32-S3 and D12 on ESP32, connected to ST_CP (12) of 74HC595
+    int dataPin1 = 13;  // IO13 on ESP32-S3 and D14 on ESP32, connected to DS (14) of 74HC595
+
+    //Data pins for 74HC595
+    int clockPin2 = 14; // IO14 on ESP32-S3 and D26 on ESP32, connected to SH_CP (11) of 74HC595
+    int latchPin2 = 15; // IO15 on ESP32-S3 and D25 on ESP32, connected to ST_CP (12) of 74HC595
+    int dataPin2 = 16;  // IO16 on ESP32-S3 and D27 on ESP32, connected to DS (14) of 74HC595
+
+    int clockPin;
+    int latchPin;
+    int dataPin;
+
+    //Still required? already happens at init. Try if can be removed if outputs work
     pinMode(latchPin1, OUTPUT);
     pinMode(clockPin1, OUTPUT);
     pinMode(dataPin1, OUTPUT);
@@ -36,91 +25,91 @@ void move_valve(char* output) {
     pinMode(clockPin2, OUTPUT);
     pinMode(dataPin2, OUTPUT);
 
-    int clockPin;
-    int latchPin;
-    int dataPin;
-
-    int i;
-    bool valve_position_file_exists;
-    bool valve_position_file_contents_valid;
-
-    Serial.print("\n\n");
-    Serial.print(output);
-    
     JsonDocument doc;
     deserializeJson(doc, output);
 
+    const char* path = "/valvepositions.json";
+    bool status_file_present;
     int valve_number;
-    int move_positions;
-    String direction;
-    String temp;
-      
-    //Serial.print("\n\n");
-    //Serial.print(valve0_data[2]);
-    
-    //String valve0_pos = doc[String("valve0")];
+    int position_change;
+    int direction;
+    int store_valve_position;
+    int check_valve_position;
+    String json;
 
-    //Serial.print(input["valve"+String(i)+"_data"][String(0)]);
-    //Serial.print("\n");
+    store_valve_position = doc["checks"][0];
+    check_valve_position = doc["checks"][1];
 
-    for(i=0;i<12;i++) {
+    // Read valve status file
+    status_file_present = check_valve_position_file_exists(path);
 
-        temp = "valve"+String(i)+"_data";
-        valve_number = doc[temp][0];
+    /*
+    if (status_file_present == 1) {
+
+        json = read_config_file(path);
+        deserializeJson(doc, json);
+  
+        String valve0_pos = doc[String("valve0")];
+        String valve1_pos = doc[String("valve1")];
+        String valve2_pos = doc[String("valve2")];
+        String valve3_pos = doc[String("valve3")];
+        String valve4_pos = doc[String("valve4")];
+        String valve5_pos = doc[String("valve5")];
+        String valve6_pos = doc[String("valve6")];
+        String valve7_pos = doc[String("valve7")];
+        String valve8_pos = doc[String("valve8")];
+        String valve9_pos = doc[String("valve9")];
+        String valve10_pos = doc[String("valve10")];
+        String valve11_pos = doc[String("valve11")];
+    }
+    */
+
+    // Debug
+    Serial.print("\n");
+    Serial.print(output);
+    Serial.print("\n\n");
+    Serial.print("Store new valve Position: " + String(store_valve_position) + ", Check valve position: " + String(check_valve_position));
+    Serial.print("\n");
+
+    for(int i=0;i<12;i++) {
+
+        valve_number = doc["valve"+String(i)+"_data"][0];
+        position_change = doc["valve"+String(i)+"_data"][1];
+        direction = doc["valve"+String(i)+"_data"][2];
 
         Serial.print("\n");
-        Serial.print(temp + ": ");
-        Serial.print(valve_number);
-        
-        //move_positions = doc[temp][1];
-        //direction = doc[temp][2];
+        Serial.print("valve_number: " + String(valve_number) + ", position_change: " + String(position_change) + ", direction: " + direction);
 
-
-        if (doc["valve"+String(i)+"_data"][0] < 6) {
+        if (valve_number < 6) {
             latchPin = latchPin1;
             clockPin = clockPin1;
             dataPin = dataPin1;
-            //Serial.print(latchPin + clockPin + dataPin + "valvenumber: " + input["valve"+String(i)+"_data"][0] + "postions to move: " + input["valve"+String(i)+"_data"][1] + "direction: " + input["valve"+String(i)+"_data"][0]);
         }
         else {
             latchPin = latchPin2;
             clockPin = clockPin2;
             dataPin = dataPin2;
         }
-    }
-
-    /*
-    valve_position_file_exists = check_valve_position_file_exists();
-    valve_position_file_contents_valid = verify_valve_position_file_contents();
-
-    // Check position if operating limits check is enabled
-    if (input["checks"][1] == true) {
-        //Check was enabled so need to check if file exists and if contents is correct. If not abort moving valves
-        if (valve_position_file_exists == false || valve_position_file_contents_valid == false ) {
-            Serial.print("Valve position check was enabled but valve position file does not exist or is not valid. Moving the valves is aborted");
+      
+        if (check_valve_position == 1) {
+            //put check position code here
         }
         else {
-            //Valve position file is ok.
-                
-            //Code to calculate how much the valves can move
-                
-            //Move valves if movement is more than 0
-            //if(input["valve"+String(i)+"_data"][1] > 0) {
-                //valvecontrol(input["valve"+String(i)+"_data"][2], input["valve"+String(i)+"_data"][1], input["valve"+String(i)+"_data"][0] , latchPin, clockPin, dataPin);
-            //}
 
-            if (input["checks"][0] == true) {
-                //Write new positions to file
-                //write_new_valve_positions_to_file(char* output);
-            }
+            //no check required so just proceed with calling move valves function if movement is > 0
+            valvecontrol(direction, position_change, valve_number, dataPin, clockPin, latchPin);
         }
+
+        if (store_valve_position == 1) {
+            //code to write new positions to file
+        }
+        else {
+            //do nothing
+            return;
+        }
+
+
     }
-    else {
-        //Check was not enables so valves can be moved. Only call function to move if actual move requested is >0. Registration of new valve position is also not needed
-        if(input["valve"+String(i)+"_data"][1] > 0) {
-            valvecontrol(input["valve"+String(i)+"_data"][2], input["valve"+String(i)+"_data"][1], input["valve"+String(i)+"_data"][0] , latchPin, clockPin, dataPin);
-        }
-    }*/
 }
 
 void valvecontrol(int direction, int position_change, int valve_number, int dataPin, int clockPin, int latchPin ) {
@@ -143,7 +132,7 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
     //switching pattern for steppermotor in 8 bits.
     int pattern[4] = { B00000101, B00001001, B00001010, B00000110 };
 
-    //Valve 0 - 5 has the same output as valves 6-11 so new variable 'valve' required to select output
+    //Valve 0 - 5 has the same output as valves 6-11
     if (valve_number >= 6) {
         valve_number = valve_number - 6;
     }
@@ -209,7 +198,8 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
           shiftOut(dataPin, clockPin, MSBFIRST, output[0][k]);
           //take the latch pin high so the LEDs will light up:
           digitalWrite(latchPin, HIGH);
-          delay(10); // This delay decides the speed of turning in ms
+          //delay(10); // This delay decides the speed of turning in ms
+          vTaskDelay(10);      
         }
       }
     //after running all outputs should be off
@@ -227,7 +217,8 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
           shiftOut(dataPin, clockPin, MSBFIRST, output[1][k]);
           shiftOut(dataPin, clockPin, MSBFIRST, output[0][k]);
           digitalWrite(latchPin, HIGH);
-          delay(10);
+          //delay(10);
+          vTaskDelay(10);
         }
       }
     all_outputs_off(dataPin, clockPin, latchPin);

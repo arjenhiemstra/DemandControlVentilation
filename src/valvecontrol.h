@@ -3,6 +3,7 @@
 
 #include <LittleFS.h>
 #include <ArduinoJson.h>
+#include <esp_task_wdt.h>
 
 #include "config_files.h"
 
