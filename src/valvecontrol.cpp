@@ -95,7 +95,6 @@ void move_valve(char* output) {
             //put check position code here
         }
         else {
-
             //no check required so just proceed with calling move valves function if movement is > 0
             valvecontrol(direction, position_change, valve_number, dataPin, clockPin, latchPin);
         }
@@ -103,10 +102,10 @@ void move_valve(char* output) {
         if (store_valve_position == 1) {
             //code to write new positions to file
         }
-        else {
+        //else {
             //do nothing
-            return;
-        }
+            //return;
+        //}
 
 
     }

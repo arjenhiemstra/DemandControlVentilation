@@ -2,6 +2,7 @@
 #include "config_files.h"
 
 TaskHandle_t Task_web;
+//TaskHandle_t Task1;
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
@@ -71,7 +72,7 @@ JsonDocument doc;
 
 void startTaskwebcode(void) {
 
-    xTaskCreatePinnedToCore(Taskwebcode, "Task_web", 10000, NULL, 1, &Task_web, 1);
+    xTaskCreatePinnedToCore(Taskwebcode, "Task_web", 10000, NULL, 1, &Task_web, CONFIG_ARDUINO_RUNNING_CORE);
 }
 
 String processor(const String& var) {
@@ -142,7 +143,7 @@ String processor(const String& var) {
 }
 
 void Taskwebcode(void *pvParameters)
-{
+{ 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(LittleFS, "/html//index.html", "text/html");
   });
@@ -368,7 +369,8 @@ void Taskwebcode(void *pvParameters)
     //request->send(LittleFS, "/html/valvecontrol.html", "text/html");
     request->send(LittleFS, "/html/valvecontrol.html", String(), false, processor);
     serializeJson(valve_control_data, output);
-    move_valve(output);
+    //move_valve(output);
+    xTaskNotifyGive(xTaskGetHandle("Task1"));
   });
 
   //POST on button create config file - name must match with action of the form submit
