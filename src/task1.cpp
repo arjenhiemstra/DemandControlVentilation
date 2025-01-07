@@ -11,10 +11,10 @@ void startTask1code(void) {
 
 void Task1code(void * pvParameters)
 {
-  ulTaskGenericNotifyTake(0, pdTRUE, portMAX_DELAY);
+  ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
   Serial.print("\n\nTask1 running on core: ");
   Serial.print(xPortGetCoreID());
-    //vTaskDelay(500);
+  //vTaskDelay(500);
   
   
   vTaskDelete(NULL);
