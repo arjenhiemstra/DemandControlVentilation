@@ -14,8 +14,6 @@
 const char* ssid = "DIRK3"; //WIFI SSID
 const char* password = "095679706460482465742852"; //WIFI password
 
-//TaskHandle_t Task1;
-
 void setup() {
 
   Serial.begin(115200);
@@ -30,14 +28,10 @@ void setup() {
     return;
   }
 
-  vTaskStartScheduler();
-
   setup_wifi();
   startTask1code();
   //startTask2code();
   startTaskwebcode();
-  startTaskvalvecontrol();
-
 }
 
 void loop() { }
