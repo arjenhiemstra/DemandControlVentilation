@@ -370,7 +370,7 @@ void Taskwebcode(void *pvParameters)
     request->send(LittleFS, "/html/valvecontrol.html", String(), false, processor);
     serializeJson(valve_control_data, output);
     //move_valve(output);
-    xTaskNotifyGive(xTaskGetHandle("Task1"));
+    xTaskNotifyGive(xTaskGetHandle("task_valvectrl"));
   });
 
   //POST on button create config file - name must match with action of the form submit
