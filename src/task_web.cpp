@@ -1,7 +1,7 @@
 #include "task_web.h"
 #include "config_files.h"
 
-TaskHandle_t Task_web;
+TaskHandle_t h_Task_web;
 //TaskHandle_t Task1;
 
 // Create AsyncWebServer object on port 80
@@ -72,7 +72,7 @@ JsonDocument doc;
 
 void startTaskwebcode(void) {
 
-    xTaskCreatePinnedToCore(Taskwebcode, "Task_web", 10000, NULL, 1, &Task_web, CONFIG_ARDUINO_RUNNING_CORE);
+    xTaskCreatePinnedToCore(Taskwebcode, "Task_web", 10000, NULL, 1, &h_Task_web, CONFIG_ARDUINO_RUNNING_CORE);
 }
 
 String processor(const String& var) {

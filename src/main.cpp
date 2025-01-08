@@ -30,10 +30,13 @@ void setup() {
     return;
   }
 
+  vTaskStartScheduler();
+
   setup_wifi();
   startTask1code();
   //startTask2code();
   startTaskwebcode();
+  startTaskvalvecontrol();
 
 }
 
