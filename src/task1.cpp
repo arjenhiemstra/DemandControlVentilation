@@ -10,13 +10,19 @@ void startTask1code(void) {
 
 void Task1code(void * pvParameters)
 {
+<<<<<<< HEAD
   ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
   Serial.print("\n\nTask1 running on core: ");
   Serial.print(xPortGetCoreID());
   //vTaskDelay(500);
+=======
+  for(;;) {
+    ulTaskGenericNotifyTake(0, pdTRUE, portMAX_DELAY);
+    Serial.print("\n\nTask1 running on core: ");
+    Serial.print(xPortGetCoreID());
+  }
+>>>>>>> 50174d6 (changed task1)
   
-  
-  vTaskDelete(NULL);
 }
 
 
