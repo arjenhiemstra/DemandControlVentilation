@@ -29,9 +29,10 @@ void setup() {
   }
 
   setup_wifi();
-  startTask1code();
+  //startTask1code();
   //startTask2code();
   startTaskwebcode();
+  start_task_valve_control();
 }
 
 void loop() { }
