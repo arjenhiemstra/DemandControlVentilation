@@ -7,6 +7,7 @@
 #include "main.h"
 #include "task1.h"
 #include "task2.h"
+#include "task_valvecontrol.h"
 #include "task_web.h"
 #include "valvecontrol.h"
 
@@ -32,10 +33,13 @@ void setup() {
   //startTask1code();
   //startTask2code();
   startTaskwebcode();
-  start_task_valve_control();
+  start_task_valvecontrol();
+  //start_task_valvecontrol();
 }
 
+
 void loop() { }
+
 
 void setup_wifi() {
   WiFi.mode(WIFI_STA);
