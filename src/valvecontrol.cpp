@@ -1,6 +1,10 @@
 #include "valvecontrol.h"
 
-void move_valve(char* output) {
+//Global varaible defined in task_web
+extern JsonDocument valve_control_data;
+
+//void move_valve(char* output) {
+void move_valve(void) {
 
     //Data pins for 74HC595
     int clockPin1 = 11; // IO11 on ESP32-S3 and D13 on ESP32, connected to SH_CP (11) of 74HC595
@@ -25,25 +29,25 @@ void move_valve(char* output) {
     pinMode(clockPin2, OUTPUT);
     pinMode(dataPin2, OUTPUT);
 
-    JsonDocument doc;
-    deserializeJson(doc, output);
-
     const char* path = "/valvepositions.json";
     bool status_file_present;
     int valve_number;
     int position_change;
+    int new_position_change;
     int direction;
     int store_valve_position;
     int check_valve_position;
-    String json;
+    int valve_pos;
 
-    store_valve_position = doc["checks"][0];
-    check_valve_position = doc["checks"][1];
+    String json;
+    JsonDocument doc;
+
+    store_valve_position = valve_control_data["checks"][0];
+    check_valve_position = valve_control_data["checks"][1];
 
     // Read valve status file
     status_file_present = check_valve_position_file_exists(path);
 
-    /*
     if (status_file_present == 1) {
 
         json = read_config_file(path);
@@ -62,20 +66,18 @@ void move_valve(char* output) {
         String valve10_pos = doc[String("valve10")];
         String valve11_pos = doc[String("valve11")];
     }
-    */
 
     // Debug
-    Serial.print("\n");
-    Serial.print(output);
     Serial.print("\n\n");
     Serial.print("Store new valve Position: " + String(store_valve_position) + ", Check valve position: " + String(check_valve_position));
     Serial.print("\n");
 
     for(int i=0;i<12;i++) {
 
-        valve_number = doc["valve"+String(i)+"_data"][0];
-        position_change = doc["valve"+String(i)+"_data"][1];
-        direction = doc["valve"+String(i)+"_data"][2];
+        valve_number = valve_control_data["valve"+String(i)+"_data"][0];
+        position_change = valve_control_data["valve"+String(i)+"_data"][1];
+        direction = valve_control_data["valve"+String(i)+"_data"][2];
+        valve_pos = doc["valve"+String(i)];
 
         Serial.print("\n");
         Serial.print("valve_number: " + String(valve_number) + ", position_change: " + String(position_change) + ", direction: " + direction);
@@ -93,6 +95,18 @@ void move_valve(char* output) {
       
         if (check_valve_position == 1) {
             //put check position code here
+            if(direction == 0 && (position_change + valve_pos)>24) {
+                new_position_change = 24 - valve_pos;
+                Serial.print("\n");
+                Serial.print ("Request move is: " + String(position_change) + ". Current_position is: " + String(valve_pos) + ". Valve will move: " + String(new_position_change));
+                valvecontrol(direction, new_position_change, valve_number, dataPin, clockPin, latchPin);
+            }
+            else {
+                new_position_change = position_change;
+                Serial.print("\n");
+                Serial.print ("Request move is: " + String(position_change) + ". Current_position is: " + String(valve_pos) + ". Valve will move: " + String(new_position_change));
+                valvecontrol(direction, new_position_change, valve_number, dataPin, clockPin, latchPin);
+            }
         }
         else {
             //no check required so just proceed with calling move valves function if movement is > 0
@@ -107,8 +121,8 @@ void move_valve(char* output) {
             //return;
         //}
 
-
     }
+    Serial.print("\n");
 }
 
 void valvecontrol(int direction, int position_change, int valve_number, int dataPin, int clockPin, int latchPin ) {

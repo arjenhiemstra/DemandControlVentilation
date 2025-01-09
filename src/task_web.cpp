@@ -2,7 +2,6 @@
 #include "config_files.h"
 
 TaskHandle_t h_Task_web;
-//TaskHandle_t Task1;
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
@@ -35,8 +34,6 @@ const char* STORE_VALVE_POSITION_IN_FILE = "store_valve_position_in_file";
 const char* CHECK_VALVE_POSITION = "check_valve_position";
 const char* STATUS_VALVE_POSITION_FILE;
 
-char output[1024];
-
 String valve0_position_move;
 String valve0_direction;
 String valve1_position_move;
@@ -64,11 +61,8 @@ String valve11_direction;
 String check_valve_position;            // True when check is required if valve moves within operating range
 String store_valve_position_in_file;    // True to enable storing of new position in valve position file
 
-int i;
-int params;
-
+//Global variable
 JsonDocument valve_control_data;
-JsonDocument doc;
 
 void startTaskwebcode(void) {
 
@@ -80,6 +74,7 @@ String processor(const String& var) {
   const char* path = "/valvepositions.json";
   const char* status;
   bool status_file_present;
+  
   String json;
   JsonDocument doc;
   
@@ -142,8 +137,8 @@ String processor(const String& var) {
   return String();
 }
 
-void Taskwebcode(void *pvParameters)
-{ 
+void Taskwebcode(void *pvParameters) { 
+ 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(LittleFS, "/html//index.html", "text/html");
   });
@@ -174,8 +169,8 @@ void Taskwebcode(void *pvParameters)
 
   //Response for POST action in webform valvecontrol manual move valves
   server.on("/", HTTP_POST, [](AsyncWebServerRequest *request) {
-    params = request->params();
-    for(i=0;i<params;i++){
+    int params = request->params();
+    for(int i=0;i<params;i++){
       AsyncWebParameter* p = request->getParam(i);
       if(p->isPost()){
         if (p->name() == VALVE0_POSITION_MOVE) {
@@ -368,7 +363,7 @@ void Taskwebcode(void *pvParameters)
     }
     //request->send(LittleFS, "/html/valvecontrol.html", "text/html");
     request->send(LittleFS, "/html/valvecontrol.html", String(), false, processor);
-    serializeJson(valve_control_data, output);
+    //serializeJson(valve_control_data, output);
     //move_valve(output);
     xTaskNotifyGive(xTaskGetHandle("task_valvectrl"));
   });

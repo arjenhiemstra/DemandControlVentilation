@@ -5,6 +5,8 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
+#include "valvecontrol.h"
+
 void start_task_valvecontrol(void);
 void task_valvecontrol_code(void *pvParameters);
 

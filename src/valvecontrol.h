@@ -8,7 +8,8 @@
 #include "config_files.h"
 
 //Function definitions
-void move_valve(char*);
+//void move_valve(char*);
+void move_valve(void);
 void valvecontrol(int, int, int, int, int, int);
 void all_outputs_off(int, int, int);
 
