@@ -32,8 +32,9 @@ void move_valve(void) {
     const char* path = "/valvepositions.json";
     bool status_file_present;
     int valve_number;
-    int position_change;
-    int new_position_change;
+    int valve_position_change;
+    int new_valve_position_change;
+    int new_valve_position;
     int direction;
     int store_valve_position;
     int check_valve_position;
@@ -75,13 +76,14 @@ void move_valve(void) {
     for(int i=0;i<12;i++) {
 
         valve_number = valve_control_data["valve"+String(i)+"_data"][0];
-        position_change = valve_control_data["valve"+String(i)+"_data"][1];
+        valve_position_change = valve_control_data["valve"+String(i)+"_data"][1];
         direction = valve_control_data["valve"+String(i)+"_data"][2];
         valve_pos = doc["valve"+String(i)];
 
         Serial.print("\n");
-        Serial.print("valve_number: " + String(valve_number) + ", position_change: " + String(position_change) + ", direction: " + direction);
+        Serial.print("valve_number: " + String(valve_number) + ", position_change: " + String(valve_position_change) + ", direction: " + direction);
 
+        // Assign the correct IO based on valve number
         if (valve_number < 6) {
             latchPin = latchPin1;
             clockPin = clockPin1;
@@ -95,34 +97,60 @@ void move_valve(void) {
       
         if (check_valve_position == 1) {
             //put check position code here
-            if(direction == 0 && (position_change + valve_pos)>24) {
-                new_position_change = 24 - valve_pos;
+            if(direction == 0 && (valve_position_change + valve_pos)>24) {
+                new_valve_position_change = 24 - valve_pos;
                 Serial.print("\n");
-                Serial.print ("Request move is: " + String(position_change) + ". Current_position is: " + String(valve_pos) + ". Valve will move: " + String(new_position_change));
-                valvecontrol(direction, new_position_change, valve_number, dataPin, clockPin, latchPin);
+                Serial.print ("Request move is: " + String(valve_position_change) + ". Current_position is: " + String(valve_pos) + ". Valve will move: " + String(new_valve_position_change));
+                valvecontrol(direction, new_valve_position_change, valve_number, dataPin, clockPin, latchPin);
+                new_valve_position = 24;
             }
             else {
-                new_position_change = position_change;
+                new_valve_position_change = valve_position_change;
                 Serial.print("\n");
-                Serial.print ("Request move is: " + String(position_change) + ". Current_position is: " + String(valve_pos) + ". Valve will move: " + String(new_position_change));
-                valvecontrol(direction, new_position_change, valve_number, dataPin, clockPin, latchPin);
+                Serial.print ("Request move is: " + String(valve_position_change) + ". Current_position is: " + String(valve_pos) + ". Valve will move: " + String(new_valve_position_change));
+                valvecontrol(direction, new_valve_position_change, valve_number, dataPin, clockPin, latchPin);
+                new_valve_position = valve_pos + new_valve_position_change;
+            }
+            if (direction == 1 && (valve_pos - valve_position_change) < 0) {
+                new_valve_position_change = valve_pos;
+                Serial.print("\n");
+                Serial.print ("Request move is: " + String(valve_position_change) + ". Current_position is: " + String(valve_pos) + ". Valve will move: " + String(new_valve_position_change));
+                valvecontrol(direction, new_valve_position_change, valve_number, dataPin, clockPin, latchPin);
+                new_valve_position = 0;
+            }
+            else {
+                new_valve_position_change = valve_position_change;
+                Serial.print("\n");
+                Serial.print ("Request move is: " + String(valve_position_change) + ". Current_position is: " + String(valve_pos) + ". Valve will move: " + String(new_valve_position_change));
+                valvecontrol(direction, new_valve_position_change, valve_number, dataPin, clockPin, latchPin);
+                new_valve_position = valve_pos - new_valve_position_change;
             }
         }
         else {
             //no check required so just proceed with calling move valves function if movement is > 0
-            valvecontrol(direction, position_change, valve_number, dataPin, clockPin, latchPin);
+            valvecontrol(direction, valve_position_change, valve_number, dataPin, clockPin, latchPin);
         }
 
-        if (store_valve_position == 1) {
+        //Storing new valve positions only makes sense in combination with new calculated positions
+        if (store_valve_position == 1 && check_valve_position == 1) {
             //code to write new positions to file
+            doc["valve"+String(i)] = new_valve_position;
         }
-        //else {
-            //do nothing
-            //return;
-        //}
-
     }
-    Serial.print("\n");
+    Serial.print("\n\n");
+
+    //write doc to file
+    String new_valve_positions;
+    File file;
+
+    //Convert from JsonDocument to String
+    serializeJson(doc, new_valve_positions);
+
+    Serial.print(new_valve_positions);
+    Serial.print("\n\n");
+
+    write_new_valve_positions_to_file(path, new_valve_positions);
+
 }
 
 void valvecontrol(int direction, int position_change, int valve_number, int dataPin, int clockPin, int latchPin ) {
