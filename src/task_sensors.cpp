@@ -10,10 +10,11 @@ void start_task_sensors(void) {
 
 void task_sensors_code(void * pvParameters)
 {
-    Serial.print("\n\nSensors running on core: ");
-    Serial.print(xPortGetCoreID());
-
-    vTaskDelete(NULL);
+    for(;;) {
+        Serial.print("\n\nSensors running on core: ");
+        Serial.print(xPortGetCoreID());
+        vTaskDelay(5000);
+    }
   
 }
 
