@@ -382,6 +382,12 @@ void Taskwebcode(void *pvParameters) {
     request->send(LittleFS, "/html/valvecontrol.html", String(), false, processor);
   });
 
+  //Valve control web pages processing
+  server.on("/sensorconfig", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(LittleFS, "/html/sensor_config.html", "text/html");
+    //request->send(LittleFS, "/html/valvecontrol.html", String(), false, processor);
+  });
+
   // Start server
   server.begin();
   vTaskDelete(NULL);

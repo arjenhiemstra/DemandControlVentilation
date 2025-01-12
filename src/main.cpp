@@ -10,6 +10,7 @@
 #include "task_valvecontrol.h"
 #include "task_web.h"
 #include "valvecontrol.h"
+#include "task_sensors.h"
 
 //Variables
 const char* ssid = "DIRK3"; //WIFI SSID
@@ -34,6 +35,7 @@ void setup() {
   //startTask2code();
   startTaskwebcode();
   start_task_valvecontrol();
+  start_task_sensors();
   //start_task_valvecontrol();
 }
 
