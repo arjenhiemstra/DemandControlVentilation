@@ -48,8 +48,8 @@
                     <fieldset>
                         <div class="pure-g">
                             <div class="pure-u-1" class="pure-u-md-1-4">
-                                <label for="I2C1_sensor0_config">Sensor 0 type:</label>
-                                <select id="I2C1_sensor0_config" name="I2C1_sensor0_config" id="I2C1_sensor0_config" class="pure-input-1-2">
+                                <label for="I2C1_sensor0_type">Sensor 0 type:</label>
+                                <select id="I2C1_sensor0_type" name="I2C1_sensor0_type" id="I2C1_sensor0_type" class="pure-input-1-2">
                                     <option>None</option>
                                     <option>DHT20</option>
                                     <option>SCD40</option>
@@ -75,90 +75,20 @@
                             </div>
                             <div class="pure-u-1" class="pure-u-md-1-4"></div>
                                 <label for="I2C1_sensor0_valve">Sensor HEX address, (e.g. 0x45):</label>
-                                <input type="text" placeholder="HEX address" name="I2C1_sensor_1_address" id="I2C1_sensor_1_address" class="pure-input-1-2" />
+                                <input type="text" placeholder="HEX address" name="I2C1_sensor_1_address" id="I2C1_sensor_1_address" class="pure-u-23-24" />
                             </div>
                             <div class="pure-u-1" class="pure-u-md-1-4">    
                                 <label for="I2C1_sensor0_location_name">Sensor location name (e.g. bathroom):</label>
-                                <input type="text" placeholder="sensor0 location name " class="pure-input-1-2" name="sensor0_location_name" id="sennsor0_location_name" />
+                                <input type="text" placeholder="I2C1 sensor0 location name " name="sensor0_location_name" id="sensor0_location_name" class="pure-u-23-24"  />
                                 
-                                <label for="isBathroomRHsensor">Bathroom RH sensor:</label>
-                                <input type="hidden" name="isBathroomRHsensor" id="isBathroomRHsensor" value="false" />
-                                <input type="checkbox" name="isBathroomRHsensor" id="isBathroomRHsensor" value="true" />
+                                <label for="I2C1_sensor0_isBathroomRHsensor">Bathroom RH sensor:</label>
+                                <input type="hidden" name="I2C1_sensor0_isBathroomRHsensor" id="I2C1_sensor0_isBathroomRHsensor" value="false" class="pure-u-23-24" />
+                                <input type="checkbox" name="I2C1_sensor0_isBathroomRHsensor" id="I2C1_sensor0_isBathroomRHsensor" value="true" class="pure-u-23-24" />
                             </div>
                             <div class="pure-u-1" class="pure-u-md-1-4"></div>
-                                <label for="isFanCO2sensor">CO2 sensor at fan inlet:</label>
-                                <input type="hidden"   name="isFanCO2sensor" id="isFanCO2sensor" value="false" />
-                                <input type="checkbox" name="isFanCO2sensor" id="isFanCO2sensor" value="true" />
-                            </div>
-                            <div class="pure-u-1" class="pure-u-md-1-4">
-                                <label for="I2C1_sensor_1_config">Sensor 1 type:</label>
-                                <select id="I2C1_sensor_1_config" name="I2C1_sensor_1_config" id="I2C1_sensor_1_config" class="pure-input-1-2">
-                                    <option>None</option>
-                                    <option>DHT20</option>
-                                    <option>SCD40</option>
-                                    <option>SCD41</option>
-                                </select>
-                                <input type="text" placeholder="HEX address" name="I2C1_sensor_1_address" id="I2C1_sensor_1_address" class="pure-input-1-2" />
-                            </div>
-                            <div class="pure-u-1" class="pure-u-md-1-4">
-                                <label for="I2C1_sensor_2_config">Sensor 2 type:</label>
-                                <select id="I2C1_sensor_2_config" name="I2C1_sensor_2_config" id="I2C1_sensor_2_config" class="pure-input-1-2">
-                                    <option>None</option>
-                                    <option>DHT20</option>
-                                    <option>SCD40</option>
-                                    <option>SCD41</option>
-                                </select>
-                                <input type="text" placeholder="HEX address" name="I2C1_sensor_2_address" id="I2C1_sensor_2_address" class="pure-input-1-2" />
-                            </div>
-                            <div class="pure-u-1" class="pure-u-md-1-4">
-                                <label for="I2C1_sensor_3_config">Sensor 3 type:</label>
-                                <select id="I2C1_sensor_3_config" name="I2C1_sensor_3_config" id="I2C1_sensor_3_config" class="pure-input-1-2">
-                                    <option>None</option>
-                                    <option>DHT20</option>
-                                    <option>SCD40</option>
-                                    <option>SCD41</option>
-                                </select>
-                                <input type="text" placeholder="HEX address" name="I2C1_sensor_3_address" id="I2C1_sensor_3_address" class="pure-input-1-2" />
-                            </div>
-                            <div class="pure-u-1" class="pure-u-md-1-4">
-                                <label for="I2C1_sensor_4_config">Sensor 4 type:</label>
-                                <select id="I2C1_sensor_4_config" name="I2C1_sensor_4_config" id="I2C1_sensor_4_config" class="pure-input-1-2">
-                                    <option>None</option>
-                                    <option>DHT20</option>
-                                    <option>SCD40</option>
-                                    <option>SCD41</option>
-                                </select>
-                                <input type="text" placeholder="HEX address" name="I2C1_sensor_4_address" id="I2C1_sensor_4_address" class="pure-input-1-2" />
-                            </div>
-                            <div class="pure-u-1" class="pure-u-md-1-4">
-                                <label for="I2C1_sensor_5_config">Sensor 5 type:</label>
-                                <select id="I2C1_sensor_5_config" name="I2C1_sensor_5_config" id="I2C1_sensor_5_config" class="pure-input-1-2">
-                                    <option>None</option>
-                                    <option>DHT20</option>
-                                    <option>SCD40</option>
-                                    <option>SCD41</option>
-                                </select>
-                                <input type="text" placeholder="HEX address" name="I2C1_sensor_3_address" id="I2C1_sensor_3_address" class="pure-input-1-2" />
-                            </div>
-                            <div class="pure-u-1" class="pure-u-md-1-4">
-                                <label for="I2C1_sensor_6_config">Sensor 6 type:</label>
-                                <select id="I2C1_sensor_6_config" name="I2C1_sensor_6_config" id="I2C1_sensor_6_config" class="pure-input-1-2">
-                                    <option>None</option>
-                                    <option>DHT20</option>
-                                    <option>SCD40</option>
-                                    <option>SCD41</option>
-                                </select>
-                                <input type="text" placeholder="HEX address" name="I2C1_sensor_6_address" id="I2C1_sensor_6_address" class="pure-input-1-2" />
-                            </div>
-                            <div class="pure-u-1" class="pure-u-md-1-4">
-                                <label for="I2C1_sensor_7_config">Sensor 3 type:</label>
-                                <select id="I2C1_sensor_7_config" name="I2C1_sensor_7_config" id="I2C1_sensor_7_config" class="pure-input-1-2">
-                                    <option>None</option>
-                                    <option>DHT20</option>
-                                    <option>SCD40</option>
-                                    <option>SCD41</option>
-                                </select>
-                                <input type="text" placeholder="HEX address" name="I2C1_sensor_7_address" id="I2C1_sensor_7_address" class="pure-input-1-2" />
+                                <label for="I2C1_sensor0_isFanCO2sensor">CO2 sensor at fan inlet:</label>
+                                <input type="hidden"   name="I2C1_sensor0_isFanCO2sensor" id="I2C1_sensor0_isFanCO2sensor" value="false" class="pure-u-23-24"  />
+                                <input type="checkbox" name="I2C1_sensor0_isFanCO2sensor" id="I2C1_sensor0_isFanCO2sensor" value="true" class="pure-u-23-24"  />
                             </div>
                         </div>
                         <br><br>
