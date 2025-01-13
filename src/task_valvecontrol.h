@@ -7,6 +7,7 @@
 
 #include "valvecontrol.h"
 
+// function declarations
 void start_task_valvecontrol(void);
 void task_valvecontrol_code(void *pvParameters);
 

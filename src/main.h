@@ -1,9 +1,19 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-// put function declarations here:
+#include <Arduino.h>
+#include <WiFi.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+#include <LittleFS.h>
+
+#include "task_valvecontrol.h"
+#include "task_web.h"
+#include "task_read_sensors.h"
+#include "valvecontrol.h"
+
+// function declarations
 void setup_wifi();
 void init_registers();
-
 
 #endif

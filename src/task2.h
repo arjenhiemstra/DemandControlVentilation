@@ -2,9 +2,10 @@
 #define TASK2_H
 
 #include <Arduino.h>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
 
+// function declarations
 void startTask2code(void);
 void Task2code(void *pvParameters);
 

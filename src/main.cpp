@@ -1,16 +1,4 @@
-#include <Arduino.h>
-#include <WiFi.h>
-#include <freertos/FreeRTOS.h>
-#include <freertos/task.h>
-#include <LittleFS.h>
-
 #include "main.h"
-#include "task1.h"
-#include "task2.h"
-#include "task_valvecontrol.h"
-#include "task_web.h"
-#include "valvecontrol.h"
-#include "task_sensors.h"
 
 //Variables
 const char* ssid = "DIRK3"; //WIFI SSID
@@ -31,12 +19,9 @@ void setup() {
   }
 
   setup_wifi();
-  //startTask1code();
-  //startTask2code();
   startTaskwebcode();
   start_task_valvecontrol();
-  start_task_sensors();
-  //start_task_valvecontrol();
+  start_task_read_sensors();
 }
 
 

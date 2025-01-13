@@ -1,8 +1,10 @@
 #ifndef SENSORS_H
 #define SENSORS_H
 
-#include <Wire.h>
 #include <Arduino.h>
+#include <LittleFS.h>
+#include <ArduinoJson.h>
+#include <Wire.h>
 #include <DHT.h>
 #include <SparkFun_SCD4x_Arduino_Library.h>
 
@@ -11,9 +13,11 @@
 #define I2C_SCL2 40
 #define I2C_SDA2 41
 
+#define TCAADDR 0x70;  //TCA9548 address
+
 //Function definitions
 void read_DHT22(void);
 void read_SCD41(void);
-void TCA9548A(uint8_t);
+//void TCA9548A(char*, uint8_t);
 
 #endif

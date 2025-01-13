@@ -3,12 +3,10 @@
 
 #include <LittleFS.h>
 #include <ArduinoJson.h>
-#include <esp_task_wdt.h>
 
 #include "config_files.h"
 
-//Function definitions
-//void move_valve(char*);
+// function declarations
 void move_valve(void);
 void valvecontrol(int, int, int, int, int, int);
 void all_outputs_off(int, int, int);
