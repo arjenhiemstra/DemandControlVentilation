@@ -42,53 +42,230 @@
             <p>
                 In this section the sensors can be configured.
             </p>
-            <h2 class="content-subhead">I2C bus 1</h2>
             <p>
                 <form class="pure-form pure-form-stacked" method="POST" action="/">
                     <fieldset>
+                        <legend>I2C bus 1 - Sensor 0 - 7</legend>
                         <div class="pure-g">
-                            <div class="pure-u-1" class="pure-u-md-1-4">
-                                <label for="I2C1_sensor0_type">Sensor 0 type:</label>
-                                <select id="I2C1_sensor0_type" name="I2C1_sensor0_type" id="I2C1_sensor0_type" class="pure-input-1-2">
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor0_type">Type:</label>
+                                <select id="I2C1_sensor0_type" name="I2C1_sensor0_type" id="I2C1_sensor0_type" class="pure-input-1-12">
                                     <option>None</option>
                                     <option>DHT20</option>
                                     <option>SCD40</option>
                                     <option>SCD41</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1" class="pure-u-md-1-4"></div>
-                                <label for="I2C1_sensor0_valve">Sensor valve number:</label>
-                                <select id="I2C1_sensor0_valve" name="I2C1_sensor0_valve" id="I2C1_sensor0_valve" class="pure-input-1-2">
-                                    <option>Valve0</option>
-                                    <option>Valve1</option>
-                                    <option>Valve2</option>
-                                    <option>Valve3</option>
-                                    <option>Valve4</option>
-                                    <option>Valve5</option>
-                                    <option>Valve6</option>
-                                    <option>Valve7</option>
-                                    <option>Valve8</option>
-                                    <option>Valve9</option>
-                                    <option>Valve10</option>
-                                    <option>Valve11</option>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor0_address">HEX Address:</label>
+                                <input type="text" placeholder="e.g. 0x3E" name="I2C1_sensor0_address" id="I2C1_sensor0_address" class="pure-input-3-4" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor0_type">Valve number:</label>
+                                <select id="I2C1_sensor0_type" name="I2C1_sensor0_type" id="I2C1_sensor0_type" class="pure-input-1-12">
+                                    <option>valve0</option>
+                                    <option>valve1</option>
+                                    <option>valve2</option>
+                                    <option>valve3</option>
+                                    <option>valve4</option>
+                                    <option>valve5</option>
+                                    <option>valve6</option>
+                                    <option>valve7</option>
+                                    <option>valve8</option>
+                                    <option>valve9</option>
+                                    <option>valve10</option>
+                                    <option>valve11</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1" class="pure-u-md-1-4"></div>
-                                <label for="I2C1_sensor0_valve">Sensor HEX address, (e.g. 0x45):</label>
-                                <input type="text" placeholder="HEX address" name="I2C1_sensor_1_address" id="I2C1_sensor_1_address" class="pure-u-23-24" />
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor0_location">Location:</label>
+                                <input type="text" placeholder="e.g. bathroom" name="I2C1_sensor0_location" id="I2C1_sensor0_location" class="pure-input-3-4" />
                             </div>
-                            <div class="pure-u-1" class="pure-u-md-1-4">    
-                                <label for="I2C1_sensor0_location_name">Sensor location name (e.g. bathroom):</label>
-                                <input type="text" placeholder="I2C1 sensor0 location name " name="sensor0_location_name" id="sensor0_location_name" class="pure-u-23-24"  />
-                                
-                                <label for="I2C1_sensor0_isBathroomRHsensor">Bathroom RH sensor:</label>
-                                <input type="hidden" name="I2C1_sensor0_isBathroomRHsensor" id="I2C1_sensor0_isBathroomRHsensor" value="false" class="pure-u-23-24" />
-                                <input type="checkbox" name="I2C1_sensor0_isBathroomRHsensor" id="I2C1_sensor0_isBathroomRHsensor" value="true" class="pure-u-23-24" />
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor0_RH">RH sensor:</label>
+                                <input type="hidden" name="I2C1_sensor0_RH" id="I2C1_sensor0_RH" value="false" class="pure-checkbox" />
+                                <input type="checkbox" name="I2C1_sensor0_RH" id="I2C1_sensor0_RH" value="true" class="pure-checkbox" />
                             </div>
-                            <div class="pure-u-1" class="pure-u-md-1-4"></div>
-                                <label for="I2C1_sensor0_isFanCO2sensor">CO2 sensor at fan inlet:</label>
-                                <input type="hidden"   name="I2C1_sensor0_isFanCO2sensor" id="I2C1_sensor0_isFanCO2sensor" value="false" class="pure-u-23-24"  />
-                                <input type="checkbox" name="I2C1_sensor0_isFanCO2sensor" id="I2C1_sensor0_isFanCO2sensor" value="true" class="pure-u-23-24"  />
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor0_CO2">CO2 sensor:</label>
+                                <input type="hidden" name="I2C1_sensor0_CO2" id="I2C1_sensor0_CO2" value="false" class="pure-checkbox" />
+                                <input type="checkbox" name="I2C1_sensor0_CO2" id="I2C1_sensor0_CO2" value="true" class="pure-checkbox" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor1_type">Type:</label>
+                                <select id="I2C1_sensor1_type" name="I2C1_sensor1_type" id="I2C1_sensor1_type" class="pure-input-1-12">
+                                    <option>None</option>
+                                    <option>DHT20</option>
+                                    <option>SCD40</option>
+                                    <option>SCD41</option>
+                                </select>
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor1_address">HEX Address:</label>
+                                <input type="text" placeholder="e.g. 0x3E" name="I2C1_sensor1_address" id="I2C1_sensor1_address" class="pure-input-3-4" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor1_type">Valve number:</label>
+                                <select id="I2C1_sensor1_type" name="I2C1_sensor1_type" id="I2C1_sensor1_type" class="pure-input-1-12">
+                                    <option>valve0</option>
+                                    <option>valve1</option>
+                                    <option>valve2</option>
+                                    <option>valve3</option>
+                                    <option>valve4</option>
+                                    <option>valve5</option>
+                                    <option>valve6</option>
+                                    <option>valve7</option>
+                                    <option>valve8</option>
+                                    <option>valve9</option>
+                                    <option>valve10</option>
+                                    <option>valve11</option>
+                                </select>
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor1_location">Location:</label>
+                                <input type="text" placeholder="e.g. bathroom" name="I2C1_sensor1_location" id="I2C1_sensor1_location" class="pure-input-3-4" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor1_RH">RH sensor:</label>
+                                <input type="hidden" name="I2C1_sensor1_RH" id="I2C1_sensor1_RH" value="false" class="pure-checkbox" />
+                                <input type="checkbox" name="I2C1_sensor1_RH" id="I2C1_sensor1_RH" value="true" class="pure-checkbox" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor1_CO2">CO2 sensor:</label>
+                                <input type="hidden" name="I2C1_sensor1_CO2" id="I2C1_sensor1_CO2" value="false" class="pure-checkbox" />
+                                <input type="checkbox" name="I2C1_sensor1_CO2" id="I2C1_sensor1_CO2" value="true" class="pure-checkbox" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor2_type">Type:</label>
+                                <select id="I2C1_sensor2_type" name="I2C1_sensor2_type" id="I2C1_sensor2_type" class="pure-input-1-12">
+                                    <option>None</option>
+                                    <option>DHT20</option>
+                                    <option>SCD40</option>
+                                    <option>SCD41</option>
+                                </select>
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor2_address">HEX Address:</label>
+                                <input type="text" placeholder="e.g. 0x3E" name="I2C1_sensor2_address" id="I2C1_sensor2_address" class="pure-input-3-4" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor2_type">Valve number:</label>
+                                <select id="I2C1_sensor2_type" name="I2C1_sensor2_type" id="I2C1_sensor2_type" class="pure-input-1-12">
+                                    <option>valve0</option>
+                                    <option>valve1</option>
+                                    <option>valve2</option>
+                                    <option>valve3</option>
+                                    <option>valve4</option>
+                                    <option>valve5</option>
+                                    <option>valve6</option>
+                                    <option>valve7</option>
+                                    <option>valve8</option>
+                                    <option>valve9</option>
+                                    <option>valve10</option>
+                                    <option>valve11</option>
+                                </select>
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor2_location">Location:</label>
+                                <input type="text" placeholder="e.g. bathroom" name="I2C1_sensor2_location" id="I2C1_sensor2_location" class="pure-input-3-4" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor2_RH">RH sensor:</label>
+                                <input type="hidden" name="I2C1_sensor2_RH" id="I2C1_sensor2_RH" value="false" class="pure-checkbox" />
+                                <input type="checkbox" name="I2C1_sensor2_RH" id="I2C1_sensor2_RH" value="true" class="pure-checkbox" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor2_CO2">CO2 sensor:</label>
+                                <input type="hidden" name="I2C1_sensor2_CO2" id="I2C1_sensor2_CO2" value="false" class="pure-checkbox" />
+                                <input type="checkbox" name="I2C1_sensor2_CO2" id="I2C1_sensor2_CO2" value="true" class="pure-checkbox" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor3_type">Type:</label>
+                                <select id="I2C1_sensor3_type" name="I2C1_sensor3_type" id="I2C1_sensor3_type" class="pure-input-1-12">
+                                    <option>None</option>
+                                    <option>DHT20</option>
+                                    <option>SCD40</option>
+                                    <option>SCD41</option>
+                                </select>
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor3_address">HEX Address:</label>
+                                <input type="text" placeholder="e.g. 0x3E" name="I2C1_sensor3_address" id="I2C1_sensor3_address" class="pure-input-3-4" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor3_type">Valve number:</label>
+                                <select id="I2C1_sensor3_type" name="I2C1_sensor3_type" id="I2C1_sensor3_type" class="pure-input-1-12">
+                                    <option>valve0</option>
+                                    <option>valve1</option>
+                                    <option>valve2</option>
+                                    <option>valve3</option>
+                                    <option>valve4</option>
+                                    <option>valve5</option>
+                                    <option>valve6</option>
+                                    <option>valve7</option>
+                                    <option>valve8</option>
+                                    <option>valve9</option>
+                                    <option>valve10</option>
+                                    <option>valve11</option>
+                                </select>
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor3_location">Location:</label>
+                                <input type="text" placeholder="e.g. bathroom" name="I2C1_sensor3_location" id="I2C1_sensor3_location" class="pure-input-3-4" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor3_RH">RH sensor:</label>
+                                <input type="hidden" name="I2C1_sensor3_RH" id="I2C1_sensor3_RH" value="false" class="pure-checkbox" />
+                                <input type="checkbox" name="I2C1_sensor3_RH" id="I2C1_sensor3_RH" value="true" class="pure-checkbox" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor3_CO2">CO2 sensor:</label>
+                                <input type="hidden" name="I2C1_sensor3_CO2" id="I2C1_sensor3_CO2" value="false" class="pure-checkbox" />
+                                <input type="checkbox" name="I2C1_sensor3_CO2" id="I2C1_sensor3_CO2" value="true" class="pure-checkbox" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor4_type">Type:</label>
+                                <select id="I2C1_sensor4_type" name="I2C1_sensor4_type" id="I2C1_sensor4_type" class="pure-input-1-12">
+                                    <option>None</option>
+                                    <option>DHT20</option>
+                                    <option>SCD40</option>
+                                    <option>SCD41</option>
+                                </select>
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor4_address">HEX Address:</label>
+                                <input type="text" placeholder="e.g. 0x3E" name="I2C1_sensor4_address" id="I2C1_sensor4_address" class="pure-input-3-4" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor4_type">Valve number:</label>
+                                <select id="I2C1_sensor4_type" name="I2C1_sensor4_type" id="I2C1_sensor4_type" class="pure-input-1-12">
+                                    <option>valve0</option>
+                                    <option>valve1</option>
+                                    <option>valve2</option>
+                                    <option>valve3</option>
+                                    <option>valve4</option>
+                                    <option>valve5</option>
+                                    <option>valve6</option>
+                                    <option>valve7</option>
+                                    <option>valve8</option>
+                                    <option>valve9</option>
+                                    <option>valve10</option>
+                                    <option>valve11</option>
+                                </select>
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor4_location">Location:</label>
+                                <input type="text" placeholder="e.g. bathroom" name="I2C1_sensor4_location" id="I2C1_sensor4_location" class="pure-input-3-4" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor4_RH">RH sensor:</label>
+                                <input type="hidden" name="I2C1_sensor4_RH" id="I2C1_sensor4_RH" value="false" class="pure-checkbox" />
+                                <input type="checkbox" name="I2C1_sensor4_RH" id="I2C1_sensor4_RH" value="true" class="pure-checkbox" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-6">
+                                <label for="I2C1_sensor4_CO2">CO2 sensor:</label>
+                                <input type="hidden" name="I2C1_sensor4_CO2" id="I2C1_sensor4_CO2" value="false" class="pure-checkbox" />
+                                <input type="checkbox" name="I2C1_sensor4_CO2" id="I2C1_sensor4_CO2" value="true" class="pure-checkbox" />
                             </div>
                         </div>
                         <br><br>

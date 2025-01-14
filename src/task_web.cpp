@@ -168,7 +168,7 @@ void Taskwebcode(void *pvParameters) {
   });
 
   //Response for POST action in webform valvecontrol manual move valves
-  server.on("/", HTTP_POST, [](AsyncWebServerRequest *request) {
+  server.on("/valvecontrol", HTTP_POST, [](AsyncWebServerRequest *request) {
     int params = request->params();
     for(int i=0;i<params;i++){
       AsyncWebParameter* p = request->getParam(i);
@@ -363,29 +363,24 @@ void Taskwebcode(void *pvParameters) {
     }
     //request->send(LittleFS, "/html/valvecontrol.html", "text/html");
     request->send(LittleFS, "/html/valvecontrol.html", String(), false, processor);
-    //serializeJson(valve_control_data, output);
-    //move_valve(output);
     xTaskNotifyGive(xTaskGetHandle("task_valvectrl"));
   });
 
   //POST on button create config file - name must match with action of the form submit
   server.on("/create_config_file", HTTP_POST, [](AsyncWebServerRequest *request) {
-    //request->send(LittleFS, "/html/valvecontrol.html", "text/html");
     valve_status_file_create();
     request->send(LittleFS, "/html/valvecontrol.html", String(), false, processor);
   });
     
   server.on("/delete_config_file", HTTP_POST, [](AsyncWebServerRequest *request) {
-    //request->send(LittleFS, "/html/valvecontrol.html", "text/html");
     const char* path = "/valvepositions.json";
     delete_file(path);
     request->send(LittleFS, "/html/valvecontrol.html", String(), false, processor);
   });
 
-  //Valve control web pages processing
+  //Sensor config web page processing
   server.on("/sensorconfig", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(LittleFS, "/html/sensor_config.html", "text/html");
-    //request->send(LittleFS, "/html/valvecontrol.html", String(), false, processor);
   });
 
   // Start server
