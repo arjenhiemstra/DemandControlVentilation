@@ -6,6 +6,7 @@ TaskHandle_t h_Task_web;
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
 
+//Variables for valvecontrol page
 const char* VALVE0_POSITION_MOVE = "valve0_position_move";
 const char* VALVE0_DIRECTION = "valve0_direction";
 const char* VALVE1_POSITION_MOVE = "valve1_position_move";
@@ -34,35 +35,165 @@ const char* STORE_VALVE_POSITION_IN_FILE = "store_valve_position_in_file";
 const char* CHECK_VALVE_POSITION = "check_valve_position";
 const char* STATUS_VALVE_POSITION_FILE;
 
-String valve0_position_move;
-String valve0_direction;
-String valve1_position_move;
-String valve1_direction;
-String valve2_position_move;
-String valve2_direction;
-String valve3_position_move;
-String valve3_direction;
-String valve4_position_move;
-String valve4_direction;
-String valve5_position_move;
-String valve5_direction;
-String valve6_position_move;
-String valve6_direction;
-String valve7_position_move;
-String valve7_direction;
-String valve8_position_move;
-String valve8_direction;
-String valve9_position_move;
-String valve9_direction;
-String valve10_position_move;
-String valve10_direction;
-String valve11_position_move;
-String valve11_direction;
+String valve0_position_move,valve0_direction;
+String valve1_position_move,valve1_direction;
+String valve2_position_move,valve2_direction;
+String valve3_position_move,valve3_direction;
+String valve4_position_move,valve4_direction;
+String valve5_position_move,valve5_direction;
+String valve6_position_move,valve6_direction;
+String valve7_position_move,valve7_direction;
+String valve8_position_move,valve8_direction;
+String valve9_position_move,valve9_direction;
+String valve10_position_move,valve10_direction;
+String valve11_position_move,valve11_direction;
 String check_valve_position;            // True when check is required if valve moves within operating range
 String store_valve_position_in_file;    // True to enable storing of new position in valve position file
 
-//Global variable
+//Variables for sensor config page
+const char* I2C1_SENSOR0_TYPE = "I2C1_sensor0_type";
+const char* I2C1_SENSOR0_ADDRESS = "I2C1_sensor0_address";
+const char* I2C1_SENSOR0_VALVE = "I2C1_sensor0_valve";
+const char* I2C1_SENSOR0_LOCATION = "I2C1_sensor0_location";
+const char* I2C1_SENSOR0_RH = "I2C1_sensor0_RH";
+const char* I2C1_SENSOR0_CO2 = "I2C1_sensor0_CO2";
+const char* I2C1_SENSOR1_TYPE = "I2C1_sensor1_type";
+const char* I2C1_SENSOR1_ADDRESS = "I2C1_sensor1_address";
+const char* I2C1_SENSOR1_VALVE = "I2C1_sensor1_valve";
+const char* I2C1_SENSOR1_LOCATION = "I2C1_sensor1_location";
+const char* I2C1_SENSOR1_RH = "I2C1_sensor1_RH";
+const char* I2C1_SENSOR1_CO2 = "I2C1_sensor1_CO2";
+const char* I2C1_SENSOR2_TYPE = "I2C1_sensor2_type";
+const char* I2C1_SENSOR2_ADDRESS = "I2C1_sensor2_address";
+const char* I2C1_SENSOR2_VALVE = "I2C1_sensor2_valve";
+const char* I2C1_SENSOR2_LOCATION = "I2C1_sensor2_location";
+const char* I2C1_SENSOR2_RH = "I2C1_sensor2_RH";
+const char* I2C1_SENSOR2_CO2 = "I2C1_sensor2_CO2";
+const char* I2C1_SENSOR3_TYPE = "I2C1_sensor3_type";
+const char* I2C1_SENSOR3_ADDRESS = "I2C1_sensor3_address";
+const char* I2C1_SENSOR3_VALVE = "I2C1_sensor3_valve";
+const char* I2C1_SENSOR3_LOCATION = "I2C1_sensor3_location";
+const char* I2C1_SENSOR3_RH = "I2C1_sensor3_RH";
+const char* I2C1_SENSOR3_CO2 = "I2C1_sensor3_CO2";
+const char* I2C1_SENSOR4_TYPE = "I2C1_sensor4_type";
+const char* I2C1_SENSOR4_ADDRESS = "I2C1_sensor4_address";
+const char* I2C1_SENSOR4_VALVE = "I2C1_sensor4_valve";
+const char* I2C1_SENSOR4_LOCATION = "I2C1_sensor4_location";
+const char* I2C1_SENSOR4_RH = "I2C1_sensor4_RH";
+const char* I2C1_SENSOR4_CO2 = "I2C1_sensor4_CO2";
+const char* I2C1_SENSOR5_TYPE = "I2C1_sensor5_type";
+const char* I2C1_SENSOR5_ADDRESS = "I2C1_sensor5_address";
+const char* I2C1_SENSOR5_VALVE = "I2C1_sensor5_valve";
+const char* I2C1_SENSOR5_LOCATION = "I2C1_sensor5_location";
+const char* I2C1_SENSOR5_RH = "I2C1_sensor5_RH";
+const char* I2C1_SENSOR5_CO2 = "I2C1_sensor5_CO2";
+const char* I2C1_SENSOR6_TYPE = "I2C1_sensor6_type";
+const char* I2C1_SENSOR6_ADDRESS = "I2C1_sensor6_address";
+const char* I2C1_SENSOR6_VALVE = "I2C1_sensor6_valve";
+const char* I2C1_SENSOR6_LOCATION = "I2C1_sensor6_location";
+const char* I2C1_SENSOR6_RH = "I2C1_sensor6_RH";
+const char* I2C1_SENSOR6_CO2 = "I2C1_sensor6_CO2";
+const char* I2C1_SENSOR7_TYPE = "I2C1_sensor7_type";
+const char* I2C1_SENSOR7_ADDRESS = "I2C1_sensor7_address";
+const char* I2C1_SENSOR7_VALVE = "I2C1_sensor7_valve";
+const char* I2C1_SENSOR7_LOCATION = "I2C1_sensor7_location";
+const char* I2C1_SENSOR7_RH = "I2C1_sensor7_RH";
+const char* I2C1_SENSOR7_CO2 = "I2C1_sensor7_CO2";
+
+const char* I2C2_SENSOR0_TYPE = "I2C2_sensor0_type";
+const char* I2C2_SENSOR0_ADDRESS = "I2C2_sensor0_address";
+const char* I2C2_SENSOR0_VALVE = "I2C2_sensor0_valve";
+const char* I2C2_SENSOR0_LOCATION = "I2C2_sensor0_location";
+const char* I2C2_SENSOR0_RH = "I2C2_sensor0_RH";
+const char* I2C2_SENSOR0_CO2 = "I2C2_sensor0_CO2";
+const char* I2C2_SENSOR1_TYPE = "I2C2_sensor1_type";
+const char* I2C2_SENSOR1_ADDRESS = "I2C2_sensor1_address";
+const char* I2C2_SENSOR1_VALVE = "I2C2_sensor1_valve";
+const char* I2C2_SENSOR1_LOCATION = "I2C2_sensor1_location";
+const char* I2C2_SENSOR1_RH = "I2C2_sensor1_RH";
+const char* I2C2_SENSOR1_CO2 = "I2C2_sensor1_CO2";
+const char* I2C2_SENSOR2_TYPE = "I2C2_sensor2_type";
+const char* I2C2_SENSOR2_ADDRESS = "I2C2_sensor2_address";
+const char* I2C2_SENSOR2_VALVE = "I2C2_sensor2_valve";
+const char* I2C2_SENSOR2_LOCATION = "I2C2_sensor2_location";
+const char* I2C2_SENSOR2_RH = "I2C2_sensor2_RH";
+const char* I2C2_SENSOR2_CO2 = "I2C2_sensor2_CO2";
+const char* I2C2_SENSOR3_TYPE = "I2C2_sensor3_type";
+const char* I2C2_SENSOR3_ADDRESS = "I2C2_sensor3_address";
+const char* I2C2_SENSOR3_VALVE = "I2C2_sensor3_valve";
+const char* I2C2_SENSOR3_LOCATION = "I2C2_sensor3_location";
+const char* I2C2_SENSOR3_RH = "I2C2_sensor3_RH";
+const char* I2C2_SENSOR3_CO2 = "I2C2_sensor3_CO2";
+const char* I2C2_SENSOR4_TYPE = "I2C2_sensor4_type";
+const char* I2C2_SENSOR4_ADDRESS = "I2C2_sensor4_address";
+const char* I2C2_SENSOR4_VALVE = "I2C2_sensor4_valve";
+const char* I2C2_SENSOR4_LOCATION = "I2C2_sensor4_location";
+const char* I2C2_SENSOR4_RH = "I2C2_sensor4_RH";
+const char* I2C2_SENSOR4_CO2 = "I2C2_sensor4_CO2";
+const char* I2C2_SENSOR5_TYPE = "I2C2_sensor5_type";
+const char* I2C2_SENSOR5_ADDRESS = "I2C2_sensor5_address";
+const char* I2C2_SENSOR5_VALVE = "I2C2_sensor5_valve";
+const char* I2C2_SENSOR5_LOCATION = "I2C2_sensor5_location";
+const char* I2C2_SENSOR5_RH = "I2C2_sensor5_RH";
+const char* I2C2_SENSOR5_CO2 = "I2C2_sensor5_CO2";
+const char* I2C2_SENSOR6_TYPE = "I2C2_sensor6_type";
+const char* I2C2_SENSOR6_ADDRESS = "I2C2_sensor6_address";
+const char* I2C2_SENSOR6_VALVE = "I2C2_sensor6_valve";
+const char* I2C2_SENSOR6_LOCATION = "I2C2_sensor6_location";
+const char* I2C2_SENSOR6_RH = "I2C2_sensor6_RH";
+const char* I2C2_SENSOR6_CO2 = "I2C2_sensor6_CO2";
+const char* I2C2_SENSOR7_TYPE = "I2C2_sensor7_type";
+const char* I2C2_SENSOR7_ADDRESS = "I2C2_sensor7_address";
+const char* I2C2_SENSOR7_VALVE = "I2C2_sensor7_valve";
+const char* I2C2_SENSOR7_LOCATION = "I2C2_sensor7_location";
+const char* I2C2_SENSOR7_RH = "I2C2_sensor7_RH";
+const char* I2C2_SENSOR7_CO2 = "I2C2_sensor7_CO2";
+
+/*
+String I2C1_sensor0_type,I2C1_sensor0_address,I2C1_sensor0_valve,I2C1_sensor0_location,I2C1_sensor0_RH,I2C1_sensor0_CO2;
+String I2C1_sensor1_type,I2C1_sensor1_address,I2C1_sensor1_valve,I2C1_sensor1_location,I2C1_sensor1_RH,I2C1_sensor1_CO2;
+String I2C1_sensor2_type,I2C1_sensor2_address,I2C1_sensor2_valve,I2C1_sensor2_location,I2C1_sensor2_RH,I2C1_sensor2_CO2;
+String I2C1_sensor3_type,I2C1_sensor3_address,I2C1_sensor3_valve,I2C1_sensor3_location,I2C1_sensor3_RH,I2C1_sensor3_CO2;
+String I2C1_sensor4_type,I2C1_sensor4_address,I2C1_sensor4_valve,I2C1_sensor4_location,I2C1_sensor4_RH,I2C1_sensor4_CO2;
+String I2C1_sensor5_type,I2C1_sensor5_address,I2C1_sensor5_valve,I2C1_sensor5_location,I2C1_sensor5_RH,I2C1_sensor5_CO2;
+String I2C1_sensor6_type,I2C1_sensor6_address,I2C1_sensor6_valve,I2C1_sensor6_location,I2C1_sensor6_RH,I2C1_sensor6_CO2;
+String I2C1_sensor7_type,I2C1_sensor7_address,I2C1_sensor7_valve,I2C1_sensor7_location,I2C1_sensor7_RH,I2C1_sensor7_CO2;
+
+String I2C2_sensor0_type,I2C2_sensor0_address,I2C2_sensor0_valve,I2C2_sensor0_location,I2C2_sensor0_RH,I2C2_sensor0_CO2;
+String I2C2_sensor1_type,I2C2_sensor1_address,I2C2_sensor1_valve,I2C2_sensor1_location,I2C2_sensor1_RH,I2C2_sensor1_CO2;
+String I2C2_sensor2_type,I2C2_sensor2_address,I2C2_sensor2_valve,I2C2_sensor2_location,I2C2_sensor2_RH,I2C2_sensor2_CO2;
+String I2C2_sensor3_type,I2C2_sensor3_address,I2C2_sensor3_valve,I2C2_sensor3_location,I2C2_sensor3_RH,I2C2_sensor3_CO2;
+String I2C2_sensor4_type,I2C2_sensor4_address,I2C2_sensor4_valve,I2C2_sensor4_location,I2C2_sensor4_RH,I2C2_sensor4_CO2;
+String I2C2_sensor5_type,I2C2_sensor5_address,I2C2_sensor5_valve,I2C2_sensor5_location,I2C2_sensor5_RH,I2C2_sensor5_CO2;
+String I2C2_sensor6_type,I2C2_sensor6_address,I2C2_sensor6_valve,I2C2_sensor6_location,I2C2_sensor6_RH,I2C2_sensor6_CO2;
+String I2C2_sensor7_type,I2C2_sensor7_address,I2C2_sensor7_valve,I2C2_sensor7_location,I2C2_sensor7_RH,I2C2_sensor7_CO2;
+*/
+
+//Global variables
 JsonDocument valve_control_data;
+JsonDocument I2C1_sensor_data;
+JsonDocument I2C2_sensor_data;
+
+//Make array of sensors inside JsonDocument for each sensor
+JsonArray I2C1_sensors = I2C1_sensor_data["I2C1_sensors"].to<JsonArray>();
+JsonObject I2C1_sensors0 = I2C1_sensors.add<JsonObject>();
+JsonObject I2C1_sensors1 = I2C1_sensors.add<JsonObject>();
+JsonObject I2C1_sensors2 = I2C1_sensors.add<JsonObject>();
+JsonObject I2C1_sensors3 = I2C1_sensors.add<JsonObject>();
+JsonObject I2C1_sensors4 = I2C1_sensors.add<JsonObject>();
+JsonObject I2C1_sensors5 = I2C1_sensors.add<JsonObject>();
+JsonObject I2C1_sensors6 = I2C1_sensors.add<JsonObject>();
+JsonObject I2C1_sensors7 = I2C1_sensors.add<JsonObject>();
+
+JsonArray I2C2_sensors = I2C2_sensor_data["I2C2_sensors"].to<JsonArray>();
+JsonObject I2C2_sensors0 = I2C2_sensors.add<JsonObject>();
+JsonObject I2C2_sensors1 = I2C2_sensors.add<JsonObject>();
+JsonObject I2C2_sensors2 = I2C2_sensors.add<JsonObject>();
+JsonObject I2C2_sensors3 = I2C2_sensors.add<JsonObject>();
+JsonObject I2C2_sensors4 = I2C2_sensors.add<JsonObject>();
+JsonObject I2C2_sensors5 = I2C2_sensors.add<JsonObject>();
+JsonObject I2C2_sensors6 = I2C2_sensors.add<JsonObject>();
+JsonObject I2C2_sensors7 = I2C2_sensors.add<JsonObject>();
 
 void startTaskwebcode(void) {
 
@@ -361,7 +492,6 @@ void Taskwebcode(void *pvParameters) {
         }
       }
     }
-    //request->send(LittleFS, "/html/valvecontrol.html", "text/html");
     request->send(LittleFS, "/html/valvecontrol.html", String(), false, processor);
     xTaskNotifyGive(xTaskGetHandle("task_valvectrl"));
   });
@@ -383,27 +513,361 @@ void Taskwebcode(void *pvParameters) {
     request->send(LittleFS, "/html/sensor_config.html", "text/html");
   });
 
+  //Response for POST action in webform sensor_config
+  I2C1_sensors0["slot"] = 0;
+  I2C1_sensors1["slot"] = 1;
+  I2C1_sensors2["slot"] = 2;
+  I2C1_sensors3["slot"] = 3;
+  I2C1_sensors4["slot"] = 4;
+  I2C1_sensors5["slot"] = 5;
+  I2C1_sensors6["slot"] = 6;
+  I2C1_sensors7["slot"] = 7;
+
+  server.on("/sensorconfig", HTTP_POST, [](AsyncWebServerRequest *request) {
+    int params = request->params();
+    for(int i=0;i<params;i++){
+      AsyncWebParameter* p = request->getParam(i);
+      if(p->isPost()){
+        if (p->name() == I2C1_SENSOR0_TYPE) {
+          I2C1_sensors0["type"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR0_ADDRESS) {
+          I2C1_sensors0["address"] = p->value().c_str();
+        }     
+        if (p->name() == I2C1_SENSOR0_VALVE) {
+          I2C1_sensors0["valve"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR0_LOCATION) {
+          I2C1_sensors0["location"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR0_RH) {
+          I2C1_sensors0["rh"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR0_CO2) {
+          I2C1_sensors0["co2"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR1_TYPE) {
+          I2C1_sensors1["type"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR1_ADDRESS) {
+          I2C1_sensors1["address"] = p->value().c_str();
+        }     
+        if (p->name() == I2C1_SENSOR1_VALVE) {
+          I2C1_sensors1["valve"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR1_LOCATION) {
+          I2C1_sensors1["location"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR1_RH) {
+          I2C1_sensors1["rh"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR1_CO2) {
+          I2C1_sensors1["co2"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR2_TYPE) {
+          I2C1_sensors2["type"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR2_ADDRESS) {
+          I2C1_sensors2["address"] = p->value().c_str();
+        }     
+        if (p->name() == I2C1_SENSOR2_VALVE) {
+          I2C1_sensors2["valve"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR2_LOCATION) {
+          I2C1_sensors2["location"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR2_RH) {
+          I2C1_sensors2["rh"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR2_CO2) {
+          I2C1_sensors2["co2"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR3_TYPE) {
+          I2C1_sensors3["type"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR3_ADDRESS) {
+          I2C1_sensors3["address"] = p->value().c_str();
+        }     
+        if (p->name() == I2C1_SENSOR3_VALVE) {
+          I2C1_sensors3["valve"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR3_LOCATION) {
+          I2C1_sensors3["location"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR3_RH) {
+          I2C1_sensors3["rh"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR3_CO2) {
+          I2C1_sensors3["co2"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR4_TYPE) {
+          I2C1_sensors4["type"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR4_ADDRESS) {
+          I2C1_sensors4["address"] = p->value().c_str();
+        }     
+        if (p->name() == I2C1_SENSOR4_VALVE) {
+          I2C1_sensors4["valve"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR4_LOCATION) {
+          I2C1_sensors4["location"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR4_RH) {
+          I2C1_sensors4["rh"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR4_CO2) {
+          I2C1_sensors4["co2"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR5_TYPE) {
+          I2C1_sensors5["type"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR5_ADDRESS) {
+          I2C1_sensors5["address"] = p->value().c_str();
+        }     
+        if (p->name() == I2C1_SENSOR5_VALVE) {
+          I2C1_sensors5["valve"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR5_LOCATION) {
+          I2C1_sensors5["location"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR5_RH) {
+          I2C1_sensors5["rh"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR5_CO2) {
+          I2C1_sensors5["co2"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR6_TYPE) {
+          I2C1_sensors6["type"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR6_ADDRESS) {
+          I2C1_sensors6["address"] = p->value().c_str();
+        }     
+        if (p->name() == I2C1_SENSOR6_VALVE) {
+          I2C1_sensors6["valve"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR6_LOCATION) {
+          I2C1_sensors6["location"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR6_RH) {
+          I2C1_sensors6["rh"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR6_CO2) {
+          I2C1_sensors6["co2"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR7_TYPE) {
+          I2C1_sensors7["type"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR7_ADDRESS) {
+          I2C1_sensors7["address"] = p->value().c_str();
+        }     
+        if (p->name() == I2C1_SENSOR7_VALVE) {
+          I2C1_sensors7["valve"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR7_LOCATION) {
+          I2C1_sensors7["location"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR7_RH) {
+          I2C1_sensors7["rh"] = p->value().c_str();
+        }
+        if (p->name() == I2C1_SENSOR7_CO2) {
+          I2C1_sensors7["co2"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR0_TYPE) {
+          I2C2_sensors0["type"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR0_ADDRESS) {
+          I2C2_sensors0["address"] = p->value().c_str();
+        }     
+        if (p->name() == I2C2_SENSOR0_VALVE) {
+          I2C2_sensors0["valve"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR0_LOCATION) {
+          I2C2_sensors0["location"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR0_RH) {
+          I2C2_sensors0["rh"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR0_CO2) {
+          I2C2_sensors0["co2"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR1_TYPE) {
+          I2C2_sensors1["type"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR1_ADDRESS) {
+          I2C2_sensors1["address"] = p->value().c_str();
+        }     
+        if (p->name() == I2C2_SENSOR1_VALVE) {
+          I2C2_sensors1["valve"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR1_LOCATION) {
+          I2C2_sensors1["location"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR1_RH) {
+          I2C2_sensors1["rh"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR1_CO2) {
+          I2C2_sensors1["co2"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR2_TYPE) {
+          I2C2_sensors2["type"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR2_ADDRESS) {
+          I2C2_sensors2["address"] = p->value().c_str();
+        }     
+        if (p->name() == I2C2_SENSOR2_VALVE) {
+          I2C2_sensors2["valve"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR2_LOCATION) {
+          I2C2_sensors2["location"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR2_RH) {
+          I2C2_sensors2["rh"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR2_CO2) {
+          I2C2_sensors2["co2"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR3_TYPE) {
+          I2C2_sensors3["type"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR3_ADDRESS) {
+          I2C2_sensors3["address"] = p->value().c_str();
+        }     
+        if (p->name() == I2C2_SENSOR3_VALVE) {
+          I2C2_sensors3["valve"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR3_LOCATION) {
+          I2C2_sensors3["location"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR3_RH) {
+          I2C2_sensors3["rh"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR3_CO2) {
+          I2C2_sensors3["co2"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR4_TYPE) {
+          I2C2_sensors4["type"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR4_ADDRESS) {
+          I2C2_sensors4["address"] = p->value().c_str();
+        }     
+        if (p->name() == I2C2_SENSOR4_VALVE) {
+          I2C2_sensors4["valve"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR4_LOCATION) {
+          I2C2_sensors4["location"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR4_RH) {
+          I2C2_sensors4["rh"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR4_CO2) {
+          I2C2_sensors4["co2"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR5_TYPE) {
+          I2C2_sensors5["type"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR5_ADDRESS) {
+          I2C2_sensors5["address"] = p->value().c_str();
+        }     
+        if (p->name() == I2C2_SENSOR5_VALVE) {
+          I2C2_sensors5["valve"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR5_LOCATION) {
+          I2C2_sensors5["location"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR5_RH) {
+          I2C2_sensors5["rh"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR5_CO2) {
+          I2C2_sensors5["co2"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR6_TYPE) {
+          I2C2_sensors6["type"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR6_ADDRESS) {
+          I2C2_sensors6["address"] = p->value().c_str();
+        }     
+        if (p->name() == I2C2_SENSOR6_VALVE) {
+          I2C2_sensors6["valve"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR6_LOCATION) {
+          I2C2_sensors6["location"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR6_RH) {
+          I2C2_sensors6["rh"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR6_CO2) {
+          I2C2_sensors6["co2"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR7_TYPE) {
+          I2C2_sensors7["type"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR7_ADDRESS) {
+          I2C2_sensors7["address"] = p->value().c_str();
+        }     
+        if (p->name() == I2C2_SENSOR7_VALVE) {
+          I2C2_sensors7["valve"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR7_LOCATION) {
+          I2C2_sensors7["location"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR7_RH) {
+          I2C2_sensors7["rh"] = p->value().c_str();
+        }
+        if (p->name() == I2C2_SENSOR7_CO2) {
+          I2C2_sensors7["co2"] = p->value().c_str();
+        }
+      }
+    }
+    request->send(LittleFS, "/html/sensor_config.html", "text/html");
+  });
+
   // Start server
   server.begin();
   vTaskDelete(NULL);
 }
 
-//JSON valve_control_data Structure
-/*{
+/*
+JSON valve_control_data Structure
+{
     "valve0_data": [valve_vumber,valve move,valvemove_direction],
     "valve1_data": [valve_vumber,valve move,valvemove_direction],
     "valve2_data": [valve_vumber,valve move,valvemove_direction],
     ......
     ......
     "valve11_data": [valve_vumber,valve move,valvemove_direction]
-  }
+}
 
-
-
-
-
-
-
-
-
-}*/
+JSON for sensor data. One dataset for one bus (I2C1,I2C2)
+{
+  "sensors": [
+    {
+      "slot": 0,
+      "type": "DHT20",
+      "address": "0x3F",
+      "valve": "valve0",
+      "location": "bathroom",
+      "rh": 1,
+      "co2": 0
+    },
+    {
+      "slot": 1,
+      "type": "DHT20",
+      "address": "0x70"
+      "valve": "valve0",
+      "location": "bathroom",
+      "rh": 1,
+      "co2": 0
+    },
+    .....
+    {
+      "slot": 7,
+      "type": "SCD41",
+      "address": "0x70"
+      "valve": "valve0",
+      "location": "bathroom",
+      "rh": 1,
+      "co2": 0
+    },
+  ]
+}
+*/
