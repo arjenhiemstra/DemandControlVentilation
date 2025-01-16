@@ -5,6 +5,8 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
+#include "read_sensors.h"
+
 // function declarations
 void start_task_read_sensors(void);
 void task_read_sensors_code(void *pvParameters);

@@ -16,7 +16,9 @@
 #define TCAADDR 0x70;  //TCA9548 address
 
 //Function definitions
-void read_DHT22(void);
+void read_bus0(void);
+void read_bus1(void);
+//void read_DHT22(void);
 void read_SCD41(void);
 //void TCA9548A(char*, uint8_t);
 

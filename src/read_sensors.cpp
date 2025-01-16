@@ -40,20 +40,20 @@ TwoWire I2C2 = TwoWire(1); //I2C2 bus
 
 void read_bus0(void) {
 
-    int slot;
+    I2C1.begin(I2C_SDA1, I2C_SCL1);
 
-    I2C1.begin(I2C_SDA1, I2C_SDA1);
-    
     //iterate through all slots of multiplexer
-    for (slot=0;slot++;slot<8) {
-        
+    for (int slot =0;slot<8;slot++) {
+
         //Select slot on I2C1 bus
+        Serial.print("\n");
+        Serial.print(slot);
         I2C1.beginTransmission(0x70);   // TCA9548A address is 0x70
         I2C1.write(1 << slot);          // send byte to select bus
         I2C1.endTransmission();
         Serial.print("TCA Port #"); 
         Serial.println(slot);
-        
+
         //Scan all addresses on the slot
         for (uint8_t addr = 0; addr<=127; addr++) {
             I2C1.beginTransmission(addr);
@@ -62,6 +62,7 @@ void read_bus0(void) {
             }
         }
     }
+
 }
 
 
@@ -70,8 +71,8 @@ void read_bus0(void) {
 
 void read_SCD41(void) {
 
-    I2C1.begin(I2C_SDA2, I2C_SDA2);
+    I2C1.begin(I2C_SDA2, I2C_SCL2);
 
-    
+
 }
 
