@@ -14,7 +14,8 @@ void task_read_sensors_code(void * pvParameters)
         Serial.print("\n\nSensors running on core: ");
         Serial.print(xPortGetCoreID());
         read_bus0();
-        vTaskDelay(5000);
+        read_bus1();
+        vTaskDelay(10000);
     }
   
 }

@@ -10,8 +10,8 @@
 
 #define I2C_SCL1 38
 #define I2C_SDA1 39
-#define I2C_SCL2 40
-#define I2C_SDA2 41
+#define I2C_SCL2 18
+#define I2C_SDA2 17
 
 #define TCAADDR 0x70;  //TCA9548 address
 
