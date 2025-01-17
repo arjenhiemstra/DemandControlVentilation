@@ -22,6 +22,7 @@ void setup() {
   startTaskwebcode();
   start_task_valvecontrol();
   start_task_read_sensors();
+  start_task_display();
 }
 
 

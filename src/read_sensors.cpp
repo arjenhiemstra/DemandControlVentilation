@@ -25,22 +25,17 @@ Sequence:
 
 */
 
-
 #include "read_sensors.h"
 
-SCD4x SCD41;
-DHT DHT20;
+//SCD4x SCD41;
+//DHT DHT20;
 
 //Global variable
 JsonDocument sensor_data;
 
-//IO defintion for both I2C busses in header file
-TwoWire I2C1 = TwoWire(0); //I2C1 bus
-TwoWire I2C2 = TwoWire(1); //I2C2 bus
-
 void read_bus0(void) {
 
-    I2C1.begin(I2C_SDA1, I2C_SCL1);
+    Wire.begin(I2C_SDA1, I2C_SCL1);
 
     Serial.print("\nScanning bus0\n");
 
@@ -49,16 +44,16 @@ void read_bus0(void) {
 
         //Select slot on I2C1 bus
         Serial.print("\n");
-        I2C1.beginTransmission(0x70);   // TCA9548A address is 0x70
-        I2C1.write(1 << slot);          // send byte to select bus
-        I2C1.endTransmission();
+        Wire.beginTransmission(0x70);   // TCA9548A address is 0x70
+        Wire.write(1 << slot);          // send byte to select bus
+        Wire.endTransmission();
         Serial.print("TCA Port #"); 
         Serial.println(slot);
 
         //Scan all addresses on the slot
         for (uint8_t addr = 0; addr<=127; addr++) {
-            I2C1.beginTransmission(addr);
-            if (!I2C1.endTransmission()) {
+            Wire.beginTransmission(addr);
+            if (!Wire.endTransmission()) {
                 Serial.print("Found I2C 0x");  
                 Serial.println(addr,HEX);
             }
@@ -69,7 +64,8 @@ void read_bus0(void) {
 
 void read_bus1(void) {
 
-    I2C2.begin(I2C_SDA2, I2C_SCL2);
+    Wire1.begin(I2C_SDA2, I2C_SCL2);
+
     Serial.print("\nScanning bus1\n");
 
     //iterate through all slots of multiplexer
@@ -77,30 +73,21 @@ void read_bus1(void) {
 
         //Select slot on I2C1 bus
         Serial.print("\n");
-        I2C2.beginTransmission(0x70);   // TCA9548A address is 0x70
-        I2C2.write(1 << slot);          // send byte to select bus
-        I2C2.endTransmission();
+        Wire1.beginTransmission(0x70);   // TCA9548A address is 0x70
+        Wire1.write(1 << slot);          // send byte to select bus
+        Wire1.endTransmission();
         Serial.print("TCA Port #"); 
         Serial.println(slot);
 
         //Scan all addresses on the slot
         for (uint8_t addr = 0; addr<=127; addr++) {
-            I2C2.beginTransmission(addr);
-            if (!I2C2.endTransmission()) {
+            Wire1.beginTransmission(addr);
+            if (!Wire1.endTransmission()) {
                 Serial.print("Found I2C 0x");  
                 Serial.println(addr,HEX);
             }
         }
     }
-
-}
-
-
-
-void read_SCD41(void) {
-
-    //I2C1.begin(I2C_SDA2, I2C_SCL2);
-
 
 }
 
