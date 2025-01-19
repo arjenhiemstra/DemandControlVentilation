@@ -47,7 +47,7 @@ void move_valve(void) {
     check_valve_position = valve_control_data["checks"][1];
 
     // Read valve status file
-    status_file_present = check_valve_position_file_exists(path);
+    status_file_present = check_file_exists(path);
 
     if (status_file_present == 1) {
 
@@ -149,7 +149,7 @@ void move_valve(void) {
     Serial.print(new_valve_positions);
     Serial.print("\n\n");
 
-    write_new_valve_positions_to_file(path, new_valve_positions);
+    write_config_file(path, new_valve_positions);
 
 }
 

@@ -32,7 +32,7 @@ void delete_file(const char* path) {
     }
 }
 
-bool check_valve_position_file_exists(const char* path) {
+bool check_file_exists(const char* path) {
 
     if (LittleFS.exists(path)) {
         return true;
@@ -60,7 +60,7 @@ String read_config_file(const char* path) {
 
 }
 
-void write_new_valve_positions_to_file(const char* path, String new_valve_positions) { 
+void write_config_file(const char* path, String new_valve_positions) { 
 
     File file;
     file = LittleFS.open(path, "w");
