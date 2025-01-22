@@ -27,24 +27,6 @@ JsonObject wire1_sensors7 = wire1_sensors.add<JsonObject>();
 
 void sensor_config_data_read() {
 
-    /*wire_sensors0["slot"] = 0;
-    wire_sensors1["slot"] = 1;
-    wire_sensors2["slot"] = 2;
-    wire_sensors3["slot"] = 3;
-    wire_sensors4["slot"] = 4;
-    wire_sensors5["slot"] = 5;
-    wire_sensors6["slot"] = 6;
-    wire_sensors7["slot"] = 7;
-
-    wire1_sensors0["slot"] = 0;
-    wire1_sensors1["slot"] = 1;
-    wire1_sensors2["slot"] = 2;
-    wire1_sensors3["slot"] = 3;
-    wire1_sensors4["slot"] = 4;
-    wire1_sensors5["slot"] = 5;
-    wire1_sensors6["slot"] = 6;
-    wire1_sensors7["slot"] = 7;*/
-
     const char* path1 = "/sensor_config1.json";
     const char* path2 = "/sensor_config2.json";
     
@@ -56,8 +38,6 @@ void sensor_config_data_read() {
 
     sensor_config1_file_present = check_file_exists(path1);
     sensor_config2_file_present = check_file_exists(path2);
-
-
 
 }
 
