@@ -30,14 +30,72 @@ Sequence:
 //SCD4x SCD41;
 //DHT DHT20;
 
-//Global variable
-JsonDocument sensor_data;
+//Global variables with sensor data in an 8 by 3 array of floats (8 sensors and three readings per sensor)
+float sensor1_data[8][3] = { 0 };
+float sensor2_data[8][3] = { 0 };
+
+//Make these variables global so reading config files is not required
+//JsonDocument sensor_config1_JsonDoc;
+//JsonDocument sensor_config2_JsonDoc;
+
+//JsonArray wire_sensors = sensor_config1_JsonDoc["wire_sensors"].to<JsonArray>();
+//JsonArray wire1_sensors = sensor_config2_JsonDoc["wire1_sensors"].to<JsonArray>();
+
+/*
+void read_sensor_config_data(void) {
+
+    const char* path1 = "/sensor_config1.json";
+    const char* path2 = "/sensor_config2.json";
+    
+    String sensor_config1_string;
+    String sensor_config2_string;
+
+    bool sensor_config1_file_present;
+    bool sensor_config2_file_present;
+
+    sensor_config1_file_present = check_file_exists(path1);
+    sensor_config2_file_present = check_file_exists(path2);
+
+    if (sensor_config1_file_present == 1) {
+
+        sensor_config1_string = read_config_file(path1);
+        Serial.print(sensor_config1_string);
+        DeserializationError error = deserializeJson(sensor_config1_JsonDoc, sensor_config1_string);
+
+        if (error) {
+            Serial.print("deserializeJson() failed: ");
+            Serial.println(error.c_str());
+            return;
+        }
+  
+        for (JsonObject wire_sensor : sensor_config1_JsonDoc["wire_sensors"].as<JsonArray>()) {
+
+            int wire_sensor_slot = wire_sensor["slot"]; // 0, 1, 2, 3, 4, 5, 6, 7
+            const char* wire_sensor_type = wire_sensor["type"]; // "None", "None", "None", "None", "None", "None", ...
+            Serial.print(wire_sensor_type);
+            const char* wire_sensor_address = wire_sensor["address"]; // nullptr, nullptr, nullptr, nullptr, ...
+            const char* wire_sensor_valve = wire_sensor["valve"]; // "valve0", "valve0", "valve0", "valve0", ...
+            const char* wire_sensor_location = wire_sensor["location"]; // nullptr, nullptr, nullptr, nullptr, ...
+            const char* wire_sensor_rh = wire_sensor["rh"]; // "false", "false", "false", "false", "false", "false", ...
+            const char* wire_sensor_co2 = wire_sensor["co2"]; // "false", "false", "false", "false", "false", ...
+        }
+
+        
+    }
+
+
+}*/
+
 
 void read_bus0(void) {
-
+ 
     Wire.begin(I2C_SDA1, I2C_SCL1);
 
     Serial.print("\nScanning bus0\n");
+
+    //JsonDocument is a global variable but is only filled with data when the button pressed to create a config file
+    //so somewhere at startup of the processor the config file should be read and put into the global variable  
+    extern JsonDocument valve_control_data;
 
     //iterate through all slots of multiplexer
     for (int slot =0;slot<8;slot++) {

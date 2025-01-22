@@ -8,6 +8,8 @@
 #include <DHT.h>
 #include <SparkFun_SCD4x_Arduino_Library.h>
 
+#include "config_files.h"
+
 #define I2C_SCL1 38
 #define I2C_SDA1 39
 #define I2C_SCL2 40

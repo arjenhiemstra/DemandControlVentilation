@@ -1,6 +1,5 @@
 #include "task_web.h"
-#include "config_files.h"
-#include "task_web_processors.h"
+
 
 TaskHandle_t h_Task_web;
 
@@ -152,36 +151,41 @@ const char* WIRE1_SENSOR7_CO2 = "wire1_sensor7_CO2";
 
 //Global variables
 JsonDocument valve_control_data;
-JsonDocument wire_sensor_data;
-JsonDocument wire1_sensor_data;
-
-//Make array of sensors inside JsonDocument for each sensor
-JsonArray wire_sensors = wire_sensor_data["wire_sensors"].to<JsonArray>();
-JsonObject wire_sensors0 = wire_sensors.add<JsonObject>();
-JsonObject wire_sensors1 = wire_sensors.add<JsonObject>();
-JsonObject wire_sensors2 = wire_sensors.add<JsonObject>();
-JsonObject wire_sensors3 = wire_sensors.add<JsonObject>();
-JsonObject wire_sensors4 = wire_sensors.add<JsonObject>();
-JsonObject wire_sensors5 = wire_sensors.add<JsonObject>();
-JsonObject wire_sensors6 = wire_sensors.add<JsonObject>();
-JsonObject wire_sensors7 = wire_sensors.add<JsonObject>();
-
-JsonArray wire1_sensors = wire1_sensor_data["wire1_sensors"].to<JsonArray>();
-JsonObject wire1_sensors0 = wire1_sensors.add<JsonObject>();
-JsonObject wire1_sensors1 = wire1_sensors.add<JsonObject>();
-JsonObject wire1_sensors2 = wire1_sensors.add<JsonObject>();
-JsonObject wire1_sensors3 = wire1_sensors.add<JsonObject>();
-JsonObject wire1_sensors4 = wire1_sensors.add<JsonObject>();
-JsonObject wire1_sensors5 = wire1_sensors.add<JsonObject>();
-JsonObject wire1_sensors6 = wire1_sensors.add<JsonObject>();
-JsonObject wire1_sensors7 = wire1_sensors.add<JsonObject>();
 
 void startTaskwebcode(void) {
 
     xTaskCreatePinnedToCore(Taskwebcode, "Task_web", 10000, NULL, 1, &h_Task_web, CONFIG_ARDUINO_RUNNING_CORE);
 }
 
-void Taskwebcode(void *pvParameters) { 
+void Taskwebcode(void *pvParameters) {
+
+  
+  //Globals defined in config.cpp
+  //extern JsonDocument wire_sensor_data;
+  //extern JsonDocument wire1_sensor_data;
+
+  /*
+  //extern JsonArray wire_sensors = wire_sensor_data["wire_sensors"].to<JsonArray>();
+  extern JsonObject wire_sensors0 = wire_sensors.add<JsonObject>();
+  extern JsonObject wire_sensors1 = wire_sensors.add<JsonObject>();
+  extern JsonObject wire_sensors2 = wire_sensors.add<JsonObject>();
+  extern JsonObject wire_sensors3 = wire_sensors.add<JsonObject>();
+  extern JsonObject wire_sensors4 = wire_sensors.add<JsonObject>();
+  extern JsonObject wire_sensors5 = wire_sensors.add<JsonObject>();
+  extern JsonObject wire_sensors6 = wire_sensors.add<JsonObject>();
+  extern JsonObject wire_sensors7 = wire_sensors.add<JsonObject>();
+
+  //extern JsonArray wire1_sensors = wire1_sensor_data["wire1_sensors"].to<JsonArray>();
+  extern JsonObject wire1_sensors0 = wire1_sensors.add<JsonObject>();
+  extern JsonObject wire1_sensors1 = wire1_sensors.add<JsonObject>();
+  extern JsonObject wire1_sensors2 = wire1_sensors.add<JsonObject>();
+  extern JsonObject wire1_sensors3 = wire1_sensors.add<JsonObject>();
+  extern JsonObject wire1_sensors4 = wire1_sensors.add<JsonObject>();
+  extern JsonObject wire1_sensors5 = wire1_sensors.add<JsonObject>();
+  extern JsonObject wire1_sensors6 = wire1_sensors.add<JsonObject>();
+  extern JsonObject wire1_sensors7 = wire1_sensors.add<JsonObject>();
+  */
+  
  
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(LittleFS, "/html//index.html", "text/html");
@@ -428,14 +432,23 @@ void Taskwebcode(void *pvParameters) {
   });
 
   //Response for POST action in webform sensor_config
-  wire_sensors0["slot"] = 0;
-  wire_sensors1["slot"] = 1;
-  wire_sensors2["slot"] = 2;
-  wire_sensors3["slot"] = 3;
-  wire_sensors4["slot"] = 4;
-  wire_sensors5["slot"] = 5;
-  wire_sensors6["slot"] = 6;
-  wire_sensors7["slot"] = 7;
+  /*extern JsonObject wire_sensors0;
+  extern JsonObject wire_sensors1;
+  extern JsonObject wire_sensors2;
+  extern JsonObject wire_sensors3;
+  extern JsonObject wire_sensors4;
+  extern JsonObject wire_sensors5;
+  extern JsonObject wire_sensors6;
+  extern JsonObject wire_sensors7;*/
+  
+  /*extern JsonObject wire_sensors0["slot"] = 0;
+  extern JsonObject wire_sensors1["slot"] = 1;
+  extern JsonObject wire_sensors2["slot"] = 2;
+  extern JsonObject wire_sensors3["slot"] = 3;
+  extern JsonObject wire_sensors4["slot"] = 4;
+  extern JsonObject wire_sensors5["slot"] = 5;
+  extern JsonObject wire_sensors6["slot"] = 6;
+  extern JsonObject wire_sensors7["slot"] = 7;*/
 
   server.on("/sensorconfig1", HTTP_POST, [](AsyncWebServerRequest *request) {
     int params = request->params();
@@ -443,22 +456,22 @@ void Taskwebcode(void *pvParameters) {
       AsyncWebParameter* p = request->getParam(i);
       if(p->isPost()){
         if (p->name() == WIRE_SENSOR0_TYPE) {
-          wire_sensors0["type"] = p->value().c_str();
+          extern JsonObject wire_sensors0["type"] = p->value().c_str();
         }
         if (p->name() == WIRE_SENSOR0_ADDRESS) {
-          wire_sensors0["address"] = p->value().c_str();
+          extern JsonObject wire_sensors0["address"] = p->value().c_str();
         }     
         if (p->name() == WIRE_SENSOR0_VALVE) {
-          wire_sensors0["valve"] = p->value().c_str();
+          extern JsonObject wire_sensors0["valve"] = p->value().c_str();
         }
         if (p->name() == WIRE_SENSOR0_LOCATION) {
-          wire_sensors0["location"] = p->value().c_str();
+          extern JsonObject wire_sensors0["location"] = p->value().c_str();
         }
         if (p->name() == WIRE_SENSOR0_RH) {
-          wire_sensors0["rh"] = p->value().c_str();
+          extern JsonObject wire_sensors0["rh"] = p->value().c_str();
         }
         if (p->name() == WIRE_SENSOR0_CO2) {
-          wire_sensors0["co2"] = p->value().c_str();
+          extern JsonObject wire_sensors0["co2"] = p->value().c_str();
         }
         if (p->name() == WIRE_SENSOR1_TYPE) {
           wire_sensors1["type"] = p->value().c_str();
@@ -494,7 +507,7 @@ void Taskwebcode(void *pvParameters) {
           wire_sensors2["rh"] = p->value().c_str();
         }
         if (p->name() == WIRE_SENSOR2_CO2) {
-          wire_sensors2["co2"] = p->value().c_str();
+          extern wire_sensors2["co2"] = p->value().c_str();
         }
         if (p->name() == WIRE_SENSOR3_TYPE) {
           wire_sensors3["type"] = p->value().c_str();

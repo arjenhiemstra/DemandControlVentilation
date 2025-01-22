@@ -1,5 +1,77 @@
 #include "config_files.h"
 
+//Define globals for sensor configuration
+JsonDocument wire_sensor_data;
+JsonDocument wire1_sensor_data;
+
+//Make array of sensors inside JsonDocument for each sensor
+JsonArray wire_sensors = wire_sensor_data["wire_sensors"].to<JsonArray>();
+JsonObject wire_sensors0 = wire_sensors.add<JsonObject>();
+JsonObject wire_sensors1 = wire_sensors.add<JsonObject>();
+JsonObject wire_sensors2 = wire_sensors.add<JsonObject>();
+JsonObject wire_sensors3 = wire_sensors.add<JsonObject>();
+JsonObject wire_sensors4 = wire_sensors.add<JsonObject>();
+JsonObject wire_sensors5 = wire_sensors.add<JsonObject>();
+JsonObject wire_sensors6 = wire_sensors.add<JsonObject>();
+JsonObject wire_sensors7 = wire_sensors.add<JsonObject>();
+
+JsonArray wire1_sensors = wire1_sensor_data["wire1_sensors"].to<JsonArray>();
+JsonObject wire1_sensors0 = wire1_sensors.add<JsonObject>();
+JsonObject wire1_sensors1 = wire1_sensors.add<JsonObject>();
+JsonObject wire1_sensors2 = wire1_sensors.add<JsonObject>();
+JsonObject wire1_sensors3 = wire1_sensors.add<JsonObject>();
+JsonObject wire1_sensors4 = wire1_sensors.add<JsonObject>();
+JsonObject wire1_sensors5 = wire1_sensors.add<JsonObject>();
+JsonObject wire1_sensors6 = wire1_sensors.add<JsonObject>();
+JsonObject wire1_sensors7 = wire1_sensors.add<JsonObject>();
+
+/*JsonObject wire_sensors0["slot"];
+JsonObject wire_sensors1["slot"];
+JsonObject wire_sensors2["slot"];
+JsonObject wire_sensors3["slot"];
+JsonObject wire_sensors4["slot"];
+JsonObject wire_sensors5["slot"];
+JsonObject wire_sensors6["slot"];
+JsonObject wire_sensors7["slot"];*/
+
+/*JsonObject wire_sensors0["slot"] = 0;
+JsonObject wire_sensors1["slot"] = 1;
+JsonObject wire_sensors2["slot"] = 2;
+JsonObject wire_sensors3["slot"] = 3;
+JsonObject wire_sensors4["slot"] = 4;
+JsonObject wire_sensors5["slot"] = 5;
+JsonObject wire_sensors6["slot"] = 6;
+JsonObject wire_sensors7["slot"] = 7;*/
+
+JsonObject wire_sensors7["slot"];
+JsonObject wire_sensors0["type"];
+JsonObject wire_sensors0["address"];
+JsonObject wire_sensors0["valve"];
+JsonObject wire_sensors0["location"];
+JsonObject wire_sensors0["rh"];
+JsonObject wire_sensors0["co2"];
+
+
+
+
+void sensor_config_data_read() {
+
+    /*const char* path1 = "/sensor_config1.json";
+    const char* path2 = "/sensor_config2.json";
+    
+    String sensor_config1_string;
+    String sensor_config2_string;
+
+    bool sensor_config1_file_present;
+    bool sensor_config2_file_present;
+
+    sensor_config1_file_present = check_file_exists(path1);
+    sensor_config2_file_present = check_file_exists(path2);*/
+
+
+
+}
+
 void valve_status_file_create() {
     
     File file;

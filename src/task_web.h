@@ -10,6 +10,8 @@
 #include <ArduinoJson.h>
 
 #include "valvecontrol.h"
+#include "config_files.h"
+#include "task_web_processors.h"
 
 // function declarations
 void startTaskwebcode(void);
