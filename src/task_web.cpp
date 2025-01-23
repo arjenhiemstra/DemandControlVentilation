@@ -1,6 +1,5 @@
 #include "task_web.h"
 
-
 TaskHandle_t h_Task_web;
 
 // Create AsyncWebServer object on port 80
@@ -35,7 +34,8 @@ const char* STORE_VALVE_POSITION_IN_FILE = "store_valve_position_in_file";
 const char* CHECK_VALVE_POSITION = "check_valve_position";
 const char* STATUS_VALVE_POSITION_FILE;
 
-String valve0_position_move,valve0_direction;
+//String valve0_position_move;
+String valve0_direction;
 String valve1_position_move,valve1_direction;
 String valve2_position_move,valve2_direction;
 String valve3_position_move,valve3_direction;
@@ -150,7 +150,7 @@ const char* WIRE1_SENSOR7_RH = "wire1_sensor7_RH";
 const char* WIRE1_SENSOR7_CO2 = "wire1_sensor7_CO2";
 
 //Global variables
-JsonDocument valve_control_data;
+extern JsonDocument valve_control_data;
 
 void startTaskwebcode(void) {
 
@@ -236,9 +236,10 @@ void Taskwebcode(void *pvParameters) {
       AsyncWebParameter* p = request->getParam(i);
       if(p->isPost()){
         if (p->name() == VALVE0_POSITION_MOVE) {
-          valve0_position_move = p->value().c_str();
+          //valve0_position_move = p->value().c_str();
           valve_control_data["valve0_data"][0] = 0;
-          valve_control_data["valve0_data"][1] = valve0_position_move.toInt();
+          //valve_control_data["valve0_data"][1] = valve0_position_move.toInt();
+          valve_control_data["valve0_data"][1] =  p->value().toInt();
         }
         if (p->name() == VALVE0_DIRECTION) {
           valve0_direction = p->value().c_str();
