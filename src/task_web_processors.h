@@ -7,7 +7,6 @@
 
 //Function definitions
 String valvecontrol_processor(const String&);
-String sensor_config1_processor(const String&);
-String sensor_config2_processor(const String&);
+String sensor_config_processor(const String&);
 
 #endif

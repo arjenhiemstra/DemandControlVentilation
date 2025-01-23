@@ -1,6 +1,29 @@
 #include "config_files.h"
 
 void sensor_config_data_read() {
+ 
+    extern JsonDocument wire_sensor_data;
+    extern JsonDocument wire1_sensor_data;
+
+    /*extern JsonArray wire_sensors;
+    extern JsonObject wire_sensors0; 
+    extern JsonObject wire_sensors1;
+    extern JsonObject wire_sensors2; 
+    extern JsonObject wire_sensors3;
+    extern JsonObject wire_sensors4;
+    extern JsonObject wire_sensors5;
+    extern JsonObject wire_sensors6;
+    extern JsonObject wire_sensors7;
+
+    extern JsonArray wire1_sensors;
+    extern JsonObject wire1_sensors0; 
+    extern JsonObject wire1_sensors1;
+    extern JsonObject wire1_sensors2; 
+    extern JsonObject wire1_sensors3;
+    extern JsonObject wire1_sensors4;
+    extern JsonObject wire1_sensors5;
+    extern JsonObject wire1_sensors6;
+    extern JsonObject wire1_sensors7;*/
 
     const char* path1 = "/sensor_config1.json";
     const char* path2 = "/sensor_config2.json";
@@ -11,9 +34,23 @@ void sensor_config_data_read() {
     bool sensor_config1_file_present;
     bool sensor_config2_file_present;
 
+    //xSemaphoreTake(mutex, portMAX_DELAY);
     sensor_config1_file_present = check_file_exists(path1);
     sensor_config2_file_present = check_file_exists(path2);
+    //xSemaphoreGive(mutex);
 
+    Serial.print("\n\nSensor config file 1 present: ");
+    Serial.print(sensor_config1_file_present);
+
+    /*if (sensor_config1_file_present = 1) {
+        File file = LittleFS.open(path1, "r");
+
+        while(file.available()) {
+            sensor_config1_string = file.readString();
+        }
+        file.close();
+        deserializeJson(wire_sensor_data, sensor_config1_string);
+    }*/
 }
 
 void valve_status_file_create() {

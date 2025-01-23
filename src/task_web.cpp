@@ -34,19 +34,7 @@ const char* STORE_VALVE_POSITION_IN_FILE = "store_valve_position_in_file";
 const char* CHECK_VALVE_POSITION = "check_valve_position";
 const char* STATUS_VALVE_POSITION_FILE;
 
-//String valve0_position_move;
 String valve0_direction,valve1_direction,valve2_direction,valve3_direction,valve4_direction,valve5_direction,valve6_direction,valve7_direction,valve8_direction,valve9_direction,valve10_direction,valve11_direction;
-//String valve1_position_move;
-//String valve2_position_move;
-//String valve3_position_move,;
-//String valve4_position_move,;
-//String valve5_position_move,;
-//String valve6_position_move;
-//String valve7_position_move;
-//String valve8_position_move;
-//String valve9_position_move;
-//String valve10_position_move;
-//String valve11_position_move;
 String check_valve_position;            // True when check is required if valve moves within operating range
 String store_valve_position_in_file;    // True to enable storing of new position in valve position file
 
@@ -236,9 +224,7 @@ void Taskwebcode(void *pvParameters) {
       const AsyncWebParameter* p = request->getParam(i);
       if(p->isPost()){
         if (p->name() == VALVE0_POSITION_MOVE) {
-          //valve0_position_move = p->value().c_str();
           valve_control_data["valve0_data"][0] = 0;
-          //valve_control_data["valve0_data"][1] = valve0_position_move.toInt();
           valve_control_data["valve0_data"][1] =  p->value().toInt();
         }
         if (p->name() == VALVE0_DIRECTION) {
@@ -251,9 +237,7 @@ void Taskwebcode(void *pvParameters) {
           }
         }
         if (p->name() == VALVE1_POSITION_MOVE) {
-          //valve1_position_move = p->value().c_str();
           valve_control_data["valve1_data"][0] = 1;
-          //valve_control_data["valve1_data"][1] = valve1_position_move.toInt();
           valve_control_data["valve1_data"][1] =  p->value().toInt();
         }
         if (p->name() == VALVE1_DIRECTION) {
@@ -266,9 +250,7 @@ void Taskwebcode(void *pvParameters) {
           }
         }
         if (p->name() == VALVE2_POSITION_MOVE) {
-          //valve2_position_move = p->value().c_str();
           valve_control_data["valve2_data"][0] = 2;
-          //valve_control_data["valve2_data"][1] = valve2_position_move.toInt();
           valve_control_data["valve2_data"][1] =  p->value().toInt();
         }
         if (p->name() == VALVE2_DIRECTION) {
@@ -281,9 +263,7 @@ void Taskwebcode(void *pvParameters) {
           }
         }
         if (p->name() == VALVE3_POSITION_MOVE) {
-          //valve3_position_move = p->value().c_str();
           valve_control_data["valve3_data"][0] = 3;
-          //valve_control_data["valve3_data"][1] = valve3_position_move.toInt();
           valve_control_data["valve3_data"][1] =  p->value().toInt();
         }
         if (p->name() == VALVE3_DIRECTION) {
@@ -296,9 +276,7 @@ void Taskwebcode(void *pvParameters) {
           }
         }
         if (p->name() == VALVE4_POSITION_MOVE) {
-          //valve4_position_move = p->value().c_str();
           valve_control_data["valve4_data"][0] = 4;
-          //valve_control_data["valve4_data"][1] = valve4_position_move.toInt();
           valve_control_data["valve4_data"][1] =  p->value().toInt();
         }
         if (p->name() == VALVE4_DIRECTION) {
@@ -311,9 +289,7 @@ void Taskwebcode(void *pvParameters) {
           }
         }
         if (p->name() == VALVE5_POSITION_MOVE) {
-          //valve5_position_move = p->value().c_str();
           valve_control_data["valve5_data"][0] = 5;
-          //valve_control_data["valve5_data"][1] = valve5_position_move.toInt();
           valve_control_data["valve5_data"][1] =  p->value().toInt();
         }
         if (p->name() == VALVE5_DIRECTION) {
@@ -326,9 +302,7 @@ void Taskwebcode(void *pvParameters) {
           }
         }
         if (p->name() == VALVE6_POSITION_MOVE) {
-          //valve6_position_move = p->value().c_str();
           valve_control_data["valve6_data"][0] = 6;
-          //valve_control_data["valve6_data"][1] = valve6_position_move.toInt();
           valve_control_data["valve6_data"][1] =  p->value().toInt();
         }
         if (p->name() == VALVE6_DIRECTION) {
@@ -341,9 +315,7 @@ void Taskwebcode(void *pvParameters) {
           }
         }
         if (p->name() == VALVE7_POSITION_MOVE) {
-          //valve7_position_move = p->value().c_str();
           valve_control_data["valve7_data"][0] = 7;
-          //valve_control_data["valve7_data"][1] = valve7_position_move.toInt();
           valve_control_data["valve7_data"][1] =  p->value().toInt();
         }
         if (p->name() == VALVE7_DIRECTION) {
@@ -356,9 +328,7 @@ void Taskwebcode(void *pvParameters) {
           }
         }
         if (p->name() == VALVE8_POSITION_MOVE) {
-          //valve8_position_move = p->value().c_str();
           valve_control_data["valve8_data"][0] = 8;
-          //valve_control_data["valve8_data"][1] = valve8_position_move.toInt();
           valve_control_data["valve8_data"][1] =  p->value().toInt();
         }
         if (p->name() == VALVE8_DIRECTION) {
@@ -371,9 +341,7 @@ void Taskwebcode(void *pvParameters) {
           }
         }
         if (p->name() == VALVE9_POSITION_MOVE) {
-          //valve9_position_move = p->value().c_str();
           valve_control_data["valve9_data"][0] = 9;
-          //valve_control_data["valve9_data"][1] = valve9_position_move.toInt();
           valve_control_data["valve9_data"][1] =  p->value().toInt();
         }
         if (p->name() == VALVE9_DIRECTION) {
@@ -386,9 +354,7 @@ void Taskwebcode(void *pvParameters) {
           }
         }
         if (p->name() == VALVE10_POSITION_MOVE) {
-          //valve10_position_move = p->value().c_str();
           valve_control_data["valve10_data"][0] = 10;
-          //valve_control_data["valve10_data"][1] = valve10_position_move.toInt();
           valve_control_data["valve10_data"][1] =  p->value().toInt();
         }
         if (p->name() == VALVE10_DIRECTION) {
@@ -401,9 +367,7 @@ void Taskwebcode(void *pvParameters) {
           }
         }
         if (p->name() == VALVE11_POSITION_MOVE) {
-          //valve11_position_move = p->value().c_str();
           valve_control_data["valve11_data"][0] = 11;
-          //valve_control_data["valve11_data"][1] = valve11_position_move.toInt();
           valve_control_data["valve11_data"][1] =  p->value().toInt();
         }
         if (p->name() == VALVE11_DIRECTION) {
@@ -454,7 +418,7 @@ void Taskwebcode(void *pvParameters) {
   //Sensor config web page processing
   server.on("/sensorconfig", HTTP_GET, [](AsyncWebServerRequest *request){
     //request->send(LittleFS, "/html/sensor_config.html", "text/html");
-    request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config1_processor);
+    request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
   });
 
   server.on("/sensorconfig1", HTTP_POST, [](AsyncWebServerRequest *request) {
@@ -614,7 +578,7 @@ void Taskwebcode(void *pvParameters) {
     Serial.print(sensor_config1);
     write_config_file(path, sensor_config1);
     //request->send(LittleFS, "/html/sensor_config.html", "text/html");
-    request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config1_processor);
+    request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
   });
 
 wire1_sensors0["slot"] = 0;
@@ -783,7 +747,8 @@ server.on("/sensorconfig2", HTTP_POST, [](AsyncWebServerRequest *request) {
     Serial.print(sensor_config2);
     Serial.print("\n\n");
     write_config_file(path, sensor_config2);
-    request->send(LittleFS, "/html/sensor_config.html", "text/html");
+    //request->send(LittleFS, "/html/sensor_config.html", "text/html");
+    request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
   });
 
 

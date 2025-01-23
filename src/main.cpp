@@ -19,6 +19,8 @@ void setup() {
   }
 
   setup_wifi();
+  sensor_config_data_read();
+  vTaskDelay(1000);
   startTaskwebcode();
   start_task_valvecontrol();
   start_task_read_sensors();
