@@ -1,5 +1,7 @@
 #include "display.h"
 
+#include "read_sensors.h"
+
 void display(void) {
 
     Wire.begin(I2C_SDA1, I2C_SCL1);

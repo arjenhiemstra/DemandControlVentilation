@@ -12,6 +12,7 @@
 #include "valvecontrol.h"
 #include "config_files.h"
 #include "task_web_processors.h"
+#include "globals.h"
 
 // function declarations
 void startTaskwebcode(void);

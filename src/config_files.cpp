@@ -76,7 +76,7 @@ String read_config_file(const char* path) {
 
 }
 
-void write_config_file(const char* path, String new_valve_positions) { 
+void write_config_file(const char* path, String file_contents) { 
 
     File file;
     file = LittleFS.open(path, "w");
@@ -86,7 +86,7 @@ void write_config_file(const char* path, String new_valve_positions) {
     }
 
     // Write to the file
-    if (file.println(new_valve_positions)) {
+    if (file.println(file_contents)) {
         Serial.println("File written");
     } 
     else {

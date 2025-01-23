@@ -1,9 +1,5 @@
 #include "valvecontrol.h"
 
-//Global varaible defined in task_web
-extern JsonDocument valve_control_data;
-
-//void move_valve(char* output) {
 void move_valve(void) {
 
     //Data pins for 74HC595
@@ -39,6 +35,9 @@ void move_valve(void) {
     int store_valve_position;
     int check_valve_position;
     int valve_pos;
+
+    //Global variable
+    extern JsonDocument valve_control_data;
 
     String json;
     JsonDocument doc;
