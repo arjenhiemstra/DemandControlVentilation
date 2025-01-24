@@ -41,50 +41,10 @@ float sensor2_data[8][3] = { 0 };
 //JsonArray wire_sensors = sensor_config1_JsonDoc["wire_sensors"].to<JsonArray>();
 //JsonArray wire1_sensors = sensor_config2_JsonDoc["wire1_sensors"].to<JsonArray>();
 
-/*
+
 void read_sensor_config_data(void) {
 
-    const char* path1 = "/sensor_config1.json";
-    const char* path2 = "/sensor_config2.json";
-    
-    String sensor_config1_string;
-    String sensor_config2_string;
-
-    bool sensor_config1_file_present;
-    bool sensor_config2_file_present;
-
-    sensor_config1_file_present = check_file_exists(path1);
-    sensor_config2_file_present = check_file_exists(path2);
-
-    if (sensor_config1_file_present == 1) {
-
-        sensor_config1_string = read_config_file(path1);
-        Serial.print(sensor_config1_string);
-        DeserializationError error = deserializeJson(sensor_config1_JsonDoc, sensor_config1_string);
-
-        if (error) {
-            Serial.print("deserializeJson() failed: ");
-            Serial.println(error.c_str());
-            return;
-        }
-  
-        for (JsonObject wire_sensor : sensor_config1_JsonDoc["wire_sensors"].as<JsonArray>()) {
-
-            int wire_sensor_slot = wire_sensor["slot"]; // 0, 1, 2, 3, 4, 5, 6, 7
-            const char* wire_sensor_type = wire_sensor["type"]; // "None", "None", "None", "None", "None", "None", ...
-            Serial.print(wire_sensor_type);
-            const char* wire_sensor_address = wire_sensor["address"]; // nullptr, nullptr, nullptr, nullptr, ...
-            const char* wire_sensor_valve = wire_sensor["valve"]; // "valve0", "valve0", "valve0", "valve0", ...
-            const char* wire_sensor_location = wire_sensor["location"]; // nullptr, nullptr, nullptr, nullptr, ...
-            const char* wire_sensor_rh = wire_sensor["rh"]; // "false", "false", "false", "false", "false", "false", ...
-            const char* wire_sensor_co2 = wire_sensor["co2"]; // "false", "false", "false", "false", "false", ...
-        }
-
-        
-    }
-
-
-}*/
+}
 
 
 void read_bus0(void) {

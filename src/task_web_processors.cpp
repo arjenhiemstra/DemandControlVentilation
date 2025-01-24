@@ -69,33 +69,16 @@ String valvecontrol_processor(const String& var) {
   return String();
 }
 
-String sensor_config1_processor(const String& var) {
+String sensor_config_processor(const String& var) {
 
-    const char* path = "/sensor_config1.json";
+    const char* path1 = "/sensor_config1.json";
+    const char* path2 = "/sensor_config2.json";
     const char* status;
     bool sensor_config1_file_present;
 
-    extern JsonDocument wire_sensor_data;
-    extern JsonDocument wire1_sensor_data;
-    extern JsonObject wire_sensors0;
-    extern JsonObject wire_sensors1;
-    extern JsonObject wire_sensors2;
-    extern JsonObject wire_sensors3;
-    extern JsonObject wire_sensors4;
-    extern JsonObject wire_sensors5;
-    extern JsonObject wire_sensors6;
-    extern JsonObject wire_sensors7;
+    sensor_config_file_present = check_file_exists(path1);
 
-    String wire_sensor0_type = wire_sensors0["type"];
-    String wire_sensor0_address = wire_sensors0["address"];
-    String wire_sensor0_valve = wire_sensors0["valve"];
-    String wire_sensor0_location = wire_sensors0["location"];
-    String wire_sensor0_rh = wire_sensors0["rh"];
-    String wire_sensor0_co2 = wire_sensors0["co2"];
-
-    sensor_config1_file_present = check_file_exists(path);
-
-    if(sensor_config1_file_present == 1) {
+    if(sensor_config_file_present == 1) {
         status = "<b><font color=\"green\">Sensor config file found.</font></b>";
         if (var == "STATUS_SENSOR_CONFIG1_FILE")
             return F(status);
@@ -119,14 +102,20 @@ String sensor_config1_processor(const String& var) {
             return F(status);
     }
 
+    sensor_config_file_present = check_file_exists(path2);
+
+    if(sensor_config_file_present == 1) {
+        status = "<b><font color=\"green\">Sensor config file found.</font></b>";
+        if (var == "STATUS_SENSOR_CONFIG2_FILE")
+            return F(status);
+    }
+
+    else {
+        status = "<b><font color=\"red\">Sensor config file not found. Create a file with button below.</font></b>";
+        if (var == "STATUS_SENSOR_CONFIG2_FILE")
+            return F(status);
+    }
+
     return String();
 }
 
-String sensor_config2_processor(const String& var) {
-
-    //const char* path = "/sensor_config1.json";
-
-    //status_file_present = check_file_exists(path);
-
-    return String();
-}

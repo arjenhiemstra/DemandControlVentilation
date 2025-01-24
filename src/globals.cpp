@@ -1,5 +1,7 @@
 #include "globals.h"
 
+static SemaphoreHandle_t mutex;
+
 //Global for valve control data
 JsonDocument valve_control_data;
 
