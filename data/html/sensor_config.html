@@ -50,6 +50,7 @@
                             <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="wire_sensor0_type">Type:</label>
                                 <select id="wire_sensor0_type" name="wire_sensor0_type" id="wire_sensor0_type" class="pure-input-1-12">
+                                    <option selected>%WIRE_SENSOR0_TYPE%</option>
                                     <option>None</option>
                                     <option>DHT20</option>
                                     <option>AHT20</option>
@@ -59,11 +60,12 @@
                             </div>
                             <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="wire_sensor0_address">HEX Address:</label>
-                                <input type="text" placeholder="e.g. 0x3E" name="wire_sensor0_address" id="wire_sensor0_address" class="pure-input-3-4" />
+                                <input type="text" placeholder="e.g. 0x3E" value="%WIRE_SENSOR0_ADDRESS%" name="wire_sensor0_address" id="wire_sensor0_address" class="pure-input-3-4" />
                             </div>
                             <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="wire_sensor0_valve">Valve number:</label>
                                 <select id="wire_sensor0_valve" name="wire_sensor0_valve" id="wire_sensor0_valve" class="pure-input-1-12">
+                                    <option selected>%WIRE_SENSOR0_VALVE%</option>
                                     <option>valve0</option>
                                     <option>valve1</option>
                                     <option>valve2</option>
@@ -80,17 +82,17 @@
                             </div>
                             <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="wire_sensor0_location">Location:</label>
-                                <input type="text" placeholder="e.g. bathroom" name="wire_sensor0_location" id="wire_sensor0_location" class="pure-input-3-4" />
+                                <input type="text" placeholder="e.g. bathroom" value="%WIRE_SENSOR0_LOCATION%" name="wire_sensor0_location" id="wire_sensor0_location" class="pure-input-3-4" />
                             </div>
                             <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="wire_sensor0_RH">RH sensor:</label>
                                 <input type="hidden" name="wire_sensor0_RH" id="wire_sensor0_RH" value="false" class="pure-checkbox" />
-                                <input type="checkbox" name="wire_sensor0_RH" id="wire_sensor0_RH" value="true" class="pure-checkbox" />
+                                <input type="checkbox" name="wire_sensor0_RH" value="%WIRE_SENSOR0_RH%" id="wire_sensor0_RH" value="true" class="pure-checkbox" />
                             </div>
                             <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="wire_sensor0_CO2">CO2 sensor:</label>
                                 <input type="hidden" name="wire_sensor0_CO2" id="wire_sensor0_CO2" value="false" class="pure-checkbox" />
-                                <input type="checkbox" name="wire_sensor0_CO2" id="wire_sensor0_CO2" value="true" class="pure-checkbox" />
+                                <input type="checkbox" name="wire_sensor0_CO2" value="%WIRE_SENSOR0_CO2%" id="wire_sensor0_CO2" value="true" class="pure-checkbox" />
                             </div>
                             <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="wire_sensor1_type">Type:</label>
