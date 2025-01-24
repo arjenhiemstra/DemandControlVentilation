@@ -5,7 +5,7 @@ void sensor_config_data_read() {
     extern JsonDocument wire_sensor_data;
     extern JsonDocument wire1_sensor_data;
 
-    /*extern JsonArray wire_sensors;
+    extern JsonArray wire_sensors;
     extern JsonObject wire_sensors0; 
     extern JsonObject wire_sensors1;
     extern JsonObject wire_sensors2; 
@@ -23,7 +23,7 @@ void sensor_config_data_read() {
     extern JsonObject wire1_sensors4;
     extern JsonObject wire1_sensors5;
     extern JsonObject wire1_sensors6;
-    extern JsonObject wire1_sensors7;*/
+    extern JsonObject wire1_sensors7;
 
     const char* path1 = "/sensor_config1.json";
     const char* path2 = "/sensor_config2.json";
@@ -42,7 +42,7 @@ void sensor_config_data_read() {
     Serial.print("\n\nSensor config file 1 present: ");
     Serial.print(sensor_config1_file_present);
 
-    /*if (sensor_config1_file_present = 1) {
+    if (sensor_config1_file_present = 1) {
         File file = LittleFS.open(path1, "r");
 
         while(file.available()) {
@@ -50,7 +50,34 @@ void sensor_config_data_read() {
         }
         file.close();
         deserializeJson(wire_sensor_data, sensor_config1_string);
-    }*/
+
+        wire_sensors = wire_sensor_data["wire_sensors"];
+        wire_sensors0 = wire_sensors[0];
+        wire_sensors1 = wire_sensors[1];
+        wire_sensors2 = wire_sensors[2];
+        wire_sensors3 = wire_sensors[3];
+        wire_sensors4 = wire_sensors[4];
+        wire_sensors5 = wire_sensors[5];
+        wire_sensors6 = wire_sensors[6];
+        wire_sensors7 = wire_sensors[7];
+
+        wire1_sensors = wire1_sensor_data["wire_sensors"];
+        wire1_sensors0 = wire1_sensors[0];
+        wire1_sensors1 = wire1_sensors[1];
+        wire1_sensors2 = wire1_sensors[2];
+        wire1_sensors3 = wire1_sensors[3];
+        wire1_sensors4 = wire1_sensors[4];
+        wire1_sensors5 = wire1_sensors[5];
+        wire1_sensors6 = wire1_sensors[6];
+        wire1_sensors7 = wire1_sensors[7];
+
+        Serial.print("\n\nContents config file: \n\n");
+        serializeJson(wire_sensor_data, Serial);
+
+        Serial.print("\n\nContents sensor file sensor0: \n\n");
+        String test = wire_sensors0["type"];
+        Serial.print(test);
+    }
 }
 
 void valve_status_file_create() {

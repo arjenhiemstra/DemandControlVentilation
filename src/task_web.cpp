@@ -142,7 +142,10 @@ extern JsonDocument valve_control_data;
 
 void startTaskwebcode(void) {
 
-    xTaskCreatePinnedToCore(Taskwebcode, "Task_web", 10000, NULL, 1, &h_Task_web, CONFIG_ARDUINO_RUNNING_CORE);
+  xTaskCreatePinnedToCore(Taskwebcode, "Task_web", 10000, NULL, 1, &h_Task_web, CONFIG_ARDUINO_RUNNING_CORE);
+
+  //Load config file data
+  sensor_config_data_read();
 }
 
 void Taskwebcode(void *pvParameters) {

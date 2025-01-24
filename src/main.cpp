@@ -19,11 +19,14 @@ void setup() {
   }
 
   setup_wifi();
-  sensor_config_data_read();
+  //sensor_config_data_read();
   vTaskDelay(1000);
   startTaskwebcode();
+  vTaskDelay(1000);
   start_task_valvecontrol();
+  vTaskDelay(1000);
   start_task_read_sensors();
+  vTaskDelay(1000);
   start_task_display();
 }
 

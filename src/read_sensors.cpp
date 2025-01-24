@@ -49,15 +49,16 @@ void read_sensor_config_data(void) {
 
 void read_bus0(void) {
  
-    Wire.begin(I2C_SDA1, I2C_SCL1);
+    //Wire.begin(I2C_SDA1, I2C_SCL1);
 
-    Serial.print("\nScanning bus0\n");
+    //Serial.print("\nScanning bus0\n");
 
     //JsonDocument is a global variable but is only filled with data when the button pressed to create a config file
     //so somewhere at startup of the processor the config file should be read and put into the global variable  
-    extern JsonDocument valve_control_data;
+    //extern JsonDocument valve_control_data;
 
     //iterate through all slots of multiplexer
+    /*
     for (int slot =0;slot<8;slot++) {
 
         //Select slot on I2C1 bus
@@ -76,17 +77,18 @@ void read_bus0(void) {
                 Serial.println(addr,HEX);
             }
         }
-    }
+    }*/
 
 }
 
 void read_bus1(void) {
 
-    Wire1.begin(I2C_SDA2, I2C_SCL2);
+    //Wire1.begin(I2C_SDA2, I2C_SCL2);
 
-    Serial.print("\nScanning bus1\n");
+    //Serial.print("\nScanning bus1\n");
 
     //iterate through all slots of multiplexer
+    /*
     for (int slot =0;slot<8;slot++) {
 
         //Select slot on I2C1 bus
@@ -105,7 +107,7 @@ void read_bus1(void) {
                 Serial.println(addr,HEX);
             }
         }
-    }
+    }*/
 
 }
 
