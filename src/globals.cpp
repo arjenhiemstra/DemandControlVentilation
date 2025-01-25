@@ -29,3 +29,7 @@ JsonObject wire1_sensors4 = wire1_sensors.add<JsonObject>();
 JsonObject wire1_sensors5 = wire1_sensors.add<JsonObject>();
 JsonObject wire1_sensors6 = wire1_sensors.add<JsonObject>();
 JsonObject wire1_sensors7 = wire1_sensors.add<JsonObject>();
+
+//Sensor data arrays for Wire and Wire1
+float sensor1_data[8][3] = { 0 };
+float sensor2_data[8][3] = { 0 };

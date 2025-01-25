@@ -71,12 +71,15 @@ void sensor_config_data_read() {
         wire1_sensors6 = wire1_sensors[6];
         wire1_sensors7 = wire1_sensors[7];
 
-        Serial.print("\n\nContents config file: \n\n");
+        Serial.print("\n\nContents config file wire: \n");
         serializeJson(wire_sensor_data, Serial);
 
-        Serial.print("\n\nContents sensor file sensor0: \n\n");
-        String test = wire_sensors0["type"];
-        Serial.print(test);
+        Serial.print("\n\nContents config file wire1: \n");
+        serializeJson(wire1_sensor_data, Serial);
+
+        //Serial.print("\n\nContents sensor file sensor0: \n\n");
+        //String test = wire_sensors0["type"];
+        //Serial.print(test);
     }
 }
 
