@@ -31,23 +31,6 @@ DHT20 DHT(&Wire);
 Adafruit_AHTX0 AHT20;
 SensirionI2CScd4x SCD4X;
 
-//Global variables with sensor data in an 8 by 3 array of floats (8 sensors and three readings per sensor)
-
-extern float sensor2_data;
-
-//Make these variables global so reading config files is not required
-//JsonDocument sensor_config1_JsonDoc;
-//JsonDocument sensor_config2_JsonDoc;
-
-//JsonArray wire_sensors = sensor_config1_JsonDoc["wire_sensors"].to<JsonArray>();
-//JsonArray wire1_sensors = sensor_config2_JsonDoc["wire1_sensors"].to<JsonArray>();
-
-
-void read_sensor_config_data(void) {
-
-}
-
-
 void read_bus0(void) {
  
     extern float sensor1_data[8][3];
