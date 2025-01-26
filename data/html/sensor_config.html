@@ -43,6 +43,17 @@
                 In this section the sensors can be configured and written to a config file. For the sensors there are two files, one for each I2C bus (Wire and Wire1). The values already store in the config file are prefilled in the text boxes.
             </p>
             <p>
+                <form method ="POST" action="/delete_sensor_config_file1">
+
+                    <input type="submit" value="Delete sensor config file1">
+                </form>
+            </p>
+            <p>
+                <form method ="POST" action="/delete_sensor_config_file2">
+                    <input type="submit" value="Delete sensor config file2">
+                </form>
+            </p>
+            <p>
                 <form class="pure-form pure-form-stacked" method="POST" action="/sensorconfig1">
                     <fieldset>
                         <legend>I2C bus 1 (wire) - Sensor 0 - 7 - %STATUS_SENSOR_CONFIG1_FILE%</legend>

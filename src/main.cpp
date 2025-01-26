@@ -20,7 +20,7 @@ void setup() {
 
   setup_wifi();
   //sensor_config_data_read();
-  vTaskDelay(1000);
+  //vTaskDelay(5000);
   startTaskwebcode();
   vTaskDelay(1000);
   start_task_valvecontrol();
@@ -45,6 +45,8 @@ void setup_wifi() {
   Serial.println();
   Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
+
+  //sensor_config_data_read();
 
 }
 

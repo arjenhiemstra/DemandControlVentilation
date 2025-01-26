@@ -137,60 +137,37 @@ const char* WIRE1_SENSOR7_LOCATION = "wire1_sensor7_location";
 const char* WIRE1_SENSOR7_RH = "wire1_sensor7_RH";
 const char* WIRE1_SENSOR7_CO2 = "wire1_sensor7_CO2";
 
-//Global variables
+//Globals defined in globals.cpp
 extern JsonDocument valve_control_data;
+extern JsonDocument wire_sensor_data;
+extern JsonDocument wire1_sensor_data;
+
+extern JsonArray wire_sensors;
+extern JsonObject wire_sensors0; 
+extern JsonObject wire_sensors1;
+extern JsonObject wire_sensors2; 
+extern JsonObject wire_sensors3;
+extern JsonObject wire_sensors4;
+extern JsonObject wire_sensors5;
+extern JsonObject wire_sensors6;
+extern JsonObject wire_sensors7;
+
+extern JsonArray wire1_sensors;
+extern JsonObject wire1_sensors0; 
+extern JsonObject wire1_sensors1;
+extern JsonObject wire1_sensors2; 
+extern JsonObject wire1_sensors3;
+extern JsonObject wire1_sensors4;
+extern JsonObject wire1_sensors5;
+extern JsonObject wire1_sensors6;
+extern JsonObject wire1_sensors7;
 
 void startTaskwebcode(void) {
 
   xTaskCreatePinnedToCore(Taskwebcode, "Task_web", 10000, NULL, 1, &h_Task_web, CONFIG_ARDUINO_RUNNING_CORE);
-
-  //Load config file data
-  sensor_config_data_read();
 }
 
 void Taskwebcode(void *pvParameters) {
-
-  //Globals defined in globals.cpp
-  extern JsonDocument wire_sensor_data;
-  extern JsonDocument wire1_sensor_data;
-
-  extern JsonArray wire_sensors;
-  extern JsonObject wire_sensors0; 
-  extern JsonObject wire_sensors1;
-  extern JsonObject wire_sensors2; 
-  extern JsonObject wire_sensors3;
-  extern JsonObject wire_sensors4;
-  extern JsonObject wire_sensors5;
-  extern JsonObject wire_sensors6;
-  extern JsonObject wire_sensors7;
-
-  extern JsonArray wire1_sensors;
-  extern JsonObject wire1_sensors0; 
-  extern JsonObject wire1_sensors1;
-  extern JsonObject wire1_sensors2; 
-  extern JsonObject wire1_sensors3;
-  extern JsonObject wire1_sensors4;
-  extern JsonObject wire1_sensors5;
-  extern JsonObject wire1_sensors6;
-  extern JsonObject wire1_sensors7;
-
-  wire_sensors0["slot"] = 0;
-  wire_sensors1["slot"] = 1;
-  wire_sensors2["slot"] = 2;
-  wire_sensors3["slot"] = 3;
-  wire_sensors4["slot"] = 4;
-  wire_sensors5["slot"] = 5;
-  wire_sensors6["slot"] = 6;
-  wire_sensors7["slot"] = 7;
-
-  wire1_sensors0["slot"] = 0;
-  wire1_sensors1["slot"] = 1;
-  wire1_sensors2["slot"] = 2;
-  wire1_sensors3["slot"] = 3;
-  wire1_sensors4["slot"] = 4;
-  wire1_sensors5["slot"] = 5;
-  wire1_sensors6["slot"] = 6;
-  wire1_sensors7["slot"] = 7;
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(LittleFS, "/html//index.html", "text/html");
@@ -421,16 +398,30 @@ void Taskwebcode(void *pvParameters) {
   //Sensor config web page processing
   server.on("/sensorconfig", HTTP_GET, [](AsyncWebServerRequest *request){
     //request->send(LittleFS, "/html/sensor_config.html", "text/html");
+    //sensor_config_data_read();
     request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
   });
 
+  
+  server.on("/delete_sensor_config_file1", HTTP_POST, [](AsyncWebServerRequest *request) {
+    const char* path = "/sensor_config1.json";
+    delete_file(path);
+    request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
+  });
+
+  server.on("/delete_sensor_config_file2", HTTP_POST, [](AsyncWebServerRequest *request) {
+    const char* path = "/sensor_config2.json";
+    delete_file(path);
+    request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
+  });
+       
   server.on("/sensorconfig1", HTTP_POST, [](AsyncWebServerRequest *request) {
     int params = request->params();
     for(int i=0;i<params;i++){
       const AsyncWebParameter* p = request->getParam(i);
       if(p->isPost()){
         if (p->name() == WIRE_SENSOR0_TYPE) {
-          wire_sensors0["type"] = p->value().c_str();
+          wire_sensors0["type"] = p->value().c_str();;
         }
         if (p->name() == WIRE_SENSOR0_ADDRESS) {
           wire_sensors0["address"] = p->value().c_str();
@@ -439,7 +430,7 @@ void Taskwebcode(void *pvParameters) {
           wire_sensors0["valve"] = p->value().c_str();
         }
         if (p->name() == WIRE_SENSOR0_LOCATION) {
-          wire_sensors0["location"] = p->value().c_str();
+          wire_sensors0["location"] = p->value().c_str();;
         }
         if (p->name() == WIRE_SENSOR0_RH) {
           wire_sensors0["rh"] = p->value().c_str();
@@ -511,7 +502,7 @@ void Taskwebcode(void *pvParameters) {
           wire_sensors4["valve"] = p->value().c_str();
         }
         if (p->name() == WIRE_SENSOR4_LOCATION) {
-          wire_sensors4["location"] = p->value().c_str();
+          wire_sensors4["location"] = p->value().c_str(); 
         }
         if (p->name() == WIRE_SENSOR4_RH) {
           wire_sensors4["rh"] = p->value().c_str();
@@ -575,31 +566,37 @@ void Taskwebcode(void *pvParameters) {
         }
       }
     }
-    const char* path = "/sensor_config1.json";
+    
+    const char* path1 = "/sensor_config1.json";
     String sensor_config1;
+
     serializeJson(wire_sensor_data, sensor_config1);
-    Serial.print(sensor_config1);
-    write_config_file(path, sensor_config1);
+    write_config_file(path1, sensor_config1);
+    
+    wire_sensors0["slot"] = 0;
+    wire_sensors1["slot"] = 1;
+    wire_sensors2["slot"] = 2;
+    wire_sensors3["slot"] = 3;
+    wire_sensors4["slot"] = 4;
+    wire_sensors5["slot"] = 5;
+    wire_sensors6["slot"] = 6;
+    wire_sensors7["slot"] = 7;
+    
+    Serial.print("\n\n");
+    serializeJson(wire_sensor_data, Serial);
+    Serial.print("\n\n");
+    
     //request->send(LittleFS, "/html/sensor_config.html", "text/html");
     request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
   });
 
-wire1_sensors0["slot"] = 0;
-wire1_sensors1["slot"] = 1;
-wire1_sensors2["slot"] = 2;
-wire1_sensors3["slot"] = 3;
-wire1_sensors4["slot"] = 4;
-wire1_sensors5["slot"] = 5;
-wire1_sensors6["slot"] = 6;
-wire1_sensors7["slot"] = 7;
-
-server.on("/sensorconfig2", HTTP_POST, [](AsyncWebServerRequest *request) {
+  server.on("/sensorconfig2", HTTP_POST, [](AsyncWebServerRequest *request) {
     int params = request->params();
     for(int i=0;i<params;i++){
       const AsyncWebParameter* p = request->getParam(i);
       if(p->isPost()){
         if (p->name() == WIRE1_SENSOR0_TYPE) {
-          wire1_sensors0["type"] = p->value().c_str();
+          wire1_sensors0["type"] = p->value().c_str();;
         }
         if (p->name() == WIRE1_SENSOR0_ADDRESS) {
           wire1_sensors0["address"] = p->value().c_str();
@@ -608,7 +605,7 @@ server.on("/sensorconfig2", HTTP_POST, [](AsyncWebServerRequest *request) {
           wire1_sensors0["valve"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR0_LOCATION) {
-          wire1_sensors0["location"] = p->value().c_str();
+          wire1_sensors0["location"] = p->value().c_str();;
         }
         if (p->name() == WIRE1_SENSOR0_RH) {
           wire1_sensors0["rh"] = p->value().c_str();
@@ -680,7 +677,7 @@ server.on("/sensorconfig2", HTTP_POST, [](AsyncWebServerRequest *request) {
           wire1_sensors4["valve"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR4_LOCATION) {
-          wire1_sensors4["location"] = p->value().c_str();
+          wire1_sensors4["location"] = p->value().c_str(); 
         }
         if (p->name() == WIRE1_SENSOR4_RH) {
           wire1_sensors4["rh"] = p->value().c_str();
@@ -744,17 +741,31 @@ server.on("/sensorconfig2", HTTP_POST, [](AsyncWebServerRequest *request) {
         }
       }
     }
-    const char* path = "/sensor_config2.json";
+    
+    const char* path2 = "/sensor_config2.json";
     String sensor_config2;
+
+    //delete_file(path2);
+
     serializeJson(wire1_sensor_data, sensor_config2);
-    Serial.print(sensor_config2);
+    write_config_file(path2, sensor_config2);
+    
+    wire1_sensors0["slot"] = 0;
+    wire1_sensors1["slot"] = 1;
+    wire1_sensors2["slot"] = 2;
+    wire1_sensors3["slot"] = 3;
+    wire1_sensors4["slot"] = 4;
+    wire1_sensors5["slot"] = 5;
+    wire1_sensors6["slot"] = 6;
+    wire1_sensors7["slot"] = 7;
+    
     Serial.print("\n\n");
-    write_config_file(path, sensor_config2);
+    serializeJson(wire1_sensor_data, Serial);
+    Serial.print("\n\n");
+    
     //request->send(LittleFS, "/html/sensor_config.html", "text/html");
     request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
   });
-
-
 
   // Start server
   server.begin();
