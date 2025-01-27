@@ -774,10 +774,6 @@ void Taskwebcode(void *pvParameters) {
 
   // Start server
   server.begin();
-
-  //xSemaphoreGive(sensor_config_file1_mutex);
-  //xSemaphoreGive(sensor_config_file2_mutex);
-
   vTaskDelete(NULL);
 }
 
