@@ -2,9 +2,6 @@
 
 TaskHandle_t h_Task_web;
 
-//extern SemaphoreHandle_t sensor_config_file1_mutex;
-//extern SemaphoreHandle_t sensor_config_file2_mutex;
-
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
 
