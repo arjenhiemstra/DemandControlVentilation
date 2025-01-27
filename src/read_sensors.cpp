@@ -22,7 +22,6 @@ Sequence:
 1. Read sensor config file
 2. Get measurement data from sensors
 3. Write measured values to varaible
-
 */
 
 #include "read_sensors.h"
@@ -36,14 +35,6 @@ void read_bus0(void) {
     extern float sensor1_data[8][3];
     extern JsonDocument wire_sensor_data;
     extern JsonArray wire_sensors;
-    /*extern JsonObject wire_sensors0; 
-    extern JsonObject wire_sensors1;
-    extern JsonObject wire_sensors2; 
-    extern JsonObject wire_sensors3;
-    extern JsonObject wire_sensors4;
-    extern JsonObject wire_sensors5;
-    extern JsonObject wire_sensors6;
-    extern JsonObject wire_sensors7;*/
 
     Wire.begin(I2C_SDA1, I2C_SCL1);
 
