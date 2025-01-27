@@ -1,31 +1,13 @@
 #include "config_files.h"
+#include "globals.h"
+
+extern SemaphoreHandle_t sensor_config_file1_mutex;
+extern SemaphoreHandle_t sensor_config_file2_mutex;
 
 void sensor_config_data_read() {
  
     extern JsonDocument wire_sensor_data;
     extern JsonDocument wire1_sensor_data;
-
-    /*
-    extern JsonArray wire_sensors;
-    extern JsonObject wire_sensors0; 
-    extern JsonObject wire_sensors1;
-    extern JsonObject wire_sensors2; 
-    extern JsonObject wire_sensors3;
-    extern JsonObject wire_sensors4;
-    extern JsonObject wire_sensors5;
-    extern JsonObject wire_sensors6;
-    extern JsonObject wire_sensors7;
-
-    extern JsonArray wire1_sensors;
-    extern JsonObject wire1_sensors0; 
-    extern JsonObject wire1_sensors1;
-    extern JsonObject wire1_sensors2; 
-    extern JsonObject wire1_sensors3;
-    extern JsonObject wire1_sensors4;
-    extern JsonObject wire1_sensors5;
-    extern JsonObject wire1_sensors6;
-    extern JsonObject wire1_sensors7;
-    */
 
     const char* path1 = "/sensor_config1.json";
     const char* path2 = "/sensor_config2.json";
@@ -36,16 +18,14 @@ void sensor_config_data_read() {
     bool sensor_config1_file_present;
     bool sensor_config2_file_present;
 
-    //xSemaphoreTake(mutex, portMAX_DELAY);
-    sensor_config1_file_present = check_file_exists(path1);
-    sensor_config2_file_present = check_file_exists(path2);
-    //xSemaphoreGive(mutex);
+    sensor_config_file1_mutex = xSemaphoreCreateMutex();
+    sensor_config_file2_mutex = xSemaphoreCreateMutex();
 
+    xSemaphoreTake(sensor_config_file1_mutex, portMAX_DELAY);
+    sensor_config1_file_present = check_file_exists(path1);
+    
     Serial.print("\n\nSensor config file 1 present: ");
     Serial.print(sensor_config1_file_present);
-
-    Serial.print("\n\nSensor config file 2 present: ");
-    Serial.print(sensor_config2_file_present);
 
     if (sensor_config1_file_present = 1) {
         File file = LittleFS.open(path1, "r");
@@ -63,6 +43,14 @@ void sensor_config_data_read() {
         Serial.print("\n\nContents config file wire: \n");
         serializeJson(wire_sensor_data, Serial);
     }
+
+    xSemaphoreGive(sensor_config_file1_mutex);
+
+    xSemaphoreTake(sensor_config_file2_mutex, portMAX_DELAY);
+    sensor_config2_file_present = check_file_exists(path2);
+
+    Serial.print("\n\nSensor config file 2 present: ");
+    Serial.print(sensor_config2_file_present);
 
     if (sensor_config2_file_present = 1) {
         
@@ -94,6 +82,7 @@ void sensor_config_data_read() {
         serializeJson(wire1_sensor_data, Serial);*/
         vTaskDelay(1000);
     }
+    xSemaphoreGive(sensor_config_file2_mutex);
 }
 
 void valve_status_file_create() {
