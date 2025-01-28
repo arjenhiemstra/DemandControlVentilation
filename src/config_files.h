@@ -5,7 +5,7 @@
 #include <LittleFS.h>
 #include <ArduinoJson.h>
 
-//#include "globals.h"
+#include "globals.h"
 
 //Function definitions
 void valve_status_file_create(void);

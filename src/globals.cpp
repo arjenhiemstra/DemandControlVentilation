@@ -1,7 +1,6 @@
 #include "globals.h"
 
-SemaphoreHandle_t sensor_config_file1_mutex;
-SemaphoreHandle_t sensor_config_file2_mutex;
+SemaphoreHandle_t sensor_config_file_mutex;
 
 //Global for valve control data
 JsonDocument valve_control_data;
@@ -30,6 +29,9 @@ JsonObject wire1_sensors4 = wire1_sensors.add<JsonObject>();
 JsonObject wire1_sensors5 = wire1_sensors.add<JsonObject>();
 JsonObject wire1_sensors6 = wire1_sensors.add<JsonObject>();
 JsonObject wire1_sensors7 = wire1_sensors.add<JsonObject>();
+
+String sensor_config1_string;
+String sensor_config2_string;
 
 //Sensor data arrays for Wire and Wire1
 float sensor1_data[8][3] = { 0 };

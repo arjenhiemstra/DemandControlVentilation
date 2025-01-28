@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <LittleFS.h>
 
+#include "globals.h"
+
 //Function definitions
 String valvecontrol_processor(const String&);
 String sensor_config_processor(const String&);

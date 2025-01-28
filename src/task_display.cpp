@@ -11,9 +11,9 @@ void start_task_display(void) {
 void task_display_code(void * pvParameters)
 {
     for(;;) {
-        Serial.print("\n\nDisplay running on core: ");
-        Serial.print(xPortGetCoreID());
-        display();
+        //Serial.print("\n\nDisplay running on core: ");
+        //Serial.print(xPortGetCoreID());
+        //display();
         vTaskDelay(5000);
     }
   

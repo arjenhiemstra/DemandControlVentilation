@@ -59,7 +59,6 @@ String valvecontrol_processor(const String& var) {
     if(var == "VALVE11_POS")
       return (valve11_pos);
   }
-
   else {
     status = "<b><font color=\"red\">Valve status file not found. Create a file with button below.</font></b>";
     if (var == "STATUS_VALVE_POSITION_FILE")
@@ -70,9 +69,11 @@ String valvecontrol_processor(const String& var) {
 }
 
 String sensor_config_processor(const String& var) {
-
+  
     extern JsonDocument wire_sensor_data;
     extern JsonArray wire_sensors;
+    extern JsonArray wire1_sensors;
+
     extern JsonObject wire_sensors0; 
     extern JsonObject wire_sensors1;
     extern JsonObject wire_sensors2; 
@@ -82,7 +83,6 @@ String sensor_config_processor(const String& var) {
     extern JsonObject wire_sensors6;
     extern JsonObject wire_sensors7;
 
-    extern JsonArray wire1_sensors;
     extern JsonObject wire1_sensors0; 
     extern JsonObject wire1_sensors1;
     extern JsonObject wire1_sensors2; 
@@ -91,27 +91,31 @@ String sensor_config_processor(const String& var) {
     extern JsonObject wire1_sensors5;
     extern JsonObject wire1_sensors6;
     extern JsonObject wire1_sensors7;
+
+    extern String wire_sensor_config_string;
+    extern String wire1_sensor_config_string;
+
+    String wire_sensor0_type = wire_sensors0[String("type")];
     
     const char* path1 = "/sensor_config1.json";
     const char* path2 = "/sensor_config2.json";
     const char* status;
-    bool sensor_config_file_present;
+    bool sensor_config_file1_present;
+    bool sensor_config_file2_present;
 
-    String wire_sensor0_type = wire_sensors0["type"];
-    String wire_sensor0_address = wire_sensors0["address"];
-    String wire_sensor0_valve = wire_sensors0["valve"];
-    String wire_sensor0_location = wire_sensors0["location"];
-    String wire_sensor0_rh = wire_sensors0["rh"];
-    String wire_sensor0_co2 = wire_sensors0["co2"];
+    sensor_config_file1_present = check_file_exists(path1);
 
-    sensor_config_file_present = check_file_exists(path1);
-
-    if(sensor_config_file_present == 1) {
+    if (var == "WIRE_SENSOR_CONFIG")
+        return (wire_sensor_config_string);
+    if (var == "WIRE1_SENSOR_CONFIG")
+        return (wire1_sensor_config_string);
+    
+    if(sensor_config_file1_present == 1) {
         status = "<b><font color=\"green\">Sensor config file found.</font></b>";
         if (var == "STATUS_SENSOR_CONFIG1_FILE")
             return F(status);
         if (var == "WIRE_SENSOR0_TYPE")
-            return (wire_sensors0["type"]);
+            return (wire_sensor0_type);
         if (var == "WIRE_SENSOR0_ADDRESS")
             return (wire_sensors0["address"]);
         if (var == "WIRE_SENSOR0_VALVE")
@@ -207,16 +211,15 @@ String sensor_config_processor(const String& var) {
         if (var == "WIRE_SENSOR7_CO2")
             return (wire_sensors7["rh"]);
     }
-
     else {
         status = "<b><font color=\"red\">Sensor config file not found. Create a file with button below.</font></b>";
         if (var == "STATUS_SENSOR_CONFIG1_FILE")
             return F(status);
     }
 
-    sensor_config_file_present = check_file_exists(path2);
+    sensor_config_file2_present = check_file_exists(path2);
 
-    if(sensor_config_file_present == 1) {
+    if(sensor_config_file2_present == 1) {
         status = "<b><font color=\"green\">Sensor config file found.</font></b>";
         if (var == "STATUS_SENSOR_CONFIG2_FILE")
             return F(status);
@@ -317,7 +320,7 @@ String sensor_config_processor(const String& var) {
         if (var == "WIRE1_SENSOR7_CO2")
             return (wire1_sensors7["rh"]);
     }
-
+        
     else {
         status = "<b><font color=\"red\">Sensor config file not found. Create a file with button below.</font></b>";
         if (var == "STATUS_SENSOR_CONFIG2_FILE")

@@ -1,29 +1,22 @@
 #include "config_files.h"
-#include "globals.h"
-
-extern SemaphoreHandle_t sensor_config_file1_mutex;
-extern SemaphoreHandle_t sensor_config_file2_mutex;
 
 void sensor_config_data_read() {
  
+    //extern SemaphoreHandle_t sensor_config_file_mutex;
+    //sensor_config_file_mutex = xSemaphoreCreateMutex();
+    
     extern JsonDocument wire_sensor_data;
     extern JsonDocument wire1_sensor_data;
 
     const char* path1 = "/sensor_config1.json";
     const char* path2 = "/sensor_config2.json";
     
-    String sensor_config1_string;
-    String sensor_config2_string;
+    extern String sensor_config1_string;
+    extern String sensor_config2_string;
 
     bool sensor_config1_file_present;
     bool sensor_config2_file_present;
-
-    sensor_config_file1_mutex = xSemaphoreCreateMutex();
-    sensor_config_file2_mutex = xSemaphoreCreateMutex();
-
-    xSemaphoreTake(sensor_config_file1_mutex, portMAX_DELAY);
-    sensor_config1_file_present = check_file_exists(path1);
-    
+   
     Serial.print("\n\nSensor config file 1 present: ");
     Serial.print(sensor_config1_file_present);
 
@@ -44,9 +37,6 @@ void sensor_config_data_read() {
         serializeJson(wire_sensor_data, Serial);
     }
 
-    xSemaphoreGive(sensor_config_file1_mutex);
-
-    xSemaphoreTake(sensor_config_file2_mutex, portMAX_DELAY);
     sensor_config2_file_present = check_file_exists(path2);
 
     Serial.print("\n\nSensor config file 2 present: ");
@@ -68,21 +58,8 @@ void sensor_config_data_read() {
         Serial.print("\n\nContents config file wire1: \n");
         serializeJson(wire1_sensor_data, Serial);
 
-        /*wire1_sensors = wire1_sensor_data["wire1_sensors"];
-        wire1_sensors0 = wire1_sensors[0];
-        wire1_sensors1 = wire1_sensors[1];
-        wire1_sensors2 = wire1_sensors[2];
-        wire1_sensors3 = wire1_sensors[3];
-        wire1_sensors4 = wire1_sensors[4];
-        wire1_sensors5 = wire1_sensors[5];
-        wire1_sensors6 = wire1_sensors[6];
-        wire1_sensors7 = wire1_sensors[7];
-
-        Serial.print("\n\nContents config file wire1: \n");
-        serializeJson(wire1_sensor_data, Serial);*/
         vTaskDelay(1000);
     }
-    xSemaphoreGive(sensor_config_file2_mutex);
 }
 
 void valve_status_file_create() {
