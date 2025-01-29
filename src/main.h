@@ -12,6 +12,7 @@
 #include "task_read_sensors.h"
 #include "task_display.h"
 #include "valvecontrol.h"
+#include "globals.h"
 
 // function declarations
 void setup_wifi();

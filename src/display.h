@@ -6,6 +6,8 @@
 #include <ArduinoJson.h>
 #include <Wire.h>
 
+#include "globals.h"
+
 //Function definitions
 void display(void);
 

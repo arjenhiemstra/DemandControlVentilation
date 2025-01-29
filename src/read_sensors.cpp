@@ -32,9 +32,9 @@ SensirionI2CScd4x SCD4X;
 
 void read_bus0(void) {
  
-    extern float sensor1_data[8][3];
-    extern JsonDocument wire_sensor_data;
-    extern JsonArray wire_sensors;
+    //extern float sensor1_data[8][3];
+    //extern JsonDocument wire_sensor_data;
+    //extern JsonArray wire_sensors;
 
     Wire.begin(I2C_SDA1, I2C_SCL1);
 

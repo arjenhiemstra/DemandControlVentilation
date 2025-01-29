@@ -37,7 +37,7 @@ void move_valve(void) {
     int valve_pos;
 
     //Global variable
-    extern JsonDocument valve_control_data;
+    //extern JsonDocument valve_control_data;
 
     String json;
     JsonDocument doc;

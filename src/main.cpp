@@ -8,6 +8,8 @@ void setup() {
 
   Serial.begin(115200);
 
+  sensor_config_file_mutex = xSemaphoreCreateMutex();
+
   // First switch off all outputs which randomly come up at power on
   init_registers();
 

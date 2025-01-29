@@ -140,6 +140,7 @@ const char* WIRE1_SENSOR7_CO2 = "wire1_sensor7_CO2";
 const char* WIRE_SENSOR_CONFIG = "wire_sensor_config";
 const char* WIRE1_SENSOR_CONFIG = "wire1_sensor_config";
 
+/*
 String wire_sensor_config_string;
 String wire1_sensor_config_string;
 
@@ -166,7 +167,7 @@ extern JsonObject wire1_sensors3;
 extern JsonObject wire1_sensors4;
 extern JsonObject wire1_sensors5;
 extern JsonObject wire1_sensors6;
-extern JsonObject wire1_sensors7;
+extern JsonObject wire1_sensors7;*/
 
 void startTaskwebcode(void) {
 
@@ -176,8 +177,8 @@ void startTaskwebcode(void) {
 
 void Taskwebcode(void *pvParameters) {
 
-  extern SemaphoreHandle_t sensor_config_file_mutex;
-  sensor_config_file_mutex = xSemaphoreCreateMutex();
+  //extern SemaphoreHandle_t sensor_config_file_mutex;
+  //sensor_config_file_mutex = xSemaphoreCreateMutex();
     
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(LittleFS, "/html//index.html", "text/html");
@@ -408,10 +409,12 @@ void Taskwebcode(void *pvParameters) {
   //Sensor config web page processing
   server.on("/sensorconfig", HTTP_GET, [](AsyncWebServerRequest *request){
 
+    xSemaphoreTake(sensor_config_file_mutex, portMAX_DELAY);
     //sensor_config_data_read();
     serializeJson(wire_sensor_data, wire_sensor_config_string);
     serializeJson(wire1_sensor_data, wire1_sensor_config_string);
 
+    xSemaphoreGive(sensor_config_file_mutex);
     //request->send(LittleFS, "/html/sensor_config.html", "text/html");
     request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
   });
@@ -429,6 +432,7 @@ void Taskwebcode(void *pvParameters) {
   });
   
   server.on("/sensorconfig1", HTTP_POST, [](AsyncWebServerRequest *request) {
+    xSemaphoreTake(sensor_config_file_mutex, portMAX_DELAY);
     int params = request->params();
     for(int i=0;i<params;i++){
       const AsyncWebParameter* p = request->getParam(i);
@@ -599,11 +603,13 @@ void Taskwebcode(void *pvParameters) {
     serializeJson(wire_sensor_data, Serial);
     Serial.print("\n\n");
  
+    xSemaphoreGive(sensor_config_file_mutex);
     //request->send(LittleFS, "/html/sensor_config.html", "text/html");
     request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor); 
   });
   
   server.on("/sensorconfig2", HTTP_POST, [](AsyncWebServerRequest *request) {
+    xSemaphoreTake(sensor_config_file_mutex, portMAX_DELAY);
     int params = request->params();
     for(int i=0;i<params;i++){
       const AsyncWebParameter* p = request->getParam(i);
@@ -774,6 +780,7 @@ void Taskwebcode(void *pvParameters) {
     serializeJson(wire1_sensor_data, Serial);
     Serial.print("\n\n");
     
+    xSemaphoreGive(sensor_config_file_mutex);
     //request->send(LittleFS, "/html/sensor_config.html", "text/html");
     request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
   });

@@ -5,6 +5,7 @@
 #include <ArduinoJson.h>
 
 #include "config_files.h"
+#include "globals.h"
 
 // function declarations
 void move_valve(void);
