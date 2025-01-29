@@ -1,5 +1,4 @@
 #include "task_web_processors.h"
-#include "config_files.h"
 
 String valvecontrol_processor(const String& var) {
 
@@ -70,7 +69,7 @@ String valvecontrol_processor(const String& var) {
 
 String sensor_config_processor(const String& var) {
   
-    extern JsonDocument wire_sensor_data;
+    /*extern JsonDocument wire_sensor_data;
     extern JsonArray wire_sensors;
     extern JsonArray wire1_sensors;
 
@@ -93,9 +92,9 @@ String sensor_config_processor(const String& var) {
     extern JsonObject wire1_sensors7;
 
     extern String wire_sensor_config_string;
-    extern String wire1_sensor_config_string;
+    extern String wire1_sensor_config_string;*/
 
-    String wire_sensor0_type = wire_sensors0[String("type")];
+    //String wire_sensor0_type = wire_sensors0[String("type")];
     
     const char* path1 = "/sensor_config1.json";
     const char* path2 = "/sensor_config2.json";
@@ -103,7 +102,7 @@ String sensor_config_processor(const String& var) {
     bool sensor_config_file1_present;
     bool sensor_config_file2_present;
 
-    sensor_config_file1_present = check_file_exists(path1);
+    xSemaphoreTake(sensor_config_file_mutex, portMAX_DELAY);
 
     if (var == "WIRE_SENSOR_CONFIG")
         return (wire_sensor_config_string);
@@ -115,7 +114,7 @@ String sensor_config_processor(const String& var) {
         if (var == "STATUS_SENSOR_CONFIG1_FILE")
             return F(status);
         if (var == "WIRE_SENSOR0_TYPE")
-            return (wire_sensor0_type);
+            return (wire_sensors0["type"]);
         if (var == "WIRE_SENSOR0_ADDRESS")
             return (wire_sensors0["address"]);
         if (var == "WIRE_SENSOR0_VALVE")
@@ -328,5 +327,7 @@ String sensor_config_processor(const String& var) {
     }
 
     return String();
+
+    xSemaphoreGive(sensor_config_file_mutex);
 }
 

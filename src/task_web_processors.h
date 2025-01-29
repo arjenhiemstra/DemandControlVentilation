@@ -5,6 +5,7 @@
 #include <ArduinoJson.h>
 #include <LittleFS.h>
 
+#include "config_files.h"
 #include "globals.h"
 
 //Function definitions
