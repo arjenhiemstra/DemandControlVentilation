@@ -102,13 +102,15 @@ String sensor_config_processor(const String& var) {
     bool sensor_config_file1_present;
     bool sensor_config_file2_present;
 
-    xSemaphoreTake(sensor_config_file_mutex, portMAX_DELAY);
+    //xSemaphoreTake(sensor_config_file_mutex, portMAX_DELAY);
 
     if (var == "WIRE_SENSOR_CONFIG")
         return (wire_sensor_config_string);
     if (var == "WIRE1_SENSOR_CONFIG")
         return (wire1_sensor_config_string);
     
+    sensor_config_file1_present = check_file_exists(path1);
+
     if(sensor_config_file1_present == 1) {
         status = "<b><font color=\"green\">Sensor config file found.</font></b>";
         if (var == "STATUS_SENSOR_CONFIG1_FILE")
@@ -328,6 +330,6 @@ String sensor_config_processor(const String& var) {
 
     return String();
 
-    xSemaphoreGive(sensor_config_file_mutex);
+    //xSemaphoreGive(sensor_config_file_mutex);
 }
 

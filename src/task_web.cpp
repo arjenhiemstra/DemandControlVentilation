@@ -409,12 +409,12 @@ void Taskwebcode(void *pvParameters) {
   //Sensor config web page processing
   server.on("/sensorconfig", HTTP_GET, [](AsyncWebServerRequest *request){
 
-    xSemaphoreTake(sensor_config_file_mutex, portMAX_DELAY);
+    //xSemaphoreTake(sensor_config_file_mutex, portMAX_DELAY);
     //sensor_config_data_read();
     serializeJson(wire_sensor_data, wire_sensor_config_string);
     serializeJson(wire1_sensor_data, wire1_sensor_config_string);
 
-    xSemaphoreGive(sensor_config_file_mutex);
+    //xSemaphoreGive(sensor_config_file_mutex);
     //request->send(LittleFS, "/html/sensor_config.html", "text/html");
     request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
   });
@@ -432,7 +432,7 @@ void Taskwebcode(void *pvParameters) {
   });
   
   server.on("/sensorconfig1", HTTP_POST, [](AsyncWebServerRequest *request) {
-    xSemaphoreTake(sensor_config_file_mutex, portMAX_DELAY);
+    //xSemaphoreTake(sensor_config_file_mutex, portMAX_DELAY);
     int params = request->params();
     for(int i=0;i<params;i++){
       const AsyncWebParameter* p = request->getParam(i);
@@ -603,13 +603,13 @@ void Taskwebcode(void *pvParameters) {
     serializeJson(wire_sensor_data, Serial);
     Serial.print("\n\n");
  
-    xSemaphoreGive(sensor_config_file_mutex);
+    //xSemaphoreGive(sensor_config_file_mutex);
     //request->send(LittleFS, "/html/sensor_config.html", "text/html");
     request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor); 
   });
   
   server.on("/sensorconfig2", HTTP_POST, [](AsyncWebServerRequest *request) {
-    xSemaphoreTake(sensor_config_file_mutex, portMAX_DELAY);
+    //xSemaphoreTake(sensor_config_file_mutex, portMAX_DELAY);
     int params = request->params();
     for(int i=0;i<params;i++){
       const AsyncWebParameter* p = request->getParam(i);
@@ -780,7 +780,7 @@ void Taskwebcode(void *pvParameters) {
     serializeJson(wire1_sensor_data, Serial);
     Serial.print("\n\n");
     
-    xSemaphoreGive(sensor_config_file_mutex);
+    //xSemaphoreGive(sensor_config_file_mutex);
     //request->send(LittleFS, "/html/sensor_config.html", "text/html");
     request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
   });

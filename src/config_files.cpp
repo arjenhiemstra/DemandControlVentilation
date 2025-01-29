@@ -20,7 +20,7 @@ void sensor_config_data_read() {
     Serial.print("\n\nSensor config file 1 present: ");
     Serial.print(sensor_config1_file_present);
 
-    xSemaphoreTake(sensor_config_file_mutex, portMAX_DELAY);    
+    //xSemaphoreTake(sensor_config_file_mutex, portMAX_DELAY);    
 
     if (sensor_config1_file_present = 1) {
         File file = LittleFS.open(path1, "r");
@@ -60,7 +60,7 @@ void sensor_config_data_read() {
         serializeJson(wire1_sensor_data, Serial);
     }
 
-    xSemaphoreGive(sensor_config_file_mutex); 
+    //xSemaphoreGive(sensor_config_file_mutex); 
 }
 
 void valve_status_file_create() {
