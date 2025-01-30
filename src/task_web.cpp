@@ -140,35 +140,6 @@ const char* WIRE1_SENSOR7_CO2 = "wire1_sensor7_CO2";
 const char* WIRE_SENSOR_CONFIG = "wire_sensor_config";
 const char* WIRE1_SENSOR_CONFIG = "wire1_sensor_config";
 
-/*
-String wire_sensor_config_string;
-String wire1_sensor_config_string;
-
-//Globals defined in globals.cpp
-extern JsonDocument valve_control_data;
-extern JsonDocument wire_sensor_data;
-extern JsonDocument wire1_sensor_data;
-
-extern JsonArray wire_sensors;
-extern JsonObject wire_sensors0; 
-extern JsonObject wire_sensors1;
-extern JsonObject wire_sensors2; 
-extern JsonObject wire_sensors3;
-extern JsonObject wire_sensors4;
-extern JsonObject wire_sensors5;
-extern JsonObject wire_sensors6;
-extern JsonObject wire_sensors7;
-
-extern JsonArray wire1_sensors;
-extern JsonObject wire1_sensors0; 
-extern JsonObject wire1_sensors1;
-extern JsonObject wire1_sensors2; 
-extern JsonObject wire1_sensors3;
-extern JsonObject wire1_sensors4;
-extern JsonObject wire1_sensors5;
-extern JsonObject wire1_sensors6;
-extern JsonObject wire1_sensors7;*/
-
 void startTaskwebcode(void) {
 
   xTaskCreatePinnedToCore(Taskwebcode, "Task_web", 10000, NULL, 1, &h_Task_web, 0);
@@ -177,8 +148,7 @@ void startTaskwebcode(void) {
 
 void Taskwebcode(void *pvParameters) {
 
-  //extern SemaphoreHandle_t sensor_config_file_mutex;
-  //sensor_config_file_mutex = xSemaphoreCreateMutex();
+  //sensor_config_data_read();
     
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(LittleFS, "/html//index.html", "text/html");
@@ -408,13 +378,12 @@ void Taskwebcode(void *pvParameters) {
 
   //Sensor config web page processing
   server.on("/sensorconfig", HTTP_GET, [](AsyncWebServerRequest *request){
-
-    //xSemaphoreTake(sensor_config_file_mutex, portMAX_DELAY);
-    //sensor_config_data_read();
+  
+    Serial.print("\n\nwire sensor data from HTTP GET sensorconfig: \n\n");
+    serializeJson(wire_sensor_data, Serial);
     serializeJson(wire_sensor_data, wire_sensor_config_string);
     serializeJson(wire1_sensor_data, wire1_sensor_config_string);
-
-    //xSemaphoreGive(sensor_config_file_mutex);
+         
     //request->send(LittleFS, "/html/sensor_config.html", "text/html");
     request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
   });
@@ -432,7 +401,6 @@ void Taskwebcode(void *pvParameters) {
   });
   
   server.on("/sensorconfig1", HTTP_POST, [](AsyncWebServerRequest *request) {
-    //xSemaphoreTake(sensor_config_file_mutex, portMAX_DELAY);
     int params = request->params();
     for(int i=0;i<params;i++){
       const AsyncWebParameter* p = request->getParam(i);
@@ -589,27 +557,15 @@ void Taskwebcode(void *pvParameters) {
 
     serializeJson(wire_sensor_data, sensor_config1);
     write_config_file(path1, sensor_config1);
-    
-    /*wire_sensors0["slot"] = 0;
-    wire_sensors1["slot"] = 1;
-    wire_sensors2["slot"] = 2;
-    wire_sensors3["slot"] = 3;
-    wire_sensors4["slot"] = 4;
-    wire_sensors5["slot"] = 5;
-    wire_sensors6["slot"] = 6;
-    wire_sensors7["slot"] = 7;*/
-    
-    Serial.print("\n\n");
-    serializeJson(wire_sensor_data, Serial);
-    Serial.print("\n\n");
- 
-    //xSemaphoreGive(sensor_config_file_mutex);
+
+    //Update string to display config file contents after sving config
+    serializeJson(wire_sensor_data, wire_sensor_config_string);
+
     //request->send(LittleFS, "/html/sensor_config.html", "text/html");
-    request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor); 
+    request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
   });
   
   server.on("/sensorconfig2", HTTP_POST, [](AsyncWebServerRequest *request) {
-    //xSemaphoreTake(sensor_config_file_mutex, portMAX_DELAY);
     int params = request->params();
     for(int i=0;i<params;i++){
       const AsyncWebParameter* p = request->getParam(i);
@@ -766,21 +722,10 @@ void Taskwebcode(void *pvParameters) {
 
     serializeJson(wire1_sensor_data, sensor_config2);
     write_config_file(path2, sensor_config2);
+
+    //Update string to display config file contents after sving config
+    serializeJson(wire1_sensor_data, wire1_sensor_config_string);
     
-    /*wire1_sensors0["slot"] = 0;
-    wire1_sensors1["slot"] = 1;
-    wire1_sensors2["slot"] = 2;
-    wire1_sensors3["slot"] = 3;
-    wire1_sensors4["slot"] = 4;
-    wire1_sensors5["slot"] = 5;
-    wire1_sensors6["slot"] = 6;
-    wire1_sensors7["slot"] = 7;*/
-    
-    Serial.print("\n\n");
-    serializeJson(wire1_sensor_data, Serial);
-    Serial.print("\n\n");
-    
-    //xSemaphoreGive(sensor_config_file_mutex);
     //request->send(LittleFS, "/html/sensor_config.html", "text/html");
     request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
   });

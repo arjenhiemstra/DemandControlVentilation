@@ -68,33 +68,6 @@ String valvecontrol_processor(const String& var) {
 }
 
 String sensor_config_processor(const String& var) {
-  
-    /*extern JsonDocument wire_sensor_data;
-    extern JsonArray wire_sensors;
-    extern JsonArray wire1_sensors;
-
-    extern JsonObject wire_sensors0; 
-    extern JsonObject wire_sensors1;
-    extern JsonObject wire_sensors2; 
-    extern JsonObject wire_sensors3;
-    extern JsonObject wire_sensors4;
-    extern JsonObject wire_sensors5;
-    extern JsonObject wire_sensors6;
-    extern JsonObject wire_sensors7;
-
-    extern JsonObject wire1_sensors0; 
-    extern JsonObject wire1_sensors1;
-    extern JsonObject wire1_sensors2; 
-    extern JsonObject wire1_sensors3;
-    extern JsonObject wire1_sensors4;
-    extern JsonObject wire1_sensors5;
-    extern JsonObject wire1_sensors6;
-    extern JsonObject wire1_sensors7;
-
-    extern String wire_sensor_config_string;
-    extern String wire1_sensor_config_string;*/
-
-    //String wire_sensor0_type = wire_sensors0[String("type")];
     
     const char* path1 = "/sensor_config1.json";
     const char* path2 = "/sensor_config2.json";
@@ -102,19 +75,17 @@ String sensor_config_processor(const String& var) {
     bool sensor_config_file1_present;
     bool sensor_config_file2_present;
 
-    //xSemaphoreTake(sensor_config_file_mutex, portMAX_DELAY);
-
     if (var == "WIRE_SENSOR_CONFIG")
         return (wire_sensor_config_string);
     if (var == "WIRE1_SENSOR_CONFIG")
         return (wire1_sensor_config_string);
     
     sensor_config_file1_present = check_file_exists(path1);
-
+    
     if(sensor_config_file1_present == 1) {
         status = "<b><font color=\"green\">Sensor config file found.</font></b>";
         if (var == "STATUS_SENSOR_CONFIG1_FILE")
-            return F(status);
+            return (status);
         if (var == "WIRE_SENSOR0_TYPE")
             return (wire_sensors0["type"]);
         if (var == "WIRE_SENSOR0_ADDRESS")
@@ -330,6 +301,5 @@ String sensor_config_processor(const String& var) {
 
     return String();
 
-    //xSemaphoreGive(sensor_config_file_mutex);
 }
 
