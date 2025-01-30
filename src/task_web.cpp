@@ -171,7 +171,7 @@ extern JsonObject wire1_sensors7;*/
 
 void startTaskwebcode(void) {
 
-  xTaskCreatePinnedToCore(Taskwebcode, "Task_web", 10000, NULL, 1, &h_Task_web, CONFIG_ARDUINO_RUNNING_CORE);
+  xTaskCreatePinnedToCore(Taskwebcode, "Task_web", 10000, NULL, 1, &h_Task_web, 0);
 
 }
 

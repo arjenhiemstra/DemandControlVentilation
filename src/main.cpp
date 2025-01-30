@@ -21,8 +21,6 @@ void setup() {
   }
 
   setup_wifi();
-  //sensor_config_data_read();
-  //vTaskDelay(5000);
   startTaskwebcode();
   vTaskDelay(1000);
   start_task_valvecontrol();
@@ -30,6 +28,19 @@ void setup() {
   start_task_read_sensors();
   vTaskDelay(1000);
   start_task_display();
+  
+  if (sensor_config_file_mutex != NULL) {
+
+    Serial.print("\n\nMutex exists\n\n");
+    if (xSemaphoreTake(sensor_config_file_mutex, portMAX_DELAY) == pdPASS) {
+      Serial.print("\n\nSemaphore successfully taken\n\n");
+      sensor_config_data_read();
+      xSemaphoreGive(sensor_config_file_mutex);
+    }
+    else {
+      Serial.print("\n\nSemaphore NOT successfully taken\n\n");
+    }
+  }
 }
 
 

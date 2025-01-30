@@ -35,7 +35,7 @@ String sensor_config1_string;
 String sensor_config2_string;
 */
 
-SemaphoreHandle_t sensor_config_file_mutex;
+SemaphoreHandle_t sensor_config_file_mutex = NULL;
 
 //Global for valve control data
 JsonDocument valve_control_data;
