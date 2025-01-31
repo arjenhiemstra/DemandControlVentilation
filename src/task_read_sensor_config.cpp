@@ -4,7 +4,7 @@ TaskHandle_t task_sensconf;
 
 void start_task_read_sensor_config_code(void) {
 
-    xTaskCreatePinnedToCore(task_read_sensor_config_code, "task_sensconf", 10000, NULL, 1, &task_sensconf, 1);
+    xTaskCreatePinnedToCore(task_read_sensor_config_code, "task_sensconf", 10000, NULL, 1, &task_sensconf, 0);
 
 }
 

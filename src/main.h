@@ -11,6 +11,8 @@
 #include "task_web.h"
 #include "task_read_sensors.h"
 #include "task_display.h"
+#include "task_read_sensor_config.h"
+
 #include "valvecontrol.h"
 #include "globals.h"
 

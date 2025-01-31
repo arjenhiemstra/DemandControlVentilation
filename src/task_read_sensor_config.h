@@ -8,7 +8,7 @@
 #include "config_files.h"
 
 // function declarations
-void start_task_read_sensor_config(void);
+void start_task_read_sensor_config_code(void);
 void task_read_sensor_config_code(void *pvParameters);
 
 #endif

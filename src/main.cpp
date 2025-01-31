@@ -22,12 +22,12 @@ void setup() {
 
   setup_wifi();
   startTaskwebcode();
-  vTaskDelay(1000);
   start_task_valvecontrol();
-  vTaskDelay(1000);
   start_task_read_sensors();
-  vTaskDelay(1000);
   start_task_display();
+  start_task_read_sensor_config_code();
+  vTaskDelay(1000);
+  xTaskNotifyGive(xTaskGetHandle("task_sensconf"));
 }
 
 
