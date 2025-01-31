@@ -75,118 +75,165 @@ String sensor_config_processor(const String& var) {
     bool sensor_config_file1_present;
     bool sensor_config_file2_present;
 
+    const char* wire_sensor_type;
+    const char* wire_sensor_address;
+    const char* wire_sensor_valve;
+    const char* wire_sensor_location;
+    const char* wire_sensor_rh;
+    const char* wire_sensor_co2;
+
+    for (JsonObject wire_sensor : wire_sensor_data["wire_sensors"].as<JsonArray>()) {
+
+      wire_sensor_type = wire_sensor["type"]; // "None", "None", "None", "None", "None", "None", ...
+      wire_sensor_address = wire_sensor["address"]; // nullptr, nullptr, nullptr, nullptr, ...
+      wire_sensor_valve = wire_sensor["valve"]; // "valve0", "valve0", "valve0", "valve0", ...
+      wire_sensor_location = wire_sensor["location"]; // nullptr, nullptr, nullptr, nullptr, ...
+      wire_sensor_rh = wire_sensor["rh"]; // "false", "false", "false", "false", "false", "false", ...
+      wire_sensor_co2 = wire_sensor["co2"]; // "false", "false", "false", "false", "false", ...
+
+      Serial.print("\n\nwire sensor data in pocessor: \n\n");
+        Serial.print(wire_sensor_type[0]);
+        Serial.print("\n\n");
+    }
+
+    //String test = wire_sensor_data["wire_sensors"]
+
+    
+    
+
+
+
     if (var == "WIRE_SENSOR_CONFIG")
         return (wire_sensor_config_string);
     if (var == "WIRE1_SENSOR_CONFIG")
         return (wire1_sensor_config_string);
     
     sensor_config_file1_present = check_file_exists(path1);
-    
-    if(sensor_config_file1_present == 1) {
-        status = "<b><font color=\"green\">Sensor config file found.</font></b>";
-        if (var == "STATUS_SENSOR_CONFIG1_FILE")
-            return (status);
-        if (var == "WIRE_SENSOR0_TYPE")
-            return (wire_sensors0["type"]);
-        if (var == "WIRE_SENSOR0_ADDRESS")
-            return (wire_sensors0["address"]);
-        if (var == "WIRE_SENSOR0_VALVE")
-            return (wire_sensors0["valve"]);
-        if (var == "WIRE_SENSOR0_LOCATION")
-            return (wire_sensors0["location"]);
-        if (var == "WIRE_SENSOR0_RH")
-            return (wire_sensors0["rh"]);
-        if (var == "WIRE_SENSOR0_CO2")
-            return (wire_sensors0["rh"]);
-        if (var == "WIRE_SENSOR1_TYPE")
-            return (wire_sensors1["type"]);
-        if (var == "WIRE_SENSOR1_ADDRESS")
-            return (wire_sensors1["address"]);
-        if (var == "WIRE_SENSOR1_VALVE")
-            return (wire_sensors1["valve"]);
-        if (var == "WIRE_SENSOR0_LOCATION")
-            return (wire_sensors1["location"]);
-        if (var == "WIRE_SENSOR1_RH")
-            return (wire_sensors1["rh"]);
-        if (var == "WIRE_SENSOR0_CO2")
-            return (wire_sensors1["rh"]);
-        if (var == "WIRE_SENSOR2_TYPE")
-            return (wire_sensors2["type"]);
-        if (var == "WIRE_SENSOR2_ADDRESS")
-            return (wire_sensors2["address"]);
-        if (var == "WIRE_SENSOR2_VALVE")
-            return (wire_sensors2["valve"]);
-        if (var == "WIRE_SENSOR2_LOCATION")
-            return (wire_sensors2["location"]);
-        if (var == "WIRE_SENSOR2_RH")
-            return (wire_sensors2["rh"]);
-        if (var == "WIRE_SENSOR2_CO2")
-            return (wire_sensors2["rh"]);
-        if (var == "WIRE_SENSOR3_TYPE")
-            return (wire_sensors3["type"]);
-        if (var == "WIRE_SENSOR3_ADDRESS")
-            return (wire_sensors3["address"]);
-        if (var == "WIRE_SENSOR3_VALVE")
-            return (wire_sensors3["valve"]);
-        if (var == "WIRE_SENSOR3_LOCATION")
-            return (wire_sensors3["location"]);
-        if (var == "WIRE_SENSOR3_RH")
-            return (wire_sensors3["rh"]);
-        if (var == "WIRE_SENSOR3_CO2")
-            return (wire_sensors3["rh"]);
-        if (var == "WIRE_SENSOR4_TYPE")
-            return (wire_sensors4["type"]);
-        if (var == "WIRE_SENSOR4_ADDRESS")
-            return (wire_sensors4["address"]);
-        if (var == "WIRE_SENSOR4_VALVE")
-            return (wire_sensors4["valve"]);
-        if (var == "WIRE_SENSOR4_LOCATION")
-            return (wire_sensors4["location"]);
-        if (var == "WIRE_SENSOR4_RH")
-            return (wire_sensors4["rh"]);
-        if (var == "WIRE_SENSOR4_CO2")
-            return (wire_sensors4["rh"]);
-        if (var == "WIRE_SENSOR5_TYPE")
-            return (wire_sensors5["type"]);
-        if (var == "WIRE_SENSOR5_ADDRESS")
-            return (wire_sensors5["address"]);
-        if (var == "WIRE_SENSOR5_VALVE")
-            return (wire_sensors5["valve"]);
-        if (var == "WIRE_SENSOR5_LOCATION")
-            return (wire_sensors5["location"]);
-        if (var == "WIRE_SENSOR5_RH")
-            return (wire_sensors5["rh"]);
-        if (var == "WIRE_SENSOR5_CO2")
-            return (wire_sensors5["rh"]);
-        if (var == "WIRE_SENSOR6_TYPE")
-            return (wire_sensors6["type"]);
-        if (var == "WIRE_SENSOR6_ADDRESS")
-            return (wire_sensors6["address"]);
-        if (var == "WIRE_SENSOR6_VALVE")
-            return (wire_sensors6["valve"]);
-        if (var == "WIRE_SENSOR6_LOCATION")
-            return (wire_sensors6["location"]);
-        if (var == "WIRE_SENSOR6_RH")
-            return (wire_sensors6["rh"]);
-        if (var == "WIRE_SENSOR6_CO2")
-            return (wire_sensors6["rh"]);
-        if (var == "WIRE_SENSOR7_TYPE")
-            return (wire_sensors7["type"]);
-        if (var == "WIRE_SENSOR7_ADDRESS")
-            return (wire_sensors7["address"]);
-        if (var == "WIRE_SENSOR7_VALVE")
-            return (wire_sensors7["valve"]);
-        if (var == "WIRE_SENSOR7_LOCATION")
-            return (wire_sensors7["location"]);
-        if (var == "WIRE_SENSOR7_RH")
-            return (wire_sensors7["rh"]);
-        if (var == "WIRE_SENSOR7_CO2")
-            return (wire_sensors7["rh"]);
-    }
-    else {
-        status = "<b><font color=\"red\">Sensor config file not found. Create a file with button below.</font></b>";
-        if (var == "STATUS_SENSOR_CONFIG1_FILE")
-            return F(status);
+
+    if (sensor_config_file_mutex != NULL) {
+        if(xSemaphoreTake(sensor_config_file_mutex, (TickType_t)0)) {
+            
+            String wire_sensors0_type = wire_sensors[0][String("type")];
+            Serial.print("\n\nwire_sensors0_type: ");
+            Serial.print(wire_sensors0_type);
+            Serial.print("\n\n");
+
+            //String temp;
+            Serial.print("\n\nPrint wire_sensors global variable from processor: \n");
+            //serializeJson(wire_sensors, temp);
+            //Serial.print(temp);
+            Serial.print("\n\n");
+            
+            if(sensor_config_file1_present == 1) {
+                status = "<b><font color=\"green\">Sensor config file found.</font></b>";
+                if (var == "STATUS_SENSOR_CONFIG1_FILE")
+                    return (status);
+                if (var == "WIRE_SENSOR0_TYPE")
+                    return (wire_sensors0[String("type")]);
+                if (var == "WIRE_SENSOR0_ADDRESS")
+                    return (wire_sensors0["address"]);
+                if (var == "WIRE_SENSOR0_VALVE")
+                    return (wire_sensors0["valve"]);
+                if (var == "WIRE_SENSOR0_LOCATION")
+                    return (wire_sensors0["location"]);
+                if (var == "WIRE_SENSOR0_RH")
+                    return (wire_sensors0["rh"]);
+                if (var == "WIRE_SENSOR0_CO2")
+                    return (wire_sensors0["rh"]);
+                if (var == "WIRE_SENSOR1_TYPE")
+                    return (wire_sensors1["type"]);
+                if (var == "WIRE_SENSOR1_ADDRESS")
+                    return (wire_sensors1["address"]);
+                if (var == "WIRE_SENSOR1_VALVE")
+                    return (wire_sensors1["valve"]);
+                if (var == "WIRE_SENSOR0_LOCATION")
+                    return (wire_sensors1["location"]);
+                if (var == "WIRE_SENSOR1_RH")
+                    return (wire_sensors1["rh"]);
+                if (var == "WIRE_SENSOR0_CO2")
+                    return (wire_sensors1["rh"]);
+                if (var == "WIRE_SENSOR2_TYPE")
+                    return (wire_sensors2["type"]);
+                if (var == "WIRE_SENSOR2_ADDRESS")
+                    return (wire_sensors2["address"]);
+                if (var == "WIRE_SENSOR2_VALVE")
+                    return (wire_sensors2["valve"]);
+                if (var == "WIRE_SENSOR2_LOCATION")
+                    return (wire_sensors2["location"]);
+                if (var == "WIRE_SENSOR2_RH")
+                    return (wire_sensors2["rh"]);
+                if (var == "WIRE_SENSOR2_CO2")
+                    return (wire_sensors2["rh"]);
+                if (var == "WIRE_SENSOR3_TYPE")
+                    return (wire_sensors3["type"]);
+                if (var == "WIRE_SENSOR3_ADDRESS")
+                    return (wire_sensors3["address"]);
+                if (var == "WIRE_SENSOR3_VALVE")
+                    return (wire_sensors3["valve"]);
+                if (var == "WIRE_SENSOR3_LOCATION")
+                    return (wire_sensors3["location"]);
+                if (var == "WIRE_SENSOR3_RH")
+                    return (wire_sensors3["rh"]);
+                if (var == "WIRE_SENSOR3_CO2")
+                    return (wire_sensors3["rh"]);
+                if (var == "WIRE_SENSOR4_TYPE")
+                    return (wire_sensors4["type"]);
+                if (var == "WIRE_SENSOR4_ADDRESS")
+                    return (wire_sensors4["address"]);
+                if (var == "WIRE_SENSOR4_VALVE")
+                    return (wire_sensors4["valve"]);
+                if (var == "WIRE_SENSOR4_LOCATION")
+                    return (wire_sensors4["location"]);
+                if (var == "WIRE_SENSOR4_RH")
+                    return (wire_sensors4["rh"]);
+                if (var == "WIRE_SENSOR4_CO2")
+                    return (wire_sensors4["rh"]);
+                if (var == "WIRE_SENSOR5_TYPE")
+                    return (wire_sensors5["type"]);
+                if (var == "WIRE_SENSOR5_ADDRESS")
+                    return (wire_sensors5["address"]);
+                if (var == "WIRE_SENSOR5_VALVE")
+                    return (wire_sensors5["valve"]);
+                if (var == "WIRE_SENSOR5_LOCATION")
+                    return (wire_sensors5["location"]);
+                if (var == "WIRE_SENSOR5_RH")
+                    return (wire_sensors5["rh"]);
+                if (var == "WIRE_SENSOR5_CO2")
+                    return (wire_sensors5["rh"]);
+                if (var == "WIRE_SENSOR6_TYPE")
+                    return (wire_sensors6["type"]);
+                if (var == "WIRE_SENSOR6_ADDRESS")
+                    return (wire_sensors6["address"]);
+                if (var == "WIRE_SENSOR6_VALVE")
+                    return (wire_sensors6["valve"]);
+                if (var == "WIRE_SENSOR6_LOCATION")
+                    return (wire_sensors6["location"]);
+                if (var == "WIRE_SENSOR6_RH")
+                    return (wire_sensors6["rh"]);
+                if (var == "WIRE_SENSOR6_CO2")
+                    return (wire_sensors6["rh"]);
+                if (var == "WIRE_SENSOR7_TYPE")
+                    return (wire_sensors7["type"]);
+                if (var == "WIRE_SENSOR7_ADDRESS")
+                    return (wire_sensors7["address"]);
+                if (var == "WIRE_SENSOR7_VALVE")
+                    return (wire_sensors7["valve"]);
+                if (var == "WIRE_SENSOR7_LOCATION")
+                    return (wire_sensors7["location"]);
+                if (var == "WIRE_SENSOR7_RH")
+                    return (wire_sensors7["rh"]);
+                if (var == "WIRE_SENSOR7_CO2")
+                    return (wire_sensors7["rh"]);
+            }
+            else {
+                status = "<b><font color=\"red\">Sensor config file not found. Create a file with button below.</font></b>";
+                if (var == "STATUS_SENSOR_CONFIG1_FILE")
+                    return F(status);
+            }
+            if(xSemaphoreGive(sensor_config_file_mutex) != pdTRUE) {
+				configASSERT(pdFALSE);
+			}
+        }
     }
 
     sensor_config_file2_present = check_file_exists(path2);
@@ -195,7 +242,7 @@ String sensor_config_processor(const String& var) {
         status = "<b><font color=\"green\">Sensor config file found.</font></b>";
         if (var == "STATUS_SENSOR_CONFIG2_FILE")
             return F(status);
-        if (var == "WIRE1_SENSOR0_TYPE")
+        /*if (var == "WIRE1_SENSOR0_TYPE")
             return (wire1_sensors0["type"]);
         if (var == "WIRE1_SENSOR0_ADDRESS")
             return (wire1_sensors0["address"]);
@@ -290,7 +337,7 @@ String sensor_config_processor(const String& var) {
         if (var == "WIRE1_SENSOR7_RH")
             return (wire1_sensors7["rh"]);
         if (var == "WIRE1_SENSOR7_CO2")
-            return (wire1_sensors7["rh"]);
+            return (wire1_sensors7["rh"]);*/
     }
         
     else {

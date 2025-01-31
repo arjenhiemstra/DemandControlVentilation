@@ -8,33 +8,46 @@ void sensor_config_data_read() {
     String sensor_config1_string;
     String sensor_config2_string;
 
-    bool sensor_config1_file_present;
-    bool sensor_config2_file_present;
-   
+    bool sensor_config1_file_present = 0;
+    bool sensor_config2_file_present = 0;
+    
+    sensor_config1_file_present = check_file_exists(path1);
+    
     Serial.print("\n\nSensor config file 1 present: ");
     Serial.print(sensor_config1_file_present);
+    Serial.print("\n\n");
 
-    if (sensor_config1_file_present = 1) {
-        File file = LittleFS.open(path1, "r");
+    if (sensor_config_file_mutex != NULL) {
+        if(xSemaphoreTake(sensor_config_file_mutex, (TickType_t)0)) {
+            if (sensor_config1_file_present = 1) {
+                File file = LittleFS.open(path1, "r");
 
-        while(file.available()) {
-            sensor_config1_string = file.readString();
+                while(file.available()) {
+                    sensor_config1_string = file.readString();
+                }
+                file.close();
+
+                Serial.print("\n\nContents config file wire string: \n");
+                Serial.print(sensor_config1_string);
+                Serial.print("\n\n");
+                
+                deserializeJson(wire_sensor_data, sensor_config1_string);
+                
+                Serial.print("\n\nRead back contents from global variable: \n");
+                serializeJson(wire_sensor_data, Serial);
+                Serial.print("\n\n");
+            }
+            if(xSemaphoreGive(sensor_config_file_mutex) != pdTRUE) {
+				configASSERT(pdFALSE);
+			}
         }
-        file.close();
-
-        Serial.print("\n\nContents config file wire string: \n");
-        Serial.print(sensor_config1_string);
-        
-        deserializeJson(wire_sensor_data, sensor_config1_string);
-        
-        Serial.print("\n\nRead back contents config file wire: \n");
-        serializeJson(wire_sensor_data, Serial);
     }
 
     sensor_config2_file_present = check_file_exists(path2);
 
-    Serial.print("\n\nSensor config file 2 present: ");
+    Serial.print("\n\nSensor config file 2 present: \n");
     Serial.print(sensor_config2_file_present);
+    Serial.print("\n\n");
 
     if (sensor_config2_file_present = 1) {
         
