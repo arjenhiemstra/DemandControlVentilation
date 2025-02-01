@@ -17,33 +17,28 @@ void sensor_config_data_read() {
     Serial.print(sensor_config1_file_present);
     Serial.print("\n\n");
 
-    if (sensor_config_file_mutex != NULL) {
-        if(xSemaphoreTake(sensor_config_file_mutex, (TickType_t)0)) {
-            if (sensor_config1_file_present = 1) {
-                File file = LittleFS.open(path1, "r");
+    xSemaphoreTake(sensor_config_file_mutex, portMAX_DELAY);
+    if (sensor_config1_file_present = 1) {
+        File file = LittleFS.open(path1, "r");
 
-                while(file.available()) {
-                    sensor_config1_string = file.readString();
-                }
-                file.close();
-
-                Serial.print("\n\nContents config file wire string: \n");
-                Serial.print(sensor_config1_string);
-                Serial.print("\n\n");
-                
-                deserializeJson(wire_sensor_data, sensor_config1_string);
-                
-                Serial.print("\n\nRead back contents from global variable: \n");
-                serializeJson(wire_sensor_data, Serial);
-                Serial.print("\n\n");
-            }
+        while(file.available()) {
+            sensor_config1_string = file.readString();
         }
-        if(xSemaphoreGive(sensor_config_file_mutex) != pdTRUE) {
-			configASSERT(pdFALSE);
-            Serial.print("\n\nMutex released\n\n");
-		}
+        file.close();
+
+        Serial.print("\n\nContents config file wire string: \n");
+        Serial.print(sensor_config1_string);
+        Serial.print("\n\n");
+        
+        deserializeJson(wire_sensor_data, sensor_config1_string);
+        
+        Serial.print("\n\nRead back contents from global variable: \n");
+        serializeJson(wire_sensor_data, Serial);
+        Serial.print("\n\n");
     }
 
+    xSemaphoreGive(sensor_config_file_mutex);
+	
     sensor_config2_file_present = check_file_exists(path2);
 
     Serial.print("\n\nSensor config file 2 present: \n");

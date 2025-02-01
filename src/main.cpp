@@ -27,13 +27,8 @@ void setup() {
   start_task_valvecontrol();
   start_task_read_sensors();
   start_task_display();
-  //start_task_read_sensor_config_code();
-  //vTaskDelay(1000);
-  //xTaskNotifyGive(xTaskGetHandle("task_sensconf"));
-  
 
 }
-
 
 void loop() { }
 

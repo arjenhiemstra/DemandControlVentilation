@@ -11,10 +11,10 @@ void start_task_read_sensors(void) {
 void task_read_sensors_code(void * pvParameters)
 {
     for(;;) {
-        //Serial.print("\n\nSensors running on core: ");
-        //Serial.print(xPortGetCoreID());
+        Serial.print("\n\nReading sensors: \n\n");
+        Serial.print(xPortGetCoreID());
         //read_bus0();
-        //read_bus1();
+        read_bus1();
         vTaskDelay(10000);
     }
   
