@@ -382,7 +382,7 @@ void Taskwebcode(void *pvParameters) {
     Serial.print("\n\nwire sensor data from HTTP GET sensorconfig: \n\n");
     serializeJson(wire_sensor_data, Serial);
     Serial.print("\n\n");
-    
+
     //Update config file data for display in browser
     serializeJson(wire_sensor_data, wire_sensor_config_string);
     serializeJson(wire1_sensor_data, wire1_sensor_config_string);
@@ -404,8 +404,8 @@ void Taskwebcode(void *pvParameters) {
   });
   
   server.on("/sensorconfig1", HTTP_POST, [](AsyncWebServerRequest *request) {
-    if (sensor_config_file_mutex != NULL) {
-      if(xSemaphoreTake(sensor_config_file_mutex, (TickType_t)0)) { 
+    //if (sensor_config_file_mutex != NULL) {
+      //if(xSemaphoreTake(sensor_config_file_mutex, (TickType_t)0)) { 
         int params = request->params();
         for(int i=0;i<params;i++){
           const AsyncWebParameter* p = request->getParam(i);
@@ -413,147 +413,147 @@ void Taskwebcode(void *pvParameters) {
             if (p->name() == WIRE_SENSOR0_TYPE) {
               wire_sensor_data["wire_sensor0"]["type"] = p->value().c_str();;
             }
-            /*if (p->name() == WIRE_SENSOR0_ADDRESS) {
-              wire_sensors0["address"] = p->value().c_str();
+            if (p->name() == WIRE_SENSOR0_ADDRESS) {
+              wire_sensor_data["wire_sensor0"]["address"] = p->value().c_str();
             }     
             if (p->name() == WIRE_SENSOR0_VALVE) {
-              wire_sensors0["valve"] = p->value().c_str();
+              wire_sensor_data["wire_sensor0"]["valve"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR0_LOCATION) {
-              wire_sensors0["location"] = p->value().c_str();;
+              wire_sensor_data["wire_sensor0"]["location"] = p->value().c_str();;
             }
             if (p->name() == WIRE_SENSOR0_RH) {
-              wire_sensors0["rh"] = p->value().c_str();
+              wire_sensor_data["wire_sensor0"]["rh"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR0_CO2) {
-              wire_sensors0["co2"] = p->value().c_str();
+              wire_sensor_data["wire_sensor0"]["co2"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR1_TYPE) {
-              wire_sensors1["type"] = p->value().c_str();
+              wire_sensor_data["wire_sensor1"]["type"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR1_ADDRESS) {
-              wire_sensors1["address"] = p->value().c_str();
+              wire_sensor_data["wire_sensor1"]["address"] = p->value().c_str();
             }     
             if (p->name() == WIRE_SENSOR1_VALVE) {
-              wire_sensors1["valve"] = p->value().c_str();
+              wire_sensor_data["wire_sensor1"]["valve"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR1_LOCATION) {
-              wire_sensors1["location"] = p->value().c_str();
+              wire_sensor_data["wire_sensor1"]["location"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR1_RH) {
-              wire_sensors1["rh"] = p->value().c_str();
+              wire_sensor_data["wire_sensor1"]["rh"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR1_CO2) {
-              wire_sensors1["co2"] = p->value().c_str();
+              wire_sensor_data["wire_sensor1"]["co2"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR2_TYPE) {
-              wire_sensors2["type"] = p->value().c_str();
+              wire_sensor_data["wire_sensor2"]["type"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR2_ADDRESS) {
-              wire_sensors2["address"] = p->value().c_str();
+              wire_sensor_data["wire_sensor2"]["address"] = p->value().c_str();
             }     
             if (p->name() == WIRE_SENSOR2_VALVE) {
-              wire_sensors2["valve"] = p->value().c_str();
+              wire_sensor_data["wire_sensor2"]["valve"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR2_LOCATION) {
-              wire_sensors2["location"] = p->value().c_str();
+              wire_sensor_data["wire_sensor2"]["location"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR2_RH) {
-              wire_sensors2["rh"] = p->value().c_str();
+              wire_sensor_data["wire_sensor2"]["rh"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR2_CO2) {
-              wire_sensors2["co2"] = p->value().c_str();
+              wire_sensor_data["wire_sensor2"]["co2"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR3_TYPE) {
-              wire_sensors3["type"] = p->value().c_str();
+              wire_sensor_data["wire_sensor3"]["type"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR3_ADDRESS) {
-              wire_sensors3["address"] = p->value().c_str();
+              wire_sensor_data["wire_sensor3"]["address"] = p->value().c_str();
             }     
             if (p->name() == WIRE_SENSOR3_VALVE) {
-              wire_sensors3["valve"] = p->value().c_str();
+              wire_sensor_data["wire_sensor3"]["valve"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR3_LOCATION) {
-              wire_sensors3["location"] = p->value().c_str();
+              wire_sensor_data["wire_sensor3"]["location"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR3_RH) {
-              wire_sensors3["rh"] = p->value().c_str();
+              wire_sensor_data["wire_sensor3"]["rh"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR3_CO2) {
-              wire_sensors3["co2"] = p->value().c_str();
+              wire_sensor_data["wire_sensor3"]["co2"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR4_TYPE) {
-              wire_sensors4["type"] = p->value().c_str();
+              wire_sensor_data["wire_sensor4"]["type"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR4_ADDRESS) {
-              wire_sensors4["address"] = p->value().c_str();
+              wire_sensor_data["wire_sensor4"]["address"] = p->value().c_str();
             }     
             if (p->name() == WIRE_SENSOR4_VALVE) {
-              wire_sensors4["valve"] = p->value().c_str();
+              wire_sensor_data["wire_sensor4"]["valve"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR4_LOCATION) {
-              wire_sensors4["location"] = p->value().c_str(); 
+              wire_sensor_data["wire_sensor4"]["location"] = p->value().c_str(); 
             }
             if (p->name() == WIRE_SENSOR4_RH) {
-              wire_sensors4["rh"] = p->value().c_str();
+              wire_sensor_data["wire_sensor4"]["rh"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR4_CO2) {
-              wire_sensors4["co2"] = p->value().c_str();
+              wire_sensor_data["wire_sensor4"]["co2"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR5_TYPE) {
-              wire_sensors5["type"] = p->value().c_str();
+              wire_sensor_data["wire_sensor5"]["type"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR5_ADDRESS) {
-              wire_sensors5["address"] = p->value().c_str();
+              wire_sensor_data["wire_sensor5"]["address"] = p->value().c_str();
             }     
             if (p->name() == WIRE_SENSOR5_VALVE) {
-              wire_sensors5["valve"] = p->value().c_str();
+              wire_sensor_data["wire_sensor5"]["valve"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR5_LOCATION) {
-              wire_sensors5["location"] = p->value().c_str();
+              wire_sensor_data["wire_sensor5"]["location"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR5_RH) {
-              wire_sensors5["rh"] = p->value().c_str();
+              wire_sensor_data["wire_sensor5"]["rh"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR5_CO2) {
-              wire_sensors5["co2"] = p->value().c_str();
+              wire_sensor_data["wire_sensor5"]["co2"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR6_TYPE) {
-              wire_sensors6["type"] = p->value().c_str();
+              wire_sensor_data["wire_sensor6"]["type"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR6_ADDRESS) {
-              wire_sensors6["address"] = p->value().c_str();
+              wire_sensor_data["wire_sensor6"]["address"] = p->value().c_str();
             }     
             if (p->name() == WIRE_SENSOR6_VALVE) {
-              wire_sensors6["valve"] = p->value().c_str();
+              wire_sensor_data["wire_sensor6"]["valve"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR6_LOCATION) {
-              wire_sensors6["location"] = p->value().c_str();
+              wire_sensor_data["wire_sensor6"]["location"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR6_RH) {
-              wire_sensors6["rh"] = p->value().c_str();
+              wire_sensor_data["wire_sensor6"]["rh"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR6_CO2) {
-              wire_sensors6["co2"] = p->value().c_str();
+              wire_sensor_data["wire_sensor6"]["co2"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR7_TYPE) {
-              wire_sensors7["type"] = p->value().c_str();
+              wire_sensor_data["wire_sensor7"]["type"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR7_ADDRESS) {
-              wire_sensors7["address"] = p->value().c_str();
+              wire_sensor_data["wire_sensor7"]["address"] = p->value().c_str();
             }     
             if (p->name() == WIRE_SENSOR7_VALVE) {
-              wire_sensors7["valve"] = p->value().c_str();
+              wire_sensor_data["wire_sensor7"]["valve"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR7_LOCATION) {
-              wire_sensors7["location"] = p->value().c_str();
+              wire_sensor_data["wire_sensor7"]["location"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR7_RH) {
-              wire_sensors7["rh"] = p->value().c_str();
+              wire_sensor_data["wire_sensor7"]["rh"] = p->value().c_str();
             }
             if (p->name() == WIRE_SENSOR7_CO2) {
-              wire_sensors7["co2"] = p->value().c_str();
-            }*/
+              wire_sensor_data["wire_sensor7"]["co2"] = p->value().c_str();
+            }
           }
         }
           
@@ -563,11 +563,11 @@ void Taskwebcode(void *pvParameters) {
         write_config_file(path1, sensor_config1);
         //Update string to display config file contents after saving config
         serializeJson(wire_sensor_data, wire_sensor_config_string);
-        if(xSemaphoreGive(sensor_config_file_mutex) != pdTRUE) {
-  		    configASSERT(pdFALSE);
-	      }
-      }
-    }
+        //if(xSemaphoreGive(sensor_config_file_mutex) != pdTRUE) {
+  		   // configASSERT(pdFALSE);
+	      //}
+      //}
+    //}
 
     //request->send(LittleFS, "/html/sensor_config.html", "text/html");
     request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
@@ -578,150 +578,150 @@ void Taskwebcode(void *pvParameters) {
     for(int i=0;i<params;i++){
       const AsyncWebParameter* p = request->getParam(i);
       if(p->isPost()){
-        /*if (p->name() == WIRE1_SENSOR0_TYPE) {
-          wire1_sensors0["type"] = p->value().c_str();;
+        if (p->name() == WIRE1_SENSOR0_TYPE) {
+          wire1_sensor_data["wire1_sensor0"]["type"] = p->value().c_str();;
         }
         if (p->name() == WIRE1_SENSOR0_ADDRESS) {
-          wire1_sensors0["address"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor0"]["address"] = p->value().c_str();
         }     
         if (p->name() == WIRE1_SENSOR0_VALVE) {
-          wire1_sensors0["valve"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor0"]["valve"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR0_LOCATION) {
-          wire1_sensors0["location"] = p->value().c_str();;
+          wire1_sensor_data["wire1_sensor0"]["location"] = p->value().c_str();;
         }
         if (p->name() == WIRE1_SENSOR0_RH) {
-          wire1_sensors0["rh"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor0"]["rh"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR0_CO2) {
-          wire1_sensors0["co2"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor0"]["co2"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR1_TYPE) {
-          wire1_sensors1["type"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor1"]["type"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR1_ADDRESS) {
-          wire1_sensors1["address"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor1"]["address"] = p->value().c_str();
         }     
         if (p->name() == WIRE1_SENSOR1_VALVE) {
-          wire1_sensors1["valve"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor1"]["valve"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR1_LOCATION) {
-          wire1_sensors1["location"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor1"]["location"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR1_RH) {
-          wire1_sensors1["rh"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor1"]["rh"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR1_CO2) {
-          wire1_sensors1["co2"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor1"]["co2"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR2_TYPE) {
-          wire1_sensors2["type"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor2"]["type"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR2_ADDRESS) {
-          wire1_sensors2["address"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor2"]["address"] = p->value().c_str();
         }     
         if (p->name() == WIRE1_SENSOR2_VALVE) {
-          wire1_sensors2["valve"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor2"]["valve"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR2_LOCATION) {
-          wire1_sensors2["location"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor2"]["location"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR2_RH) {
-          wire1_sensors2["rh"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor2"]["rh"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR2_CO2) {
-          wire1_sensors2["co2"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor2"]["co2"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR3_TYPE) {
-          wire1_sensors3["type"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor3"]["type"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR3_ADDRESS) {
-          wire1_sensors3["address"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor3"]["address"] = p->value().c_str();
         }     
         if (p->name() == WIRE1_SENSOR3_VALVE) {
-          wire1_sensors3["valve"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor3"]["valve"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR3_LOCATION) {
-          wire1_sensors3["location"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor3"]["location"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR3_RH) {
-          wire1_sensors3["rh"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor3"]["rh"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR3_CO2) {
-          wire1_sensors3["co2"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor3"]["co2"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR4_TYPE) {
-          wire1_sensors4["type"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor4"]["type"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR4_ADDRESS) {
-          wire1_sensors4["address"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor4"]["address"] = p->value().c_str();
         }     
         if (p->name() == WIRE1_SENSOR4_VALVE) {
-          wire1_sensors4["valve"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor4"]["valve"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR4_LOCATION) {
-          wire1_sensors4["location"] = p->value().c_str(); 
+          wire1_sensor_data["wire1_sensor4"]["location"] = p->value().c_str(); 
         }
         if (p->name() == WIRE1_SENSOR4_RH) {
-          wire1_sensors4["rh"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor4"]["rh"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR4_CO2) {
-          wire1_sensors4["co2"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor4"]["co2"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR5_TYPE) {
-          wire1_sensors5["type"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor5"]["type"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR5_ADDRESS) {
-          wire1_sensors5["address"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor5"]["address"] = p->value().c_str();
         }     
         if (p->name() == WIRE1_SENSOR5_VALVE) {
-          wire1_sensors5["valve"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor5"]["valve"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR5_LOCATION) {
-          wire1_sensors5["location"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor5"]["location"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR5_RH) {
-          wire1_sensors5["rh"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor5"]["rh"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR5_CO2) {
-          wire1_sensors5["co2"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor5"]["co2"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR6_TYPE) {
-          wire1_sensors6["type"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor6"]["type"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR6_ADDRESS) {
-          wire1_sensors6["address"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor6"]["address"] = p->value().c_str();
         }     
         if (p->name() == WIRE1_SENSOR6_VALVE) {
-          wire1_sensors6["valve"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor6"]["valve"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR6_LOCATION) {
-          wire1_sensors6["location"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor6"]["location"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR6_RH) {
-          wire1_sensors6["rh"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor6"]["rh"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR6_CO2) {
-          wire1_sensors6["co2"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor6"]["co2"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR7_TYPE) {
-          wire1_sensors7["type"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor7"]["type"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR7_ADDRESS) {
-          wire1_sensors7["address"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor7"]["address"] = p->value().c_str();
         }     
         if (p->name() == WIRE1_SENSOR7_VALVE) {
-          wire1_sensors7["valve"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor7"]["valve"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR7_LOCATION) {
-          wire1_sensors7["location"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor7"]["location"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR7_RH) {
-          wire1_sensors7["rh"] = p->value().c_str();
+          wire1_sensor_data["wire1_sensor7"]["rh"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR7_CO2) {
-          wire1_sensors7["co2"] = p->value().c_str();
-        }*/
+          wire1_sensor_data["wire1_sensor7"]["co2"] = p->value().c_str();
+        }
       }
     }
     

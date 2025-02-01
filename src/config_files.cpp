@@ -37,10 +37,11 @@ void sensor_config_data_read() {
                 serializeJson(wire_sensor_data, Serial);
                 Serial.print("\n\n");
             }
-            if(xSemaphoreGive(sensor_config_file_mutex) != pdTRUE) {
-				configASSERT(pdFALSE);
-			}
         }
+        if(xSemaphoreGive(sensor_config_file_mutex) != pdTRUE) {
+			configASSERT(pdFALSE);
+            Serial.print("\n\nMutex released\n\n");
+		}
     }
 
     sensor_config2_file_present = check_file_exists(path2);
