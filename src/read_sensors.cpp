@@ -43,6 +43,7 @@ void read_bus0(void) {
 
     sensor_config_file_present = check_file_exists(path1);
 
+    /*
     if(sensor_config_file_present == 0) {
         for (int slot=0;slot<8;slot++) {
         
@@ -141,7 +142,7 @@ void read_bus0(void) {
                 Serial.print("\n\nSensor not found");
             }
         }
-    }
+    }*/
 
     //Serial.print("\nScanning bus0\n");
 

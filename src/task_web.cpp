@@ -411,9 +411,9 @@ void Taskwebcode(void *pvParameters) {
           const AsyncWebParameter* p = request->getParam(i);
           if(p->isPost()){
             if (p->name() == WIRE_SENSOR0_TYPE) {
-              wire_sensors0["type"] = p->value().c_str();;
+              wire_sensor_data["wire_sensor0"]["type"] = p->value().c_str();;
             }
-            if (p->name() == WIRE_SENSOR0_ADDRESS) {
+            /*if (p->name() == WIRE_SENSOR0_ADDRESS) {
               wire_sensors0["address"] = p->value().c_str();
             }     
             if (p->name() == WIRE_SENSOR0_VALVE) {
@@ -553,7 +553,7 @@ void Taskwebcode(void *pvParameters) {
             }
             if (p->name() == WIRE_SENSOR7_CO2) {
               wire_sensors7["co2"] = p->value().c_str();
-            }
+            }*/
           }
         }
           
@@ -578,7 +578,7 @@ void Taskwebcode(void *pvParameters) {
     for(int i=0;i<params;i++){
       const AsyncWebParameter* p = request->getParam(i);
       if(p->isPost()){
-        if (p->name() == WIRE1_SENSOR0_TYPE) {
+        /*if (p->name() == WIRE1_SENSOR0_TYPE) {
           wire1_sensors0["type"] = p->value().c_str();;
         }
         if (p->name() == WIRE1_SENSOR0_ADDRESS) {
@@ -721,7 +721,7 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == WIRE1_SENSOR7_CO2) {
           wire1_sensors7["co2"] = p->value().c_str();
-        }
+        }*/
       }
     }
     
