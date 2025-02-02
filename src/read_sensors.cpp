@@ -32,10 +32,13 @@ Adafruit_AHTX0 AHT20_1;
 Adafruit_AHTX0 AHT20_2;
 SensirionI2CScd4x SCD4X_1;
 SensirionI2CScd4x SCD4X_2;
+//SCD4x SCD4X_1;
+//SCD4x SCD4X_2;
 
 void read_bus0(void) {
  
-    Wire.begin(I2C_SDA1, I2C_SCL1);
+    Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
+    vTaskDelay(1000);
 
     bool sensor_config_file_present;
     const char* path1 = "/sensor_config1.json";
@@ -46,20 +49,23 @@ void read_bus0(void) {
         for (int slot=0;slot<8;slot++) {
 
             String sensor = "wire_sensor" + String(slot);
-        
+            Serial.print("\nWire sensors, slot ");
+            Serial.print(slot);
+                    
             Wire.beginTransmission(TCAADDR);
             Wire.write(1 << slot);
             Wire.endTransmission();
 
             String sensor_type = wire_sensor_data[sensor]["type"];
             String sensor_address = wire_sensor_data[sensor]["address"];
-            Serial.print("\n\n");
+            Serial.print("\nSensor type: ");
             Serial.print(sensor_type);
-            Serial.print("\n\n");
+            Serial.print("\n");
 
             if (sensor_type == "DHT20") {
-                vTaskDelay(2000);
+                
                 DHT1.begin();
+                vTaskDelay(2000);
                 int status = DHT1.read();
                 
                 sensor1_data[slot][0] = DHT1.getTemperature();
@@ -70,22 +76,44 @@ void read_bus0(void) {
             }
             
             else if (sensor_type == "AHT20") {
-                
-                vTaskDelay(1000);
+                               
                 AHT20_1.begin();
+                vTaskDelay(1000);
                 sensors_event_t humidity, temp;
                 AHT20_1.getEvent(&humidity, &temp);// populate temp and humidity objects with fresh data
                 
                 sensor1_data[slot][0] = temp.temperature;
                 sensor1_data[slot][1] = humidity.relative_humidity;
                 
-                Serial.print("Temperature: "); Serial.print(temp.temperature); Serial.println(" degrees C");
-                Serial.print("Humidity: "); Serial.print(humidity.relative_humidity); Serial.println("% rH");
+                Serial.print("Temperature: "); Serial.print(temp.temperature); Serial.print(" degrees C");
+                Serial.print(",\t");
+                Serial.print("Humidity: "); Serial.print(humidity.relative_humidity); Serial.print("% rH");
             }
             
-            else if (sensor_type == "SCD40" || "SCD41") {
+            else if (sensor_type == "SCD40" || sensor_type == "SCD41") {
                 
-                vTaskDelay(1000);
+                
+                /*SCD4X_1.begin();
+              
+                vTaskDelay(5200);
+                SCD4X_1.enableDebugging(Serial);
+            
+                float co2 = 0;
+                float temperature = 0.0f;
+                float humidity = 0.0f;
+
+                sensor1_data[slot][0] = SCD4X_1.getTemperature();
+                sensor1_data[slot][1] = SCD4X_1.getHumidity();
+                sensor1_data[slot][2] = SCD4X_1.getCO2();
+                Serial.print("Co2:");
+                Serial.print(sensor1_data[slot][2]);
+                Serial.print("\t");
+                Serial.print("Temperature:");
+                Serial.print(sensor1_data[slot][0]);
+                Serial.print("\t");
+                Serial.print("Humidity:");
+                Serial.println(sensor1_data[slot][1]);*/
+                
                 SCD4X_1.begin(Wire);
                 
                 uint16_t error;
@@ -122,60 +150,63 @@ void read_bus0(void) {
     }
 }
 
-
 void read_bus1(void) {
  
-    Wire1.begin(I2C_SDA2, I2C_SCL2);
-
+    Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
+    vTaskDelay(1000);
+    
     bool sensor_config_file_present;
-    const char* path2 = "/sensor_config2.json";
+    const char* path = "/sensor_config2.json";
 
-    sensor_config_file_present = check_file_exists(path2);
+    sensor_config_file_present = check_file_exists(path);
  
     if(sensor_config_file_present == 1) {
         for (int slot=0;slot<8;slot++) {
 
             String sensor = "wire1_sensor" + String(slot);
-        
+            Serial.print("\nWire1 sensors, slot ");
+            Serial.print(slot);
+                    
             Wire1.beginTransmission(TCAADDR);
             Wire1.write(1 << slot);
             Wire1.endTransmission();
 
             String sensor_type = wire1_sensor_data[sensor]["type"];
             String sensor_address = wire1_sensor_data[sensor]["address"];
-            Serial.print("\n\n");
+            Serial.print("\nSensor type: ");
             Serial.print(sensor_type);
-            Serial.print("\n\n");
+            Serial.print("\n");
 
             if (sensor_type == "DHT20") {
-                vTaskDelay(2000);
+                
                 DHT2.begin();
+                vTaskDelay(2000);
                 int status = DHT2.read();
                 
                 sensor2_data[slot][0] = DHT2.getTemperature();
+                sensor2_data[slot][1] = DHT2.getHumidity();
                 Serial.print(sensor2_data[slot][0]);
                 Serial.print(",\t");
-                sensor2_data[slot][1] = DHT2.getHumidity();
                 Serial.print(sensor2_data[slot][1]);
             }
             
             else if (sensor_type == "AHT20") {
-                
+                               
+                AHT20_2.begin(&Wire1);
                 vTaskDelay(1000);
-                AHT20_2.begin();
                 sensors_event_t humidity, temp;
                 AHT20_2.getEvent(&humidity, &temp);// populate temp and humidity objects with fresh data
                 
                 sensor2_data[slot][0] = temp.temperature;
                 sensor2_data[slot][1] = humidity.relative_humidity;
                 
-                Serial.print("Temperature: "); Serial.print(temp.temperature); Serial.println(" degrees C");
-                Serial.print("Humidity: "); Serial.print(humidity.relative_humidity); Serial.println("% rH");
+                Serial.print("Temperature: "); Serial.print(temp.temperature); Serial.print(" degrees C");
+                Serial.print(",\t");
+                Serial.print("Humidity: "); Serial.print(humidity.relative_humidity); Serial.print("% rH");
             }
             
-            else if (sensor_type == "SCD40" || "SCD41") {
+            else if (sensor_type == "SCD40" || sensor_type ==  "SCD41") {
                 
-                vTaskDelay(1000);
                 SCD4X_2.begin(Wire1);
                 
                 uint16_t error;
@@ -211,6 +242,145 @@ void read_bus1(void) {
 
     }
 }
+
+
+/*void read_bus1(void) {
+    
+    //DHT20 on slot 0
+    Wire1.begin(I2C_SDA2, I2C_SCL2);
+    Wire1.beginTransmission(TCAADDR);
+    Wire1.write(1 << 0);
+    Wire1.endTransmission();
+    vTaskDelay(2000);
+    DHT20 DHT2(&Wire1);
+    DHT2.begin();
+    int status = DHT2.read();
+    
+    Serial.print("\n");
+    sensor2_data[0][0] = DHT2.getTemperature();
+    Serial.print(sensor2_data[0][0]);
+    Serial.print(",\t");
+    sensor2_data[0][1] = DHT2.getHumidity();
+    Serial.print(sensor2_data[0][1]);
+
+    //AHT20 on slot1
+    Wire1.begin(I2C_SDA2, I2C_SCL2);
+    Wire1.beginTransmission(TCAADDR);
+    Wire1.write(1 << 1);
+    Wire1.endTransmission();
+    vTaskDelay(1000);
+    Adafruit_AHTX0 AHT20;
+    AHT20.begin(&Wire1);
+    vTaskDelay(1000);
+    sensors_event_t humidity, temp;
+    AHT20.getEvent(&humidity, &temp);// populate temp and humidity objects with fresh data
+    
+    sensor2_data[1][0] = temp.temperature;
+    sensor2_data[1][1] = humidity.relative_humidity;
+    
+    Serial.print("\nTemperature: "); 
+    Serial.print(temp.temperature); 
+    Serial.print(" C");
+    Serial.print(",\t");
+    Serial.print("Humidity: "); 
+    Serial.print(humidity.relative_humidity); 
+    Serial.print(" %");
+    
+
+    
+    bool sensor_config_file_present;
+    const char* path2 = "/sensor_config2.json";
+
+    sensor_config_file_present = check_file_exists(path2);
+ 
+    if(sensor_config_file_present == 1) {
+        for (int slot=0;slot<8;slot++) {
+
+            String sensor = "wire1_sensor" + String(slot);
+            Wire1.beginTransmission(TCAADDR);
+            Wire1.write(1 << slot);
+            Wire1.endTransmission();
+
+            String sensor_type = wire1_sensor_data[sensor]["type"];
+            String sensor_address = wire1_sensor_data[sensor]["address"];
+            Serial.print("\n\n");
+            Serial.print(sensor_type);
+            Serial.print("\n\n");
+
+            if (sensor_type == "DHT20") {
+                vTaskDelay(2000);
+                DHT20 DHT2(&Wire1);
+                DHT2.begin();
+                int status = DHT2.read();
+    
+                Serial.print("\n");
+                sensor2_data[0][0] = DHT2.getTemperature();
+                Serial.print(sensor2_data[0][0]);
+                Serial.print(",\t");
+                sensor2_data[0][1] = DHT2.getHumidity();
+                Serial.print(sensor2_data[0][1]);
+            }
+            
+            else if (sensor_type == "AHT20") {
+                
+                vTaskDelay(1000);
+                Adafruit_AHTX0 AHT20;
+                AHT20.begin(&Wire1);
+                vTaskDelay(1000);
+                sensors_event_t humidity, temp;
+                AHT20.getEvent(&humidity, &temp);// populate temp and humidity objects with fresh data
+                    
+                sensor2_data[1][0] = temp.temperature;
+                sensor2_data[1][1] = humidity.relative_humidity;
+                    
+                Serial.print("\nTemperature: "); 
+                Serial.print(temp.temperature); 
+                Serial.print(" C");
+                Serial.print(",\t");
+                Serial.print("Humidity: "); 
+                Serial.print(humidity.relative_humidity); 
+                Serial.print(" %");
+            }
+            
+            else if (sensor_type == "SCD40" || "SCD41") {
+                
+                SCD4X_2.begin(Wire1);
+                
+                uint16_t error;
+                uint16_t co2 = 0;
+                float temperature = 0.0f;
+                float humidity = 0.0f;
+                bool isDataReady = false;
+
+                vTaskDelay(2000);
+
+                error = SCD4X_2.readMeasurement(co2, temperature, humidity);
+                if (error) {
+                    Serial.print("Error trying to execute readMeasurement(): ");
+                } else if (co2 == 0) {
+                    Serial.println("Invalid sample detected, skipping.");
+                } else {
+                    sensor2_data[slot][0] = temperature;
+                    sensor2_data[slot][1] = humidity;
+                    sensor2_data[slot][2] = co2;
+                    Serial.print("Co2:");
+                    Serial.print(co2);
+                    Serial.print("\t");
+                    Serial.print("Temperature:");
+                    Serial.print(temperature);
+                    Serial.print("\t");
+                    Serial.print("Humidity:");
+                    Serial.println(humidity);
+                }
+            }
+            
+            else {
+                Serial.print("\n\nSensor not found");
+            }
+        }
+
+    }
+}*/
 
 
 
