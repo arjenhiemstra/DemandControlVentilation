@@ -1,5 +1,5 @@
-#ifndef SENSORS_H
-#define SENSORS_H
+#ifndef READ_SENSORS_H
+#define READ_SENSORS_H
 
 #include <Arduino.h>
 #include <LittleFS.h>
@@ -8,6 +8,7 @@
 #include <DHT20.h>
 #include <Adafruit_AHTX0.h>
 #include <SensirionI2CScd4x.h>
+//#include <SensirionCore.h>
 
 #include "globals.h"
 #include "config_files.h"

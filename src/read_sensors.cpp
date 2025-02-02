@@ -25,13 +25,15 @@ Sequence:
 */
 
 #include "read_sensors.h"
+//#include <SensirionI2cScd4x.h>
 
 DHT20 DHT1(&Wire);
 DHT20 DHT2(&Wire1);
 Adafruit_AHTX0 AHT20_1;
 Adafruit_AHTX0 AHT20_2;
-SensirionI2CScd4x SCD4X_1;
-SensirionI2CScd4x SCD4X_2;
+SensirionI2cScd4x SCD4X_1;
+SensirionI2cScd4x SCD4X_2;
+
 //SCD4x SCD4X_1;
 //SCD4x SCD4X_2;
 
@@ -114,7 +116,7 @@ void read_bus0(void) {
                 Serial.print("Humidity:");
                 Serial.println(sensor1_data[slot][1]);*/
                 
-                SCD4X_1.begin(Wire);
+                /*SCD4X_1.begin(Wire);
                 
                 uint16_t error;
                 uint16_t co2 = 0;
@@ -139,7 +141,7 @@ void read_bus0(void) {
                     Serial.print("\t");
                     Serial.print("Humidity:");
                     Serial.println(humidity);
-                }
+                }*/
             }
             
             else {
@@ -207,7 +209,7 @@ void read_bus1(void) {
             
             else if (sensor_type == "SCD40" || sensor_type ==  "SCD41") {
                 
-                SCD4X_2.begin(Wire1);
+                /*SCD4X_2.begin(Wire1);
                 
                 uint16_t error;
                 uint16_t co2 = 0;
@@ -232,7 +234,7 @@ void read_bus1(void) {
                     Serial.print("\t");
                     Serial.print("Humidity:");
                     Serial.println(humidity);
-                }
+                }*/
             }
             
             else {
