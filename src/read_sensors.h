@@ -7,8 +7,7 @@
 #include <Wire.h>
 #include <DHT20.h>
 #include <Adafruit_AHTX0.h>
-#include <SensirionI2CScd4x.h>
-//#include <SensirionCore.h>
+#include <SensirionI2cScd4x.h>
 
 #include "globals.h"
 #include "config_files.h"

@@ -40,6 +40,7 @@ SensirionI2cScd4x SCD4X_2;
 void read_bus0(void) {
  
     Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
+    SCD4X_1.begin(Wire, SCD41_I2C_ADDR_62);
     vTaskDelay(1000);
 
     bool sensor_config_file_present;
@@ -93,30 +94,9 @@ void read_bus0(void) {
             }
             
             else if (sensor_type == "SCD40" || sensor_type == "SCD41") {
-                
-                
-                /*SCD4X_1.begin();
-              
+             
+                SCD4X_1.startPeriodicMeasurement();
                 vTaskDelay(5200);
-                SCD4X_1.enableDebugging(Serial);
-            
-                float co2 = 0;
-                float temperature = 0.0f;
-                float humidity = 0.0f;
-
-                sensor1_data[slot][0] = SCD4X_1.getTemperature();
-                sensor1_data[slot][1] = SCD4X_1.getHumidity();
-                sensor1_data[slot][2] = SCD4X_1.getCO2();
-                Serial.print("Co2:");
-                Serial.print(sensor1_data[slot][2]);
-                Serial.print("\t");
-                Serial.print("Temperature:");
-                Serial.print(sensor1_data[slot][0]);
-                Serial.print("\t");
-                Serial.print("Humidity:");
-                Serial.println(sensor1_data[slot][1]);*/
-                
-                /*SCD4X_1.begin(Wire);
                 
                 uint16_t error;
                 uint16_t co2 = 0;
@@ -124,6 +104,7 @@ void read_bus0(void) {
                 float humidity = 0.0f;
                 bool isDataReady = false;
 
+                
                 error = SCD4X_1.readMeasurement(co2, temperature, humidity);
                 if (error) {
                     Serial.print("Error trying to execute readMeasurement(): ");
@@ -141,7 +122,7 @@ void read_bus0(void) {
                     Serial.print("\t");
                     Serial.print("Humidity:");
                     Serial.println(humidity);
-                }*/
+                }
             }
             
             else {
@@ -155,6 +136,7 @@ void read_bus0(void) {
 void read_bus1(void) {
  
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
+    SCD4X_2.begin(Wire1, SCD41_I2C_ADDR_62);
     vTaskDelay(1000);
     
     bool sensor_config_file_present;
@@ -209,7 +191,8 @@ void read_bus1(void) {
             
             else if (sensor_type == "SCD40" || sensor_type ==  "SCD41") {
                 
-                /*SCD4X_2.begin(Wire1);
+                SCD4X_2.startPeriodicMeasurement();
+                vTaskDelay(5200);
                 
                 uint16_t error;
                 uint16_t co2 = 0;
@@ -217,12 +200,15 @@ void read_bus1(void) {
                 float humidity = 0.0f;
                 bool isDataReady = false;
 
+                
                 error = SCD4X_2.readMeasurement(co2, temperature, humidity);
                 if (error) {
                     Serial.print("Error trying to execute readMeasurement(): ");
-                } else if (co2 == 0) {
+                } 
+                else if (co2 == 0) {
                     Serial.println("Invalid sample detected, skipping.");
-                } else {
+                } 
+                else {
                     sensor2_data[slot][0] = temperature;
                     sensor2_data[slot][1] = humidity;
                     sensor2_data[slot][2] = co2;
@@ -234,7 +220,7 @@ void read_bus1(void) {
                     Serial.print("\t");
                     Serial.print("Humidity:");
                     Serial.println(humidity);
-                }*/
+                }
             }
             
             else {
