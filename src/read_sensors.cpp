@@ -34,14 +34,17 @@ Adafruit_AHTX0 AHT20_2;
 SensirionI2cScd4x SCD4X_1;
 SensirionI2cScd4x SCD4X_2;
 
+#ifdef NO_ERROR
+#undef NO_ERROR
+#endif
+#define NO_ERROR 0
+
 //SCD4x SCD4X_1;
 //SCD4x SCD4X_2;
 
 void read_bus0(void) {
  
     Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
-    SCD4X_1.begin(Wire, SCD41_I2C_ADDR_62);
-    vTaskDelay(1000);
 
     bool sensor_config_file_present;
     const char* path1 = "/sensor_config1.json";
@@ -83,7 +86,7 @@ void read_bus0(void) {
                 AHT20_1.begin();
                 vTaskDelay(1000);
                 sensors_event_t humidity, temp;
-                AHT20_1.getEvent(&humidity, &temp);// populate temp and humidity objects with fresh data
+                AHT20_1.getEvent(&humidity, &temp);
                 
                 sensor1_data[slot][0] = temp.temperature;
                 sensor1_data[slot][1] = humidity.relative_humidity;
@@ -95,34 +98,82 @@ void read_bus0(void) {
             
             else if (sensor_type == "SCD40" || sensor_type == "SCD41") {
              
-                SCD4X_1.startPeriodicMeasurement();
-                vTaskDelay(5200);
-                
-                uint16_t error;
+                SCD4X_1.begin(Wire, SCD41_I2C_ADDR_62);
+
+                static char errorMessage[64];
+                static int16_t error;
+                uint64_t serialNumber = 0;
                 uint16_t co2 = 0;
                 float temperature = 0.0f;
                 float humidity = 0.0f;
-                bool isDataReady = false;
+                vTaskDelay(300);
 
-                
-                error = SCD4X_1.readMeasurement(co2, temperature, humidity);
-                if (error) {
-                    Serial.print("Error trying to execute readMeasurement(): ");
-                } else if (co2 == 0) {
-                    Serial.println("Invalid sample detected, skipping.");
-                } else {
-                    sensor1_data[slot][0] = temperature;
-                    sensor1_data[slot][1] = humidity;
-                    sensor1_data[slot][2] = co2;
-                    Serial.print("Co2:");
-                    Serial.print(co2);
-                    Serial.print("\t");
-                    Serial.print("Temperature:");
-                    Serial.print(temperature);
-                    Serial.print("\t");
-                    Serial.print("Humidity:");
-                    Serial.println(humidity);
+                // Ensure sensor is in clean state
+                error = SCD4X_1.wakeUp();
+                if (error != NO_ERROR) {
+                    Serial.print("Error trying to execute wakeUp(): ");
+                    errorToString(error, errorMessage, sizeof errorMessage);
+                    Serial.println(errorMessage);
                 }
+                error = SCD4X_1.stopPeriodicMeasurement();
+                if (error != NO_ERROR) {
+                    Serial.print("Error trying to execute stopPeriodicMeasurement(): ");
+                    errorToString(error, errorMessage, sizeof errorMessage);
+                    Serial.println(errorMessage);
+                }
+                error = SCD4X_1.reinit();
+                if (error != NO_ERROR) {
+                    Serial.print("Error trying to execute reinit(): ");
+                    errorToString(error, errorMessage, sizeof errorMessage);
+                    Serial.println(errorMessage);
+                }
+                // Read out information about the sensor
+                error = SCD4X_1.getSerialNumber(serialNumber);
+                if (error != NO_ERROR) {
+                    Serial.print("Error trying to execute getSerialNumber(): ");
+                    errorToString(error, errorMessage, sizeof errorMessage);
+                    Serial.println(errorMessage);
+                    return;
+                }
+                Serial.print("serial number: 0x");
+                Serial.print(serialNumber);
+                Serial.println();
+              
+                error = SCD4X_1.wakeUp();
+                if (error != NO_ERROR) {
+                    Serial.print("Error trying to execute wakeUp(): ");
+                    errorToString(error, errorMessage, sizeof errorMessage);
+                    Serial.println(errorMessage);
+                    return;
+                }
+                // Ignore first measurement after wake up.
+                error = SCD4X_1.measureSingleShot();
+                if (error != NO_ERROR) {
+                    Serial.print("Error trying to execute measureSingleShot(): ");
+                    errorToString(error, errorMessage, sizeof errorMessage);
+                    Serial.println(errorMessage);
+                    return;
+                }
+                // Perform single shot measurement and read data.
+                error = SCD4X_1.measureAndReadSingleShot(co2, temperature,humidity);
+                if (error != NO_ERROR) {
+                    Serial.print("Error trying to execute measureAndReadSingleShot(): ");
+                    errorToString(error, errorMessage, sizeof errorMessage);
+                    Serial.println(errorMessage);
+                    return;
+                }
+                
+                sensor1_data[slot][0] = temperature;
+                sensor1_data[slot][1] = humidity;
+                sensor1_data[slot][2] = co2;
+                Serial.print("Co2:");
+                Serial.print(co2);
+                Serial.print("\t");
+                Serial.print("Temperature:");
+                Serial.print(temperature);
+                Serial.print("\t");
+                Serial.print("Humidity:");
+                Serial.println(humidity);
             }
             
             else {
