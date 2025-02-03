@@ -75,10 +75,11 @@ void read_bus0(void) {
                 int status = DHT1.read();
                 
                 sensor1_data[slot][0] = DHT1.getTemperature();
-                Serial.print(sensor1_data[slot][0]);
-                Serial.print(",\t");
                 sensor1_data[slot][1] = DHT1.getHumidity();
-                Serial.print(sensor1_data[slot][1]);
+
+                Serial.print("Temperature: "); Serial.print(sensor1_data[slot][0]); Serial.print("degrC");
+                Serial.print(",\t");
+                Serial.print("Humidity: "); Serial.print(sensor1_data[slot][1]); Serial.print("%");
             }
             
             else if (sensor_type == "AHT20") {
@@ -91,9 +92,9 @@ void read_bus0(void) {
                 sensor1_data[slot][0] = temp.temperature;
                 sensor1_data[slot][1] = humidity.relative_humidity;
                 
-                Serial.print("Temperature: "); Serial.print(temp.temperature); Serial.print(" degrees C");
+                Serial.print("Temperature: "); Serial.print(temp.temperature); Serial.print("degrC");
                 Serial.print(",\t");
-                Serial.print("Humidity: "); Serial.print(humidity.relative_humidity); Serial.print("% rH");
+                Serial.print("Humidity: "); Serial.print(humidity.relative_humidity); Serial.print("%");
             }
             
             else if (sensor_type == "SCD40" || sensor_type == "SCD41") {
@@ -166,18 +167,16 @@ void read_bus0(void) {
                 sensor1_data[slot][0] = temperature;
                 sensor1_data[slot][1] = humidity;
                 sensor1_data[slot][2] = co2;
-                Serial.print("Co2:");
-                Serial.print(co2);
-                Serial.print("\t");
-                Serial.print("Temperature:");
-                Serial.print(temperature);
-                Serial.print("\t");
-                Serial.print("Humidity:");
-                Serial.println(humidity);
+                                
+                Serial.print("Temperature: "); Serial.print(temperature); Serial.print("degrees C");
+                Serial.print(", \t");
+                Serial.print("Humidity: "); Serial.println(humidity); Serial.print("%");
+                Serial.print(", \t");
+                Serial.print("CO2: "); Serial.print(co2); Serial.print("ppm");
             }
             
             else {
-                Serial.print("\n\nSensor not found");
+                Serial.println("No sensor configured.");
             }
         }
 
