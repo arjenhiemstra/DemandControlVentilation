@@ -101,6 +101,14 @@ void read_bus0(void) {
              
                 SCD4X_1.begin(Wire, SCD41_I2C_ADDR_62);
 
+                //check if sensor detected on I2C
+                uint8_t addr = 98;  //0x62 HEX
+                Wire.beginTransmission(addr);
+                if (!Wire.endTransmission()) {
+                    Serial.print("Found I2C 0x");  
+                    Serial.println(addr,HEX);
+                }
+
                 static char errorMessage[64];
                 static int16_t error;
                 uint64_t serialNumber = 0;
@@ -249,8 +257,7 @@ void read_bus1(void) {
                 float temperature = 0.0f;
                 float humidity = 0.0f;
                 bool isDataReady = false;
-
-                
+    
                 error = SCD4X_2.readMeasurement(co2, temperature, humidity);
                 if (error) {
                     Serial.print("Error trying to execute readMeasurement(): ");
