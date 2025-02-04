@@ -43,7 +43,8 @@ void setup_wifi() {
   
   Serial.println();
   Serial.print("IP Address: ");
-  Serial.println(WiFi.localIP());
+  Serial.print(WiFi.localIP());
+  Serial.print("\n\n");
 }
 
 void init_registers(void) {

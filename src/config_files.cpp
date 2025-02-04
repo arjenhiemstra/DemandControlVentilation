@@ -13,10 +13,6 @@ void sensor_config_data_read() {
     
     sensor_config1_file_present = check_file_exists(path1);
     
-    Serial.print("\n\nSensor config file 1 present: ");
-    Serial.print(sensor_config1_file_present);
-    Serial.print("\n\n");
-
     xSemaphoreTake(sensor_config_file_mutex, portMAX_DELAY);
     if (sensor_config1_file_present = 1) {
         File file = LittleFS.open(path1, "r");
@@ -26,13 +22,13 @@ void sensor_config_data_read() {
         }
         file.close();
 
-        Serial.print("\n\nContents config file wire string: \n");
-        Serial.print(sensor_config1_string);
-        Serial.print("\n\n");
+        //Serial.print("\n\nContents config file wire string: \n");
+        //Serial.print(sensor_config1_string);
+        //Serial.print("\n\n");
         
         deserializeJson(wire_sensor_data, sensor_config1_string);
         
-        Serial.print("\n\nRead back contents from global variable: \n");
+        Serial.print("Wire - Read back contents from global variable: \n");
         serializeJson(wire_sensor_data, Serial);
         Serial.print("\n\n");
     }
@@ -41,9 +37,6 @@ void sensor_config_data_read() {
 	
     sensor_config2_file_present = check_file_exists(path2);
 
-    Serial.print("\n\nSensor config file 2 present: \n");
-    Serial.print(sensor_config2_file_present);
-    Serial.print("\n\n");
 
     if (sensor_config2_file_present = 1) {
         
@@ -55,6 +48,10 @@ void sensor_config_data_read() {
         file.close();
 
         deserializeJson(wire1_sensor_data, sensor_config2_string);
+
+        Serial.print("Wire1 - Read back contents from global variable: \n");
+        serializeJson(wire1_sensor_data, Serial);
+        Serial.print("\n\n");
     }
 }
 
