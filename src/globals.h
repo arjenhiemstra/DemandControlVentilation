@@ -4,6 +4,11 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 
+#define I2C_SCL1 38
+#define I2C_SDA1 39
+#define I2C_SCL2 40
+#define I2C_SDA2 41
+
 extern SemaphoreHandle_t sensor_config_file_mutex;
 extern SemaphoreHandle_t sensor_variable_mutex;
 extern SemaphoreHandle_t valve_position_mutex;

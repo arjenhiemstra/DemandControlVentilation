@@ -180,6 +180,7 @@ void Taskwebcode(void *pvParameters) {
 
   //Response for POST action in webform valvecontrol manual move valves
   server.on("/valvecontrol", HTTP_POST, [](AsyncWebServerRequest *request) {
+    xSemaphoreTake(valve_position_mutex, portMAX_DELAY);
     int params = request->params();
     for(int i=0;i<params;i++){
       const AsyncWebParameter* p = request->getParam(i);
@@ -361,6 +362,8 @@ void Taskwebcode(void *pvParameters) {
       }
     }
     request->send(LittleFS, "/html/valvecontrol.html", String(), false, valvecontrol_processor);
+    xSemaphoreGive(valve_position_mutex);
+
     xTaskNotifyGive(xTaskGetHandle("task_valvectrl"));
   });
 
@@ -405,6 +408,7 @@ void Taskwebcode(void *pvParameters) {
     request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
   });
   
+  //Write sensor config input to file
   server.on("/sensorconfig1", HTTP_POST, [](AsyncWebServerRequest *request) {
     xSemaphoreTake(sensor_config_file_mutex, portMAX_DELAY);
     int params = request->params();

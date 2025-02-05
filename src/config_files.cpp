@@ -60,6 +60,7 @@ void valve_status_file_create() {
     const char* default_valve_position_file;
     default_valve_position_file = "{\"valve0\":1, \"valve1\":2, \"valve2\":3, \"valve3\":4, \"valve4\":5, \"valve5\":6, \"valve6\":7, \"valve7\":8, \"valve8\":9, \"valve9\":10, \"valve10\":11, \"valve11\":12}";
     
+    xSemaphoreTake(valve_position_mutex, portMAX_DELAY);
     file = LittleFS.open("/valvepositions.json", "w");
     if(!file) {
         Serial.println("Failed to open file for writing");
@@ -74,6 +75,7 @@ void valve_status_file_create() {
         Serial.println("Write failed");
     }
     file.close();
+    xSemaphoreGive(valve_position_mutex);
 }
 
 void delete_file(const char* path) {
@@ -133,7 +135,7 @@ void write_config_file(const char* path, String file_contents) {
     file.close();
 }
 
-bool verify_valve_position_file_contents(void) {
+/*bool verify_valve_position_file_contents(void) {
 
     int i;
     File file;
@@ -176,4 +178,4 @@ bool verify_valve_position_file_contents(void) {
     file.close();
     return 0;
 }
-
+*/

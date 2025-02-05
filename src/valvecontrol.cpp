@@ -110,6 +110,7 @@ void move_valve(void) {
                 valvecontrol(direction, new_valve_position_change, valve_number, dataPin, clockPin, latchPin);
                 new_valve_position = valve_pos + new_valve_position_change;
             }
+            
             if (direction == 1 && (valve_pos - valve_position_change) < 0) {
                 new_valve_position_change = valve_pos;
                 Serial.print("\n");

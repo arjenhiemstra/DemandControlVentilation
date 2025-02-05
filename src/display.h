@@ -8,10 +8,12 @@
 #include <LiquidCrystal_I2C.h>
 
 #include "globals.h"
+#include "config_files.h"
 
 #define LCDADDR 0x70
 
 //Function definitions
-void display(void);
+void display_sensors(void);
+void display_valve_positions(void);
 
 #endif
