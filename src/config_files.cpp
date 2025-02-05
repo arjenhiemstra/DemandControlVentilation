@@ -37,7 +37,6 @@ void sensor_config_data_read() {
 	
     sensor_config2_file_present = check_file_exists(path2);
 
-
     if (sensor_config2_file_present = 1) {
         
         File file = LittleFS.open(path2, "r");

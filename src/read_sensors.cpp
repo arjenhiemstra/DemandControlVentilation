@@ -37,6 +37,7 @@ void read_bus0(void) {
  
     Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
 
+    xSemaphoreTake(sensor_variable_mutex, portMAX_DELAY);
     bool sensor_config_file_present;
     const char* path1 = "/sensor_config1.json";
 
@@ -119,12 +120,14 @@ void read_bus0(void) {
         }
 
     }
+    xSemaphoreGive(sensor_variable_mutex);
 }
 
 void read_bus1(void) {
  
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
     
+    xSemaphoreTake(sensor_variable_mutex, portMAX_DELAY);
     bool sensor_config_file_present;
     const char* path = "/sensor_config2.json";
 
@@ -208,4 +211,5 @@ void read_bus1(void) {
         }
 
     }
+    xSemaphoreGive(sensor_variable_mutex);
 }
