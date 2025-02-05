@@ -10,7 +10,7 @@
 #include "globals.h"
 #include "config_files.h"
 
-#define LCDADDR 0x70
+#define LCDADDR 0x27
 
 //Function definitions
 void display_sensors(void);

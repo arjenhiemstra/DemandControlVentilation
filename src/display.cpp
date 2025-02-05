@@ -19,16 +19,23 @@ void display_sensors(void) {
     int slot = 0;
     int bus = 0;
 
-    Wire.begin(I2C_SDA1, I2C_SCL1, 100000);     //Display is on Wire bus
+    Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
 
     lcd.init();
     lcd.backlight();                            //LCD starts with backlight on so toggle off until needed
+    lcd.print("Hello World");
 
+    /*
     xSemaphoreTake(sensor_variable_mutex, portMAX_DELAY);  
    
     for (int bus=0;bus<2;bus++)
     {
         for (int slot=0;slot<8;slot++) {
+            
+            Serial.print(sensor_data[bus][slot][0]);
+            Serial.println();
+            Serial.print(sensor_data[bus][slot][1]);
+            Serial.println();
             
             //Clear display and turn on backlight 
             lcd.backlight();
@@ -60,7 +67,7 @@ void display_sensors(void) {
     lcd.backlight(); //backlight off
     lcd.clear();
    
-    xSemaphoreGive(sensor_variable_mutex);
+    xSemaphoreGive(sensor_variable_mutex);*/
 }
 
 void display_valve_positions(void) {
@@ -79,7 +86,7 @@ void display_valve_positions(void) {
     String json;
     JsonDocument doc;
 
-    Wire.begin(I2C_SDA1, I2C_SCL1, 100000);     //Display is on Wire bus
+    Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire bus
     lcd.init();
 
     lcd.clear();

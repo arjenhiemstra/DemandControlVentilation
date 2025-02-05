@@ -139,8 +139,8 @@ void read_bus1(void) {
         for (int slot=0;slot<8;slot++) {
 
             String sensor = "wire1_sensor" + String(slot);
-            String sensor_type = wire_sensor_data[sensor]["type"];
-            String sensor_address = wire_sensor_data[sensor]["address"];
+            String sensor_type = wire1_sensor_data[sensor]["type"];
+            String sensor_address = wire1_sensor_data[sensor]["address"];
                              
             Wire1.beginTransmission(TCAADDR);
             Wire1.write(1 << slot);
