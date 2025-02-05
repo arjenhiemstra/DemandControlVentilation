@@ -40,6 +40,7 @@ void read_bus0(void) {
     xSemaphoreTake(sensor_variable_mutex, portMAX_DELAY);
     bool sensor_config_file_present;
     const char* path1 = "/sensor_config1.json";
+    int bus = 0;
 
     sensor_config_file_present = check_file_exists(path1);
  
@@ -49,7 +50,7 @@ void read_bus0(void) {
             String sensor = "wire_sensor" + String(slot);
             String sensor_type = wire_sensor_data[sensor]["type"];
             String sensor_address = wire_sensor_data[sensor]["address"];
-                             
+                            
             Wire.beginTransmission(TCAADDR);
             Wire.write(1 << slot);
             Wire.endTransmission();
@@ -63,12 +64,12 @@ void read_bus0(void) {
                 DHT1.begin();
                 int status = DHT1.read();
                 
-                sensor1_data[slot][0] = DHT1.getTemperature();
-                sensor1_data[slot][1] = DHT1.getHumidity();
+                sensor_data[bus][slot][0] = DHT1.getTemperature();
+                sensor_data[bus][slot][1] = DHT1.getHumidity();
 
-                Serial.print("Temperature: "); Serial.print(sensor1_data[slot][0]); Serial.print(" °C");
+                Serial.print("Temperature: "); Serial.print(sensor_data[bus][slot][0]); Serial.print(" °C");
                 Serial.print(",\t\t");
-                Serial.print("Humidity: "); Serial.print(sensor1_data[slot][1]); Serial.print(" %");
+                Serial.print("Humidity: "); Serial.print(sensor_data[bus][slot][1]); Serial.print(" %");
             }
             
             else if (sensor_type == "AHT20") {
@@ -77,12 +78,12 @@ void read_bus0(void) {
                 sensors_event_t humidity, temp;
                 AHT20_1.getEvent(&humidity, &temp);
                 
-                sensor1_data[slot][0] = temp.temperature;
-                sensor1_data[slot][1] = humidity.relative_humidity;
+                sensor_data[bus][slot][0] = temp.temperature;
+                sensor_data[bus][slot][1] = humidity.relative_humidity;
                 
-                Serial.print("Temperature: "); Serial.print(temp.temperature); Serial.print(" °C");
+                Serial.print("Temperature: "); Serial.print(sensor_data[bus][slot][0]); Serial.print(" °C");
                 Serial.print(",\t\t");
-                Serial.print("Humidity: "); Serial.print(humidity.relative_humidity); Serial.print(" %");
+                Serial.print("Humidity: "); Serial.print(sensor_data[bus][slot][1]); Serial.print(" %");
             }
             
             else if (sensor_type == "SCD40" || sensor_type == "SCD41") {
@@ -104,14 +105,14 @@ void read_bus0(void) {
                     Serial.println("Invalid sample detected, skipping.");
                 } 
                 else {
-                    sensor1_data[slot][0] = temperature;
-                    sensor1_data[slot][1] = humidity;
-                    sensor1_data[slot][2] = co2;
-                    Serial.print("Temperature: "); Serial.print(temperature); Serial.print(" °C");
+                    sensor_data[bus][slot][0] = temperature;
+                    sensor_data[bus][slot][1] = humidity;
+                    sensor_data[bus][slot][2] = co2;
+                    Serial.print("Temperature: "); Serial.print(sensor_data[bus][slot][0]); Serial.print(" °C");
                     Serial.print("\t\t");
-                    Serial.print("Humidity: "); Serial.print(humidity); Serial.print(" %");
+                    Serial.print("Humidity: "); Serial.print(sensor_data[bus][slot][1]); Serial.print(" %");
                     Serial.print("\t\t");
-                    Serial.print("Co2: "); Serial.print(co2); Serial.print(" ppm");
+                    Serial.print("Co2: "); Serial.print(sensor_data[bus][slot][2]); Serial.print(" ppm");
                 }
             }
             else {
@@ -130,6 +131,7 @@ void read_bus1(void) {
     xSemaphoreTake(sensor_variable_mutex, portMAX_DELAY);
     bool sensor_config_file_present;
     const char* path = "/sensor_config2.json";
+    int bus = 1;
 
     sensor_config_file_present = check_file_exists(path);
  
@@ -137,8 +139,8 @@ void read_bus1(void) {
         for (int slot=0;slot<8;slot++) {
 
             String sensor = "wire1_sensor" + String(slot);
-            String sensor_type = wire1_sensor_data[sensor]["type"];
-            String sensor_address = wire1_sensor_data[sensor]["address"];
+            String sensor_type = wire_sensor_data[sensor]["type"];
+            String sensor_address = wire_sensor_data[sensor]["address"];
                              
             Wire1.beginTransmission(TCAADDR);
             Wire1.write(1 << slot);
@@ -153,11 +155,11 @@ void read_bus1(void) {
                 DHT2.begin();
                 int status = DHT2.read();
                 
-                sensor2_data[slot][0] = DHT2.getTemperature();
-                sensor2_data[slot][1] = DHT2.getHumidity();
-                Serial.print("Temperature: "); Serial.print(sensor2_data[slot][0]); Serial.print(" °C");
+                sensor_data[bus][slot][0] = DHT2.getTemperature();
+                sensor_data[bus][slot][1] = DHT2.getHumidity();
+                Serial.print("Temperature: "); Serial.print(sensor_data[bus][slot][0]); Serial.print(" °C");
                 Serial.print(",\t\t");
-                Serial.print("Humidity: "); Serial.print(sensor2_data[slot][1]); Serial.print(" %");
+                Serial.print("Humidity: "); Serial.print(sensor_data[bus][slot][1]); Serial.print(" %");
                 Serial.println();
             }
             
@@ -167,12 +169,12 @@ void read_bus1(void) {
                 sensors_event_t humidity, temp;
                 AHT20_2.getEvent(&humidity, &temp);// populate temp and humidity objects with fresh data
                 
-                sensor2_data[slot][0] = temp.temperature;
-                sensor2_data[slot][1] = humidity.relative_humidity;
+                sensor_data[bus][slot][0] = temp.temperature;
+                sensor_data[bus][slot][1] = humidity.relative_humidity;
                 
-                Serial.print("Temperature: "); Serial.print(temp.temperature); Serial.print(" °C");
+                Serial.print("Temperature: "); Serial.print(sensor_data[bus][slot][0]); Serial.print(" °C");
                 Serial.print(",\t\t");
-                Serial.print("Humidity: "); Serial.print(humidity.relative_humidity); Serial.print(" %");
+                Serial.print("Humidity: "); Serial.print(sensor_data[bus][slot][1]); Serial.print(" %");
             }
             
             else if (sensor_type == "SCD40" || sensor_type ==  "SCD41") {
@@ -194,14 +196,14 @@ void read_bus1(void) {
                     Serial.println("Invalid sample detected, skipping.");
                 } 
                 else {
-                    sensor2_data[slot][0] = temperature;
-                    sensor2_data[slot][1] = humidity;
-                    sensor2_data[slot][2] = co2;
-                    Serial.print("Temperature: "); Serial.print(temperature); Serial.print(" °C");
+                    sensor_data[bus][slot][0] = temperature;
+                    sensor_data[bus][slot][1] = humidity;
+                    sensor_data[bus][slot][2] = co2;
+                    Serial.print("Temperature: "); Serial.print(sensor_data[bus][slot][0]); Serial.print(" °C");
                     Serial.print("\t\t");
-                    Serial.print("Humidity:"); Serial.print(humidity); Serial.print(" %");
+                    Serial.print("Humidity:"); Serial.print(sensor_data[bus][slot][1]); Serial.print(" %");
                     Serial.print("\t\t");
-                    Serial.print("Co2:"); Serial.print(co2); Serial.print(" ppm");
+                    Serial.print("Co2:"); Serial.print(sensor_data[bus][slot][2]); Serial.print(" ppm");
                 }
             }
             

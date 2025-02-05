@@ -16,73 +16,40 @@ void display(void) {
     lcd.init();
     lcd.backlight();                            //LCD starts with backlight on so toggle off until needed
 
-    xSemaphoreTake(sensor_variable_mutex, portMAX_DELAY);
+    xSemaphoreTake(sensor_variable_mutex, portMAX_DELAY);  
+   
+    for (int bus=0;bus<2;bus++)
+    {
+        for (int slot=0;slot<8;slot++) {
+            
+            //Clear display and turn on backlight 
+            lcd.backlight();
+            lcd.clear();
 
-    //Sensor bus0
-    for (int slot=0;slot<8;slot++) {
-        
-        bus = 0;
+            vTaskDelay(2000);
 
-        //Clear display and turn on backlight 
-        lcd.backlight();
-        lcd.clear();
+            lcd.setCursor(0, 0);
+            lcd.print("Bus: "); Serial.print(bus); Serial.print("Sensor: "); Serial.print(slot);
+            
+            lcd.setCursor(0, 1);
+            lcd.print("Temperature: ");
+            lcd.print(sensor_data[bus][slot][0]);
+            lcd.print(" °C");
 
-        vTaskDelay(2000);
+            lcd.setCursor(0, 2);
+            lcd.print("Humidity: ");
+            lcd.print(sensor_data[bus][slot][1]);
+            lcd.print(" °C");
 
-        lcd.setCursor(0, 0);
-        lcd.print("Bus: "); Serial.print(bus); Serial.print("Sensor: "); Serial.print(slot);
-        
-        lcd.setCursor(0, 1);
-        lcd.print("Temperature: ");
-        lcd.print(sensor1_data[slot][0]);
-        lcd.print(" °C");
+            lcd.setCursor(0, 3);
+            lcd.print("CO2: ");
+            lcd.print(sensor_data[bus][slot][2]);
+            lcd.print(" ppm");
 
-        lcd.setCursor(0, 2);
-        lcd.print("Humidity: ");
-        lcd.print(sensor1_data[slot][1]);
-        lcd.print(" °C");
-
-        lcd.setCursor(0, 3);
-        lcd.print("CO2: ");
-        lcd.print(sensor1_data[slot][2]);
-        lcd.print(" ppm");
-
-        lcd.backlight();
-        lcd.clear();
+            lcd.backlight();
+            lcd.clear();
+        }
     }
-    
-    //Sensor bus1
-    for (int slot=0;slot<8;slot++) {
-        
-        bus = 1;
-
-        //Clear display and turn on backlight 
-        lcd.backlight();
-        lcd.clear();
-
-        vTaskDelay(2000);
-
-        lcd.setCursor(0, 0);
-        lcd.print("Bus:"); Serial.print(bus); Serial.print("Sensor:"); Serial.print(slot);
-        
-        lcd.setCursor(0, 1);
-        lcd.print("Temperature: ");
-        lcd.print(sensor2_data[slot][0]);
-        lcd.print(" °C");
-
-        lcd.setCursor(0, 2);
-        lcd.print("Humidity: ");
-        lcd.print(sensor2_data[slot][1]);
-        lcd.print(" °C");
-
-        lcd.setCursor(0, 3);
-        lcd.print("CO2: ");
-        lcd.print(sensor2_data[slot][2]);
-        lcd.print(" ppm");
-
-        lcd.backlight();
-        lcd.clear();
-    }
-    
+   
     xSemaphoreGive(sensor_variable_mutex);
 }
