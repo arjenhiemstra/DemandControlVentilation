@@ -1,9 +1,6 @@
 #include "display.h"
 
-int lcd_columns = 16;
-int lcd_rows = 4;
-
-LiquidCrystal_I2C lcd(LCDADDR, lcd_columns, lcd_rows);
+LiquidCrystal_I2C lcd(LCDADDR, LCD_COLUMNS, LCD_ROWS);
 
 void display_sensors(void) {
 
@@ -23,6 +20,9 @@ void display_sensors(void) {
 
     lcd.init();
     lcd.backlight();                            //LCD starts with backlight on so toggle off until needed
+    //lcd.nobacklight();
+    lcd.noAutoscroll();
+    lcd.noCursor();
     lcd.print("Hello World");
 
     /*

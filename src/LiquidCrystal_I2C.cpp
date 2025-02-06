@@ -64,7 +64,7 @@ void LiquidCrystal_I2C::init(){
 void LiquidCrystal_I2C::init_priv()
 {
 	//Wire.begin();
-	Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
+	//Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
 	_displayfunction = LCD_4BITMODE | LCD_1LINE | LCD_5x8DOTS;
 	begin(_cols, _rows);  
 }

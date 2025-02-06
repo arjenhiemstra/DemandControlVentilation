@@ -9,6 +9,10 @@
 #define I2C_SCL2 40
 #define I2C_SDA2 41
 
+#define LCD_ROWS 4
+#define LCD_COLUMNS 16
+#define LCDADDR 0x27
+
 extern SemaphoreHandle_t sensor_config_file_mutex;
 extern SemaphoreHandle_t sensor_variable_mutex;
 extern SemaphoreHandle_t valve_position_mutex;
