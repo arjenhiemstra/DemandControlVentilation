@@ -19,55 +19,51 @@ void display_sensors(void) {
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
 
     lcd.init();
-    lcd.backlight();                            //LCD starts with backlight on so toggle off until needed
-    //lcd.nobacklight();
+    lcd.backlight();
+    //lcd.noBacklight();                            //LCD starts with backlight on so toggle off until needed
     lcd.noAutoscroll();
     lcd.noCursor();
-    lcd.print("Hello World");
 
-    /*
     xSemaphoreTake(sensor_variable_mutex, portMAX_DELAY);  
    
     for (int bus=0;bus<2;bus++)
     {
         for (int slot=0;slot<8;slot++) {
             
-            Serial.print(sensor_data[bus][slot][0]);
-            Serial.println();
-            Serial.print(sensor_data[bus][slot][1]);
-            Serial.println();
+            //Serial.print(sensor_data[bus][slot][0]);
+            //Serial.println();
+            //Serial.print(sensor_data[bus][slot][1]);
+            //Serial.println();
             
-            //Clear display and turn on backlight 
-            lcd.backlight();
-            lcd.clear();
-
-            //Refresh sensor data every 2 seconds
-            vTaskDelay(2000);
-
             lcd.setCursor(0, 0);
-            lcd.print("Bus:"); Serial.print(bus); Serial.print(" Sensor:"); Serial.print(slot);
+            lcd.print("Bus:"); lcd.print(bus); lcd.print(" Sensor:"); lcd.print(slot);
             
             lcd.setCursor(0, 1);
-            lcd.print("Temperature:");
+            lcd.print("Temperature: ");
             lcd.print(sensor_data[bus][slot][0]);
-            lcd.print("°C");
+            lcd.print((char)223);
+            lcd.print("C");
 
             lcd.setCursor(0, 2);
-            lcd.print("Humidity:");
+            lcd.print("Humidity: ");
             lcd.print(sensor_data[bus][slot][1]);
             lcd.print("%");
 
             lcd.setCursor(0, 3);
-            lcd.print("CO2:");
+            lcd.print("CO2: ");
             lcd.print(sensor_data[bus][slot][2]);
             lcd.print("ppm");
+
+            //Refresh sensor data every 5 seconds and clear
+            vTaskDelay(5000);
+            lcd.clear();
         }
     }
 
-    lcd.backlight(); //backlight off
+    lcd.noBacklight();
     lcd.clear();
    
-    xSemaphoreGive(sensor_variable_mutex);*/
+    xSemaphoreGive(sensor_variable_mutex);
 }
 
 void display_valve_positions(void) {
@@ -81,7 +77,6 @@ void display_valve_positions(void) {
     3 |	9	:	7			1	0	:	i	i		1	1	:	i	i
     */
       
-   /*
     const char* path = "/valvepositions.json";
     bool status_file_present;
     String json;
@@ -116,53 +111,54 @@ void display_valve_positions(void) {
         String valve10_pos = doc[String("valve10")];
         String valve11_pos = doc[String("valve11")];
 
-        lcd.setCursor(0, 0);
+        lcd.cursor();
+        lcd.setCursor(0,0);
         lcd.print("v0:");
         lcd.print(valve0_pos);
-        lcd.setCursor(0, 6);
+        lcd.setCursor(7,0);
         lcd.print("v1:");
         lcd.print(valve1_pos);
-        lcd.setCursor(0, 12);
+        lcd.setCursor(14,0);
         lcd.print("v2:");
         lcd.print(valve2_pos);
         
-        lcd.setCursor(1, 0);
+        lcd.setCursor(0,1);
         lcd.print("v3:");
         lcd.print(valve3_pos);
-        lcd.setCursor(0, 6);
+        lcd.setCursor(7,1);
         lcd.print("v4:");
         lcd.print(valve4_pos);
-        lcd.setCursor(0, 12);
+        lcd.setCursor(14,1);
         lcd.print("v5:");
         lcd.print(valve5_pos);
         
-        lcd.setCursor(2, 0);
+        lcd.setCursor(0,2);
         lcd.print("v6:");
         lcd.print(valve6_pos);
-        lcd.setCursor(0, 6);
+        lcd.setCursor(7,2);
         lcd.print("v7:");
         lcd.print(valve7_pos);
-        lcd.setCursor(0, 12);
+        lcd.setCursor(14,2);
         lcd.print("v8:");
         lcd.print(valve8_pos);
 
-        lcd.setCursor(3, 0);
+        lcd.setCursor(0,3);
         lcd.print("v9:");
         lcd.print(valve9_pos);
-        lcd.setCursor(0, 5);
+        lcd.setCursor(6,3);
         lcd.print("v10:");
         lcd.print(valve10_pos);
-        lcd.setCursor(0, 11);
+        lcd.setCursor(13,3);
         lcd.print("v11:");
         lcd.print(valve11_pos);
 
     }
 
-    vTaskDelay(2000);                           //Show data for two seconds
+    vTaskDelay(7000);                       //Show data for two seconds
     lcd.clear();
-    lcd.backlight();                            //Backlight off
+    lcd.noBacklight();                      //Backlight off
+    lcd.noCursor();
 
     xSemaphoreGive(valve_position_mutex);
-    */
 }
 
