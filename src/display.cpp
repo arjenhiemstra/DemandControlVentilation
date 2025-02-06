@@ -29,12 +29,7 @@ void display_sensors(void) {
     for (int bus=0;bus<2;bus++)
     {
         for (int slot=0;slot<8;slot++) {
-            
-            //Serial.print(sensor_data[bus][slot][0]);
-            //Serial.println();
-            //Serial.print(sensor_data[bus][slot][1]);
-            //Serial.println();
-            
+                     
             lcd.setCursor(0, 0);
             lcd.print("Bus:"); lcd.print(bus); lcd.print(" Sensor:"); lcd.print(slot);
             
@@ -59,8 +54,6 @@ void display_sensors(void) {
             lcd.clear();
         }
     }
-
-    lcd.noBacklight();
     lcd.clear();
    
     xSemaphoreGive(sensor_variable_mutex);
@@ -111,7 +104,6 @@ void display_valve_positions(void) {
         String valve10_pos = doc[String("valve10")];
         String valve11_pos = doc[String("valve11")];
 
-        lcd.cursor();
         lcd.setCursor(0,0);
         lcd.print("v0:");
         lcd.print(valve0_pos);
@@ -157,7 +149,6 @@ void display_valve_positions(void) {
     vTaskDelay(7000);                       //Show data for two seconds
     lcd.clear();
     lcd.noBacklight();                      //Backlight off
-    lcd.noCursor();
 
     xSemaphoreGive(valve_position_mutex);
 }

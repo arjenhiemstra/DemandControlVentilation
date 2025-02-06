@@ -58,7 +58,7 @@ void valve_status_file_create() {
     
     File file;
     const char* default_valve_position_file;
-    default_valve_position_file = "{\"valve0\":1, \"valve1\":2, \"valve2\":3, \"valve3\":4, \"valve4\":5, \"valve5\":6, \"valve6\":7, \"valve7\":8, \"valve8\":9, \"valve9\":10, \"valve10\":11, \"valve11\":12}";
+    default_valve_position_file = "{\"valve0\":0, \"valve1\":0, \"valve2\":0, \"valve3\":0, \"valve4\":0, \"valve5\":0, \"valve6\":0, \"valve7\":0, \"valve8\":0, \"valve9\":0, \"valve10\":0, \"valve11\":0}";
     
     xSemaphoreTake(valve_position_mutex, portMAX_DELAY);
     file = LittleFS.open("/valvepositions.json", "w");

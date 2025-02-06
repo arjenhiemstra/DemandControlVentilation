@@ -95,8 +95,22 @@ void move_valve(void) {
         }
       
         if (check_valve_position == 1) {
-            //put check position code here
-            if(direction == 0 && (valve_position_change + valve_pos)>24) {
+            //put check position code here, direction Forward is 0 and valve close
+            if(direction == 0 && (valve_pos - valve_position_change) < 0) {
+                new_valve_position_change = 0;
+                Serial.print("\n");
+                Serial.print ("Request move is: " + String(valve_position_change) + ". Current_position is: " + String(valve_pos) + ". Valve will move: " + String(new_valve_position_change));
+                valvecontrol(direction, new_valve_position_change, valve_number, dataPin, clockPin, latchPin);
+                new_valve_position = 0;
+            }
+            else if (direction == 0 && (valve_pos - valve_position_change) > 0) {
+                new_valve_position_change = valve_position_change;
+                Serial.print("\n");
+                Serial.print ("Request move is: " + String(valve_position_change) + ". Current_position is: " + String(valve_pos) + ". Valve will move: " + String(new_valve_position_change));
+                valvecontrol(direction, new_valve_position_change, valve_number, dataPin, clockPin, latchPin);
+                new_valve_position = valve_pos - new_valve_position_change;
+            }
+            else if (direction == 1 && (valve_pos + valve_position_change) > 24) {
                 new_valve_position_change = 24 - valve_pos;
                 Serial.print("\n");
                 Serial.print ("Request move is: " + String(valve_position_change) + ". Current_position is: " + String(valve_pos) + ". Valve will move: " + String(new_valve_position_change));
@@ -109,21 +123,6 @@ void move_valve(void) {
                 Serial.print ("Request move is: " + String(valve_position_change) + ". Current_position is: " + String(valve_pos) + ". Valve will move: " + String(new_valve_position_change));
                 valvecontrol(direction, new_valve_position_change, valve_number, dataPin, clockPin, latchPin);
                 new_valve_position = valve_pos + new_valve_position_change;
-            }
-            
-            if (direction == 1 && (valve_pos - valve_position_change) < 0) {
-                new_valve_position_change = valve_pos;
-                Serial.print("\n");
-                Serial.print ("Request move is: " + String(valve_position_change) + ". Current_position is: " + String(valve_pos) + ". Valve will move: " + String(new_valve_position_change));
-                valvecontrol(direction, new_valve_position_change, valve_number, dataPin, clockPin, latchPin);
-                new_valve_position = 0;
-            }
-            else {
-                new_valve_position_change = valve_position_change;
-                Serial.print("\n");
-                Serial.print ("Request move is: " + String(valve_position_change) + ". Current_position is: " + String(valve_pos) + ". Valve will move: " + String(new_valve_position_change));
-                valvecontrol(direction, new_valve_position_change, valve_number, dataPin, clockPin, latchPin);
-                new_valve_position = valve_pos - new_valve_position_change;
             }
         }
         else {
@@ -226,8 +225,8 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
             break;
     }
 
-  //Direction is 0 (forwards)
-  if (direction == 0) {
+  //Direction is 0 (forwards or close)
+  if (direction == 1) {
     //Loop to run the number of cycles to make one turn * the number of turns to make requested_position_change
       for (j=0; j < (cycles * position_change); j++) {
         //Loop to make one cycle of the four coils in the motor
@@ -247,7 +246,7 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
     all_outputs_off(dataPin, clockPin, latchPin);
   }
 
-  //Direction is 1 (backwards)
+  //Direction is 1 (backwards or open)
   else {
       //Loop to run the number of cycles to make one turn * the number of turns to make requested_position_change
       for (j=0; j < (cycles*position_change); j++) {
