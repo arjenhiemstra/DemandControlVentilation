@@ -12,9 +12,6 @@
 #include "globals.h"
 #include "config_files.h"
 
-//TCA9548 address
-#define TCAADDR 0x70
-
 //Function definitions
 void read_bus0(void);
 void read_bus1(void);
