@@ -81,6 +81,7 @@ void display_valve_positions(void) {
     3 |	9	:	7			1	0	:	i	i		1	1	:	i	i
     */
       
+   /*
     const char* path = "/valvepositions.json";
     bool status_file_present;
     String json;
@@ -162,5 +163,6 @@ void display_valve_positions(void) {
     lcd.backlight();                            //Backlight off
 
     xSemaphoreGive(valve_position_mutex);
+    */
 }
 

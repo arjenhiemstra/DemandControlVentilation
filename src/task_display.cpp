@@ -14,7 +14,7 @@ void task_display_code(void * pvParameters)
         //Serial.print("\n\nDisplay running on core: ");
         //Serial.print(xPortGetCoreID());
         display_sensors();
-        //display_valve_positions();
+        display_valve_positions();
         vTaskDelay(10000);
     }
   

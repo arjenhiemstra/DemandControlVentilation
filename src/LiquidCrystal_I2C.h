@@ -6,6 +6,8 @@
 #include "Print.h" 
 #include <Wire.h>
 
+#include "globals.h"
+
 // commands
 #define LCD_CLEARDISPLAY 0x01
 #define LCD_RETURNHOME 0x02
