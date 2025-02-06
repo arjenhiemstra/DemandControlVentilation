@@ -2,6 +2,9 @@
 
 void publish_sensor_data(void) {
 
+    EthernetClient ethClient;
+    PubSubClient client(ethClient);
+
 }
 
 void publish_valve_data(void) {
