@@ -31,27 +31,36 @@ void display_sensors(void) {
         for (int slot=0;slot<8;slot++) {
                      
             lcd.setCursor(0, 0);
-            lcd.print("Bus:"); lcd.print(bus); lcd.print(" Sensor:"); lcd.print(slot);
+            lcd.print("Bus:");
+            lcd.print(bus);
+            lcd.print(" Sensor:");
+            lcd.print(slot);
             
-            lcd.setCursor(0, 1);
-            lcd.print("Temperature: ");
-            lcd.print(sensor_data[bus][slot][0]);
-            lcd.print((char)223);
-            lcd.print("C");
+            if (sensor_data[bus][slot][0] != 0) {
+                lcd.setCursor(0, 1);
+                lcd.print("Temperature: ");
+                lcd.print(sensor_data[bus][slot][0]);
+                lcd.print((char)223);
+                lcd.print("C");
 
-            lcd.setCursor(0, 2);
-            lcd.print("Humidity: ");
-            lcd.print(sensor_data[bus][slot][1]);
-            lcd.print("%");
+                lcd.setCursor(0, 2);
+                lcd.print("Humidity: ");
+                lcd.print(sensor_data[bus][slot][1]);
+                lcd.print("%");
 
-            lcd.setCursor(0, 3);
-            lcd.print("CO2: ");
-            lcd.print(sensor_data[bus][slot][2]);
-            lcd.print("ppm");
+                lcd.setCursor(0, 3);
+                lcd.print("CO2: ");
+                lcd.print(sensor_data[bus][slot][2]);
+                lcd.print("ppm");
 
-            //Refresh sensor data every 5 seconds and clear
-            vTaskDelay(5000);
-            lcd.clear();
+                //Refresh sensor data every 5 seconds and clear
+                vTaskDelay(5000);
+                lcd.clear();
+            }
+            else {
+                lcd.setCursor(0, 2);
+                lcd.print("No sensor");
+            }
         }
     }
     lcd.clear();
