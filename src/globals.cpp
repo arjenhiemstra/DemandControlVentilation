@@ -17,4 +17,7 @@ float sensor_data[2][8][3] = { 0 };
 String wire_sensor_config_string = {};
 String wire1_sensor_config_string = {};
 
+const char* mqtt_server = "mqtt.lourens.cloud";
+const char* mqtt_port = "1883";
+
 

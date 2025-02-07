@@ -19,11 +19,10 @@
 #define TCAADDR 0x70
 
 //MQTT
-#define MQTT_SERVER "mqtt.lourens.cloud"
-#define MQTT_PORT 1883
-#define MQTT_PUB_TOPIC "/OSVentilationC/"
+extern const char* mqtt_server;
+extern const char* mqtt_port;
 
-
+//Mutexes
 extern SemaphoreHandle_t sensor_config_file_mutex;
 extern SemaphoreHandle_t sensor_variable_mutex;
 extern SemaphoreHandle_t valve_position_mutex;
