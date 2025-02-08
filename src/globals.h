@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 
-//Wire I/O settings (SDA1/SCL1) and Wire1 I/O settings
+//Wire I/O settings (SDA1/SCL1) and Wire1 I/O settings (SDA2/SCL2)
 #define I2C_SCL1 38
 #define I2C_SDA1 39
 #define I2C_SCL2 40
