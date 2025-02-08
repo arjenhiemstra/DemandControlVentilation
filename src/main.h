@@ -12,6 +12,7 @@
 #include "task_read_sensors.h"
 #include "task_display.h"
 #include "task_mqtt.h"
+#include "task_statemachine.h"
 
 #include "valvecontrol.h"
 #include "globals.h"

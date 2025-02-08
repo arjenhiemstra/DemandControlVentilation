@@ -43,6 +43,15 @@ extern float sensor_data[2][8][3];
 extern String wire_sensor_config_string;
 extern String wire1_sensor_config_string;
 
+//Settings for MQTT
+extern const char* mqtt_server;
+extern const char* mqtt_port;
+
+//Settings for RTC
+extern const char* ntp_server;
+extern const long gmt_offset_sec;
+extern const int daylight_offset_sec;
+
 //Function definitions
 
 #endif
