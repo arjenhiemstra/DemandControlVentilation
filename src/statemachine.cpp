@@ -71,10 +71,10 @@ void init_transitions(void) {
 
     String new_state;
 
-    //functions to set fan speed or to set valve positions
-
-    //if time is day -> day
-    //if time is night -> night
+    //Take actions for this state (valve positions, fan speed)
+    //Evaluate time
+    //Evaluate sensor values
+    //Set new state according to logics
 
     state == new_state;
 }
