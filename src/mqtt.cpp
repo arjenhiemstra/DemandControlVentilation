@@ -13,40 +13,50 @@ void publish_sensor_data(void) {
 
     client.setServer(mqtt_server, mqtt_port);
 
-    xSemaphoreTake(sensor_variable_mutex, portMAX_DELAY);
+    if (sensor_variable_mutex != NULL) {
+        if(xSemaphoreTake(sensor_variable_mutex, ( TickType_t ) 10 ) == pdTRUE) {
 
-    Serial.println("Update MQTT....");
-    if (client.connect("ESP32Client")) {
-        for (int bus=0;bus<2;bus++) {
-            for (int slot=0;slot<8;slot++) {
-                        
-                if (sensor_data[bus][slot][0] != 0.00 )  {
-                    measurement = "/temperature";
-                    ("OSVentilation/bus/" + String(bus) + "/sensor" + String(slot) + measurement).toCharArray(topic,200);
-                    String(sensor_data[bus][slot][0]).toCharArray(sensor_value,8);
-                    client.publish(topic, sensor_value);
-                    vTaskDelay(50);
-                }
+            Serial.println("Update MQTT....");
+            if (client.connect("ESP32Client")) {
+                for (int bus=0;bus<2;bus++) {
+                    for (int slot=0;slot<8;slot++) {
+                                
+                        if (sensor_data[bus][slot][0] != 0.00 )  {
+                            measurement = "/temperature";
+                            ("OSVentilation/bus/" + String(bus) + "/sensor" + String(slot) + measurement).toCharArray(topic,200);
+                            String(sensor_data[bus][slot][0]).toCharArray(sensor_value,8);
+                            client.publish(topic, sensor_value);
+                            vTaskDelay(50);
+                        }
 
-                if (sensor_data[bus][slot][1] != 0.00 )  {
-                    measurement = "/humidity";
-                    ("OSVentilation/bus/" + String(bus) + "/sensor" + String(slot) + measurement).toCharArray(topic,200);
-                    String(sensor_data[bus][slot][1]).toCharArray(sensor_value,8);
-                    client.publish(topic, sensor_value);
-                    vTaskDelay(50);
-                }
+                        if (sensor_data[bus][slot][1] != 0.00 )  {
+                            measurement = "/humidity";
+                            ("OSVentilation/bus/" + String(bus) + "/sensor" + String(slot) + measurement).toCharArray(topic,200);
+                            String(sensor_data[bus][slot][1]).toCharArray(sensor_value,8);
+                            client.publish(topic, sensor_value);
+                            vTaskDelay(50);
+                        }
 
-                if (sensor_data[bus][slot][2] != 0.00 )  {
-                    measurement = "/CO2";
-                    ("OSVentilation/bus/" + String(bus) + "/sensor" + String(slot) + measurement).toCharArray(topic,200);
-                    String(sensor_data[bus][slot][2]).toCharArray(sensor_value,8);
-                    client.publish(topic, sensor_value);
-                    vTaskDelay(50);
+                        if (sensor_data[bus][slot][2] != 0.00 )  {
+                            measurement = "/CO2";
+                            ("OSVentilation/bus/" + String(bus) + "/sensor" + String(slot) + measurement).toCharArray(topic,200);
+                            String(sensor_data[bus][slot][2]).toCharArray(sensor_value,8);
+                            client.publish(topic, sensor_value);
+                            vTaskDelay(50);
+                        }
+                    }
                 }
             }
+            else {
+                Serial.print("No connection to MQTT server");
+            }
+            xSemaphoreGive(sensor_variable_mutex);
+        }
+        else {
+            //Serial.print("Could not take semaphore and cannot access shared data safely");
+            return;
         }
     }
-    xSemaphoreGive(sensor_variable_mutex);
 }
 
 void publish_valve_data(void) {

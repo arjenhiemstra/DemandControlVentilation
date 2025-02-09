@@ -22,6 +22,7 @@
 extern SemaphoreHandle_t sensor_config_file_mutex;
 extern SemaphoreHandle_t sensor_variable_mutex;
 extern SemaphoreHandle_t valve_position_mutex;
+extern SemaphoreHandle_t date_time_mutex;
 
 //Global for valve control data
 extern JsonDocument valve_control_data;
@@ -47,6 +48,15 @@ extern const int mqtt_port;
 extern const char* ntp_server;
 extern const long gmt_offset_sec;
 extern const int daylight_offset_sec;
+
+//Variables for RTC data
+extern String yearStr;
+extern String monthStr;
+extern String dayStr;
+extern String hourStr;
+extern String minuteStr;
+extern String secondStr;
+extern String dayOfWeek;
 
 //Function definitions
 

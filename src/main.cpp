@@ -28,9 +28,8 @@ void setup() {
   start_task_valvecontrol();
   start_task_read_sensors();
   start_task_display();
-  vTaskDelay(5000);
-  start_task_mqtt();
   start_task_statemachine();
+  start_task_mqtt();
 }
 
 void loop() { }

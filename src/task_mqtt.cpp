@@ -13,7 +13,7 @@ void task_mqtt_code(void * pvParameters)
     for(;;) {
         publish_sensor_data();
         publish_valve_data();
-        vTaskDelay(12000);
+        vTaskDelay(5000);
     }
   
 }

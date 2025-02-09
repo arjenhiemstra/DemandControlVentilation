@@ -13,13 +13,13 @@ void current_time(void) {
     DateTime now = rtc.now();
 
     // Getting each time field in individual variables
-    String yearStr = String(now.year(), DEC);
-    String monthStr = (now.month() < 10 ? "0" : "") + String(now.month(), DEC);
-    String dayStr = (now.day() < 10 ? "0" : "") + String(now.day(), DEC);
-    String hourStr = (now.hour() < 10 ? "0" : "") + String(now.hour(), DEC);
-    String minuteStr = (now.minute() < 10 ? "0" : "") + String(now.minute(), DEC);
-    String secondStr = (now.second() < 10 ? "0" : "") + String(now.second(), DEC);
-    String dayOfWeek = daysOfTheWeek[now.dayOfTheWeek()];
+    yearStr = String(now.year(), DEC);
+    monthStr = (now.month() < 10 ? "0" : "") + String(now.month(), DEC);
+    dayStr = (now.day() < 10 ? "0" : "") + String(now.day(), DEC);
+    hourStr = (now.hour() < 10 ? "0" : "") + String(now.hour(), DEC);
+    minuteStr = (now.minute() < 10 ? "0" : "") + String(now.minute(), DEC);
+    secondStr = (now.second() < 10 ? "0" : "") + String(now.second(), DEC);
+    dayOfWeek = daysOfTheWeek[now.dayOfTheWeek()];
 
     // Complete time string
     String formattedTime = dayOfWeek + ", " + yearStr + "-" + monthStr + "-" + dayStr + " " + hourStr + ":" + minuteStr + ":" + secondStr;
