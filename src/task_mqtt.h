@@ -5,10 +5,11 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
-//#include "mqtt.h"
+#include "mqtt.h"
 
 // function declarations
 void start_task_mqtt(void);
 void task_mqtt_code(void * pvParameters);
+
 
 #endif

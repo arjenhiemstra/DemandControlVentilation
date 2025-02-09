@@ -60,6 +60,8 @@ void display_sensors(void) {
             else {
                 lcd.setCursor(0, 2);
                 lcd.print("No sensor");
+                vTaskDelay(5000);
+                lcd.clear();
             }
         }
     }
@@ -162,3 +164,7 @@ void display_valve_positions(void) {
     xSemaphoreGive(valve_position_mutex);
 }
 
+void display_time_and_date(void) {
+
+    
+}

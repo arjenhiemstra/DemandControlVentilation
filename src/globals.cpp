@@ -18,8 +18,8 @@ String wire_sensor_config_string = {};
 String wire1_sensor_config_string = {};
 
 //Settings for MQTT
-const char* mqtt_server = "mqtt.lourens.cloud";
-const char* mqtt_port = "1883";
+const char* mqtt_server = "192.168.0.15";
+const int mqtt_port = 1883;
 
 //Settings for RTC
 const char* ntp_server = "pool.ntp.org";

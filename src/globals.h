@@ -18,10 +18,6 @@
 //TCA9548 address
 #define TCAADDR 0x70
 
-//MQTT
-extern const char* mqtt_server;
-extern const char* mqtt_port;
-
 //Mutexes
 extern SemaphoreHandle_t sensor_config_file_mutex;
 extern SemaphoreHandle_t sensor_variable_mutex;
@@ -45,7 +41,7 @@ extern String wire1_sensor_config_string;
 
 //Settings for MQTT
 extern const char* mqtt_server;
-extern const char* mqtt_port;
+extern const int mqtt_port;
 
 //Settings for RTC
 extern const char* ntp_server;

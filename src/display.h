@@ -13,5 +13,6 @@
 //Function definitions
 void display_sensors(void);
 void display_valve_positions(void);
+void display_time_and_date(void);
 
 #endif

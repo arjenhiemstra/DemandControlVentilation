@@ -191,7 +191,7 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == VALVE0_DIRECTION) {
           valve0_direction = p->value().c_str();
-          if (valve0_direction == "Forward") {
+          if (valve0_direction == "Close") {
             valve_control_data["valve0_data"][2] = 0;
           }
           else {
@@ -204,7 +204,7 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == VALVE1_DIRECTION) {
           valve1_direction = p->value().c_str();
-          if (valve1_direction == "Forward") {
+          if (valve1_direction == "Close") {
             valve_control_data["valve1_data"][2] = 0;
           }
           else {
@@ -217,7 +217,7 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == VALVE2_DIRECTION) {
           valve2_direction = p->value().c_str();
-          if (valve2_direction == "Forward") {
+          if (valve2_direction == "Close") {
             valve_control_data["valve2_data"][2] = 0;
           }
           else {
@@ -230,7 +230,7 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == VALVE3_DIRECTION) {
           valve3_direction = p->value().c_str();
-          if (valve3_direction == "Forward") {
+          if (valve3_direction == "Close") {
             valve_control_data["valve3_data"][2] = 0;
           }
           else {
@@ -243,7 +243,7 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == VALVE4_DIRECTION) {
           valve4_direction = p->value().c_str();
-          if (valve4_direction == "Forward") {
+          if (valve4_direction == "Close") {
             valve_control_data["valve4_data"][2] = 0;
           }
           else {
@@ -256,7 +256,7 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == VALVE5_DIRECTION) {
           valve5_direction = p->value().c_str();
-          if (valve5_direction == "Forward") {
+          if (valve5_direction == "Close") {
             valve_control_data["valve5_data"][2] = 0;
           }
           else {
@@ -269,7 +269,7 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == VALVE6_DIRECTION) {
           valve6_direction = p->value().c_str();
-          if (valve6_direction == "Forward") {
+          if (valve6_direction == "Close") {
             valve_control_data["valve6_data"][2] = 0;
           }
           else {
@@ -282,7 +282,7 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == VALVE7_DIRECTION) {
           valve7_direction = p->value().c_str();
-          if (valve7_direction == "Forward") {
+          if (valve7_direction == "Close") {
             valve_control_data["valve7_data"][2] = 0;
           }
           else {
@@ -295,7 +295,7 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == VALVE8_DIRECTION) {
           valve8_direction = p->value().c_str();
-          if (valve8_direction == "Forward") {
+          if (valve8_direction == "Close") {
             valve_control_data["valve8_data"][2] = 0;
           }
           else {
@@ -308,7 +308,7 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == VALVE9_DIRECTION) {
           valve9_direction = p->value().c_str();
-          if (valve9_direction == "Forward") {
+          if (valve9_direction == "Close") {
             valve_control_data["valve9_data"][2] = 0;
           }
           else {
@@ -321,7 +321,7 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == VALVE10_DIRECTION) {
           valve10_direction = p->value().c_str();
-          if (valve10_direction == "Forward") {
+          if (valve10_direction == "Close") {
             valve_control_data["valve10_data"][2] = 0;
           }
           else {
@@ -334,7 +334,7 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == VALVE11_DIRECTION) {
           valve11_direction = p->value().c_str();
-          if (valve11_direction == "Forward") {
+          if (valve11_direction == "Close") {
             valve_control_data["valve11_data"][2] = 0;
           }
           else {
@@ -363,7 +363,6 @@ void Taskwebcode(void *pvParameters) {
     }
     request->send(LittleFS, "/html/valvecontrol.html", String(), false, valvecontrol_processor);
     xSemaphoreGive(valve_position_mutex);
-
     xTaskNotifyGive(xTaskGetHandle("task_valvectrl"));
   });
 

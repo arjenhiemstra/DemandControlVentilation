@@ -48,6 +48,8 @@ void setup_wifi() {
   Serial.print("IP Address: ");
   Serial.print(WiFi.localIP());
   Serial.print("\n\n");
+  vTaskDelay(1000);
+  sync_rtc_ntp();
 }
 
 void init_registers(void) {
