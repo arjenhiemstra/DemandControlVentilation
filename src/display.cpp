@@ -23,71 +23,81 @@ void display_sensors(void) {
     lcd.noAutoscroll();
     lcd.noCursor();
 
+    //Copy array to local array with active mutex an then run slow display function without mutex
+    float temp_sensor_data[2][8][3];
+
     if (sensor_variable_mutex != NULL) {
         if(xSemaphoreTake(sensor_variable_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-   
-            for (int bus=0;bus<2;bus++)
-            {
-                for (int slot=0;slot<8;slot++) {
-                            
-                    lcd.setCursor(0, 0);
-                    lcd.print("Bus:");
-                    lcd.print(bus);
-                    lcd.print(" Sensor:");
-                    lcd.print(slot);
-                    
-                    //Only display measurments if sensor is present, i.e. if temperature measurement is not zero
-                    if (sensor_data[bus][slot][0] != 0) {
-                        lcd.setCursor(0, 1);
-                        lcd.print("Temperature: ");
-                        lcd.print(sensor_data[bus][slot][0]);
-                        lcd.print((char)223);
-                        lcd.print("C");
-
-                        lcd.setCursor(0, 2);
-                        lcd.print("Humidity: ");
-                        lcd.print(sensor_data[bus][slot][1]);
-                        lcd.print("%");
-
-                        //Only displat CO2 is sensor has this measurement
-                        if (sensor_data[bus][slot][2] != 0) {
-                            lcd.setCursor(0, 3);
-                            lcd.print("CO2: ");
-                            lcd.print(sensor_data[bus][slot][2]);
-                            lcd.print("ppm");
-                        }
-
-                        //Refresh sensor data every 5 seconds and clear display
-                        vTaskDelay(5000);
-                        lcd.clear();
-                    }
-                    //No sensor connected to port
-                    else {
-                        lcd.setCursor(0, 2);
-                        lcd.print("No sensor");
-                        vTaskDelay(5000);
-                        lcd.clear();
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 8; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        temp_sensor_data[i][j][k] = sensor_data[i][j][k];
                     }
                 }
             }
-            lcd.clear();
+            vTaskDelay(100);
             xSemaphoreGive(sensor_variable_mutex);
         }
-        else {
-            return;
+    }
+        
+    for (int bus=0;bus<2;bus++)
+    {
+        for (int slot=0;slot<8;slot++) {
+                    
+            lcd.setCursor(0, 0);
+            lcd.print("Bus:");
+            lcd.print(bus);
+            lcd.print(" Sensor:");
+            lcd.print(slot);
+            
+            //Only display measurments if sensor is present, i.e. if temperature measurement is not zero
+            if (temp_sensor_data[bus][slot][0] != 0) {
+                lcd.setCursor(0, 1);
+                lcd.print("Temperature: ");
+                lcd.print(temp_sensor_data[bus][slot][0]);
+                lcd.print((char)223);
+                lcd.print("C");
+
+                lcd.setCursor(0, 2);
+                lcd.print("Humidity: ");
+                lcd.print(temp_sensor_data[bus][slot][1]);
+                lcd.print("%");
+
+                //Only displat CO2 is sensor has this measurement
+                if (temp_sensor_data[bus][slot][2] != 0) {
+                    lcd.setCursor(0, 3);
+                    lcd.print("CO2: ");
+                    lcd.print(temp_sensor_data[bus][slot][2]);
+                    lcd.print("ppm");
+                }
+
+                //Refresh sensor data every 5 seconds and clear display
+                vTaskDelay(5000);
+                lcd.clear();
+            }
+            //No sensor connected to port
+            else {
+                lcd.setCursor(0, 2);
+                lcd.print("No sensor");
+                vTaskDelay(5000);
+                lcd.clear();
+            }
         }
     }
+    lcd.clear();
 }
 
 void display_valve_positions(void) {
 
-    /*
-        0 	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15
-       ---------------------------------------------------------------
-    0 |	0	:	2	4			1	:	i	i			2	:	i	i
-    1 |	3	:	1	2			4	:	i	i			5	:	i	i
-    2 |	6	:	9				7	:	i	i			8	:	i	i
-    3 |	9	:	7			1	0	:	i	i		1	1	:	i	i
+    /* Display layout
+
+            0 	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15  16  17  18  19  20
+            -----------------------------------------------------------------------------------
+    0   |	v   0	:	i	i		    v	1	:	i	i			v   2	:	i	i
+    1   |	v   3	:	i	i		    v	4	:	i	i			v   5	:	i	i
+    2   |	v   6	:	i   i		    v	7	:	i	i			v   8	:	i	i
+    3   |	v   9	:	i   i		v   1	0	:	i	i		v   1   1	:	i	i
+    
     */
       
     const char* path = "/valvepositions.json";
@@ -101,10 +111,6 @@ void display_valve_positions(void) {
     lcd.clear();
     lcd.backlight();
     
-    vTaskDelay(1000);
-
-    //xSemaphoreTake(valve_position_mutex, portMAX_DELAY);
-
     if (valve_position_mutex != NULL) {
         if(xSemaphoreTake(valve_position_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             status_file_present = check_file_exists(path);
@@ -178,5 +184,34 @@ void display_valve_positions(void) {
 
 void display_time_and_date(void) {
 
+    Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
+    lcd.init();
+
+    lcd.clear();
+    lcd.backlight();
     
+    if (valve_position_mutex != NULL) {
+        if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            lcd.setCursor(0,0);
+            lcd.print(dayOfWeek);
+
+            lcd.setCursor(0,1);
+            lcd.print(dayStr);
+            lcd.print(" - ");
+            lcd.print(monthStr);
+            lcd.print(" - ");
+            lcd.print(yearStr);
+            
+            lcd.setCursor(0,2);
+            lcd.print(hourStr);
+            lcd.print(":");
+            lcd.print(minuteStr);
+            lcd.print(":");
+            lcd.print(secondStr);  
+
+            xSemaphoreGive(date_time_mutex);        
+        }
+        vTaskDelay(5000);
+        lcd.clear();
+    }
 }

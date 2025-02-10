@@ -52,10 +52,6 @@ void publish_sensor_data(void) {
             }
             xSemaphoreGive(sensor_variable_mutex);
         }
-        else {
-            //Serial.print("Could not take semaphore and cannot access shared data safely");
-            return;
-        }
     }
 }
 
@@ -70,29 +66,31 @@ void publish_valve_data(void) {
     String json;
     JsonDocument doc;
 
-    client.setServer(mqtt_server, 1883);
+    client.setServer(mqtt_server, 1883); 
+
+    if (valve_position_mutex != NULL) {
+        if(xSemaphoreTake(valve_position_mutex, ( TickType_t ) 10 ) == pdTRUE) {
     
-    xSemaphoreTake(valve_position_mutex, portMAX_DELAY);
-    
-    status_file_present = check_file_exists(path);
+            status_file_present = check_file_exists(path);
 
-    if (status_file_present == 1) {
+            if (status_file_present == 1) {
 
-        json = read_config_file(path);
-        deserializeJson(doc, json);
+                json = read_config_file(path);
+                deserializeJson(doc, json);
 
-        for (int i=0;i<12;i++){
+                for (int i=0;i<12;i++){
 
-            String valve_nr_str = "valve" + String(i);
-            String valve_pos_str = doc[String(valve_nr_str)];
-            valve_nr_str.toCharArray(valve_nr,10);
-            valve_pos_str.toCharArray(valve_pos,4);
-            ("OSVentilation/position/" + valve_nr_str).toCharArray(topic,100);
-            client.publish(topic,valve_pos);
+                    String valve_nr_str = "valve" + String(i);
+                    String valve_pos_str = doc[String(valve_nr_str)];
+                    valve_nr_str.toCharArray(valve_nr,10);
+                    valve_pos_str.toCharArray(valve_pos,4);
+                    ("OSVentilation/position/" + valve_nr_str).toCharArray(topic,100);
+                    client.publish(topic,valve_pos);
+                }
+            }
+            xSemaphoreGive(valve_position_mutex);
         }
     }
-
-    xSemaphoreGive(valve_position_mutex);
 }
 
 void publish_state(void) {

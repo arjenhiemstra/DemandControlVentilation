@@ -5,7 +5,6 @@
 #include <LittleFS.h>
 #include <ArduinoJson.h>
 #include <Wire.h>
-#include <Ethernet.h>
 #include <WiFi.h>
 
 #include "globals.h"
