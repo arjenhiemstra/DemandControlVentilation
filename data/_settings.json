@@ -1,0 +1,12 @@
+{
+    "SSID" : " ",
+    "wifi_password" : " ",
+    "ip_address" : " ",
+    "subnet_mask" : " ",
+    "gateway" : " ",
+    "primary_dns" : "",
+    "secondary_dns": " ",
+    "mqtt_server" : " ",
+    "mqtt_port" : " ",
+    "mqtt_base_topic" : ""
+}
