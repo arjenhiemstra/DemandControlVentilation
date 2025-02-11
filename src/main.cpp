@@ -11,6 +11,7 @@ void setup() {
   sensor_config_file_mutex = xSemaphoreCreateMutex();
   sensor_variable_mutex = xSemaphoreCreateMutex();
   valve_position_mutex = xSemaphoreCreateMutex();
+  date_time_mutex = xSemaphoreCreateMutex();
 
   // First switch off all outputs which randomly come up at power on
   init_registers();

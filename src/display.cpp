@@ -5,8 +5,8 @@ LiquidCrystal_I2C lcd(LCDADDR, LCD_COLUMNS, LCD_ROWS);
 void display_sensors(void) {
 
     /*
-        0 	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15
-       ---------------------------------------------------------------
+        0 	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15  16  17  18  19
+       -------------------------------------------------------------------------------
     0 |	B	u	s	:	0		S	e	n	s	o	r	:	1	1	
     1 |	T	e	m	p	:	2	2	,	8	7	°	C				
     2 |	H	u	m	i	d	i	t	y	:	4	7	%				
@@ -28,6 +28,7 @@ void display_sensors(void) {
 
     if (sensor_variable_mutex != NULL) {
         if(xSemaphoreTake(sensor_variable_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            vTaskDelay(100);
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 8; j++) {
                     for (int k = 0; k < 3; k++) {
@@ -190,16 +191,16 @@ void display_time_and_date(void) {
     lcd.clear();
     lcd.backlight();
     
-    if (valve_position_mutex != NULL) {
+    if (date_time_mutex != NULL) {
         if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             lcd.setCursor(0,0);
             lcd.print(dayOfWeek);
 
             lcd.setCursor(0,1);
             lcd.print(dayStr);
-            lcd.print(" - ");
+            lcd.print("-");
             lcd.print(monthStr);
-            lcd.print(" - ");
+            lcd.print("-");
             lcd.print(yearStr);
             
             lcd.setCursor(0,2);
@@ -209,7 +210,7 @@ void display_time_and_date(void) {
             lcd.print(":");
             lcd.print(secondStr);  
 
-            xSemaphoreGive(date_time_mutex);        
+            xSemaphoreGive(date_time_mutex);       
         }
         vTaskDelay(5000);
         lcd.clear();

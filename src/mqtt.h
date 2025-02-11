@@ -10,10 +10,13 @@
 #include "globals.h"
 #include "config_files.h"
 #include "PubSubClient.h"
+#include "uptime_formatter.h"
+//#include <uptime.h>
 
 //Function definitions
 void publish_sensor_data(void);
 void publish_valve_data(void);
+void publish_uptime(void);
 void publish_state(void);
 void subscribe(void);
 

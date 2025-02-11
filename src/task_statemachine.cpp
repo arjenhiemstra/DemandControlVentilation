@@ -13,6 +13,7 @@ void task_statemachine_code(void * pvParameters)
   for (;;) { 
     Serial.print("\n\nLocal time is: ");
     current_time();
+    //Serial.println("up: " + uptime_formatter::getUptime());
     vTaskDelay(10000);
   }
   

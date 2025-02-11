@@ -12,7 +12,7 @@
 
 //LCD display
 #define LCD_ROWS 4
-#define LCD_COLUMNS 16
+#define LCD_COLUMNS 20
 #define LCDADDR 0x27
 
 //TCA9548 address

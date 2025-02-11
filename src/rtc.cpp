@@ -6,6 +6,7 @@ RTC_DS3231 rtc;
 void current_time(void) {
 
     char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+    //String formattedTime;
 
     Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
     rtc.begin(&Wire);
@@ -14,7 +15,7 @@ void current_time(void) {
 
     if (date_time_mutex != NULL) {
         if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            // Getting each time field in individual variables
+
             yearStr = String(now.year(), DEC);
             monthStr = (now.month() < 10 ? "0" : "") + String(now.month(), DEC);
             dayStr = (now.day() < 10 ? "0" : "") + String(now.day(), DEC);
@@ -22,17 +23,11 @@ void current_time(void) {
             minuteStr = (now.minute() < 10 ? "0" : "") + String(now.minute(), DEC);
             secondStr = (now.second() < 10 ? "0" : "") + String(now.second(), DEC);
             dayOfWeek = daysOfTheWeek[now.dayOfTheWeek()];
-            vTaskDelay(100);
+            String formattedTime = dayOfWeek + ", " + yearStr + "-" + monthStr + "-" + dayStr + " " + hourStr + ":" + minuteStr + ":" + secondStr;
+            Serial.println(formattedTime);
+            xSemaphoreGive(date_time_mutex);
         }
-        xSemaphoreGive(date_time_mutex);
     }
-
-    // Complete time string
-    String formattedTime = dayOfWeek + ", " + yearStr + "-" + monthStr + "-" + dayStr + " " + hourStr + ":" + minuteStr + ":" + secondStr;
-
-    // Print the complete formatted time
-    Serial.println(formattedTime);
-    //Serial.println();
 }
 
 void sync_rtc_ntp(void) {

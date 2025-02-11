@@ -93,6 +93,20 @@ void publish_valve_data(void) {
     }
 }
 
+void publish_uptime(void) {
+
+    const char* topic;
+    char uptime[200];
+
+
+    client.setServer(mqtt_server, 1883);
+    topic="OSVentilation/system/uptime";
+    (uptime_formatter::getUptime()).toCharArray(uptime,200);
+    client.publish(topic,uptime);
+
+}
+
+
 void publish_state(void) {
     
 }
