@@ -8,5 +8,22 @@
     "secondary_dns": " ",
     "mqtt_server" : " ",
     "mqtt_port" : " ",
-    "mqtt_base_topic" : ""
+    "mqtt_base_topic" : "",
+    "bus0_multiplexer_address" : "",
+    "bus1_multiplexer_address" : "",
+    "display_i2c_adddress" : "",
+    "fan_control_mode" : "",
+    "fan_control_mqqt_topic" : "",
+    "fan_control_url_high_speed" : "",
+    "fan_control_url_medium_speed" : "",
+    "fan_control_url_low_speed" : "",
+
+    "ntp_server" : "",
+    "gmt_offset_sec" : "",
+    "daylight_offset_sec" : "",
+
+    "influxdb_url": "",
+    "influxdb_token" : "",
+    "influxdb_org" : "",
+    "influxdb_bucket" : ""
 }
