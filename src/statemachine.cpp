@@ -71,6 +71,22 @@ void init_transitions(void) {
 
     String new_state;
 
+    Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
+    rtc.begin(&Wire);
+
+    DateTime now = rtc.now();
+
+    //now.dayOfTheWeek start with Sunday (0) and ends at Saturday 6
+
+    if (now.hour > 7 && now.hour < 22 && now.dayOfTheWeek != 0 && now.dayOfTheWeek !=6)  {
+        Serial.print("It is after 7 and before 21 and a weekday")
+    }
+    else if (now.hour > 8 && now.hour < 22 && now.dayOfTheWeek == 0 && now.dayOfTheWeek ==6) {
+    }
+    else {
+        Serial.print("It's night")
+    }
+
     //Take actions for this state (valve positions, fan speed)
     //Evaluate time
     //Evaluate sensor values

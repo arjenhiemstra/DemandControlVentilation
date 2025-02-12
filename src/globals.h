@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include <ArduinoJson.h>
+#include <RTClib.h>
 
 //Wire I/O settings (SDA1/SCL1) and Wire1 I/O settings (SDA2/SCL2)
 #define I2C_SCL1 38
@@ -45,6 +46,7 @@ extern const char* mqtt_server;
 extern const int mqtt_port;
 
 //Settings for RTC
+extern RTC_DS3231 rtc;
 extern const char* ntp_server;
 extern const long gmt_offset_sec;
 extern const int daylight_offset_sec;

@@ -23,6 +23,7 @@ const char* mqtt_server = "192.168.0.15";
 const int mqtt_port = 1883;
 
 //Settings for RTC
+RTC_DS3231 rtc;
 const char* ntp_server = "pool.ntp.org";
 const long gmt_offset_sec = 3600;                // Offset for GMT in seconds, 3600 for Europe/Amsterdam
 const int daylight_offset_sec = 3600;            // Daylight savings time in seconds, 3600 for Europe/Amsterdam

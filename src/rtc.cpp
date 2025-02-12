@@ -1,7 +1,7 @@
 #include "rtc.h"
 
-// RTC object for DS3231
-RTC_DS3231 rtc;
+// RTC object for DS3231 is in globals
+//RTC_DS3231 rtc;
 
 void current_time(void) {
 
