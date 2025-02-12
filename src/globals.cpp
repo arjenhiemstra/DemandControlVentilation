@@ -37,3 +37,6 @@ String minuteStr = "";
 String secondStr = "";
 String dayOfWeek = "";
 
+//Statemachine globals
+String state = "";
+

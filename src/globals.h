@@ -60,6 +60,9 @@ extern String minuteStr;
 extern String secondStr;
 extern String dayOfWeek;
 
+//Variables for statemachine
+extern String state;
+
 //Function definitions
 
 #endif
