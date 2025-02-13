@@ -24,6 +24,7 @@ extern SemaphoreHandle_t sensor_config_file_mutex;
 extern SemaphoreHandle_t sensor_variable_mutex;
 extern SemaphoreHandle_t valve_position_mutex;
 extern SemaphoreHandle_t date_time_mutex;
+extern SemaphoreHandle_t settings_mutex;
 
 //Global for valve control data
 extern JsonDocument valve_control_data;
@@ -34,6 +35,9 @@ extern JsonDocument wire1_sensor_data;
 
 extern String wire_sensor_config1_string;
 extern String sensor_config2_string;
+
+//Define lobal for settings configuration
+extern JsonDocument settings_data;
 
 //Sensor data arrays for Wire and Wire1
 extern float sensor_data[2][8][3];

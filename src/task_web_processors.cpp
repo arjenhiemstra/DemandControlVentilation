@@ -286,3 +286,152 @@ String sensor_config_processor(const String& var) {
 
 }
 
+String status_processor(const String& var) {
+
+    /*Valve positions part of processor*/
+    const char* path = "/valvepositions.json";
+    const char* status;
+    bool status_file_present;
+    
+    String json;
+    JsonDocument doc;
+    
+    status_file_present = check_file_exists(path);
+
+    if (status_file_present == 1) {
+
+        json = read_config_file(path);
+        deserializeJson(doc, json);
+
+        if(var == "VALVE0_POS")
+        return (doc[String("valve0")]);
+        if(var == "VALVE1_POS")
+        return (doc[String("valve1")]);
+        if(var == "VALVE2_POS")
+        return (doc[String("valve2")]);
+        if(var == "VALVE3_POS")
+        return (doc[String("valve3")]);
+        if(var == "VALVE4_POS")
+        return (doc[String("valve4")]);
+        if(var == "VALVE5_POS")
+        return (doc[String("valve5")]);
+        if(var == "VALVE6_POS")
+        return (doc[String("valve6")]);
+        if(var == "VALVE7_POS")
+        return (doc[String("valve7")]);
+        if(var == "VALVE8_POS")
+        return (doc[String("valve8")]);
+        if(var == "VALVE9_POS")
+        return (doc[String("valve9")]);
+        if(var == "VALVE10_POS")
+        return (doc[String("valve10")]);
+        if(var == "VALVE11_POS")
+        return (doc[String("valve11")]);
+    }
+    else {
+        return "";
+    }
+
+    /*Sensor readings part of processor*/
+    if (sensor_variable_mutex != NULL) {
+        if(xSemaphoreTake(sensor_variable_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            if(var == "BUS0_SENSOR0_TEMP")
+            return (String(sensor_data[0][0][0]));
+            if(var == "BUS0_SENSOR0_HUM")
+            return (String(sensor_data[0][0][1]));
+            if(var == "BUS0_SENSOR0_CO2")
+            return (String(sensor_data[0][0][2]));
+            if(var == "BUS0_SENSOR1_TEMP")
+            return (String(sensor_data[0][1][0]));
+            if(var == "BUS0_SENSOR1_HUM")
+            return (String(sensor_data[0][1][1]));
+            if(var == "BUS0_SENSOR1_CO2")
+            return (String(sensor_data[0][1][2]));
+            if(var == "BUS0_SENSOR2_TEMP")
+            return (String(sensor_data[0][2][0]));
+            if(var == "BUS0_SENSOR2_HUM")
+            return (String(sensor_data[0][2][1]));
+            if(var == "BUS0_SENSOR2_CO2")
+            return (String(sensor_data[0][2][2]));
+            if(var == "BUS0_SENSOR3_TEMP")
+            return (String(sensor_data[0][3][0]));
+            if(var == "BUS0_SENSOR3_HUM")
+            return (String(sensor_data[0][3][1]));
+            if(var == "BUS0_SENSOR3_CO2")
+            return (String(sensor_data[0][3][2]));
+            if(var == "BUS0_SENSOR4_TEMP")
+            return (String(sensor_data[0][4][0]));
+            if(var == "BUS0_SENSOR4_HUM")
+            return (String(sensor_data[0][4][1]));
+            if(var == "BUS0_SENSOR4_CO2")
+            return (String(sensor_data[0][4][2]));
+            if(var == "BUS0_SENSOR5_TEMP")
+            return (String(sensor_data[0][5][0]));
+            if(var == "BUS0_SENSOR5_HUM")
+            return (String(sensor_data[0][5][1]));
+            if(var == "BUS0_SENSOR5_CO2")
+            return (String(sensor_data[0][5][2]));
+            if(var == "BUS0_SENSOR6_TEMP")
+            return (String(sensor_data[0][6][0]));
+            if(var == "BUS0_SENSOR6_HUM")
+            return (String(sensor_data[0][6][1]));
+            if(var == "BUS0_SENSOR6_CO2")
+            return (String(sensor_data[0][6][2]));
+
+            if(var == "BUS1_SENSOR0_TEMP")
+            return (String(sensor_data[1][0][0]));
+            if(var == "BUS1_SENSOR0_HUM")
+            return (String(sensor_data[1][0][1]));
+            if(var == "BUS1_SENSOR0_CO2")
+            return (String(sensor_data[1][0][2]));
+            if(var == "BUS1_SENSOR1_TEMP")
+            return (String(sensor_data[1][1][0]));
+            if(var == "BUS1_SENSOR1_HUM")
+            return (String(sensor_data[1][1][1]));
+            if(var == "BUS1_SENSOR1_CO2")
+            return (String(sensor_data[1][1][2]));
+            if(var == "BUS1_SENSOR2_TEMP")
+            return (String(sensor_data[1][2][0]));
+            if(var == "BUS1_SENSOR2_HUM")
+            return (String(sensor_data[1][2][1]));
+            if(var == "BUS1_SENSOR2_CO2")
+            return (String(sensor_data[1][2][2]));
+            if(var == "BUS1_SENSOR3_TEMP")
+            return (String(sensor_data[1][3][0]));
+            if(var == "BUS1_SENSOR3_HUM")
+            return (String(sensor_data[1][3][1]));
+            if(var == "BUS1_SENSOR3_CO2")
+            return (String(sensor_data[1][3][2]));
+            if(var == "BUS1_SENSOR4_TEMP")
+            return (String(sensor_data[1][4][0]));
+            if(var == "BUS1_SENSOR4_HUM")
+            return (String(sensor_data[1][4][1]));
+            if(var == "BUS1_SENSOR4_CO2")
+            return (String(sensor_data[1][4][2]));
+            if(var == "BUS1_SENSOR5_TEMP")
+            return (String(sensor_data[1][5][0]));
+            if(var == "BUS1_SENSOR5_HUM")
+            return (String(sensor_data[1][5][1]));
+            if(var == "BUS1_SENSOR5_CO2")
+            return (String(sensor_data[1][5][2]));
+            if(var == "BUS1_SENSOR6_TEMP")
+            return (String(sensor_data[1][6][0]));
+            if(var == "BUS1_SENSOR6_HUM")
+            return (String(sensor_data[1][6][1]));
+            if(var == "BUS1_SENSOR6_CO2")
+            return (String(sensor_data[1][6][2]));
+
+            xSemaphoreGive(sensor_variable_mutex);
+        }
+    }
+
+    return String();
+
+}
+
+
+String settings_processor(const String& var) {
+
+    return String();
+
+}
