@@ -108,6 +108,7 @@ const char* WIRE1_SENSOR7_LOCATION = "wire1_sensor7_location";
 const char* WIRE_SENSOR_CONFIG = "wire_sensor_config";
 const char* WIRE1_SENSOR_CONFIG = "wire1_sensor_config";
 
+const char* STATUS_NETWORK_CONFIG = "status_network_config"
 const char* SSID = "ssid";
 const char* WIFI_PASSWORD = "wifi_password";
 const char* IP_ADDRESS = "ip_address";
@@ -115,9 +116,13 @@ const char* SUBNET_MASK = "subnet_mask";
 const char* GATEWAY = "gateway";
 const char* PRIMARY_DNS = "primary_dns";
 const char* SECONDARY_DNS = "secondary_dns";
+
+const char* STATUS_MQTT_CONFIG = "status_mqtt_config"
 const char* MQTT_SERVER = "mqtt_server";
 const char* MQTT_PORT = "mqtt_port";
 const char* MQTT_BASE_TOPIC = "mqtt_base_topic";
+
+const char* STATUS_I2C_CONFIG
 const char* BUS0_MULTIPLEXER_ADDRESS = "bus0_multiplexer_address";
 const char* BUS1_MULTIPLEXER_ADDRESS = "bus0_multiplexer_address";
 const char* DISPLAY_I2C_ADDRESS = "display_i2c_address";
@@ -151,6 +156,86 @@ void Taskwebcode(void *pvParameters) {
   //Settings web pages processing
   server.on("/settings", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send(LittleFS, "/html/settings.html", "text/html");
+  });
+
+  //Save settings from network settings
+  server.on("/settings_network", HTTP_POST, [](AsyncWebServerRequest *request) {
+    
+    if (settings_network_mutex != NULL) {
+      if(xSemaphoreTake(settings_network_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        int params = request->params();
+        for(int i=0;i<params;i++){
+          const AsyncWebParameter* p = request->getParam(i);
+          if(p->isPost()){
+            if (p->name() == SSID) {
+              settings_data["ssid"] = p->value().c_str();;
+            }
+            if (p->name() == WIFI_PASSWORD) {
+              settings_data["wifi_password"] = p->value().c_str();;
+            }
+            if (p->name() == IP_ADDRESS) {
+              network_settings_data["ip_address"] = p->value().c_str();;
+            }
+            if (p->name() == SUBNET_MASK) {
+              network_settings_data["subnet_mask"] = p->value().c_str();;
+            }
+            if (p->name() == GATEWAY) {
+              network_settings_data["gateway"] = p->value().c_str();;
+            }
+            if (p->name() == PRIMARY_DNS) {
+              network_settings_data["primary_dns"] = p->value().c_str();;
+            }
+            if (p->name() == SECONDARY_DNS) {
+              network_settings_data["secondary_dns"] = p->value().c_str();;
+            }
+          }
+        }
+        const char* path = "/settings_network.json";
+        String settings_network_str;
+
+        serializeJson(network_settings_data, settings_network_str);
+        write_config_file(path, settings_network_str);
+             
+        //request->send(LittleFS, "/html/sensor_config.html", "text/html");
+        request->send(LittleFS, "/html/index.html", String(), false, settings_processor);
+        xSemaphoreGive(settings_network_mutex);
+      }
+    }
+  });
+
+  //Save settings from MQTT settings
+  server.on("/settings_network", HTTP_POST, [](AsyncWebServerRequest *request) {
+    
+    if (settings_mqtt_mutex != NULL) {
+      if(xSemaphoreTake(settings_mqtt_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        int params = request->params();
+        for(int i=0;i<params;i++){
+          const AsyncWebParameter* p = request->getParam(i);
+          if(p->isPost()){
+            if (p->name() == STATUS_MQTT_CONFIG) {
+              settings_mqtt_data["status_mqtt_config"] = p->value().c_str();;
+            }
+            if (p->name() == MQTT_SERVER) {
+              settings__mqtt_data["mqtt_server"] = p->value().c_str();;
+            }
+            if (p->name() == MQTT_PORT) {
+              settings_mqtt_data["mqtt_port"] = p->value().c_str();;
+            }
+            if (p->name() == MQTT_BASE_TOPIC) {
+              settings_mqtt_data["mqtt_base_topic"] = p->value().c_str();;
+            }
+          }
+        }
+        const char* path = "/settings_network.json";
+        String settings_mqtt_str;
+
+        serializeJson(settings_mqtt_data, settings_mqtt_str);
+        write_config_file(path, settings_mqtt_str);
+             
+        request->send(LittleFS, "/html/index.html", String(), false, settings_processor);
+        xSemaphoreGive(settings_mqtt_mutex);
+      }
+    }
   });
 
   //Valve control web pages processing
@@ -637,53 +722,6 @@ void Taskwebcode(void *pvParameters) {
         //request->send(LittleFS, "/html/sensor_config.html", "text/html");
         request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
         xSemaphoreGive(sensor_config_file_mutex);
-      }
-    }
-  });
-
-  server.on("/networkconfig", HTTP_POST, [](AsyncWebServerRequest *request) {
-    
-    if (settings_mutex != NULL) {
-      if(xSemaphoreTake(settings_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-        int params = request->params();
-        for(int i=0;i<params;i++){
-          const AsyncWebParameter* p = request->getParam(i);
-          if(p->isPost()){
-            if (p->name() == SSID) {
-              settings_data["ssid"] = p->value().c_str();;
-            }
-            if (p->name() == WIFI_PASSWORD) {
-              settings_data["wifi_password"] = p->value().c_str();;
-            }
-            if (p->name() == IP_ADDRESS) {
-              settings_data["ip_address"] = p->value().c_str();;
-            }
-            if (p->name() == SUBNET_MASK) {
-              settings_data["subnet_mask"] = p->value().c_str();;
-            }
-            if (p->name() == GATEWAY) {
-              settings_data["gateway"] = p->value().c_str();;
-            }
-            if (p->name() == PRIMARY_DNS) {
-              settings_data["primary_dns"] = p->value().c_str();;
-            }
-            if (p->name() == SECONDARY_DNS) {
-              settings_data["secondary_dns"] = p->value().c_str();;
-            }
-          }
-        }
-        const char* path = "/settings_network.json";
-        String network_config;
-
-        serializeJson(settings_data, network_config);
-        write_config_file(path, network_config);
-
-        //Update string to display config file contents after sving config
-        serializeJson(wire1_sensor_data, wire1_sensor_config_string);
-        
-        //request->send(LittleFS, "/html/sensor_config.html", "text/html");
-        request->send(LittleFS, "/html/index.html", String(), false, settings_processor);
-        xSemaphoreGive(settings_mutex);
       }
     }
   });

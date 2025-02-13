@@ -12,7 +12,11 @@ void setup() {
   sensor_variable_mutex = xSemaphoreCreateMutex();
   valve_position_mutex = xSemaphoreCreateMutex();
   date_time_mutex = xSemaphoreCreateMutex();
-  settings_mutex = xSemaphoreCreateMutex();
+  settings_network_mutex = xSemaphoreCreateMutex();
+  settings_mqtt_mutex = xSemaphoreCreateMutex();
+  settings_i2c_mutex = xSemaphoreCreateMutex();
+  settings_fan_mutex = xSemaphoreCreateMutex();
+  settings_statemachine_mutex = xSemaphoreCreateMutex();
 
   // First switch off all outputs which randomly come up at power on
   init_registers();

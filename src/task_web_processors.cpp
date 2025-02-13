@@ -296,40 +296,45 @@ String status_processor(const String& var) {
     String json;
     JsonDocument doc;
     
-    status_file_present = check_file_exists(path);
+    if (sensor_config_file_mutex != NULL) {
+        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            status_file_present = check_file_exists(path);
 
-    if (status_file_present == 1) {
+            if (status_file_present == 1) {
 
-        json = read_config_file(path);
-        deserializeJson(doc, json);
+                json = read_config_file(path);
+                deserializeJson(doc, json);
 
-        if(var == "VALVE0_POS")
-        return (doc[String("valve0")]);
-        if(var == "VALVE1_POS")
-        return (doc[String("valve1")]);
-        if(var == "VALVE2_POS")
-        return (doc[String("valve2")]);
-        if(var == "VALVE3_POS")
-        return (doc[String("valve3")]);
-        if(var == "VALVE4_POS")
-        return (doc[String("valve4")]);
-        if(var == "VALVE5_POS")
-        return (doc[String("valve5")]);
-        if(var == "VALVE6_POS")
-        return (doc[String("valve6")]);
-        if(var == "VALVE7_POS")
-        return (doc[String("valve7")]);
-        if(var == "VALVE8_POS")
-        return (doc[String("valve8")]);
-        if(var == "VALVE9_POS")
-        return (doc[String("valve9")]);
-        if(var == "VALVE10_POS")
-        return (doc[String("valve10")]);
-        if(var == "VALVE11_POS")
-        return (doc[String("valve11")]);
-    }
-    else {
-        return "";
+                if(var == "VALVE0_POS")
+                return (doc[String("valve0")]);
+                if(var == "VALVE1_POS")
+                return (doc[String("valve1")]);
+                if(var == "VALVE2_POS")
+                return (doc[String("valve2")]);
+                if(var == "VALVE3_POS")
+                return (doc[String("valve3")]);
+                if(var == "VALVE4_POS")
+                return (doc[String("valve4")]);
+                if(var == "VALVE5_POS")
+                return (doc[String("valve5")]);
+                if(var == "VALVE6_POS")
+                return (doc[String("valve6")]);
+                if(var == "VALVE7_POS")
+                return (doc[String("valve7")]);
+                if(var == "VALVE8_POS")
+                return (doc[String("valve8")]);
+                if(var == "VALVE9_POS")
+                return (doc[String("valve9")]);
+                if(var == "VALVE10_POS")
+                return (doc[String("valve10")]);
+                if(var == "VALVE11_POS")
+                return (doc[String("valve11")]);
+            }
+            else {
+                return "";
+            }
+            xSemaphoreGive(sensor_config_file_mutex);
+        }
     }
 
     /*Sensor readings part of processor*/
