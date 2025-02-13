@@ -108,7 +108,7 @@ const char* WIRE1_SENSOR7_LOCATION = "wire1_sensor7_location";
 const char* WIRE_SENSOR_CONFIG = "wire_sensor_config";
 const char* WIRE1_SENSOR_CONFIG = "wire1_sensor_config";
 
-const char* STATUS_NETWORK_CONFIG = "status_network_config"
+const char* STATUS_NETWORK_CONFIG = "status_network_config";
 const char* SSID = "ssid";
 const char* WIFI_PASSWORD = "wifi_password";
 const char* IP_ADDRESS = "ip_address";
@@ -117,15 +117,26 @@ const char* GATEWAY = "gateway";
 const char* PRIMARY_DNS = "primary_dns";
 const char* SECONDARY_DNS = "secondary_dns";
 
-const char* STATUS_MQTT_CONFIG = "status_mqtt_config"
+const char* STATUS_MQTT_CONFIG = "status_mqtt_config";
 const char* MQTT_SERVER = "mqtt_server";
 const char* MQTT_PORT = "mqtt_port";
 const char* MQTT_BASE_TOPIC = "mqtt_base_topic";
 
-const char* STATUS_I2C_CONFIG
+const char* STATUS_I2C_CONFIG = "status_i2c_config";
 const char* BUS0_MULTIPLEXER_ADDRESS = "bus0_multiplexer_address";
 const char* BUS1_MULTIPLEXER_ADDRESS = "bus0_multiplexer_address";
 const char* DISPLAY_I2C_ADDRESS = "display_i2c_address";
+
+const char* STATUS_FAN_CONTROL_CONFIG = "status_fan_control_config";
+const char* FAN_CONTROL_MODE = "fan_control_mode";
+const char* FAN_CONTROL_MQTT_TOPIC = "fan_control_mqtt_topic";
+const char* FAN_CONTROL_URL_HIGH_SPEED = "fan_control_url_high_speed";
+const char* FAN_CONTROL_URL_MEDIUM_SPEED = "fan_control_url_medium_speed";
+const char* FAN_CONTROL_URL_LOW_SPEED = "fan_control_url_low_speed";
+
+const char* STATUS_STATEMACHINE_CONFIG = "status_statemachine_config";
+const char* STATEMACHINE_RH_SENSOR = "statemachine_rh_sensor";
+const char* STATEMACHINE_CO2_SENSOR = "statemachine_co2_sensor";
 
 void startTaskwebcode(void) {
 
@@ -168,32 +179,32 @@ void Taskwebcode(void *pvParameters) {
           const AsyncWebParameter* p = request->getParam(i);
           if(p->isPost()){
             if (p->name() == SSID) {
-              settings_data["ssid"] = p->value().c_str();;
+              settings_network_data["ssid"] = p->value().c_str();;
             }
             if (p->name() == WIFI_PASSWORD) {
-              settings_data["wifi_password"] = p->value().c_str();;
+              settings_network_data["wifi_password"] = p->value().c_str();;
             }
             if (p->name() == IP_ADDRESS) {
-              network_settings_data["ip_address"] = p->value().c_str();;
+              settings_network_data["ip_address"] = p->value().c_str();;
             }
             if (p->name() == SUBNET_MASK) {
-              network_settings_data["subnet_mask"] = p->value().c_str();;
+              settings_network_data["subnet_mask"] = p->value().c_str();;
             }
             if (p->name() == GATEWAY) {
-              network_settings_data["gateway"] = p->value().c_str();;
+              settings_network_data["gateway"] = p->value().c_str();;
             }
             if (p->name() == PRIMARY_DNS) {
-              network_settings_data["primary_dns"] = p->value().c_str();;
+              settings_network_data["primary_dns"] = p->value().c_str();;
             }
             if (p->name() == SECONDARY_DNS) {
-              network_settings_data["secondary_dns"] = p->value().c_str();;
+              settings_network_data["secondary_dns"] = p->value().c_str();;
             }
           }
         }
         const char* path = "/settings_network.json";
         String settings_network_str;
 
-        serializeJson(network_settings_data, settings_network_str);
+        serializeJson(settings_network_data, settings_network_str);
         write_config_file(path, settings_network_str);
              
         //request->send(LittleFS, "/html/sensor_config.html", "text/html");
@@ -204,7 +215,7 @@ void Taskwebcode(void *pvParameters) {
   });
 
   //Save settings from MQTT settings
-  server.on("/settings_network", HTTP_POST, [](AsyncWebServerRequest *request) {
+  server.on("/settings_mqtt", HTTP_POST, [](AsyncWebServerRequest *request) {
     
     if (settings_mqtt_mutex != NULL) {
       if(xSemaphoreTake(settings_mqtt_mutex, ( TickType_t ) 10 ) == pdTRUE) {
@@ -216,7 +227,7 @@ void Taskwebcode(void *pvParameters) {
               settings_mqtt_data["status_mqtt_config"] = p->value().c_str();;
             }
             if (p->name() == MQTT_SERVER) {
-              settings__mqtt_data["mqtt_server"] = p->value().c_str();;
+              settings_mqtt_data["mqtt_server"] = p->value().c_str();;
             }
             if (p->name() == MQTT_PORT) {
               settings_mqtt_data["mqtt_port"] = p->value().c_str();;
@@ -226,7 +237,7 @@ void Taskwebcode(void *pvParameters) {
             }
           }
         }
-        const char* path = "/settings_network.json";
+        const char* path = "/settings_mqtt.json";
         String settings_mqtt_str;
 
         serializeJson(settings_mqtt_data, settings_mqtt_str);
@@ -238,6 +249,120 @@ void Taskwebcode(void *pvParameters) {
     }
   });
 
+  //Save settings from I2C settings
+  server.on("/settings_i2c", HTTP_POST, [](AsyncWebServerRequest *request) {
+    
+    if (settings_i2c_mutex != NULL) {
+      if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        int params = request->params();
+        for(int i=0;i<params;i++){
+          const AsyncWebParameter* p = request->getParam(i);
+          if(p->isPost()){
+            if (p->name() == STATUS_I2C_CONFIG) {
+              settings_i2c_data["status_i2c_config"] = p->value().c_str();;
+            }
+            if (p->name() == BUS0_MULTIPLEXER_ADDRESS) {
+              settings_i2c_data["bus0_multiplexer_address"] = p->value().c_str();;
+            }
+            if (p->name() == BUS1_MULTIPLEXER_ADDRESS) {
+              settings_i2c_data["bus0_multiplexer_address"] = p->value().c_str();;
+            }
+            if (p->name() == DISPLAY_I2C_ADDRESS) {
+              settings_i2c_data["display_i2c_address"] = p->value().c_str();;
+            }
+          }
+        }
+        const char* path = "/settings_i2c.json";
+        String settings_i2c_str;
+
+        serializeJson(settings_i2c_data, settings_i2c_str);
+        write_config_file(path, settings_i2c_str);
+             
+        request->send(LittleFS, "/html/index.html", String(), false, settings_processor);
+        xSemaphoreGive(settings_i2c_mutex);
+      }
+    }
+  });
+
+  //Save settings from fan control settings
+  server.on("/settings_fan", HTTP_POST, [](AsyncWebServerRequest *request) {
+    
+    if (settings_fan_mutex != NULL) {
+      if(xSemaphoreTake(settings_fan_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        int params = request->params();
+        for(int i=0;i<params;i++){
+          const AsyncWebParameter* p = request->getParam(i);
+          if(p->isPost()){
+            if (p->name() == STATUS_FAN_CONTROL_CONFIG) {
+              settings_fan_data["status_fan_control_config"] = p->value().c_str();;
+            }
+            if (p->name() == FAN_CONTROL_MODE) {
+              settings_fan_data["fan_control_mode"] = p->value().c_str();;
+            }
+            if (p->name() == FAN_CONTROL_MQTT_TOPIC) {
+              settings_fan_data["fan_control_mqtt_topic"] = p->value().c_str();;
+            }
+            if (p->name() == FAN_CONTROL_URL_HIGH_SPEED) {
+              settings_fan_data["fan_control_url_high_speed"] = p->value().c_str();;
+            }
+            if (p->name() == FAN_CONTROL_URL_MEDIUM_SPEED) {
+              settings_fan_data["fan_control_url_medium_speed"] = p->value().c_str();;
+            }
+            if (p->name() == FAN_CONTROL_URL_LOW_SPEED) {
+              settings_fan_data["fan_control_url_low_speed"] = p->value().c_str();;
+            }
+          }
+        }
+        const char* path = "/settings_fan.json";
+        String settings_fan_str;
+
+        serializeJson(settings_fan_data, settings_fan_str);
+        write_config_file(path, settings_fan_str);
+             
+        request->send(LittleFS, "/html/index.html", String(), false, settings_processor);
+        xSemaphoreGive(settings_fan_mutex);
+      }
+    }
+  });
+
+  //Save settings from statemachine settings
+  server.on("/settings_statemachine", HTTP_POST, [](AsyncWebServerRequest *request) {
+    
+    if (settings_statemachine_mutex != NULL) {
+      if(xSemaphoreTake(settings_statemachine_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        int params = request->params();
+        for(int i=0;i<params;i++){
+          const AsyncWebParameter* p = request->getParam(i);
+          if(p->isPost()){
+            if (p->name() == STATUS_STATEMACHINE_CONFIG) {
+              settings_statemachine_data["status_statemachine_config"] = p->value().c_str();;
+            }
+            if (p->name() == STATEMACHINE_RH_SENSOR) {
+              settings_statemachine_data["statemachine_rh_sensor"] = p->value().c_str();;
+            }
+            if (p->name() == STATEMACHINE_CO2_SENSOR) {
+              settings_statemachine_data["statemachine_co2_sensor"] = p->value().c_str();;
+            }
+          }
+        }
+        const char* path = "/settings_statemachine.json";
+        String settings_statemachine_str;
+
+        serializeJson(settings_statemachine_data, settings_statemachine_str);
+        write_config_file(path, settings_statemachine_str);
+             
+        request->send(LittleFS, "/html/index.html", String(), false, settings_processor);
+        xSemaphoreGive(settings_statemachine_mutex);
+      }
+    }
+  });
+
+  //Valve control web pages processing
+  server.on("/valvecontrol", HTTP_GET, [](AsyncWebServerRequest *request) {
+    //request->send(LittleFS, "/html/valvecontrol.html", "text/html");
+    request->send(LittleFS, "/html/valvecontrol.html", String(), false, valvecontrol_processor);
+  });
+  
   //Valve control web pages processing
   server.on("/valvecontrol", HTTP_GET, [](AsyncWebServerRequest *request) {
     //request->send(LittleFS, "/html/valvecontrol.html", "text/html");

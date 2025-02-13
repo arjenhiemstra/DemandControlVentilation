@@ -18,7 +18,7 @@ JsonDocument wire_sensor_data;
 JsonDocument wire1_sensor_data;
 
 //Define lobal for settings configuration
-JsonDocument network_settings_data;
+JsonDocument settings_network_data;
 JsonDocument settings_mqtt_data;
 JsonDocument settings_i2c_data;
 JsonDocument settings_fan_data;
