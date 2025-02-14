@@ -140,7 +140,7 @@ const char* STATEMACHINE_CO2_SENSOR = "statemachine_co2_sensor";
 
 void startTaskwebcode(void) {
 
-  xTaskCreatePinnedToCore(Taskwebcode, "Task_web", 10000, NULL, 1, &h_Task_web, 0);
+  xTaskCreatePinnedToCore(Taskwebcode, "Task_web", 10000, NULL, 99, &h_Task_web, 0);
 
 }
 
@@ -208,7 +208,7 @@ void Taskwebcode(void *pvParameters) {
         write_config_file(path, settings_network_str);
              
         //request->send(LittleFS, "/html/sensor_config.html", "text/html");
-        request->send(LittleFS, "/html/index.html", String(), false, settings_processor);
+        request->send(LittleFS, "/html/settings.html", String(), false, settings_processor);
         xSemaphoreGive(settings_network_mutex);
       }
     }
@@ -243,7 +243,7 @@ void Taskwebcode(void *pvParameters) {
         serializeJson(settings_mqtt_data, settings_mqtt_str);
         write_config_file(path, settings_mqtt_str);
              
-        request->send(LittleFS, "/html/index.html", String(), false, settings_processor);
+        request->send(LittleFS, "/html/settings.html", String(), false, settings_processor);
         xSemaphoreGive(settings_mqtt_mutex);
       }
     }
@@ -278,7 +278,7 @@ void Taskwebcode(void *pvParameters) {
         serializeJson(settings_i2c_data, settings_i2c_str);
         write_config_file(path, settings_i2c_str);
              
-        request->send(LittleFS, "/html/index.html", String(), false, settings_processor);
+        request->send(LittleFS, "/html/settings.html", String(), false, settings_processor);
         xSemaphoreGive(settings_i2c_mutex);
       }
     }
@@ -319,7 +319,7 @@ void Taskwebcode(void *pvParameters) {
         serializeJson(settings_fan_data, settings_fan_str);
         write_config_file(path, settings_fan_str);
              
-        request->send(LittleFS, "/html/index.html", String(), false, settings_processor);
+        request->send(LittleFS, "/html/settings.html", String(), false, settings_processor);
         xSemaphoreGive(settings_fan_mutex);
       }
     }
@@ -351,7 +351,7 @@ void Taskwebcode(void *pvParameters) {
         serializeJson(settings_statemachine_data, settings_statemachine_str);
         write_config_file(path, settings_statemachine_str);
              
-        request->send(LittleFS, "/html/index.html", String(), false, settings_processor);
+        request->send(LittleFS, "/html/settings.html", String(), false, settings_processor);
         xSemaphoreGive(settings_statemachine_mutex);
       }
     }
@@ -554,6 +554,7 @@ void Taskwebcode(void *pvParameters) {
           }
         }
         request->send(LittleFS, "/html/valvecontrol.html", String(), false, valvecontrol_processor);
+        //request->send(LittleFS, "/html/valvecontrol.html", "text/html");
         xSemaphoreGive(valve_position_mutex);
         xTaskNotifyGive(xTaskGetHandle("task_valvectrl"));
       }
@@ -575,22 +576,16 @@ void Taskwebcode(void *pvParameters) {
   //Sensor config web page processing
   server.on("/sensorconfig", HTTP_GET, [](AsyncWebServerRequest *request){
   
-    if (sensor_config_file_mutex != NULL) {
-      if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-        //xSemaphoreTake(sensor_config_file_mutex, portMAX_DELAY);
-        Serial.print("\n\nwire sensor data from HTTP GET sensorconfig: \n\n");
-        serializeJson(wire_sensor_data, Serial);
-        Serial.print("\n\n");
+    //Serial.print("\n\nwire sensor data from HTTP GET sensorconfig: \n\n");
+    //serializeJson(wire_sensor_data, Serial);
+    //Serial.print("\n\n");
 
-        //Update config file data for display in browser
-        serializeJson(wire_sensor_data, wire_sensor_config_string);
-        serializeJson(wire1_sensor_data, wire1_sensor_config_string);
-            
-        //request->send(LittleFS, "/html/sensor_config.html", "text/html");
-        request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
-        xSemaphoreGive(sensor_config_file_mutex);
-      }
-    }
+    //Update config file data for display in browser
+    //serializeJson(wire_sensor_data, wire_sensor_config_string);
+    //serializeJson(wire1_sensor_data, wire1_sensor_config_string);
+        
+    //request->send(LittleFS, "/html/sensor_config.html", "text/html");
+    request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
   });
 
   server.on("/delete_sensor_config_file1", HTTP_POST, [](AsyncWebServerRequest *request) {
@@ -607,248 +602,234 @@ void Taskwebcode(void *pvParameters) {
   
   //Write sensor config input to file
   server.on("/sensorconfig1", HTTP_POST, [](AsyncWebServerRequest *request) {
-    
-    if (sensor_config_file_mutex != NULL) {
-      if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-        //xSemaphoreTake(sensor_config_file_mutex, portMAX_DELAY);
-        int params = request->params();
-        for(int i=0;i<params;i++){
-          const AsyncWebParameter* p = request->getParam(i);
-          if(p->isPost()){
-            if (p->name() == WIRE_SENSOR0_TYPE) {
-              wire_sensor_data["wire_sensor0"]["type"] = p->value().c_str();;
-            }
-            if (p->name() == WIRE_SENSOR0_ADDRESS) {
-              wire_sensor_data["wire_sensor0"]["address"] = p->value().c_str();
-            }     
-            if (p->name() == WIRE_SENSOR0_VALVE) {
-              wire_sensor_data["wire_sensor0"]["valve"] = p->value().c_str();
-            }
-            if (p->name() == WIRE_SENSOR0_LOCATION) {
-              wire_sensor_data["wire_sensor0"]["location"] = p->value().c_str();;
-            }
-            if (p->name() == WIRE_SENSOR1_TYPE) {
-              wire_sensor_data["wire_sensor1"]["type"] = p->value().c_str();
-            }
-            if (p->name() == WIRE_SENSOR1_ADDRESS) {
-              wire_sensor_data["wire_sensor1"]["address"] = p->value().c_str();
-            }     
-            if (p->name() == WIRE_SENSOR1_VALVE) {
-              wire_sensor_data["wire_sensor1"]["valve"] = p->value().c_str();
-            }
-            if (p->name() == WIRE_SENSOR1_LOCATION) {
-              wire_sensor_data["wire_sensor1"]["location"] = p->value().c_str();
-            }
-            if (p->name() == WIRE_SENSOR2_TYPE) {
-              wire_sensor_data["wire_sensor2"]["type"] = p->value().c_str();
-            }
-            if (p->name() == WIRE_SENSOR2_ADDRESS) {
-              wire_sensor_data["wire_sensor2"]["address"] = p->value().c_str();
-            }     
-            if (p->name() == WIRE_SENSOR2_VALVE) {
-              wire_sensor_data["wire_sensor2"]["valve"] = p->value().c_str();
-            }
-            if (p->name() == WIRE_SENSOR2_LOCATION) {
-              wire_sensor_data["wire_sensor2"]["location"] = p->value().c_str();
-            }
-            if (p->name() == WIRE_SENSOR3_TYPE) {
-              wire_sensor_data["wire_sensor3"]["type"] = p->value().c_str();
-            }
-            if (p->name() == WIRE_SENSOR3_ADDRESS) {
-              wire_sensor_data["wire_sensor3"]["address"] = p->value().c_str();
-            }     
-            if (p->name() == WIRE_SENSOR3_VALVE) {
-              wire_sensor_data["wire_sensor3"]["valve"] = p->value().c_str();
-            }
-            if (p->name() == WIRE_SENSOR3_LOCATION) {
-              wire_sensor_data["wire_sensor3"]["location"] = p->value().c_str();
-            }
-            if (p->name() == WIRE_SENSOR4_TYPE) {
-              wire_sensor_data["wire_sensor4"]["type"] = p->value().c_str();
-            }
-            if (p->name() == WIRE_SENSOR4_ADDRESS) {
-              wire_sensor_data["wire_sensor4"]["address"] = p->value().c_str();
-            }     
-            if (p->name() == WIRE_SENSOR4_VALVE) {
-              wire_sensor_data["wire_sensor4"]["valve"] = p->value().c_str();
-            }
-            if (p->name() == WIRE_SENSOR4_LOCATION) {
-              wire_sensor_data["wire_sensor4"]["location"] = p->value().c_str(); 
-            }
-            if (p->name() == WIRE_SENSOR5_TYPE) {
-              wire_sensor_data["wire_sensor5"]["type"] = p->value().c_str();
-            }
-            if (p->name() == WIRE_SENSOR5_ADDRESS) {
-              wire_sensor_data["wire_sensor5"]["address"] = p->value().c_str();
-            }     
-            if (p->name() == WIRE_SENSOR5_VALVE) {
-              wire_sensor_data["wire_sensor5"]["valve"] = p->value().c_str();
-            }
-            if (p->name() == WIRE_SENSOR5_LOCATION) {
-              wire_sensor_data["wire_sensor5"]["location"] = p->value().c_str();
-            }
-            if (p->name() == WIRE_SENSOR6_TYPE) {
-              wire_sensor_data["wire_sensor6"]["type"] = p->value().c_str();
-            }
-            if (p->name() == WIRE_SENSOR6_ADDRESS) {
-              wire_sensor_data["wire_sensor6"]["address"] = p->value().c_str();
-            }     
-            if (p->name() == WIRE_SENSOR6_VALVE) {
-              wire_sensor_data["wire_sensor6"]["valve"] = p->value().c_str();
-            }
-            if (p->name() == WIRE_SENSOR6_LOCATION) {
-              wire_sensor_data["wire_sensor6"]["location"] = p->value().c_str();
-            }
-            if (p->name() == WIRE_SENSOR7_TYPE) {
-              wire_sensor_data["wire_sensor7"]["type"] = p->value().c_str();
-            }
-            if (p->name() == WIRE_SENSOR7_ADDRESS) {
-              wire_sensor_data["wire_sensor7"]["address"] = p->value().c_str();
-            }     
-            if (p->name() == WIRE_SENSOR7_VALVE) {
-              wire_sensor_data["wire_sensor7"]["valve"] = p->value().c_str();
-            }
-            if (p->name() == WIRE_SENSOR7_LOCATION) {
-              wire_sensor_data["wire_sensor7"]["location"] = p->value().c_str();
-            }
-          }
+    int params = request->params();
+    for(int i=0;i<params;i++){
+      const AsyncWebParameter* p = request->getParam(i);
+      if(p->isPost()){
+        if (p->name() == WIRE_SENSOR0_TYPE) {
+          wire_sensor_data["wire_sensor0"]["type"] = p->value().c_str();;
         }
-          
-        const char* path1 = "/sensor_config1.json";
-        String sensor_config1;
-        serializeJson(wire_sensor_data, sensor_config1);
-        write_config_file(path1, sensor_config1);
-        //Update string to display config file contents after saving config
-        serializeJson(wire_sensor_data, wire_sensor_config_string);
-
-        //request->send(LittleFS, "/html/sensor_config.html", "text/html");
-        request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
-        xSemaphoreGive(sensor_config_file_mutex);
+        if (p->name() == WIRE_SENSOR0_ADDRESS) {
+          wire_sensor_data["wire_sensor0"]["address"] = p->value().c_str();
+        }     
+        if (p->name() == WIRE_SENSOR0_VALVE) {
+          wire_sensor_data["wire_sensor0"]["valve"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR0_LOCATION) {
+          wire_sensor_data["wire_sensor0"]["location"] = p->value().c_str();;
+        }
+        if (p->name() == WIRE_SENSOR1_TYPE) {
+          wire_sensor_data["wire_sensor1"]["type"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR1_ADDRESS) {
+          wire_sensor_data["wire_sensor1"]["address"] = p->value().c_str();
+        }     
+        if (p->name() == WIRE_SENSOR1_VALVE) {
+          wire_sensor_data["wire_sensor1"]["valve"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR1_LOCATION) {
+          wire_sensor_data["wire_sensor1"]["location"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR2_TYPE) {
+          wire_sensor_data["wire_sensor2"]["type"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR2_ADDRESS) {
+          wire_sensor_data["wire_sensor2"]["address"] = p->value().c_str();
+        }     
+        if (p->name() == WIRE_SENSOR2_VALVE) {
+          wire_sensor_data["wire_sensor2"]["valve"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR2_LOCATION) {
+          wire_sensor_data["wire_sensor2"]["location"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR3_TYPE) {
+          wire_sensor_data["wire_sensor3"]["type"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR3_ADDRESS) {
+          wire_sensor_data["wire_sensor3"]["address"] = p->value().c_str();
+        }     
+        if (p->name() == WIRE_SENSOR3_VALVE) {
+          wire_sensor_data["wire_sensor3"]["valve"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR3_LOCATION) {
+          wire_sensor_data["wire_sensor3"]["location"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR4_TYPE) {
+          wire_sensor_data["wire_sensor4"]["type"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR4_ADDRESS) {
+          wire_sensor_data["wire_sensor4"]["address"] = p->value().c_str();
+        }     
+        if (p->name() == WIRE_SENSOR4_VALVE) {
+          wire_sensor_data["wire_sensor4"]["valve"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR4_LOCATION) {
+          wire_sensor_data["wire_sensor4"]["location"] = p->value().c_str(); 
+        }
+        if (p->name() == WIRE_SENSOR5_TYPE) {
+          wire_sensor_data["wire_sensor5"]["type"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR5_ADDRESS) {
+          wire_sensor_data["wire_sensor5"]["address"] = p->value().c_str();
+        }     
+        if (p->name() == WIRE_SENSOR5_VALVE) {
+          wire_sensor_data["wire_sensor5"]["valve"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR5_LOCATION) {
+          wire_sensor_data["wire_sensor5"]["location"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR6_TYPE) {
+          wire_sensor_data["wire_sensor6"]["type"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR6_ADDRESS) {
+          wire_sensor_data["wire_sensor6"]["address"] = p->value().c_str();
+        }     
+        if (p->name() == WIRE_SENSOR6_VALVE) {
+          wire_sensor_data["wire_sensor6"]["valve"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR6_LOCATION) {
+          wire_sensor_data["wire_sensor6"]["location"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR7_TYPE) {
+          wire_sensor_data["wire_sensor7"]["type"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR7_ADDRESS) {
+          wire_sensor_data["wire_sensor7"]["address"] = p->value().c_str();
+        }     
+        if (p->name() == WIRE_SENSOR7_VALVE) {
+          wire_sensor_data["wire_sensor7"]["valve"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR7_LOCATION) {
+          wire_sensor_data["wire_sensor7"]["location"] = p->value().c_str();
+        }
       }
     }
+      
+    const char* path1 = "/sensor_config1.json";
+    String sensor_config1;
+    serializeJson(wire_sensor_data, sensor_config1);
+    write_config_file(path1, sensor_config1);
+    //Update string to display config file contents after saving config
+    //serializeJson(wire_sensor_data, wire_sensor_config_string);
+    //request->send(LittleFS, "/html/sensor_config.html", "text/html");
+    request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
   });
   
   server.on("/sensorconfig2", HTTP_POST, [](AsyncWebServerRequest *request) {
     
-    if (sensor_config_file_mutex != NULL) {
-      if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-        //xSemaphoreTake(sensor_config_file_mutex, portMAX_DELAY);
-        int params = request->params();
-        for(int i=0;i<params;i++){
-          const AsyncWebParameter* p = request->getParam(i);
-          if(p->isPost()){
-            if (p->name() == WIRE1_SENSOR0_TYPE) {
-              wire1_sensor_data["wire1_sensor0"]["type"] = p->value().c_str();;
-            }
-            if (p->name() == WIRE1_SENSOR0_ADDRESS) {
-              wire1_sensor_data["wire1_sensor0"]["address"] = p->value().c_str();
-            }     
-            if (p->name() == WIRE1_SENSOR0_VALVE) {
-              wire1_sensor_data["wire1_sensor0"]["valve"] = p->value().c_str();
-            }
-            if (p->name() == WIRE1_SENSOR0_LOCATION) {
-              wire1_sensor_data["wire1_sensor0"]["location"] = p->value().c_str();;
-            }
-            if (p->name() == WIRE1_SENSOR1_TYPE) {
-              wire1_sensor_data["wire1_sensor1"]["type"] = p->value().c_str();
-            }
-            if (p->name() == WIRE1_SENSOR1_ADDRESS) {
-              wire1_sensor_data["wire1_sensor1"]["address"] = p->value().c_str();
-            }     
-            if (p->name() == WIRE1_SENSOR1_VALVE) {
-              wire1_sensor_data["wire1_sensor1"]["valve"] = p->value().c_str();
-            }
-            if (p->name() == WIRE1_SENSOR1_LOCATION) {
-              wire1_sensor_data["wire1_sensor1"]["location"] = p->value().c_str();
-            }
-            if (p->name() == WIRE1_SENSOR2_TYPE) {
-              wire1_sensor_data["wire1_sensor2"]["type"] = p->value().c_str();
-            }
-            if (p->name() == WIRE1_SENSOR2_ADDRESS) {
-              wire1_sensor_data["wire1_sensor2"]["address"] = p->value().c_str();
-            }     
-            if (p->name() == WIRE1_SENSOR2_VALVE) {
-              wire1_sensor_data["wire1_sensor2"]["valve"] = p->value().c_str();
-            }
-            if (p->name() == WIRE1_SENSOR2_LOCATION) {
-              wire1_sensor_data["wire1_sensor2"]["location"] = p->value().c_str();
-            }
-            if (p->name() == WIRE1_SENSOR3_TYPE) {
-              wire1_sensor_data["wire1_sensor3"]["type"] = p->value().c_str();
-            }
-            if (p->name() == WIRE1_SENSOR3_ADDRESS) {
-              wire1_sensor_data["wire1_sensor3"]["address"] = p->value().c_str();
-            }     
-            if (p->name() == WIRE1_SENSOR3_VALVE) {
-              wire1_sensor_data["wire1_sensor3"]["valve"] = p->value().c_str();
-            }
-            if (p->name() == WIRE1_SENSOR3_LOCATION) {
-              wire1_sensor_data["wire1_sensor3"]["location"] = p->value().c_str();
-            }
-            if (p->name() == WIRE1_SENSOR4_TYPE) {
-              wire1_sensor_data["wire1_sensor4"]["type"] = p->value().c_str();
-            }
-            if (p->name() == WIRE1_SENSOR4_ADDRESS) {
-              wire1_sensor_data["wire1_sensor4"]["address"] = p->value().c_str();
-            }     
-            if (p->name() == WIRE1_SENSOR4_VALVE) {
-              wire1_sensor_data["wire1_sensor4"]["valve"] = p->value().c_str();
-            }
-            if (p->name() == WIRE1_SENSOR4_LOCATION) {
-              wire1_sensor_data["wire1_sensor4"]["location"] = p->value().c_str(); 
-            }
-            if (p->name() == WIRE1_SENSOR5_TYPE) {
-              wire1_sensor_data["wire1_sensor5"]["type"] = p->value().c_str();
-            }
-            if (p->name() == WIRE1_SENSOR5_ADDRESS) {
-              wire1_sensor_data["wire1_sensor5"]["address"] = p->value().c_str();
-            }     
-            if (p->name() == WIRE1_SENSOR5_VALVE) {
-              wire1_sensor_data["wire1_sensor5"]["valve"] = p->value().c_str();
-            }
-            if (p->name() == WIRE1_SENSOR5_LOCATION) {
-              wire1_sensor_data["wire1_sensor5"]["location"] = p->value().c_str();
-            }
-            if (p->name() == WIRE1_SENSOR6_TYPE) {
-              wire1_sensor_data["wire1_sensor6"]["type"] = p->value().c_str();
-            }
-            if (p->name() == WIRE1_SENSOR6_ADDRESS) {
-              wire1_sensor_data["wire1_sensor6"]["address"] = p->value().c_str();
-            }     
-            if (p->name() == WIRE1_SENSOR6_VALVE) {
-              wire1_sensor_data["wire1_sensor6"]["valve"] = p->value().c_str();
-            }
-            if (p->name() == WIRE1_SENSOR6_LOCATION) {
-              wire1_sensor_data["wire1_sensor6"]["location"] = p->value().c_str();
-            }
-            if (p->name() == WIRE1_SENSOR7_TYPE) {
-              wire1_sensor_data["wire1_sensor7"]["type"] = p->value().c_str();
-            }
-            if (p->name() == WIRE1_SENSOR7_ADDRESS) {
-              wire1_sensor_data["wire1_sensor7"]["address"] = p->value().c_str();
-            }     
-            if (p->name() == WIRE1_SENSOR7_VALVE) {
-              wire1_sensor_data["wire1_sensor7"]["valve"] = p->value().c_str();
-            }
-            if (p->name() == WIRE1_SENSOR7_LOCATION) {
-              wire1_sensor_data["wire1_sensor7"]["location"] = p->value().c_str();
-            }
-          }
+    int params = request->params();
+    for(int i=0;i<params;i++){
+      const AsyncWebParameter* p = request->getParam(i);
+      if(p->isPost()){
+        if (p->name() == WIRE1_SENSOR0_TYPE) {
+          wire1_sensor_data["wire1_sensor0"]["type"] = p->value().c_str();;
         }
-        const char* path2 = "/sensor_config2.json";
-        String sensor_config2;
-
-        serializeJson(wire1_sensor_data, sensor_config2);
-        write_config_file(path2, sensor_config2);
-
-        //Update string to display config file contents after sving config
-        serializeJson(wire1_sensor_data, wire1_sensor_config_string);
-        
-        //request->send(LittleFS, "/html/sensor_config.html", "text/html");
-        request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
-        xSemaphoreGive(sensor_config_file_mutex);
+        if (p->name() == WIRE1_SENSOR0_ADDRESS) {
+          wire1_sensor_data["wire1_sensor0"]["address"] = p->value().c_str();
+        }     
+        if (p->name() == WIRE1_SENSOR0_VALVE) {
+          wire1_sensor_data["wire1_sensor0"]["valve"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR0_LOCATION) {
+          wire1_sensor_data["wire1_sensor0"]["location"] = p->value().c_str();;
+        }
+        if (p->name() == WIRE1_SENSOR1_TYPE) {
+          wire1_sensor_data["wire1_sensor1"]["type"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR1_ADDRESS) {
+          wire1_sensor_data["wire1_sensor1"]["address"] = p->value().c_str();
+        }     
+        if (p->name() == WIRE1_SENSOR1_VALVE) {
+          wire1_sensor_data["wire1_sensor1"]["valve"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR1_LOCATION) {
+          wire1_sensor_data["wire1_sensor1"]["location"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR2_TYPE) {
+          wire1_sensor_data["wire1_sensor2"]["type"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR2_ADDRESS) {
+          wire1_sensor_data["wire1_sensor2"]["address"] = p->value().c_str();
+        }     
+        if (p->name() == WIRE1_SENSOR2_VALVE) {
+          wire1_sensor_data["wire1_sensor2"]["valve"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR2_LOCATION) {
+          wire1_sensor_data["wire1_sensor2"]["location"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR3_TYPE) {
+          wire1_sensor_data["wire1_sensor3"]["type"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR3_ADDRESS) {
+          wire1_sensor_data["wire1_sensor3"]["address"] = p->value().c_str();
+        }     
+        if (p->name() == WIRE1_SENSOR3_VALVE) {
+          wire1_sensor_data["wire1_sensor3"]["valve"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR3_LOCATION) {
+          wire1_sensor_data["wire1_sensor3"]["location"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR4_TYPE) {
+          wire1_sensor_data["wire1_sensor4"]["type"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR4_ADDRESS) {
+          wire1_sensor_data["wire1_sensor4"]["address"] = p->value().c_str();
+        }     
+        if (p->name() == WIRE1_SENSOR4_VALVE) {
+          wire1_sensor_data["wire1_sensor4"]["valve"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR4_LOCATION) {
+          wire1_sensor_data["wire1_sensor4"]["location"] = p->value().c_str(); 
+        }
+        if (p->name() == WIRE1_SENSOR5_TYPE) {
+          wire1_sensor_data["wire1_sensor5"]["type"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR5_ADDRESS) {
+          wire1_sensor_data["wire1_sensor5"]["address"] = p->value().c_str();
+        }     
+        if (p->name() == WIRE1_SENSOR5_VALVE) {
+          wire1_sensor_data["wire1_sensor5"]["valve"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR5_LOCATION) {
+          wire1_sensor_data["wire1_sensor5"]["location"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR6_TYPE) {
+          wire1_sensor_data["wire1_sensor6"]["type"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR6_ADDRESS) {
+          wire1_sensor_data["wire1_sensor6"]["address"] = p->value().c_str();
+        }     
+        if (p->name() == WIRE1_SENSOR6_VALVE) {
+          wire1_sensor_data["wire1_sensor6"]["valve"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR6_LOCATION) {
+          wire1_sensor_data["wire1_sensor6"]["location"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR7_TYPE) {
+          wire1_sensor_data["wire1_sensor7"]["type"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR7_ADDRESS) {
+          wire1_sensor_data["wire1_sensor7"]["address"] = p->value().c_str();
+        }     
+        if (p->name() == WIRE1_SENSOR7_VALVE) {
+          wire1_sensor_data["wire1_sensor7"]["valve"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR7_LOCATION) {
+          wire1_sensor_data["wire1_sensor7"]["location"] = p->value().c_str();
+        }
       }
     }
+    const char* path2 = "/sensor_config2.json";
+    String sensor_config2;
+
+    serializeJson(wire1_sensor_data, sensor_config2);
+    write_config_file(path2, sensor_config2);
+
+    //Update string to display config file contents after sving config
+    //serializeJson(wire1_sensor_data, wire1_sensor_config_string);
+    
+    //request->send(LittleFS, "/html/sensor_config.html", "text/html");
+    request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
   });
 
   // Start server

@@ -26,12 +26,12 @@ Sequence:
 
 #include "read_sensors.h"
 
-DHT20 DHT1(&Wire);
-DHT20 DHT2(&Wire1);
-Adafruit_AHTX0 AHT20_1;
-Adafruit_AHTX0 AHT20_2;
-SensirionI2cScd4x SCD4X_1;
-SensirionI2cScd4x SCD4X_2;
+//DHT20 DHT1(&Wire);
+//DHT20 DHT2(&Wire1);
+//Adafruit_AHTX0 AHT20_1;
+//Adafruit_AHTX0 AHT20_2;
+//SensirionI2cScd4x SCD4X_1;
+//SensirionI2cScd4x SCD4X_2;
 
 void read_bus0(void) {
  
@@ -63,6 +63,7 @@ void read_bus0(void) {
 
                     if (sensor_type == "DHT20") {
                         
+                        DHT20 DHT1(&Wire);
                         DHT1.begin();
                         int status = DHT1.read();
                         
@@ -76,6 +77,7 @@ void read_bus0(void) {
                     
                     else if (sensor_type == "AHT20") {
                                     
+                        Adafruit_AHTX0 AHT20_1;
                         AHT20_1.begin();
                         sensors_event_t humidity, temp;
                         AHT20_1.getEvent(&humidity, &temp);
@@ -90,6 +92,7 @@ void read_bus0(void) {
                     
                     else if (sensor_type == "SCD40" || sensor_type == "SCD41") {
                             
+                        SensirionI2cScd4x SCD4X_1;
                         SCD4X_1.begin(Wire1, SCD41_I2C_ADDR_62);
                         SCD4X_1.startPeriodicMeasurement();
                     
@@ -157,6 +160,7 @@ void read_bus1(void) {
 
                     if (sensor_type == "DHT20") {
                         
+                        DHT20 DHT2(&Wire1);
                         DHT2.begin();
                         int status = DHT2.read();
                         
@@ -170,6 +174,7 @@ void read_bus1(void) {
                     
                     else if (sensor_type == "AHT20") {
                                     
+                        Adafruit_AHTX0 AHT20_2;
                         AHT20_2.begin(&Wire1);
                         sensors_event_t humidity, temp;
                         AHT20_2.getEvent(&humidity, &temp);// populate temp and humidity objects with fresh data
@@ -184,6 +189,7 @@ void read_bus1(void) {
                     
                     else if (sensor_type == "SCD40" || sensor_type ==  "SCD41") {
                         
+                        SensirionI2cScd4x SCD4X_2;
                         SCD4X_2.begin(Wire1, SCD41_I2C_ADDR_62);
                         SCD4X_2.startPeriodicMeasurement();
                     
