@@ -107,10 +107,10 @@ bool valve_cycle_times_night(void) {
     
     DateTime now = rtc.now();
 
-    if (now.hour()==10 && now.minute() < 30)
-        return true;
-    if (now.hour()==10 && now.minute() >= 30)
-        return false;
+    //if (now.hour()==10 && now.minute() < 30)
+        //return true;
+    //if (now.hour()==10 && now.minute() >= 30)
+        //return false;
 
     else
         return false;
