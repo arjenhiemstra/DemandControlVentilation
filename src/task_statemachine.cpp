@@ -10,10 +10,11 @@ void start_task_statemachine(void) {
 
 void task_statemachine_code(void * pvParameters)
 {
+  init_statemachine();
   for (;;) { 
     Serial.print("\n\nLocal time is: ");
     current_time();
-    //Serial.println("up: " + uptime_formatter::getUptime());
+    run_statemachine();
     vTaskDelay(10000);
   }
   

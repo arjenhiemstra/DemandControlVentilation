@@ -7,7 +7,6 @@
 
 #include "statemachine.h"
 #include "rtc.h"
-//#include "uptime_formatter.h"
 
 // function declarations
 void start_task_statemachine(void);

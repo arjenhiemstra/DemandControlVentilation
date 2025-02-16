@@ -9,6 +9,8 @@
 
 #include "globals.h"
 #include "fancontrol.h"
+#include "mqtt.h"
+#include "rtc.h"
 
 // function declarations
 void init_statemachine(void);

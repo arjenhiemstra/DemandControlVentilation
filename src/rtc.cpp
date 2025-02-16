@@ -1,8 +1,5 @@
 #include "rtc.h"
 
-// RTC object for DS3231 is in globals
-//RTC_DS3231 rtc;
-
 void current_time(void) {
 
     char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
@@ -33,9 +30,11 @@ void current_time(void) {
 void sync_rtc_ntp(void) {
 
     struct tm timeinfo;
-    
+        
     Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
     rtc.begin(&Wire);
+    
+    DateTime now = rtc.now();
 
     configTime(gmt_offset_sec, daylight_offset_sec, ntp_server);  // Configure time with NTP server
     if (!getLocalTime(&timeinfo)) {
@@ -49,6 +48,70 @@ void sync_rtc_ntp(void) {
 
     // Sync the RTC with the NTP time
     rtc.adjust(DateTime(timeinfo.tm_year + 1900, timeinfo.tm_mon + 1, timeinfo.tm_mday, timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec));
+}
 
+bool cooking_times(void) {
 
+    Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
+    rtc.begin(&Wire);
+    
+    DateTime now = rtc.now();
+
+    if (now.hour()==17 && now.minute() > 20)
+        return true;
+    if (now.hour()==17 && now.minute() >= 58)
+        return false;
+    else
+        return false;
+}
+
+bool valve_cycle_times_day(void) {
+
+    Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
+    rtc.begin(&Wire);
+    
+    DateTime now = rtc.now();
+    
+    if (now.hour()==10 && now.minute() < 30)
+        return true;
+    if (now.hour()==10 && now.minute() >= 30)
+        return false;
+    if (now.hour()==12 && now.minute() < 30)
+        return true;
+    if (now.hour()==12 && now.minute() >= 30)
+        return false;
+    if (now.hour()==14 && now.minute() < 30)
+        return true;
+    if (now.hour()==14 && now.minute() >= 30)
+        return false;
+    if (now.hour()==16 && now.minute() < 30)
+        return true;
+    if (now.hour()==16 && now.minute() >= 30)
+        return false;
+    if (now.hour()==18 && now.minute() > 30)
+        return true;
+    if (now.hour()==18 && now.minute() >= 58)
+        return false;
+    if (now.hour()==20 && now.hour() < 30)
+        return true;
+    if (now.hour()==20 && now.hour() >= 30)
+        return false;
+    else
+        return false;
+}
+
+bool valve_cycle_times_night(void) {
+
+    Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
+    rtc.begin(&Wire);
+    
+    DateTime now = rtc.now();
+
+    if (now.hour()==10 && now.minute() < 30)
+        return true;
+    if (now.hour()==10 && now.minute() >= 30)
+        return false;
+
+    else
+        return false;
 }

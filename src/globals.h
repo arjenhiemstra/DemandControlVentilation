@@ -29,6 +29,7 @@ extern SemaphoreHandle_t settings_mqtt_mutex;
 extern SemaphoreHandle_t settings_i2c_mutex;
 extern SemaphoreHandle_t settings_fan_mutex;
 extern SemaphoreHandle_t settings_statemachine_mutex;
+extern SemaphoreHandle_t statemachine_state_mutex;
 
 //Global for valve control data
 extern JsonDocument valve_control_data;

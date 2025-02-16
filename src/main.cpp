@@ -17,6 +17,7 @@ void setup() {
   settings_i2c_mutex = xSemaphoreCreateMutex();
   settings_fan_mutex = xSemaphoreCreateMutex();
   settings_statemachine_mutex = xSemaphoreCreateMutex();
+  statemachine_state_mutex = xSemaphoreCreateMutex();
 
   // First switch off all outputs which randomly come up at power on
   init_registers();

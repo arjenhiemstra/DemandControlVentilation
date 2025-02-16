@@ -9,6 +9,7 @@ SemaphoreHandle_t settings_mqtt_mutex = NULL;
 SemaphoreHandle_t settings_i2c_mutex = NULL;
 SemaphoreHandle_t settings_fan_mutex = NULL;
 SemaphoreHandle_t settings_statemachine_mutex = NULL;
+SemaphoreHandle_t statemachine_state_mutex = NULL;
 
 //Global for valve control data
 JsonDocument valve_control_data;
