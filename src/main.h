@@ -14,6 +14,7 @@
 #include "task_mqtt.h"
 #include "task_statemachine.h"
 #include "task_system.h"
+#include "task_influxdb.h"
 #include "rtc.h"
 
 #include "valvecontrol.h"
