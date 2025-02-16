@@ -13,6 +13,7 @@
 #include "task_display.h"
 #include "task_mqtt.h"
 #include "task_statemachine.h"
+#include "task_system.h"
 #include "rtc.h"
 
 #include "valvecontrol.h"

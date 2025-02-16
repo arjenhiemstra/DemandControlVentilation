@@ -37,6 +37,7 @@ void setup() {
   start_task_display();
   start_task_statemachine();
   start_task_mqtt();
+  //start_task_system();
 }
 
 void loop() { }
