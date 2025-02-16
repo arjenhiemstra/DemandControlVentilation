@@ -14,13 +14,12 @@
 #include "task_mqtt.h"
 #include "task_statemachine.h"
 #include "rtc.h"
-//#include "uptime_formatter.h"
 
 #include "valvecontrol.h"
 #include "globals.h"
 
 // function declarations
-void setup_wifi();
-void init_registers();
+void setup_wifi(void);
+void init_registers(void);
 
 #endif

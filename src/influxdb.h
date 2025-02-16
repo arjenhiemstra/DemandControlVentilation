@@ -8,5 +8,7 @@
 #define DEVICE "ESP32"
 
 // function declarations
+void write_sensor_data(void);
+
 
 #endif

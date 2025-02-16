@@ -195,7 +195,6 @@ void night_transitions(void) {
         Serial.print("Conditions have not changed, it's still night.");
         new_state = "night";
     }
-
 }
 
 void high_co2_day_transitions(void) {
@@ -231,7 +230,6 @@ void high_co2_day_transitions(void) {
         Serial.println("Conditions have not changed, CO2 is still high, so remain in high_co2_day state");
         new_state = "high_co2_day";
     }
-
 }
 
 void high_co2_night_transitions(void) {
@@ -271,7 +269,6 @@ void high_co2_night_transitions(void) {
         Serial.println("Conditions have not changed, CO2 is still high, so remain in high_co2_night state");
         new_state = "high_co2_night";
     }
-
 }
 
 void high_rh_day_transitions(void) {
@@ -346,7 +343,6 @@ void high_rh_night_transitions(void) {
         Serial.println("Conditions have not changed, RH is still high, so remain in high_rh_night state");
         new_state = "high_rh_night";
     }
-
 }
 
 void cooking_transitions(void) {
@@ -405,7 +401,15 @@ void valve_cycle_day_transitions(void) {
         Serial.print("It's not valve_cycle time. Transit to day");
         new_state = "day";
     }
-    else{
+    else if (temp_sensor_data[0][0][1] > 85) {
+        Serial.print("It's day and high RH. Transit to high_rh_day state.");
+        new_state = "high_rh_day";
+    }
+    else if (temp_sensor_data[1][2][2] > 1000) {
+        Serial.println("It is valve_cycle_day and CO2 level is high. Transit to high_co2_day");
+        new_state = "high_co2_day";
+    }
+    else {
         Serial.println("Conditions have not changed, valve_cycle_day is still active, so remain in vavle_cycle_day state");
         new_state = "valve_cycle_day";
     }
@@ -435,6 +439,14 @@ void valve_cycle_night_transitions(void) {
     if (valve_cycle_times_night() == false) {
         Serial.print("It's not valve_cycle time. Transit to night");
         new_state = "night";
+    }
+    else if (temp_sensor_data[0][0][1] > 85) {
+        Serial.print("It's valve_cycle_day and high RH. Transit to high_rh_day state.");
+        new_state = "high_rh_night";
+    }
+    else if (temp_sensor_data[1][2][2] > 1000) {
+        Serial.println("It is valve_cycle_night and CO2 level is high. Transit to high_co2_night");
+        new_state = "high_co2_night";
     }
     else{
         Serial.println("Conditions have not changed, valve_cycle_day is still active, so remain in vavle_cycle_night state");
