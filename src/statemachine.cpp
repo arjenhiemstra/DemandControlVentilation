@@ -370,7 +370,7 @@ void cooking_transitions(void) {
     // valves in default position
 
     // Conditions for transition
-    if (valve_cycle_times_day() == false) {
+    if (cooking_times() == false) {
         Serial.print("It's day and not cooking time. Transit to day");
         new_state = "day";
     }

@@ -111,7 +111,6 @@ void publish_uptime(void) {
     topic="OSVentilation/system/uptime";
     (uptime_formatter::getUptime()).toCharArray(uptime,200);
     client.publish(topic,uptime);
-
 }
 
 void publish_fanspeed(String fanspeed) {
@@ -141,7 +140,7 @@ void publish_state(void) {
     client.publish(topic,temp_state);
 }
 
-
 void subscribe(void) {
 
 }
+
