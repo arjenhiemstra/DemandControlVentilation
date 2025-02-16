@@ -92,9 +92,9 @@ bool valve_cycle_times_day(void) {
         return true;
     if (now.hour()==18 && now.minute() >= 58)
         return false;
-    if (now.hour()==20 && now.hour() < 30)
+    if (now.hour()==20 && now.minute() < 30)
         return true;
-    if (now.hour()==20 && now.hour() >= 30)
+    if (now.hour()==20 && now.minute() >= 30)
         return false;
     else
         return false;
