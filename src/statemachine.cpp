@@ -128,18 +128,18 @@ void day_transitions(void) {
         new_state = "high_co2_day";
     }
     //Assuming TH is on slot 0 of bus 0
-    else if (temp_sensor_data[0][0][1] > 85) {
+    /*else if (temp_sensor_data[0][0][1] > 85) {
         Serial.print("It's day and high RH. Transit to high_rh_day state.");
         new_state = "high_rh_day";
     }
-    else if (cooking_times() == true) {
+    /*else if (cooking_times() == true) {
         Serial.print("It's day and cooking time. Transit to cooking state.");
         new_state = "cooking";
     }
-    else if (valve_cycle_times_day() == true) {
+    /*else if (valve_cycle_times_day() == true) {
         Serial.print("It's day and valve_cycle_time_day. Transit to vavle_cycle_day state");
         new_state = "valve_cycle_day";
-    }
+    }*/
     //Manual high speed mode is ignored for now
     else {
         Serial.print("Conditions have not changed, it's still day");
@@ -182,14 +182,14 @@ void night_transitions(void) {
         new_state = "high_co2_night";
     }
     //Assuming RH sensor is on slot 0 of bus 0
-    else if (temp_sensor_data[0][0][1] > 85) {
+    /*else if (temp_sensor_data[0][0][1] > 85) {
         Serial.print("It's night and high RH. Transit to high high_rh_night.");
         new_state = "high_rh_day";
     }
     else if (valve_cycle_times_night() == true) {
         Serial.print("It's night and valve_cycle time. Transit to valve_cycle_night.");
         new_state = "valve_cycle_night";
-    }
+    }*/
     //Manual high speed mode is ignored for now
     else {
         Serial.print("Conditions have not changed, it's still night.");

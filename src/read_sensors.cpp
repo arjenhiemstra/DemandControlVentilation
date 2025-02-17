@@ -45,8 +45,9 @@ void read_bus0(void) {
         if(xSemaphoreTake(sensor_variable_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             
             sensor_config_file_present = check_file_exists(path1);
-        
+            Serial.println("\n\nBus\tSensor\tType\tTemperature\tHumidity\tCO2");
             if(sensor_config_file_present == 1) {
+                
                 for (int slot=0;slot<8;slot++) {
 
                     String sensor = "wire_sensor" + String(slot);
@@ -57,9 +58,9 @@ void read_bus0(void) {
                     Wire.write(1 << slot);
                     Wire.endTransmission();
                     
-                    Serial.print("\n\nWire sensors, slot "); Serial.print(slot);
-                    Serial.print(", Sensor type: "); Serial.print(sensor_type);
-                    Serial.println();
+                    //Serial.print("\n\nWire sensors, slot "); Serial.print(slot);
+                    //Serial.print(", Sensor type: "); Serial.print(sensor_type);
+                    //Serial.println();
 
                     if (sensor_type == "DHT20") {
                         
@@ -70,9 +71,14 @@ void read_bus0(void) {
                         sensor_data[bus][slot][0] = DHT1.getTemperature();
                         sensor_data[bus][slot][1] = DHT1.getHumidity();
 
-                        Serial.print("Temperature: "); Serial.print(sensor_data[bus][slot][0]); Serial.print(" °C");
-                        Serial.print(",\t\t");
-                        Serial.print("Humidity: "); Serial.print(sensor_data[bus][slot][1]); Serial.print(" %");
+                        Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type);Serial.print("\t");
+                        Serial.print(sensor_data[bus][slot][0]);Serial.print("\t");
+                        Serial.print(sensor_data[bus][slot][1]);Serial.print("\t");
+                        Serial.print(sensor_data[bus][slot][2]);Serial.print("\t\n");
+
+                        //Serial.print("Temperature: "); Serial.print(sensor_data[bus][slot][0]); Serial.print(" °C");
+                        //Serial.print(",\t\t");
+                        //Serial.print("Humidity: "); Serial.print(sensor_data[bus][slot][1]); Serial.print(" %");
                     }
                     
                     else if (sensor_type == "AHT20") {
@@ -85,9 +91,13 @@ void read_bus0(void) {
                         sensor_data[bus][slot][0] = temp.temperature;
                         sensor_data[bus][slot][1] = humidity.relative_humidity;
                         
-                        Serial.print("Temperature: "); Serial.print(sensor_data[bus][slot][0]); Serial.print(" °C");
-                        Serial.print(",\t\t");
-                        Serial.print("Humidity: "); Serial.print(sensor_data[bus][slot][1]); Serial.print(" %");
+                        Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type);Serial.print("\t");
+                        Serial.print(sensor_data[bus][slot][0]);Serial.print("\t");
+                        Serial.print(sensor_data[bus][slot][1]);Serial.print("\t");
+                        Serial.print(sensor_data[bus][slot][2]);Serial.print("\t\n");
+                        //Serial.print("Temperature: "); Serial.print(sensor_data[bus][slot][0]); Serial.print(" °C");
+                        //Serial.print(",\t\t");
+                        //Serial.print("Humidity: "); Serial.print(sensor_data[bus][slot][1]); Serial.print(" %");
                     }
                     
                     else if (sensor_type == "SCD40" || sensor_type == "SCD41") {
@@ -113,15 +123,21 @@ void read_bus0(void) {
                             sensor_data[bus][slot][0] = temperature;
                             sensor_data[bus][slot][1] = humidity;
                             sensor_data[bus][slot][2] = co2;
-                            Serial.print("Temperature: "); Serial.print(sensor_data[bus][slot][0]); Serial.print(" °C");
-                            Serial.print("\t\t");
-                            Serial.print("Humidity: "); Serial.print(sensor_data[bus][slot][1]); Serial.print(" %");
-                            Serial.print("\t\t");
-                            Serial.print("Co2: "); Serial.print(sensor_data[bus][slot][2]); Serial.print(" ppm");
+
+                            Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type);Serial.print("\t");
+                            Serial.print(sensor_data[bus][slot][0]);Serial.print("\t");
+                            Serial.print(sensor_data[bus][slot][1]);Serial.print("\t");
+                            Serial.print(sensor_data[bus][slot][2]);Serial.print("\t\n");
+
+                            //Serial.print("Temperature: "); Serial.print(sensor_data[bus][slot][0]); Serial.print(" °C");
+                            //Serial.print("\t\t");
+                            //Serial.print("Humidity: "); Serial.print(sensor_data[bus][slot][1]); Serial.print(" %");
+                            //Serial.print("\t\t");
+                            //Serial.print("Co2: "); Serial.print(sensor_data[bus][slot][2]); Serial.print(" ppm");
                         }
                     }
                     else {
-                        Serial.println("No sensor configured.");
+                        Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print("No sensor.\n");
                     }
                 }
             }
@@ -142,7 +158,7 @@ void read_bus1(void) {
         if(xSemaphoreTake(sensor_variable_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             
             sensor_config_file_present = check_file_exists(path);
-        
+            Serial.println("\n\nBus\tSensor\tType\tTemperature\tHumidity\tCO2");
             if(sensor_config_file_present == 1) {
                 for (int slot=0;slot<8;slot++) {
 
@@ -154,9 +170,9 @@ void read_bus1(void) {
                     Wire1.write(1 << slot);
                     Wire1.endTransmission();
                     
-                    Serial.print("\n\nWire1 sensors, slot "); Serial.print(slot);
-                    Serial.print(", Sensor type: "); Serial.print(sensor_type);
-                    Serial.println();
+                    //Serial.print("\n\nWire1 sensors, slot "); Serial.print(slot);
+                    //Serial.print(", Sensor type: "); Serial.print(sensor_type);
+                    //Serial.println();
 
                     if (sensor_type == "DHT20") {
                         
@@ -166,10 +182,16 @@ void read_bus1(void) {
                         
                         sensor_data[bus][slot][0] = DHT2.getTemperature();
                         sensor_data[bus][slot][1] = DHT2.getHumidity();
-                        Serial.print("Temperature: "); Serial.print(sensor_data[bus][slot][0]); Serial.print(" °C");
-                        Serial.print(",\t\t");
-                        Serial.print("Humidity: "); Serial.print(sensor_data[bus][slot][1]); Serial.print(" %");
-                        Serial.println();
+                        
+                        Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type);Serial.print("\t");
+                        Serial.print(sensor_data[bus][slot][0]);Serial.print("\t");
+                        Serial.print(sensor_data[bus][slot][1]);Serial.print("\t");
+                        Serial.print(sensor_data[bus][slot][2]);Serial.print("\t\n");
+
+                        //Serial.print("Temperature: "); Serial.print(sensor_data[bus][slot][0]); Serial.print(" °C");
+                        //Serial.print(",\t\t");
+                        //Serial.print("Humidity: "); Serial.print(sensor_data[bus][slot][1]); Serial.print(" %");
+                        //Serial.println();
                     }
                     
                     else if (sensor_type == "AHT20") {
@@ -182,9 +204,14 @@ void read_bus1(void) {
                         sensor_data[bus][slot][0] = temp.temperature;
                         sensor_data[bus][slot][1] = humidity.relative_humidity;
                         
-                        Serial.print("Temperature: "); Serial.print(sensor_data[bus][slot][0]); Serial.print(" °C");
-                        Serial.print(",\t\t");
-                        Serial.print("Humidity: "); Serial.print(sensor_data[bus][slot][1]); Serial.print(" %");
+                        Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type);Serial.print("\t");
+                        Serial.print(sensor_data[bus][slot][0]);Serial.print("\t");
+                        Serial.print(sensor_data[bus][slot][1]);Serial.print("\t");
+                        Serial.print(sensor_data[bus][slot][2]);Serial.print("\t\n");
+
+                        //Serial.print("Temperature: "); Serial.print(sensor_data[bus][slot][0]); Serial.print(" °C");
+                        //Serial.print(",\t\t");
+                        //Serial.print("Humidity: "); Serial.print(sensor_data[bus][slot][1]); Serial.print(" %");
                     }
                     
                     else if (sensor_type == "SCD40" || sensor_type ==  "SCD41") {
@@ -210,15 +237,21 @@ void read_bus1(void) {
                             sensor_data[bus][slot][0] = temperature;
                             sensor_data[bus][slot][1] = humidity;
                             sensor_data[bus][slot][2] = co2;
-                            Serial.print("Temperature: "); Serial.print(sensor_data[bus][slot][0]); Serial.print(" °C");
-                            Serial.print("\t\t");
-                            Serial.print("Humidity:"); Serial.print(sensor_data[bus][slot][1]); Serial.print(" %");
-                            Serial.print("\t\t");
-                            Serial.print("Co2:"); Serial.print(sensor_data[bus][slot][2]); Serial.print(" ppm");
+                            
+                            Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type);Serial.print("\t");
+                            Serial.print(sensor_data[bus][slot][0]);Serial.print("\t");
+                            Serial.print(sensor_data[bus][slot][1]);Serial.print("\t");
+                            Serial.print(sensor_data[bus][slot][2]);Serial.print("\t\n");
+                            
+                            //Serial.print("Temperature: "); Serial.print(sensor_data[bus][slot][0]); Serial.print(" °C");
+                            //Serial.print("\t\t");
+                            //Serial.print("Humidity:"); Serial.print(sensor_data[bus][slot][1]); Serial.print(" %");
+                            //Serial.print("\t\t");
+                            //Serial.print("Co2:"); Serial.print(sensor_data[bus][slot][2]); Serial.print(" ppm");
                         }
                     }
                     else {
-                        Serial.print("No sensor configured.");
+                        Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print("No sensor.\n");
                     }
                 }
             }
