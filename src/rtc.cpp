@@ -112,6 +112,6 @@ bool valve_cycle_times_night(void) {
     //if (now.hour()==10 && now.minute() >= 30)
         //return false;
 
-    else
+    //else
         return false;
 }

@@ -81,12 +81,12 @@ void init_transitions(void) {
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
 
-    //now.dayOfTheWeek start with Sunday (0) and ends at Saturday 6
-    if (now.hour() > 7 && now.hour() < 22 && now.dayOfTheWeek() != 0 && now.dayOfTheWeek() != 6)  {
+    // Conditions to transit to other state
+     if (now.hour() >= 8 && now.hour() < 21 && now.dayOfTheWeek() != 0 && now.dayOfTheWeek() != 6)  {
         Serial.println("It is after 7, before 21 and a weekday. Transit to day.");
         new_state = "day";
     }
-    else if (now.hour() > 8 && now.hour() < 22 && (now.dayOfTheWeek() == 0 || now.dayOfTheWeek() == 6)) {
+    else if (now.hour() >= 9 && now.hour() < 21 && (now.dayOfTheWeek() == 0 || now.dayOfTheWeek() == 6)) {
         Serial.println("It is after 8 and before 21 and weekend. Transit to day.");
         new_state = "day";
     }
@@ -94,7 +94,6 @@ void init_transitions(void) {
         Serial.println("It's night. Transit to night.");
         new_state = "night";
     }
-
     state = new_state;
 }
 
@@ -118,7 +117,8 @@ void day_transitions(void) {
     publish_fanspeed(fanspeed);
     // valves in default position
 
-    if (now.hour() > 21) {
+    // Condition to transit to other state
+    if (now.hour() >= 21) {
         Serial.print("It's night. Transit to night.");        
         new_state = "night";
     }
@@ -132,7 +132,6 @@ void day_transitions(void) {
         Serial.print("It's day and high RH. Transit to high_rh_day state.");
         new_state = "high_rh_day";
     }
-
     else if (cooking_times() == true) {
         Serial.print("It's day and cooking time. Transit to cooking state.");
         new_state = "cooking";
@@ -169,19 +168,20 @@ void night_transitions(void) {
     publish_fanspeed(fanspeed);
     // valves in default position
 
-    if (now.hour() > 7 && now.hour() < 22 && now.dayOfTheWeek() != 0 && now.dayOfTheWeek() != 6)  {
-        Serial.println("It is after 7, before 21 and a weekday. Transit to day.");
+    // Conditions to transit to other state
+    if (now.hour() >= 8 && now.hour() < 21 && now.dayOfTheWeek() > 0 && now.dayOfTheWeek() < 6)  {
+        Serial.println("It is after 8, before 21 and a weekday. Transit to day.");
         new_state = "day";
     }
-    else if (now.hour() > 8 && now.hour() < 22 && (now.dayOfTheWeek() == 0 || now.dayOfTheWeek() == 6)) {
-        Serial.println("It is after 8, before 21 and weekend. Transit to day");
+    else if (now.hour() >= 9 && now.hour() < 21 && (now.dayOfTheWeek() == 0 || now.dayOfTheWeek() == 6)) {
+        Serial.println("It is after 9, before 21 and weekend. Transit to day");
         new_state = "day";
     }
     else if (temp_sensor_data[1][2][2] > 1000) {
         Serial.println("It is and CO2 level is high. Transit to high_co2_night");
         new_state = "high_co2_night";
     }
-    //Assuming TH is on slot 0 of bus 0
+    //Assuming RH sensor is on slot 0 of bus 0
     else if (temp_sensor_data[0][0][1] > 85) {
         Serial.print("It's night and high RH. Transit to high high_rh_night.");
         new_state = "high_rh_day";
@@ -222,7 +222,7 @@ void high_co2_day_transitions(void) {
         Serial.println("It is day and CO2 level is low enough. Transit to day.");
         new_state = "day";
     }
-    else if (now.hour() > 21) {
+    else if (now.hour() >= 21) {
         Serial.print("It's night but CO2 levels are still high. Transit to high_co2_night");        
         new_state = "high_co2_night";
     }
@@ -253,11 +253,11 @@ void high_co2_night_transitions(void) {
     // valves in default position
 
     // Conditions for transition
-    if (now.hour() > 7 && now.hour() < 22 && now.dayOfTheWeek() != 0 && now.dayOfTheWeek() != 6)  {
+    if (now.hour() >= 8 && now.hour() < 21 && now.dayOfTheWeek() > 0 && now.dayOfTheWeek() < 6)  {
         Serial.println("It is after 7, before 21 and a weekday. Transit to high_co2_day.");
         new_state = "high_co2_day";
     }
-    else if (now.hour() > 8 && now.hour() < 22 && (now.dayOfTheWeek() == 0 || now.dayOfTheWeek() == 6)) {
+    else if (now.hour() >= 9 && now.hour() < 21 && (now.dayOfTheWeek() == 0 || now.dayOfTheWeek() == 6)) {
         Serial.println("It is after 8, before 21 and weekend. Transit to high_co2_day.");
         new_state = "high_co2_day";
     }
@@ -296,7 +296,7 @@ void high_rh_day_transitions(void) {
         Serial.print("It's night and high RH. Transit to day");
         new_state = "day";
     }
-    else if (now.hour() > 21) {
+    else if (now.hour() >= 21) {
         Serial.print("It's night but rh levels are still high. Transit to high_rh_night");        
         new_state = "high_rh_night";
     }
@@ -331,15 +331,15 @@ void high_rh_night_transitions(void) {
         Serial.print("It's night and RH is low enough. Transit to night.");
         new_state = "night";
     }
-    if (now.hour() > 7 && now.hour() < 22 && now.dayOfTheWeek() != 0 && now.dayOfTheWeek() != 6)  {
+    else if (now.hour() >= 8 && now.hour() < 21 && now.dayOfTheWeek() > 0 && now.dayOfTheWeek() < 6)  {
         Serial.println("It is after 7, before 21 and a weekday but RH is still high. Transit to high_rh_day.");
         new_state = "high_rh_day";
     }
-    else if (now.hour() > 8 && now.hour() < 22 && (now.dayOfTheWeek() == 0 || now.dayOfTheWeek() == 6)) {
+    else if (now.hour() >= 9 && now.hour() < 21 && (now.dayOfTheWeek() == 0 || now.dayOfTheWeek() == 6)) {
         Serial.println("It is after 8, before 21 and weekend but RH is still high. Transit to high_rh_day ");
         new_state = "high_rh_day";
     }
-    else{
+    else {
         Serial.println("Conditions have not changed, RH is still high, so remain in high_rh_night state");
         new_state = "high_rh_night";
     }
@@ -398,7 +398,7 @@ void valve_cycle_day_transitions(void) {
 
     // Conditions for transition
     if (valve_cycle_times_day() == false) {
-        Serial.print("It's not valve_cycle time. Transit to day");
+        Serial.print("It's not valve cycle time. Transit to day");
         new_state = "day";
     }
     else if (temp_sensor_data[0][0][1] > 85) {
@@ -410,7 +410,7 @@ void valve_cycle_day_transitions(void) {
         new_state = "high_co2_day";
     }
     else {
-        Serial.println("Conditions have not changed, valve_cycle_day is still active, so remain in vavle_cycle_day state");
+        Serial.println("Conditions have not changed, valve_cycle_day is still active, so remain in valve_cycle_day state");
         new_state = "valve_cycle_day";
     }
 }
@@ -448,8 +448,8 @@ void valve_cycle_night_transitions(void) {
         Serial.println("It is valve_cycle_night and CO2 level is high. Transit to high_co2_night");
         new_state = "high_co2_night";
     }
-    else{
-        Serial.println("Conditions have not changed, valve_cycle_day is still active, so remain in vavle_cycle_night state");
+    else {
+        Serial.println("Conditions have not changed, valve_cycle_day is still active, so remain in valve_cycle_night state");
         new_state = "valve_cycle_night";
     }
 }
