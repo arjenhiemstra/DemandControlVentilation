@@ -195,6 +195,7 @@ void night_transitions(void) {
         Serial.print("Conditions have not changed, it's still night.");
         new_state = "night";
     }
+    state = new_state;
 }
 
 void high_co2_day_transitions(void) {
@@ -230,6 +231,7 @@ void high_co2_day_transitions(void) {
         Serial.println("Conditions have not changed, CO2 is still high, so remain in high_co2_day state");
         new_state = "high_co2_day";
     }
+    state = new_state;
 }
 
 void high_co2_night_transitions(void) {
@@ -269,6 +271,7 @@ void high_co2_night_transitions(void) {
         Serial.println("Conditions have not changed, CO2 is still high, so remain in high_co2_night state");
         new_state = "high_co2_night";
     }
+    state = new_state;
 }
 
 void high_rh_day_transitions(void) {
@@ -304,6 +307,7 @@ void high_rh_day_transitions(void) {
         Serial.println("Conditions have not changed, RH is still high, so remain in high_rh_day state");
         new_state = "high_rh_day";
     }
+    state = new_state;
 }
 
 void high_rh_night_transitions(void) {
@@ -343,6 +347,7 @@ void high_rh_night_transitions(void) {
         Serial.println("Conditions have not changed, RH is still high, so remain in high_rh_night state");
         new_state = "high_rh_night";
     }
+    state = new_state;
 }
 
 void cooking_transitions(void) {
@@ -374,6 +379,7 @@ void cooking_transitions(void) {
         Serial.println("Conditions have not changed, cooking time is not over so remain in cooking state");
         new_state = "cooking";
     }
+    state = new_state;
 }
 
 void valve_cycle_day_transitions(void) {
@@ -413,6 +419,7 @@ void valve_cycle_day_transitions(void) {
         Serial.println("Conditions have not changed, valve_cycle_day is still active, so remain in valve_cycle_day state");
         new_state = "valve_cycle_day";
     }
+    state = new_state;
 }
 
 void valve_cycle_night_transitions(void) {
@@ -452,6 +459,7 @@ void valve_cycle_night_transitions(void) {
         Serial.println("Conditions have not changed, valve_cycle_day is still active, so remain in valve_cycle_night state");
         new_state = "valve_cycle_night";
     }
+    state = new_state;
 }
 
 //This state is for later
