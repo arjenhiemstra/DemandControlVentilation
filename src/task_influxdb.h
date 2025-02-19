@@ -5,7 +5,7 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
-//#include "display.h"
+#include "influxdb.h"
 
 // function declarations
 void start_task_influxdb(void);

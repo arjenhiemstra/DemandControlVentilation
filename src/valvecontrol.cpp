@@ -36,9 +36,6 @@ void move_valve(void) {
     int check_valve_position;
     int valve_pos;
 
-    //Global variable
-    //extern JsonDocument valve_control_data;
-
     String json;
     JsonDocument doc;
 
@@ -275,44 +272,39 @@ void all_outputs_off(int dataPin, int clockPin, int latchPin) {
 }
 
 
+void valve_position_statemachine(void) {
+
+/*
+The move_valve function works with requested position move value and is not with absolute positions of the valves.  
+1. Select valve position file based on global variable state (with Mutex!)
+2. Read file with valve settings for state (e.g. day or high_co2_) of statemachine.
+3. Read file with existing positions (with mutex!)
+4. Calculate how much the valve should move and calculate direction. 
+5. Set valve check and update position file to active
+6. Update valve_control_data global variable with data from step 4 (with Mutex!
+7. Call the move valve function.
+
+Data structure for each JSON valve_control_data Structure
+{
+    "valve0_data": [valve_vumber,valve move,valvemove_direction],
+    "valve1_data": [valve_vumber,valve move,valvemove_direction],
+    "valve2_data": [valve_vumber,valve move,valvemove_direction],
+    ......
+    ......
+    "valve11_data": [valve_vumber,valve move,valvemove_direction]
+}
+*/
 
 
 
 
 
+}
 
-/*void read_position_file(fs::FS &fs, const char *path) {
 
-  Serial.printf("Reading file: %s\r\n", path);
 
-  File file = fs.open(path);
-  if (!file || file.isDirectory()) {
-    Serial.println("- failed to open file for reading");
-    return;
-  }
 
-  Serial.println("- read from file:");
-  while (file.available()) {
-    Serial.write(file.read());
-  }
-  file.close();
-}*/
 
-/* Python example
-
-def checkValvePositionFile():
-    # Check is valvePositions.json exists and if not write the default positions
-    filename="valvePositions.json"
-    if filename in uos.listdir():
-        print("\nValve status file found.")
-        if uos.stat(filename)[6] < 100:
-            print("\nValve status file found, but too small. Creating new default file")
-            defaultValvePositions()
-        else:
-            print("Everything ok with valve status file")
-    else:
-        print("\nValve status file not found. Creating new default one")
-        defaultValvePositions() */
 
 
 

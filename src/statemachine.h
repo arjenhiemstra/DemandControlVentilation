@@ -11,6 +11,7 @@
 #include "fancontrol.h"
 #include "mqtt.h"
 #include "rtc.h"
+#include "valvecontrol.h"
 
 // function declarations
 void init_statemachine(void);
