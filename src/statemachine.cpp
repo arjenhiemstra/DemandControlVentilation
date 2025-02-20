@@ -77,9 +77,9 @@ void init_transitions(void) {
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
-    publish_state();
+    valve_position_statemachine();
     set_fanspeed(fanspeed);
-    publish_fanspeed(fanspeed);
+    publish_fanspeed(fanspeed); 
 
     // Conditions to transit to other state
      if (now.hour() >= 8 && now.hour() < 21 && now.dayOfTheWeek() != 0 && now.dayOfTheWeek() != 6)  {
@@ -112,7 +112,6 @@ void day_transitions(void) {
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
-    publish_state();
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
     // valves in default position
@@ -163,7 +162,6 @@ void night_transitions(void) {
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
-    publish_state();
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
     // valves in default position
@@ -213,7 +211,6 @@ void high_co2_day_transitions(void) {
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
-    publish_state();
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
     // valves in default position
@@ -249,7 +246,6 @@ void high_co2_night_transitions(void) {
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
-    publish_state();
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
     // valves in default position
@@ -289,7 +285,6 @@ void high_rh_day_transitions(void) {
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
-    publish_state();
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
     // valves in default position
@@ -325,7 +320,6 @@ void high_rh_night_transitions(void) {
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
-    publish_state();
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
     // valves in default position
@@ -365,7 +359,6 @@ void cooking_transitions(void) {
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
-    publish_state();
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
     // valves in default position
@@ -397,7 +390,6 @@ void valve_cycle_day_transitions(void) {
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
-    publish_state();
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
     // valves in default position
@@ -437,7 +429,6 @@ void valve_cycle_night_transitions(void) {
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
-    publish_state();
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
     // valves in default position
@@ -478,7 +469,6 @@ void manual_high_speed_transitions(void) {
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
-    publish_state();
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
     // valves in default position

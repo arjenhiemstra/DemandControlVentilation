@@ -60,7 +60,7 @@ void publish_sensor_data(void) {
     }
 }
 
-void publish_valve_data(void) {
+void publish_valve_positions(void) {
 
     const char* path = "/json/valvepositions.json";
     char valve_pos[4];
