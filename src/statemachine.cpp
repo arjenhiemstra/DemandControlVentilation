@@ -77,7 +77,7 @@ void init_transitions(void) {
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
-    valve_position_statemachine();
+    //valve_position_statemachine();
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed); 
 

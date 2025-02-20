@@ -51,7 +51,7 @@ void display_sensors(void) {
             lcd.print(" Sensor:");
             lcd.print(slot);
             
-            //Only display measurments if sensor is present, i.e. if temperature measurement is not zero
+            //Only display measurements if sensor is present, i.e. if temperature measurement is not zero
             if (temp_sensor_data[bus][slot][0] != 0) {
                 lcd.setCursor(0, 1);
                 lcd.print("Temperature: ");

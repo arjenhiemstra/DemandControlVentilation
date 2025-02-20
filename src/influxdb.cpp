@@ -32,11 +32,14 @@ void write_sensor_data(void) {
     }
   
     for (int i = 0; i < 2; i++) {
-        for (int j = 0; j < 8; j++) {
-            sensor.clearFields();
+        for (int j = 0; j < 8; j++) {           
             if (temp_sensor_data[i][j][0] > 0) {
-                String tag = "bus" + String(i) + "_sensor" + String(j);
+                sensor.clearFields();
+                sensor.clearTags();
+                String tag = "sensor" + String(j);
+                String bus = "bus" + String(i);
                 sensor.addTag("device",tag);
+                sensor.addTag("bus",bus);
                 sensor.addField("temperature", temp_sensor_data[i][j][0]);
                 if (temp_sensor_data[i][j][1] > 0) {
                     sensor.addField("humidity", temp_sensor_data[i][j][1]);
@@ -45,14 +48,59 @@ void write_sensor_data(void) {
                     sensor.addField("CO2", temp_sensor_data[i][j][2]); 
                 }
                 
-                Serial.print("Writing: ");
+                Serial.print("Writing sensor data: ");
                 Serial.println(client.pointToLineProtocol(sensor));
         
                 if (!client.writePoint(sensor)) {
                     Serial.print("InfluxDB write failed: ");
                     Serial.println(client.getLastErrorMessage());
                 }
+                
             }
         } 
+    }
+}
+
+void write_valve_position_data(void) {
+    
+    InfluxDBClient client(INFLUXDB_URL, INFLUXDB_ORG, INFLUXDB_BUCKET, INFLUXDB_TOKEN);
+    Point sensor("Valves");
+    String json;
+    JsonDocument doc;
+
+    const char* path = "/json/valvepositions.json";
+    bool status_file_present;
+    int valve_pos_temp;
+
+    status_file_present = check_file_exists(path);
+
+    if (status_file_present == 1) {
+        if (valve_position_file_mutex != NULL) {
+            if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+                json = read_config_file(path);
+                xSemaphoreGive(valve_position_file_mutex);
+            }
+        }
+
+        deserializeJson(doc, json);
+
+        for(int i=0;i<12;i++) {
+            
+            valve_pos_temp = doc["valve"+String(i)];
+                        
+            sensor.clearFields();
+            sensor.clearTags();
+            String tag = "valve" + String(i);
+            sensor.addTag("device",tag);
+            sensor.addField("position", valve_pos_temp);
+                        
+            Serial.print("Writing valve data: ");
+            Serial.println(client.pointToLineProtocol(sensor));
+    
+            if (!client.writePoint(sensor)) {
+                Serial.print("InfluxDB write failed: ");
+                Serial.println(client.getLastErrorMessage());
+            }
+        }
     }
 }

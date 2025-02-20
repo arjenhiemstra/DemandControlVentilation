@@ -45,7 +45,7 @@ void read_bus0(void) {
         if(xSemaphoreTake(sensor_variable_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             
             sensor_config_file_present = check_file_exists(path1);
-            Serial.println("\n\nBus\tSensor\tType\tTemperature\tHumidity\tCO2");
+            Serial.println("\n\nBus\tSensor\tType\tTemperature\t\tHumidity\tCO2");
             if(sensor_config_file_present == 1) {
                 
                 for (int slot=0;slot<8;slot++) {
@@ -72,7 +72,7 @@ void read_bus0(void) {
                         sensor_data[bus][slot][1] = DHT1.getHumidity();
 
                         Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type);Serial.print("\t");
-                        Serial.print(sensor_data[bus][slot][0]);Serial.print("\t");
+                        Serial.print(sensor_data[bus][slot][0]);Serial.print("\t\t");
                         Serial.print(sensor_data[bus][slot][1]);Serial.print("\t");
                         Serial.print(sensor_data[bus][slot][2]);Serial.print("\t\n");
 
@@ -92,7 +92,7 @@ void read_bus0(void) {
                         sensor_data[bus][slot][1] = humidity.relative_humidity;
                         
                         Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type);Serial.print("\t");
-                        Serial.print(sensor_data[bus][slot][0]);Serial.print("\t");
+                        Serial.print(sensor_data[bus][slot][0]);Serial.print("\t\t");
                         Serial.print(sensor_data[bus][slot][1]);Serial.print("\t");
                         Serial.print(sensor_data[bus][slot][2]);Serial.print("\t\n");
                         //Serial.print("Temperature: "); Serial.print(sensor_data[bus][slot][0]); Serial.print(" °C");
@@ -125,7 +125,7 @@ void read_bus0(void) {
                             sensor_data[bus][slot][2] = co2;
 
                             Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type);Serial.print("\t");
-                            Serial.print(sensor_data[bus][slot][0]);Serial.print("\t");
+                            Serial.print(sensor_data[bus][slot][0]);Serial.print("\t\t");
                             Serial.print(sensor_data[bus][slot][1]);Serial.print("\t");
                             Serial.print(sensor_data[bus][slot][2]);Serial.print("\t\n");
 
@@ -184,7 +184,7 @@ void read_bus1(void) {
                         sensor_data[bus][slot][1] = DHT2.getHumidity();
                         
                         Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type);Serial.print("\t");
-                        Serial.print(sensor_data[bus][slot][0]);Serial.print("\t");
+                        Serial.print(sensor_data[bus][slot][0]);Serial.print("\t\t");
                         Serial.print(sensor_data[bus][slot][1]);Serial.print("\t");
                         Serial.print(sensor_data[bus][slot][2]);Serial.print("\t\n");
 
@@ -205,7 +205,7 @@ void read_bus1(void) {
                         sensor_data[bus][slot][1] = humidity.relative_humidity;
                         
                         Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type);Serial.print("\t");
-                        Serial.print(sensor_data[bus][slot][0]);Serial.print("\t");
+                        Serial.print(sensor_data[bus][slot][0]);Serial.print("\t\t");
                         Serial.print(sensor_data[bus][slot][1]);Serial.print("\t");
                         Serial.print(sensor_data[bus][slot][2]);Serial.print("\t\n");
 
@@ -239,7 +239,7 @@ void read_bus1(void) {
                             sensor_data[bus][slot][2] = co2;
                             
                             Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type);Serial.print("\t");
-                            Serial.print(sensor_data[bus][slot][0]);Serial.print("\t");
+                            Serial.print(sensor_data[bus][slot][0]);Serial.print("\t\t");
                             Serial.print(sensor_data[bus][slot][1]);Serial.print("\t");
                             Serial.print(sensor_data[bus][slot][2]);Serial.print("\t\n");
                             
