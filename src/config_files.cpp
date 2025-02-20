@@ -2,8 +2,8 @@
 
 void sensor_config_data_read() {
  
-    const char* path1 = "/sensor_config1.json";
-    const char* path2 = "/sensor_config2.json";
+    const char* path1 = "/json/sensor_config1.json";
+    const char* path2 = "/json/sensor_config2.json";
     
     String sensor_config1_string;
     String sensor_config2_string;
@@ -68,7 +68,7 @@ void valve_status_file_create() {
     if (valve_position_mutex != NULL) {
         if(xSemaphoreTake(valve_position_mutex, ( TickType_t ) 10 ) == pdTRUE) {
 
-            file = LittleFS.open("/valvepositions.json", "w");
+            file = LittleFS.open("/json/valvepositions.json", "w");
             if(!file) {
                 Serial.println("Failed to open file for writing");
                 return;

@@ -201,7 +201,7 @@ void Taskwebcode(void *pvParameters) {
             }
           }
         }
-        const char* path = "/settings_network.json";
+        const char* path = "/json/settings_network.json";
         String settings_network_str;
 
         serializeJson(settings_network_data, settings_network_str);
@@ -237,7 +237,7 @@ void Taskwebcode(void *pvParameters) {
             }
           }
         }
-        const char* path = "/settings_mqtt.json";
+        const char* path = "/json/settings_mqtt.json";
         String settings_mqtt_str;
 
         serializeJson(settings_mqtt_data, settings_mqtt_str);
@@ -272,7 +272,7 @@ void Taskwebcode(void *pvParameters) {
             }
           }
         }
-        const char* path = "/settings_i2c.json";
+        const char* path = "/json/settings_i2c.json";
         String settings_i2c_str;
 
         serializeJson(settings_i2c_data, settings_i2c_str);
@@ -313,7 +313,7 @@ void Taskwebcode(void *pvParameters) {
             }
           }
         }
-        const char* path = "/settings_fan.json";
+        const char* path = "/json/settings_fan.json";
         String settings_fan_str;
 
         serializeJson(settings_fan_data, settings_fan_str);
@@ -345,7 +345,7 @@ void Taskwebcode(void *pvParameters) {
             }
           }
         }
-        const char* path = "/settings_statemachine.json";
+        const char* path = "/json/settings_statemachine.json";
         String settings_statemachine_str;
 
         serializeJson(settings_statemachine_data, settings_statemachine_str);
@@ -568,7 +568,7 @@ void Taskwebcode(void *pvParameters) {
   });
     
   server.on("/delete_config_file", HTTP_POST, [](AsyncWebServerRequest *request) {
-    const char* path = "/valvepositions.json";
+    const char* path = "/json/valvepositions.json";
     delete_file(path);
     request->send(LittleFS, "/html/valvecontrol.html", String(), false, valvecontrol_processor);
   });
@@ -589,13 +589,13 @@ void Taskwebcode(void *pvParameters) {
   });
 
   server.on("/delete_sensor_config_file1", HTTP_POST, [](AsyncWebServerRequest *request) {
-    const char* path = "/sensor_config1.json";
+    const char* path = "/json/sensor_config1.json";
     delete_file(path);
     request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
   });
 
   server.on("/delete_sensor_config_file2", HTTP_POST, [](AsyncWebServerRequest *request) {
-    const char* path = "/sensor_config2.json";
+    const char* path = "/json/sensor_config2.json";
     delete_file(path);
     request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
   });
@@ -705,7 +705,7 @@ void Taskwebcode(void *pvParameters) {
       }
     }
       
-    const char* path1 = "/sensor_config1.json";
+    const char* path1 = "/json/sensor_config1.json";
     String sensor_config1;
     serializeJson(wire_sensor_data, sensor_config1);
     write_config_file(path1, sensor_config1);
@@ -819,7 +819,7 @@ void Taskwebcode(void *pvParameters) {
         }
       }
     }
-    const char* path2 = "/sensor_config2.json";
+    const char* path2 = "/json/sensor_config2.json";
     String sensor_config2;
 
     serializeJson(wire1_sensor_data, sensor_config2);

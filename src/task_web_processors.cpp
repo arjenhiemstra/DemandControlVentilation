@@ -2,8 +2,8 @@
 
 String sensor_config_processor(const String& var) {
     
-    const char* path1 = "/sensor_config1.json";
-    const char* path2 = "/sensor_config2.json";
+    const char* path1 = "/json/sensor_config1.json";
+    const char* path2 = "/json/sensor_config2.json";
     const char* status;
     bool sensor_config_file1_present;
     bool sensor_config_file2_present;
@@ -237,7 +237,7 @@ String sensor_config_processor(const String& var) {
 String status_processor(const String& var) {
 
     /*Valve positions part of processor*/
-    const char* path = "/valvepositions.json";
+    const char* path = "/json/valvepositions.json";
     const char* status;
     bool status_file_present;
     
@@ -407,7 +407,7 @@ String settings_processor(const String& var) {
 
 String valvecontrol_processor(const String& var) {
 
-  const char* path = "/valvepositions.json";
+  const char* path = "/json/valvepositions.json";
   const char* status;
   bool status_file_present;
   

@@ -101,7 +101,7 @@ void display_valve_positions(void) {
     
     */
       
-    const char* path = "/valvepositions.json";
+    const char* path = "/json/valvepositions.json";
     bool status_file_present;
     String json;
     JsonDocument doc;

@@ -25,7 +25,7 @@ void move_valve(void) {
     pinMode(clockPin2, OUTPUT);
     pinMode(dataPin2, OUTPUT);
 
-    const char* path = "/valvepositions.json";
+    const char* path = "/json/valvepositions.json";
     bool status_file_present;
     int valve_number;
     int valve_position_change;
