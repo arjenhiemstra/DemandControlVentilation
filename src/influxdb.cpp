@@ -31,6 +31,7 @@ void write_sensor_data(void) {
         Serial.println(client.getLastErrorMessage());
     }
   
+    Serial.println("Writing sensor data to influxDB.");
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < 8; j++) {           
             if (temp_sensor_data[i][j][0] > 0) {
@@ -48,8 +49,9 @@ void write_sensor_data(void) {
                     sensor.addField("CO2", temp_sensor_data[i][j][2]); 
                 }
                 
-                Serial.print("Writing sensor data: ");
-                Serial.println(client.pointToLineProtocol(sensor));
+                //Serial.println("Writing sensor data to influxDB: ");
+                //Serial.println(client.pointToLineProtocol(sensor));
+                client.pointToLineProtocol(sensor);
         
                 if (!client.writePoint(sensor)) {
                     Serial.print("InfluxDB write failed: ");
@@ -84,6 +86,7 @@ void write_valve_position_data(void) {
 
         deserializeJson(doc, json);
 
+        Serial.print("Writing valve position data to influxDB.");
         for(int i=0;i<12;i++) {
             
             valve_pos_temp = doc["valve"+String(i)];
@@ -94,8 +97,9 @@ void write_valve_position_data(void) {
             sensor.addTag("device",tag);
             sensor.addField("position", valve_pos_temp);
                         
-            Serial.print("Writing valve data: ");
-            Serial.println(client.pointToLineProtocol(sensor));
+            //Serial.print("Writing valve data: ");
+            //Serial.println(client.pointToLineProtocol(sensor));
+            client.pointToLineProtocol(sensor);
     
             if (!client.writePoint(sensor)) {
                 Serial.print("InfluxDB write failed: ");
