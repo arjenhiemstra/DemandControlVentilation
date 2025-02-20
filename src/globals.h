@@ -22,7 +22,8 @@
 //Mutexes
 extern SemaphoreHandle_t sensor_config_file_mutex;
 extern SemaphoreHandle_t sensor_variable_mutex;
-extern SemaphoreHandle_t valve_position_mutex;
+extern SemaphoreHandle_t valve_position_file_mutex;
+extern SemaphoreHandle_t valve_control_data_mutex;
 extern SemaphoreHandle_t date_time_mutex;
 extern SemaphoreHandle_t settings_network_mutex;
 extern SemaphoreHandle_t settings_mqtt_mutex;

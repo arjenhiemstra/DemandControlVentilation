@@ -365,14 +365,13 @@ void Taskwebcode(void *pvParameters) {
   
   //Valve control web pages processing
   server.on("/valvecontrol", HTTP_GET, [](AsyncWebServerRequest *request) {
-    //request->send(LittleFS, "/html/valvecontrol.html", "text/html");
     request->send(LittleFS, "/html/valvecontrol.html", String(), false, valvecontrol_processor);
   });
 
   //Response for POST action in webform valvecontrol manual move valves
   server.on("/valvecontrol", HTTP_POST, [](AsyncWebServerRequest *request) {
-    if (sensor_variable_mutex != NULL) {
-        if(xSemaphoreTake(sensor_variable_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+    if (valve_control_data_mutex != NULL) {
+        if(xSemaphoreTake(valve_control_data_mutex, ( TickType_t ) 10 ) == pdTRUE) {
         int params = request->params();
         for(int i=0;i<params;i++){
           const AsyncWebParameter* p = request->getParam(i);
@@ -554,8 +553,7 @@ void Taskwebcode(void *pvParameters) {
           }
         }
         request->send(LittleFS, "/html/valvecontrol.html", String(), false, valvecontrol_processor);
-        //request->send(LittleFS, "/html/valvecontrol.html", "text/html");
-        xSemaphoreGive(valve_position_mutex);
+        xSemaphoreGive(valve_control_data_mutex);
         xTaskNotifyGive(xTaskGetHandle("task_valvectrl"));
       }
     }
@@ -825,10 +823,6 @@ void Taskwebcode(void *pvParameters) {
     serializeJson(wire1_sensor_data, sensor_config2);
     write_config_file(path2, sensor_config2);
 
-    //Update string to display config file contents after sving config
-    //serializeJson(wire1_sensor_data, wire1_sensor_config_string);
-    
-    //request->send(LittleFS, "/html/sensor_config.html", "text/html");
     request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
   });
 

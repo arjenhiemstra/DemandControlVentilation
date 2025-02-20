@@ -112,10 +112,10 @@ void display_valve_positions(void) {
     lcd.clear();
     lcd.backlight();
     
-    if (valve_position_mutex != NULL) {
-        if(xSemaphoreTake(valve_position_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            status_file_present = check_file_exists(path);
+    status_file_present = check_file_exists(path);
 
+    if (valve_position_file_mutex != NULL) {
+        if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             if (status_file_present == 1) {
 
                 json = read_config_file(path);
@@ -175,7 +175,7 @@ void display_valve_positions(void) {
                 lcd.print(valve11_pos);
 
             }
-            xSemaphoreGive(valve_position_mutex);
+            xSemaphoreGive(valve_position_file_mutex);
             vTaskDelay(5000);
             lcd.clear();
             lcd.noBacklight(); 

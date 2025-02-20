@@ -39,15 +39,25 @@ void move_valve(void) {
     String json;
     JsonDocument doc;
 
-    store_valve_position = valve_control_data["checks"][0];
-    check_valve_position = valve_control_data["checks"][1];
+    if (valve_control_data_mutex != NULL) {
+        if(xSemaphoreTake(valve_control_data_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            store_valve_position = valve_control_data["checks"][0];
+            check_valve_position = valve_control_data["checks"][1];
+            xSemaphoreGive(valve_control_data_mutex);
+        }
+    }
 
     // Read valve status file
     status_file_present = check_file_exists(path);
 
     if (status_file_present == 1) {
+        if (valve_position_file_mutex != NULL) {
+            if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+                json = read_config_file(path);
+                xSemaphoreGive(valve_position_file_mutex);
+            }
+        }
 
-        json = read_config_file(path);
         deserializeJson(doc, json);
   
         String valve0_pos = doc[String("valve0")];
@@ -71,9 +81,15 @@ void move_valve(void) {
 
     for(int i=0;i<12;i++) {
 
-        valve_number = valve_control_data["valve"+String(i)+"_data"][0];
-        valve_position_change = valve_control_data["valve"+String(i)+"_data"][1];
-        direction = valve_control_data["valve"+String(i)+"_data"][2];
+        if (valve_control_data_mutex != NULL) {
+            if(xSemaphoreTake(valve_control_data_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+                valve_number = valve_control_data["valve"+String(i)+"_data"][0];
+                valve_position_change = valve_control_data["valve"+String(i)+"_data"][1];
+                direction = valve_control_data["valve"+String(i)+"_data"][2];
+                xSemaphoreGive(valve_control_data_mutex);
+            }
+        }      
+        
         valve_pos = doc["valve"+String(i)];
 
         Serial.print("\n");
@@ -145,7 +161,12 @@ void move_valve(void) {
     Serial.print(new_valve_positions);
     Serial.print("\n\n");
 
-    write_config_file(path, new_valve_positions);
+    if (valve_position_file_mutex != NULL) {
+        if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+            write_config_file(path, new_valve_positions);
+            xSemaphoreGive(valve_position_file_mutex);
+        }
+    }
 
 }
 
@@ -288,17 +309,93 @@ Data structure for each JSON valve_control_data Structure
 {
     "valve0_data": [valve_vumber,valve move,valvemove_direction],
     "valve1_data": [valve_vumber,valve move,valvemove_direction],
-    "valve2_data": [valve_vumber,valve move,valvemove_direction],
-    ......
     ......
     "valve11_data": [valve_vumber,valve move,valvemove_direction]
 }
 */
+    const char* state_valve_pos_path;
+    bool state_valve_pos_file_present;
+    String state_valve_pos_str;
 
+    JsonDocument state_valve_pos_doc;
 
+    if (statemachine_state_mutex != NULL) {
+        if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            state_valve_pos_path = ("/json/" + state + ".json").c_str();
+            xSemaphoreGive(statemachine_state_mutex);
+        }
+    }
 
+    //Requested valve positions based on valve position settings files
+    state_valve_pos_file_present = check_file_exists(state_valve_pos_path);
 
+    if (state_valve_pos_file_present = 1) {
+        
+        File file = LittleFS.open(state_valve_pos_path, "r");
 
+        while(file.available()) {
+            state_valve_pos_str = file.readString();
+        }
+        file.close();
+        deserializeJson(state_valve_pos_doc, state_valve_pos_str);
+    }
+
+    //Actual valve positions
+    const char* actual_valve_pos_path = "/json/valvepositions.json";
+    bool status_file_present;
+    int move;
+    int direction;
+    int valve_number;
+    int i;
+    
+    String actual_valve_pos_json;
+    JsonDocument actual_valve_pos_doc;
+    
+    status_file_present = check_file_exists(actual_valve_pos_path);
+
+    if (valve_position_file_mutex != NULL) {
+        if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+            if (status_file_present == 1) {
+                actual_valve_pos_json = read_config_file(actual_valve_pos_path);
+            }
+            xSemaphoreGive(valve_position_file_mutex);
+            deserializeJson(actual_valve_pos_doc, actual_valve_pos_json);
+        }
+    }
+
+    for (i=0;i<12;i++) {
+        valve_number = i;
+        if (actual_valve_pos_doc[("valve" + String(i))] >= state_valve_pos_doc[("valve" + String(i))] ) {
+            
+            //valve needs to close with difference. Check if within movements limits is done in move_valve function
+            move = int(actual_valve_pos_doc[("valve" + String(i))]) - int(state_valve_pos_doc[("valve" + String(i))]);
+            direction = 0;
+        }
+        else {
+            //valve needs to open with difference. Check if within movement limits is done in move_valve function
+            move = int(state_valve_pos_doc[("valve" + String(i))]) - int(actual_valve_pos_doc[("valve" + String(i))]);
+            direction = 1;
+        }
+        if (valve_control_data_mutex != NULL) {
+            if(xSemaphoreTake(valve_control_data_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+                valve_control_data["valve"+String(i)+"_data"][0] = valve_number;
+                valve_control_data["valve"+String(i)+"_data"][1] = move;
+                valve_control_data["valve"+String(i)+"_data"][2] = direction;
+                xSemaphoreGive(valve_control_data_mutex);
+            }
+        }
+    }
+    
+    if (valve_control_data_mutex != NULL) {
+        if(xSemaphoreTake(valve_control_data_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            valve_control_data["checks"][0] = 1;
+            valve_control_data["checks"][1] = 1;
+            xSemaphoreGive(valve_control_data_mutex);
+        }
+    }
+
+    //finally the valves can be moved
+    move_valve();
 }
 
 

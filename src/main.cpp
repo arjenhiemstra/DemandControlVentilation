@@ -10,7 +10,7 @@ void setup() {
 
   sensor_config_file_mutex = xSemaphoreCreateMutex();
   sensor_variable_mutex = xSemaphoreCreateMutex();
-  valve_position_mutex = xSemaphoreCreateMutex();
+  valve_position_file_mutex = xSemaphoreCreateMutex();
   date_time_mutex = xSemaphoreCreateMutex();
   settings_network_mutex = xSemaphoreCreateMutex();
   settings_mqtt_mutex = xSemaphoreCreateMutex();
@@ -18,6 +18,7 @@ void setup() {
   settings_fan_mutex = xSemaphoreCreateMutex();
   settings_statemachine_mutex = xSemaphoreCreateMutex();
   statemachine_state_mutex = xSemaphoreCreateMutex();
+  valve_control_data_mutex = xSemaphoreCreateMutex();
 
   // First switch off all outputs which randomly come up at power on
   init_registers();

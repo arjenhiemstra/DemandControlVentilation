@@ -244,8 +244,8 @@ String status_processor(const String& var) {
     String json;
     JsonDocument doc;
     
-    if (valve_position_mutex != NULL) {
-        if(xSemaphoreTake(valve_position_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+    if (valve_position_file_mutex != NULL) {
+        if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             //Serial.print("mutex taken");
             status_file_present = check_file_exists(path);
 
@@ -254,7 +254,7 @@ String status_processor(const String& var) {
                 json = read_config_file(path);
                 deserializeJson(doc, json);
             }
-            xSemaphoreGive(valve_position_mutex);
+            xSemaphoreGive(valve_position_file_mutex);
         }
     }
 

@@ -73,8 +73,8 @@ void publish_valve_data(void) {
 
     client.setServer(mqtt_server, 1883); 
 
-    if (valve_position_mutex != NULL) {
-        if(xSemaphoreTake(valve_position_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+    if (valve_position_file_mutex != NULL) {
+        if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
     
             status_file_present = check_file_exists(path);
 
@@ -83,7 +83,7 @@ void publish_valve_data(void) {
                 json = read_config_file(path);
                 deserializeJson(doc, json);
             }
-            xSemaphoreGive(valve_position_mutex);
+            xSemaphoreGive(valve_position_file_mutex);
         }
     }
 
