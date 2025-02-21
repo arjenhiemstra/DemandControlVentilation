@@ -57,8 +57,12 @@ void read_bus0(void) {
                         DHT1.begin();
                         int status = DHT1.read();
                         
-                        sensor_data[bus][slot][0] = DHT1.getTemperature();
-                        sensor_data[bus][slot][1] = DHT1.getHumidity();
+                        if(status == DHT20_OK) {
+                            sensor_data[bus][slot][0] = DHT1.getTemperature();
+                            sensor_data[bus][slot][1] = DHT1.getHumidity();
+                        }
+
+                        Wire.endTransmission();
 
                         Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type);Serial.print("\t");
                         Serial.print(sensor_data[bus][slot][0]);Serial.print("\t\t\t");
@@ -75,6 +79,8 @@ void read_bus0(void) {
                         
                         sensor_data[bus][slot][0] = temp.temperature;
                         sensor_data[bus][slot][1] = humidity.relative_humidity;
+
+                        Wire.endTransmission();
                         
                         Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type);Serial.print("\t");
                         Serial.print(sensor_data[bus][slot][0]);Serial.print("\t\t\t");
@@ -111,9 +117,19 @@ void read_bus0(void) {
                             Serial.print(sensor_data[bus][slot][1]);Serial.print("\t\t");
                             Serial.print(sensor_data[bus][slot][2]);Serial.print("\n");
                         }
+                        Wire.endTransmission();
                     }
                     else {
-                        Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print("No sensor.\n");
+                        //Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print("No sensor.\n");
+                        
+                        sensor_data[bus][slot][0] = 0;
+                        sensor_data[bus][slot][1] = 0;
+                        sensor_data[bus][slot][2] = 0;
+                        
+                        Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type);Serial.print("\t");
+                        Serial.print(sensor_data[bus][slot][0]);Serial.print("\t\t\t");
+                        Serial.print(sensor_data[bus][slot][1]);Serial.print("\t\t");
+                        Serial.print(sensor_data[bus][slot][2]);Serial.print("\n");
                     }
                 }
             }
@@ -152,8 +168,12 @@ void read_bus1(void) {
                         DHT2.begin();
                         int status = DHT2.read();
                         
-                        sensor_data[bus][slot][0] = DHT2.getTemperature();
-                        sensor_data[bus][slot][1] = DHT2.getHumidity();
+                        if(status == DHT20_OK) {
+                            sensor_data[bus][slot][0] = DHT2.getTemperature();
+                            sensor_data[bus][slot][1] = DHT2.getHumidity();
+                        }
+
+                        Wire1.endTransmission();
                         
                         Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type);Serial.print("\t");
                         Serial.print(sensor_data[bus][slot][0]);Serial.print("\t\t\t");
@@ -170,6 +190,8 @@ void read_bus1(void) {
                         
                         sensor_data[bus][slot][0] = temp.temperature;
                         sensor_data[bus][slot][1] = humidity.relative_humidity;
+
+                        Wire1.endTransmission();
                         
                         Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type);Serial.print("\t");
                         Serial.print(sensor_data[bus][slot][0]);Serial.print("\t\t\t");
@@ -206,9 +228,19 @@ void read_bus1(void) {
                             Serial.print(sensor_data[bus][slot][1]);Serial.print("\t\t");
                             Serial.print(sensor_data[bus][slot][2]);Serial.print("\n");
                         }
+                        Wire1.endTransmission();
                     }
                     else {
-                        Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print("No sensor.\n");
+                        //Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print("No sensor.\n");
+
+                        sensor_data[bus][slot][0] = 0;
+                        sensor_data[bus][slot][1] = 0;
+                        sensor_data[bus][slot][2] = 0;
+                        
+                        Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type);Serial.print("\t");
+                        Serial.print(sensor_data[bus][slot][0]);Serial.print("\t\t\t");
+                        Serial.print(sensor_data[bus][slot][1]);Serial.print("\t\t");
+                        Serial.print(sensor_data[bus][slot][2]);Serial.print("\n");
                     }
                 }
             }
