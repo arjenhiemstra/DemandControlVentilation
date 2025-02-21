@@ -147,7 +147,7 @@ void read_bus1(void) {
     int bus = 1;
 
     if (sensor_variable_mutex != NULL) {
-        if(xSemaphoreTake(sensor_variable_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        if(xSemaphoreTake(sensor_variable_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             
             sensor_config_file_present = check_file_exists(path);
             Serial.println("\n\nBus\tSensor\tType\tTemperature (°C)\tHumidity (%)\tCO2 (ppm)");

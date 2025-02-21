@@ -9,7 +9,7 @@ void write_sensor_data(void) {
     float temp_sensor_data[2][8][3];
 
     if (sensor_variable_mutex != NULL) {
-        if(xSemaphoreTake(sensor_variable_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        if(xSemaphoreTake(sensor_variable_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 8; j++) {
                     for (int k = 0; k < 3; k++) {
@@ -42,10 +42,10 @@ void write_sensor_data(void) {
                 sensor.addTag("device",tag);
                 sensor.addTag("bus",bus);
                 sensor.addField("temperature", temp_sensor_data[i][j][0]);
-                if (temp_sensor_data[i][j][1] > 0) {
+                if (temp_sensor_data[i][j][1] > 5) {
                     sensor.addField("humidity", temp_sensor_data[i][j][1]);
                 }
-                if (temp_sensor_data[i][j][2] > 0) {
+                if (temp_sensor_data[i][j][2] > 5) {
                     sensor.addField("CO2", temp_sensor_data[i][j][2]); 
                 }
                 
