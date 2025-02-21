@@ -42,7 +42,9 @@ void write_sensor_data(void) {
                 String bus = "bus" + String(i);
                 sensor.addTag("device",tag);
                 sensor.addTag("bus",bus);
-                sensor.addField("temperature", temp_sensor_data[i][j][0]);
+                if (temp_sensor_data[i][j][0] > 3) {
+                    sensor.addField("temperature", temp_sensor_data[i][j][0]);
+                }
                 if (temp_sensor_data[i][j][1] > 5) {
                     sensor.addField("humidity", temp_sensor_data[i][j][1]);
                 }
