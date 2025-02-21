@@ -20,6 +20,7 @@ void run_statemachine(void) {
                 }
             }
             xSemaphoreGive(sensor_variable_mutex);
+            vTaskDelay(50);
         }
     }
     

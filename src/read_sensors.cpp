@@ -245,6 +245,7 @@ void read_bus1(void) {
                 }
             }
             xSemaphoreGive(sensor_variable_mutex);
+            vTaskDelay(50);
         }
     }
 }

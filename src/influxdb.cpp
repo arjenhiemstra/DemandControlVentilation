@@ -18,6 +18,7 @@ void write_sensor_data(void) {
                 }
             }
             xSemaphoreGive(sensor_variable_mutex);
+            vTaskDelay(50);
         }
     }
 
@@ -57,7 +58,7 @@ void write_sensor_data(void) {
                     Serial.print("InfluxDB write failed: ");
                     Serial.println(client.getLastErrorMessage());
                 }
-                
+                vTaskDelay(50);
             }
         } 
     }
@@ -81,6 +82,7 @@ void write_valve_position_data(void) {
             if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
                 json = read_config_file(path);
                 xSemaphoreGive(valve_position_file_mutex);
+                vTaskDelay(50);
             }
         }
 
@@ -105,6 +107,7 @@ void write_valve_position_data(void) {
                 Serial.print("InfluxDB write failed: ");
                 Serial.println(client.getLastErrorMessage());
             }
+            vTaskDelay(50);
         }
     }
 }

@@ -140,7 +140,7 @@ const char* STATEMACHINE_CO2_SENSOR = "statemachine_co2_sensor";
 
 void startTaskwebcode(void) {
 
-  xTaskCreatePinnedToCore(Taskwebcode, "Task_web", 10000, NULL, 99, &h_Task_web, 0);
+  xTaskCreatePinnedToCore(Taskwebcode, "Task_web", 10000, NULL, 9, &h_Task_web, 0);
 
 }
 

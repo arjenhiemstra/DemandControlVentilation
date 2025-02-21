@@ -4,7 +4,7 @@ TaskHandle_t task_mqtt;
 
 void start_task_mqtt(void) {
 
-    xTaskCreatePinnedToCore(task_mqtt_code, "taskMQTT", 10000, NULL, 1, &task_mqtt, 0);
+    xTaskCreatePinnedToCore(task_mqtt_code, "taskMQTT", 10000, NULL, 3, &task_mqtt, 0);
 
 }
 

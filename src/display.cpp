@@ -27,7 +27,7 @@ void display_sensors(void) {
     float temp_sensor_data[2][8][3];
 
     if (sensor_variable_mutex != NULL) {
-        if(xSemaphoreTake(sensor_variable_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        if(xSemaphoreTake(sensor_variable_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             vTaskDelay(100);
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 8; j++) {
