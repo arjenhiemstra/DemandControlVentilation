@@ -185,6 +185,7 @@ void display_valve_positions(void) {
 
 void display_time_and_date(void) {
 
+    int64_t uptime;
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
     lcd.init();
 
@@ -212,6 +213,11 @@ void display_time_and_date(void) {
 
             xSemaphoreGive(date_time_mutex);       
         }
+        uptime = esp_timer_get_time();
+        lcd.setCursor(0,3);
+        lcd.print("Uptime: ");
+        lcd.print(uptime/1000000/3600);         // in hours
+        lcd.print(" h");
         vTaskDelay(5000);
         lcd.clear();
     }

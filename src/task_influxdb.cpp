@@ -13,6 +13,7 @@ void task_influxdb_code(void * pvParameters)
         vTaskDelay(30000);
         write_sensor_data();
         write_valve_position_data();
+        write_system_uptime();
     }
   
 }

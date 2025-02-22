@@ -36,7 +36,8 @@ void sync_rtc_ntp(void) {
     
     DateTime now = rtc.now();
 
-    configTime(gmt_offset_sec, daylight_offset_sec, ntp_server);  // Configure time with NTP server
+    //configTime(gmt_offset_sec, daylight_offset_sec, ntp_server);  // Configure time with NTP server
+    configTzTime("CET-1CEST,M3.30.0/2,M10.26.0/3", "pool.ntp.org");
     if (!getLocalTime(&timeinfo)) {
         Serial.println("Failed to obtain time");
         return;

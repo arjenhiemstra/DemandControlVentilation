@@ -23,7 +23,6 @@ void publish_sensor_data(void) {
                 }
             }
             xSemaphoreGive(sensor_variable_mutex);
-            vTaskDelay(50);
         }
     }
 
@@ -147,7 +146,6 @@ void publish_state(void) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             state.toCharArray(temp_state,20);
             xSemaphoreGive(statemachine_state_mutex);
-            vTaskDelay(50);
         }
     }
     

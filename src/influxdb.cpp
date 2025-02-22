@@ -18,7 +18,6 @@ void write_sensor_data(void) {
                 }
             }
             xSemaphoreGive(sensor_variable_mutex);
-            vTaskDelay(50);
         }
     }
 
@@ -60,7 +59,6 @@ void write_sensor_data(void) {
                     Serial.print("InfluxDB write failed: ");
                     Serial.println(client.getLastErrorMessage());
                 }
-                vTaskDelay(50);
             }
         } 
     }
@@ -84,13 +82,12 @@ void write_valve_position_data(void) {
             if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
                 json = read_config_file(path);
                 xSemaphoreGive(valve_position_file_mutex);
-                vTaskDelay(50);
             }
         }
 
         deserializeJson(doc, json);
 
-        Serial.print("Writing valve position data to influxDB.");
+        Serial.println("Writing valve position data to influxDB.");
         for(int i=0;i<12;i++) {
             
             valve_pos_temp = doc["valve"+String(i)];
@@ -101,15 +98,31 @@ void write_valve_position_data(void) {
             sensor.addTag("device",tag);
             sensor.addField("position", valve_pos_temp);
                         
-            //Serial.print("Writing valve data: ");
-            //Serial.println(client.pointToLineProtocol(sensor));
             client.pointToLineProtocol(sensor);
     
             if (!client.writePoint(sensor)) {
                 Serial.print("InfluxDB write failed: ");
                 Serial.println(client.getLastErrorMessage());
             }
-            vTaskDelay(50);
         }
+    }
+}
+
+void write_system_uptime(void) {
+
+    uint64_t uptime;
+
+    InfluxDBClient client(INFLUXDB_URL, INFLUXDB_ORG, INFLUXDB_BUCKET, INFLUXDB_TOKEN);
+    Point sensor("System");
+
+    uptime = (esp_timer_get_time())/1000000;        //in sec
+    sensor.clearFields();
+    sensor.clearTags();
+    //sensor.addTag("system","system");
+    sensor.addField("uptime", uptime);
+    Serial.println("Writing uptime to influxDB.");
+    if (!client.writePoint(sensor)) {
+        Serial.print("InfluxDB write failed: ");
+        Serial.println(client.getLastErrorMessage());
     }
 }

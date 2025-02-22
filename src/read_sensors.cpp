@@ -38,7 +38,7 @@ void read_bus0(void) {
         if(xSemaphoreTake(sensor_variable_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             
             sensor_config_file_present = check_file_exists(path1);
-            Serial.println("\n\nBus\tSensor\tType\tTemperature (°C)\tHumidity (%)\tCO2 (ppm)");
+            Serial.println("\nBus\tSensor\tType\tTemperature (°C)\tHumidity (%)\tCO2 (ppm)");
             if(sensor_config_file_present == 1) {
                 
                 for (int slot=0;slot<8;slot++) {
@@ -62,7 +62,7 @@ void read_bus0(void) {
                             sensor_data[bus][slot][1] = DHT1.getHumidity();
                         }
 
-                        Wire.endTransmission();
+                        //Wire.endTransmission();
 
                         Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type);Serial.print("\t");
                         Serial.print(sensor_data[bus][slot][0]);Serial.print("\t\t\t");
@@ -80,7 +80,7 @@ void read_bus0(void) {
                         sensor_data[bus][slot][0] = temp.temperature;
                         sensor_data[bus][slot][1] = humidity.relative_humidity;
 
-                        Wire.endTransmission();
+                        //Wire.endTransmission();
                         
                         Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type);Serial.print("\t");
                         Serial.print(sensor_data[bus][slot][0]);Serial.print("\t\t\t");
@@ -117,7 +117,7 @@ void read_bus0(void) {
                             Serial.print(sensor_data[bus][slot][1]);Serial.print("\t\t");
                             Serial.print(sensor_data[bus][slot][2]);Serial.print("\n");
                         }
-                        Wire.endTransmission();
+                        //Wire.endTransmission();
                     }
                     else {
                         //Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print("No sensor.\n");
@@ -150,7 +150,7 @@ void read_bus1(void) {
         if(xSemaphoreTake(sensor_variable_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             
             sensor_config_file_present = check_file_exists(path);
-            Serial.println("\n\nBus\tSensor\tType\tTemperature (°C)\tHumidity (%)\tCO2 (ppm)");
+            Serial.println("\nBus\tSensor\tType\tTemperature (°C)\tHumidity (%)\tCO2 (ppm)");
             if(sensor_config_file_present == 1) {
                 for (int slot=0;slot<8;slot++) {
 
@@ -173,7 +173,7 @@ void read_bus1(void) {
                             sensor_data[bus][slot][1] = DHT2.getHumidity();
                         }
 
-                        Wire1.endTransmission();
+                        //Wire1.endTransmission();
                         
                         Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type);Serial.print("\t");
                         Serial.print(sensor_data[bus][slot][0]);Serial.print("\t\t\t");
@@ -191,7 +191,7 @@ void read_bus1(void) {
                         sensor_data[bus][slot][0] = temp.temperature;
                         sensor_data[bus][slot][1] = humidity.relative_humidity;
 
-                        Wire1.endTransmission();
+                        //Wire1.endTransmission();
                         
                         Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type);Serial.print("\t");
                         Serial.print(sensor_data[bus][slot][0]);Serial.print("\t\t\t");
@@ -228,7 +228,7 @@ void read_bus1(void) {
                             Serial.print(sensor_data[bus][slot][1]);Serial.print("\t\t");
                             Serial.print(sensor_data[bus][slot][2]);Serial.print("\n");
                         }
-                        Wire1.endTransmission();
+                        //Wire1.endTransmission();
                     }
                     else {
                         //Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print("No sensor.\n");
@@ -245,7 +245,6 @@ void read_bus1(void) {
                 }
             }
             xSemaphoreGive(sensor_variable_mutex);
-            vTaskDelay(50);
         }
     }
 }

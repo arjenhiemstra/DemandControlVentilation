@@ -11,7 +11,7 @@ void start_task_mqtt(void) {
 void task_mqtt_code(void * pvParameters)
 {
     for(;;) {
-        Serial.println("\n\nUpdate MQTT....");
+        Serial.println("Update MQTT....");
         publish_sensor_data();
         publish_valve_positions();
         publish_uptime();
