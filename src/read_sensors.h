@@ -13,8 +13,8 @@
 #include "config_files.h"
 
 //Function definitions
-void read_bus0(void);
-void read_bus1(void);
+//void read_bus0(void);
+//void read_bus1(void);
 void read_sensors(void);
 
 #endif
