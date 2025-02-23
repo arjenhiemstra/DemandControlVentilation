@@ -284,8 +284,7 @@ String status_processor(const String& var) {
     return (doc[String("valve11")]);
 
     /*Sensor readings part of processor*/
-    float temp_sensor_data[2][8][3];
-    if (sensor_variable_mutex != NULL) {
+    /*if (sensor_variable_mutex != NULL) {
         if(xSemaphoreTake(sensor_variable_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 8; j++) {
@@ -295,6 +294,19 @@ String status_processor(const String& var) {
                 }
             }
             xSemaphoreGive(sensor_variable_mutex);
+        }
+    }*/
+
+    float temp_sensor_data[2][8][3];
+    if( sensor_queue != 0 ) {
+        if (xQueuePeek(sensor_queue, &sensor_data2, ( TickType_t ) 10 )) { 
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 8; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        temp_sensor_data[i][j][k] = sensor_data2[i][j][k];
+                    }
+                }
+            }
         }
     }
 

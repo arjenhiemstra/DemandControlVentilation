@@ -4,7 +4,7 @@ TaskHandle_t task_read_sensors;
 
 void start_task_read_sensors(void) {
 
-    xTaskCreatePinnedToCore(task_read_sensors_code, "taskReadSensors", 20000, NULL, 5, &task_read_sensors, 0);
+    xTaskCreatePinnedToCore(task_read_sensors_code, "taskReadSensors", 20000, NULL, 1, &task_read_sensors, 0);
 
 }
 
@@ -16,7 +16,7 @@ void task_read_sensors_code(void * pvParameters)
         //read_bus0();
         //read_bus1();
         read_sensors();
-        vTaskDelay(20000);
+        vTaskDelay(10000);
     }
   
 }

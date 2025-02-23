@@ -28,21 +28,21 @@ void read_sensors(void) {
     String sensor_type_temp;
     String sensor_address_temp;
           
+    Serial.println("\n\nBus\tSensor\tType\tTemperature (°C)\tHumidity (%)\tCO2 (ppm)");
     for(bus=0;bus<2;bus++) {
         
         if (bus==0) {
-            Wire1.endTransmission();
+            //Wire1.endTransmission();
             Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
             path = "/json/sensor_config1.json";
         }
         if (bus==1) {
-            Wire.endTransmission();
+            //Wire.endTransmission();
             Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
             path = "/json/sensor_config2.json";
         }
         
         sensor_config_file_present = check_file_exists(path);
-        Serial.println("\nBus\tSensor\tType\tTemperature (°C)\tHumidity (%)\tCO2 (ppm)");
         
         if(sensor_config_file_present == 1) {
             for (int slot=0;slot<8;slot++) {
@@ -79,6 +79,7 @@ void read_sensors(void) {
 
                         temp_sensor_data[bus][slot][0] = DHT1.getTemperature();
                         temp_sensor_data[bus][slot][1] = DHT1.getHumidity();
+                        Wire.endTransmission();
                     }
                     if (bus==1) {
                         DHT20 DHT2(&Wire1);
@@ -87,6 +88,7 @@ void read_sensors(void) {
 
                         temp_sensor_data[bus][slot][0] = DHT2.getTemperature();
                         temp_sensor_data[bus][slot][1] = DHT2.getHumidity();
+                        Wire1.endTransmission();
                     }
                     Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type_temp);Serial.print("\t");
                     Serial.print(temp_sensor_data[bus][slot][0]);Serial.print("\t\t\t");
@@ -100,6 +102,7 @@ void read_sensors(void) {
                         AHT20_1.begin();
                         sensors_event_t humidity, temp;
                         AHT20_1.getEvent(&humidity, &temp);
+                        Wire.endTransmission();
                         
                         temp_sensor_data[bus][slot][0] = temp.temperature;
                         temp_sensor_data[bus][slot][1] = humidity.relative_humidity;
@@ -109,6 +112,7 @@ void read_sensors(void) {
                         AHT20_2.begin();
                         sensors_event_t humidity, temp;
                         AHT20_2.getEvent(&humidity, &temp);
+                        Wire1.endTransmission();
                         
                         temp_sensor_data[bus][slot][0] = temp.temperature;
                         temp_sensor_data[bus][slot][1] = humidity.relative_humidity;
@@ -145,6 +149,7 @@ void read_sensors(void) {
                             temp_sensor_data[bus][slot][1] = humidity;
                             temp_sensor_data[bus][slot][2] = co2;
                         }
+                        Wire.endTransmission();
                     }
                     if (bus==1) {
                         SensirionI2cScd4x SCD4X_2;
@@ -169,6 +174,7 @@ void read_sensors(void) {
                             temp_sensor_data[bus][slot][1] = humidity;
                             temp_sensor_data[bus][slot][2] = co2;
                         }
+                        Wire1.endTransmission();
                     }
 
                     Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type_temp);Serial.print("\t");
@@ -189,8 +195,20 @@ void read_sensors(void) {
             }
         }
     }
-    
-    if (sensor_variable_mutex != NULL) {
+
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 8; j++) {
+            for (int k = 0; k < 3; k++) {
+                sensor_data2[i][j][k] = temp_sensor_data[i][j][k];
+            }
+        }
+    }
+
+    if(xQueueOverwrite(sensor_queue, &sensor_data2) != pdPASS){
+        Serial.println("\nno queue space.\n");
+    }
+
+    /*if (sensor_variable_mutex != NULL) {
         if(xSemaphoreTake(sensor_variable_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 8; j++) {
@@ -201,7 +219,7 @@ void read_sensors(void) {
             }
             xSemaphoreGive(sensor_variable_mutex);
         }
-    }
+    }*/
 }
 
 

@@ -21,7 +21,7 @@
 
 //Mutexes
 extern SemaphoreHandle_t sensor_config_file_mutex;
-extern SemaphoreHandle_t sensor_variable_mutex;
+//extern SemaphoreHandle_t sensor_variable_mutex;
 extern SemaphoreHandle_t valve_position_file_mutex;
 extern SemaphoreHandle_t valve_control_data_mutex;
 extern SemaphoreHandle_t date_time_mutex;
@@ -31,6 +31,8 @@ extern SemaphoreHandle_t settings_i2c_mutex;
 extern SemaphoreHandle_t settings_fan_mutex;
 extern SemaphoreHandle_t settings_statemachine_mutex;
 extern SemaphoreHandle_t statemachine_state_mutex;
+
+extern QueueHandle_t sensor_queue;
 
 //Global for valve control data
 extern JsonDocument valve_control_data;
@@ -51,6 +53,7 @@ extern JsonDocument settings_statemachine_data;
 
 //Sensor data arrays for Wire and Wire1
 extern float sensor_data[2][8][3];
+extern float sensor_data2[2][8][3];
 
 extern String wire_sensor_config_string;
 extern String wire1_sensor_config_string;

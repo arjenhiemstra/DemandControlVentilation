@@ -9,7 +9,7 @@ void setup() {
   Serial.begin(115200);
 
   sensor_config_file_mutex = xSemaphoreCreateMutex();
-  sensor_variable_mutex = xSemaphoreCreateMutex();
+  //sensor_variable_mutex = xSemaphoreCreateMutex();
   valve_position_file_mutex = xSemaphoreCreateMutex();
   date_time_mutex = xSemaphoreCreateMutex();
   settings_network_mutex = xSemaphoreCreateMutex();
@@ -19,6 +19,8 @@ void setup() {
   settings_statemachine_mutex = xSemaphoreCreateMutex();
   statemachine_state_mutex = xSemaphoreCreateMutex();
   valve_control_data_mutex = xSemaphoreCreateMutex();
+
+  sensor_queue = xQueueCreate(1, sizeof(sensor_data2));
 
   // First switch off all outputs which randomly come up at power on
   init_registers();
@@ -40,6 +42,7 @@ void setup() {
   start_task_mqtt();
   start_task_influxdb();
   //start_task_system();
+
 }
 
 void loop() { }

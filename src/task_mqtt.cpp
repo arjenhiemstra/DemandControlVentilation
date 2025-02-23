@@ -11,11 +11,11 @@ void start_task_mqtt(void) {
 void task_mqtt_code(void * pvParameters)
 {
     for(;;) {
-        Serial.println("Update MQTT....");
+        Serial.println("\nUpdate MQTT....");
         publish_sensor_data();
-        publish_valve_positions();
+        //publish_valve_positions();
         publish_uptime();
-        publish_state();
+        //publish_state();
         Serial.println("MQTT update done");
         vTaskDelay(20000);
     }

@@ -8,7 +8,7 @@ void write_sensor_data(void) {
     //Copy array to local array with active mutex an then run slow display function without mutex
     float temp_sensor_data[2][8][3];
 
-    if (sensor_variable_mutex != NULL) {
+    /*if (sensor_variable_mutex != NULL) {
         if(xSemaphoreTake(sensor_variable_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             for (int i = 0; i < 2; i++) {
                 Serial.println("\nTemp sensor data for writing to influxdb");
@@ -23,12 +23,28 @@ void write_sensor_data(void) {
             }
             xSemaphoreGive(sensor_variable_mutex);
         }
+    }*/
+
+    //Serial.println("\nTemp sensor data in queue for influxdb:");
+    if( sensor_queue != 0 ) {
+        if (xQueuePeek(sensor_queue, &sensor_data2, ( TickType_t ) 10 )) {  
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 8; j++) {
+                    //Serial.print("\n");
+                    for (int k = 0; k < 3; k++) {
+                        temp_sensor_data[i][j][k] = sensor_data2[i][j][k];
+                        //Serial.print(temp_sensor_data[i][j][k]);
+                        //Serial.print("\t\t");
+                    }
+                }
+            }
+        }
     }
 
     // Check server connection
     if (client.validateConnection()) {
-        Serial.println("Connected to InfluxDB: ");
-        Serial.println(client.getServerUrl());
+        Serial.println("\nConnected to InfluxDB: ");
+        Serial.print(client.getServerUrl());
     } 
     else {
         Serial.print("InfluxDB connection failed: ");
