@@ -11,9 +11,13 @@ void write_sensor_data(void) {
     if (sensor_variable_mutex != NULL) {
         if(xSemaphoreTake(sensor_variable_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             for (int i = 0; i < 2; i++) {
+                Serial.println("\nTemp sensor data for writing to influxdb");
                 for (int j = 0; j < 8; j++) {
+                    Serial.print("\n");
                     for (int k = 0; k < 3; k++) {
                         temp_sensor_data[i][j][k] = sensor_data[i][j][k];
+                        Serial.print(temp_sensor_data[i][j][k]);
+                        Serial.print("\t\t");
                     }
                 }
             }
@@ -23,7 +27,7 @@ void write_sensor_data(void) {
 
     // Check server connection
     if (client.validateConnection()) {
-        Serial.print("Connected to InfluxDB: ");
+        Serial.println("Connected to InfluxDB: ");
         Serial.println(client.getServerUrl());
     } 
     else {
@@ -52,13 +56,14 @@ void write_sensor_data(void) {
                 }
                 
                 //Serial.println("Writing sensor data to influxDB: ");
-                //Serial.println(client.pointToLineProtocol(sensor));
+                Serial.println(client.pointToLineProtocol(sensor));
                 client.pointToLineProtocol(sensor);
         
                 if (!client.writePoint(sensor)) {
                     Serial.print("InfluxDB write failed: ");
                     Serial.println(client.getLastErrorMessage());
                 }
+                vTaskDelay(50);
             }
         } 
     }

@@ -42,10 +42,9 @@ void sync_rtc_ntp(void) {
         Serial.println("Failed to obtain time");
         return;
     }
-    Serial.println("\n\nESP32 Time synchronized with NTP server.\n\n");
-    Serial.print("\nCurrent time: ");
+    Serial.println("ESP32 Time synchronized with NTP server.");
+    Serial.println("Current time: ");
     Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
-    Serial.println("\n");
 
     // Sync the RTC with the NTP time
     rtc.adjust(DateTime(timeinfo.tm_year + 1900, timeinfo.tm_mon + 1, timeinfo.tm_mday, timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec));
