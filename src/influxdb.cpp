@@ -26,8 +26,8 @@ void write_sensor_data(void) {
     }*/
 
     //Serial.println("\nTemp sensor data in queue for influxdb:");
-    if( sensor_queue != 0 ) {
-        if (xQueuePeek(sensor_queue, &sensor_data2, ( TickType_t ) 10 )) {  
+    if( sensor_queue != NULL ) {
+        if (xQueueReceive(sensor_queue, &sensor_data2, ( TickType_t ) 100 ) == pdPASS) {  
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 8; j++) {
                     //Serial.print("\n");
@@ -40,6 +40,10 @@ void write_sensor_data(void) {
             }
         }
     }
+    Serial.print("\nAvailable places in sensor queue: ");
+    Serial.print(uxQueueSpacesAvailable( sensor_queue ));
+    Serial.print("\nMessages waiting in sensor queue: ");
+    Serial.print(uxQueueMessagesWaiting( sensor_queue ));
 
     // Check server connection
     if (client.validateConnection()) {

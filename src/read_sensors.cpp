@@ -204,9 +204,15 @@ void read_sensors(void) {
         }
     }
 
-    if(xQueueOverwrite(sensor_queue, &sensor_data2) != pdPASS){
-        Serial.println("\nno queue space.\n");
+    if(sensor_queue !=0) {
+        if (xQueueSend(sensor_queue, &sensor_data2, (TickType_t) 100) != pdPASS){
+            Serial.println("\nNo queue space for sending data to queue.\n");
+        }
     }
+    Serial.print("\nAvailable places in sensor queue: ");
+    Serial.print(uxQueueSpacesAvailable( sensor_queue ));
+    Serial.print("\nMessages waiting in sensor queue: ");
+    Serial.print(uxQueueMessagesWaiting( sensor_queue ));
 
     /*if (sensor_variable_mutex != NULL) {
         if(xSemaphoreTake(sensor_variable_mutex, ( TickType_t ) 10 ) == pdTRUE) {
