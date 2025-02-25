@@ -26,7 +26,7 @@ void publish_sensor_data(void) {
         }
     }*/
 
-    if( sensor_queue != 0 ) {
+    /*if( sensor_queue != 0 ) {
         if (xQueuePeek(sensor_queue, &sensor_data2, ( TickType_t ) 10 )) { 
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 8; j++) {
@@ -36,7 +36,17 @@ void publish_sensor_data(void) {
                 }
             }
         }
+    }*/
+
+    if( sensor_queue != NULL ) {
+        if (xQueueReceive(sensor_queue, &temp_sensor_data, ( TickType_t ) 100 ) == pdPASS) {  
+        }
     }
+    
+    Serial.print("\nAvailable places in sensor queue: ");
+    Serial.print(uxQueueSpacesAvailable( sensor_queue ));
+    Serial.print("\nMessages waiting in sensor queue: ");
+    Serial.print(uxQueueMessagesWaiting( sensor_queue ));
 
     client.setServer(mqtt_server, mqtt_port);
 

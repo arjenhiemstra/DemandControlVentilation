@@ -297,18 +297,12 @@ String status_processor(const String& var) {
         }
     }*/
 
+    //This code is repeated multiple times so only peek to prevent empty queue
     float temp_sensor_data[2][8][3];
     if( sensor_queue != 0 ) {
-        if (xQueuePeek(sensor_queue, &sensor_data2, ( TickType_t ) 10 )) { 
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 8; j++) {
-                    for (int k = 0; k < 3; k++) {
-                        temp_sensor_data[i][j][k] = sensor_data2[i][j][k];
-                    }
-                }
-            }
+        if (xQueuePeek(sensor_queue, &temp_sensor_data, ( TickType_t ) 10 )) { 
         }
-    }
+    }     
 
     if(var == "BUS0_SENSOR0_TEMP")
         return (String(temp_sensor_data[0][0][0]));
@@ -329,7 +323,7 @@ String status_processor(const String& var) {
     if(var == "BUS0_SENSOR2_CO2")
         return (String(temp_sensor_data[0][2][2]));
     if(var == "BUS0_SENSOR3_TEMP")
-        return (String(sensor_data[0][3][0]));
+        return (String(temp_sensor_data[0][3][0]));
     if(var == "BUS0_SENSOR3_HUM")
         return (String(temp_sensor_data[0][3][1]));
     if(var == "BUS0_SENSOR3_CO2")
