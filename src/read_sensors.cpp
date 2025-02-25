@@ -98,24 +98,28 @@ void read_sensors(void) {
                 
                 else if (sensor_type_temp == "AHT20") {     
                     if (bus==0) {
-                        Adafruit_AHTX0 AHT20_1;
+                        AHT20 AHT20_1;
+                        float humidity;
+                        float temperature;
+
                         AHT20_1.begin();
-                        sensors_event_t humidity, temp;
-                        AHT20_1.getEvent(&humidity, &temp);
+                        AHT20_1.getSensor(&humidity, &temperature);
                         Wire.endTransmission();
                         
-                        temp_sensor_data[bus][slot][0] = temp.temperature;
-                        temp_sensor_data[bus][slot][1] = humidity.relative_humidity;
+                        temp_sensor_data[bus][slot][0] = temperature;
+                        temp_sensor_data[bus][slot][1] = humidity;
                     }
                     if (bus==1) {
-                        Adafruit_AHTX0 AHT20_2;
+                        AHT20 AHT20_2;
+                        float humidity;
+                        float temperature;
+
                         AHT20_2.begin();
-                        sensors_event_t humidity, temp;
-                        AHT20_2.getEvent(&humidity, &temp);
-                        Wire1.endTransmission();
+                        AHT20_2.getSensor(&humidity, &temperature);
+                        Wire.endTransmission();
                         
-                        temp_sensor_data[bus][slot][0] = temp.temperature;
-                        temp_sensor_data[bus][slot][1] = humidity.relative_humidity;
+                        temp_sensor_data[bus][slot][0] = temperature;
+                        temp_sensor_data[bus][slot][1] = humidity;
                     }
 
                     Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type_temp);Serial.print("\t");
