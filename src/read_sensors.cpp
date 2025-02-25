@@ -200,19 +200,27 @@ void read_sensors(void) {
         }
     }
 
-    for (int i = 0; i < 2; i++) {
+    /*for (int i = 0; i < 2; i++) {
         for (int j = 0; j < 8; j++) {
             for (int k = 0; k < 3; k++) {
                 sensor_data2[i][j][k] = temp_sensor_data[i][j][k];
             }
         }
+    }*/
+    
+    //check if transmission is properly done, if not
+    byte busStatus = Wire.endTransmission();
+    if (busStatus != 0x00)
+    {
+        //do not write to queue
     }
 
     if(sensor_queue !=0) {
-        if (xQueueSend(sensor_queue, &sensor_data2, (TickType_t) 100) != pdPASS){
+        if (xQueueSend(sensor_queue, &temp_sensor_data, (TickType_t) 100) != pdPASS){
             Serial.println("\nNo queue space for sending data to queue.\n");
         }
     }
+    
     Serial.print("\nAvailable places in sensor queue: ");
     Serial.print(uxQueueSpacesAvailable( sensor_queue ));
     Serial.print("\nMessages waiting in sensor queue: ");
