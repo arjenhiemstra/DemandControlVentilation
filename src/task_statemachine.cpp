@@ -4,7 +4,7 @@ TaskHandle_t task_statemach;
 
 void start_task_statemachine(void) {
 
-    xTaskCreatePinnedToCore(task_statemachine_code, "task_statemach", 10000, NULL, 9, &task_statemach, 1);
+    xTaskCreate(task_statemachine_code, "task_statemach", 10000, NULL, 9, &task_statemach);
 
 }
 

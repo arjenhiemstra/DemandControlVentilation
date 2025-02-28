@@ -4,7 +4,7 @@ TaskHandle_t task_valvectrl;
 
 void start_task_valvecontrol(void) {
 
-    xTaskCreatePinnedToCore(task_valvecontrol_code, "task_valvectrl", 10000, NULL, 8, &task_valvectrl, 1);
+    xTaskCreate(task_valvecontrol_code, "task_valvectrl", 10000, NULL, 8, &task_valvectrl);
 
 }
 

@@ -4,7 +4,7 @@ TaskHandle_t task_sys;
 
 void start_task_system(void) {
 
-    xTaskCreatePinnedToCore(task_system_code, "taskSystem", 10000, NULL, 1, &task_sys, 0);
+    xTaskCreate(task_system_code, "taskSystem", 10000, NULL, 1, &task_sys);
 
 }
 

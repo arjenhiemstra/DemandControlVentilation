@@ -210,8 +210,8 @@ void read_sensors(void) {
     wire1_status = Wire1.endTransmission();
 
     Serial.print("\n\nSystem uptime: ");
-    Serial.print(esp_timer_get_time()/1000000/3600);
-    Serial.print(" h\n");
+    Serial.print(esp_timer_get_time()/1000000/60);
+    Serial.print(" min\n");
     
     if (wire_status == 0x00 && wire1_status == 0x00)
     {

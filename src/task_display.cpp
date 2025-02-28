@@ -4,7 +4,7 @@ TaskHandle_t task_display;
 
 void start_task_display(void) {
 
-    xTaskCreatePinnedToCore(task_display_code, "taskDisplay", 10000, NULL, 1, &task_display, 1);
+    xTaskCreate(task_display_code, "taskDisplay", 10000, NULL, 1, &task_display);
 
 }
 
