@@ -28,7 +28,7 @@ void read_sensors(void) {
     String sensor_type_temp;
     String sensor_address_temp;
         
-    Serial.println("\n\nBus\tSensor\tType\tTemperature (°C)\tHumidity (%)\tCO2 (ppm)");
+    //Serial.println("\n\nBus\tSensor\tType\tTemperature (°C)\tHumidity (%)\tCO2 (ppm)");
     for(bus=0;bus<2;bus++) {
         
         if (bus==0) {
@@ -92,6 +92,7 @@ void read_sensors(void) {
                     Serial.print(temp_sensor_data[bus][slot][0]);Serial.print("\t\t\t");
                     Serial.print(temp_sensor_data[bus][slot][1]);Serial.print("\t\t");
                     Serial.print(temp_sensor_data[bus][slot][2]);Serial.print("\n");
+                    
                 }
                 
                 else if (sensor_type_temp == "AHT20") {     
@@ -122,6 +123,7 @@ void read_sensors(void) {
                     Serial.print(temp_sensor_data[bus][slot][0]);Serial.print("\t\t\t");
                     Serial.print(temp_sensor_data[bus][slot][1]);Serial.print("\t\t");
                     Serial.print(temp_sensor_data[bus][slot][2]);Serial.print("\n");
+                    
                 }
                 
                 else if (sensor_type_temp == "SCD40" || sensor_type_temp == "SCD41") {
@@ -181,6 +183,7 @@ void read_sensors(void) {
                     Serial.print(temp_sensor_data[bus][slot][0]);Serial.print("\t\t\t");
                     Serial.print(temp_sensor_data[bus][slot][1]);Serial.print("\t\t");
                     Serial.print(temp_sensor_data[bus][slot][2]);Serial.print("\n");
+                    
                 }
                 else {
                     temp_sensor_data[bus][slot][0] = 0.00;
@@ -191,22 +194,38 @@ void read_sensors(void) {
                     Serial.print(temp_sensor_data[bus][slot][0]);Serial.print("\t\t\t");
                     Serial.print(temp_sensor_data[bus][slot][1]);Serial.print("\t\t");
                     Serial.print(temp_sensor_data[bus][slot][2]);Serial.print("\n");
+                    
                 }
             }
         }
     }
+
+    vTaskDelay(100);
    
     //check if transmission is properly done, if not
-    //byte busStatus = Wire.endTransmission();
-    //if (busStatus != 0x00)
-    //{
-        //do something
-    //}
+    byte wire_status;
+    byte wire1_status;
+    
+    wire_status = Wire.endTransmission();
+    wire1_status = Wire1.endTransmission();
 
-    if(sensor_queue !=NULL) {
-        if (xQueueSendToFront(sensor_queue, &temp_sensor_data, (TickType_t) 100) != pdPASS){
-            Serial.println("\nNo queue space for sending data to queue.\n");
+    Serial.print("\n\nSystem uptime: ");
+    Serial.print(esp_timer_get_time()/1000000/3600);
+    Serial.print(" h\n");
+    
+    if (wire_status == 0x00 && wire1_status == 0x00)
+    {
+        if(sensor_queue !=NULL) {
+            if (xQueueSendToFront(sensor_queue, &temp_sensor_data, (TickType_t) 100) != pdPASS){
+                Serial.println("\nNo queue space for sending data to queue.\n");
+            }
         }
+        else {
+            Serial.print("Send - Queue handle is NULL");
+        }
+    }
+    else {
+        Serial.print("I2C communication problem");
     }
     
     Serial.print("\nAvailable places in sensor queue: ");

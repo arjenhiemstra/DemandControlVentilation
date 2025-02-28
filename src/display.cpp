@@ -13,6 +13,7 @@ void display_sensors(void) {
     3 |	C	O	2	:	1	2	0	0	p	p	m					
     */
 
+    float temp_sensor_data[2][8][3];        //local variable to store sensor data from queue
     int slot = 0;
     int bus = 0;
 
@@ -21,37 +22,17 @@ void display_sensors(void) {
     lcd.init();
     lcd.backlight();
     lcd.noAutoscroll();
-    lcd.noCursor();
+    lcd.noCursor();   
 
-    //Copy array to local array with active mutex an then run slow display function without mutex
-    float temp_sensor_data[2][8][3];
-
-    /*if (sensor_variable_mutex != NULL) {
-        if(xSemaphoreTake(sensor_variable_mutex, ( TickType_t ) 100 ) == pdTRUE) {
-            vTaskDelay(100);
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 8; j++) {
-                    for (int k = 0; k < 3; k++) {
-                        temp_sensor_data[i][j][k] = sensor_data[i][j][k];
-                    }
-                }
-            }
-            vTaskDelay(100);
-            xSemaphoreGive(sensor_variable_mutex);
-        }
-    }*/
-
-    if( sensor_queue != 0 ) {
-        if (xQueuePeek(sensor_queue, &sensor_data2, ( TickType_t ) 10 )) {  
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 8; j++) {
-                    for (int k = 0; k < 3; k++) {
-                        temp_sensor_data[i][j][k] = sensor_data2[i][j][k];
-                    }
-                }
-            }
+    if( sensor_queue != NULL ) {
+        if (xQueueReceive(sensor_queue, &temp_sensor_data, ( TickType_t ) 100 ) == pdPASS) {  
         }
     }
+    
+    Serial.print("\nAvailable places in sensor queue: ");
+    Serial.print(uxQueueSpacesAvailable( sensor_queue ));
+    Serial.print("\nMessages waiting in sensor queue: ");
+    Serial.print(uxQueueMessagesWaiting( sensor_queue ));
         
     for (int bus=0;bus<2;bus++)
     {

@@ -12,42 +12,11 @@ void publish_sensor_data(void) {
     int bus;
     int slot;
 
-    //Copy array to local array with active mutex an then run slow display function without mutex
-    /*if (sensor_variable_mutex != NULL) {
-        if(xSemaphoreTake(sensor_variable_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 8; j++) {
-                    for (int k = 0; k < 3; k++) {
-                        temp_sensor_data[i][j][k] = sensor_data[i][j][k];
-                    }
-                }
-            }
-            xSemaphoreGive(sensor_variable_mutex);
-        }
-    }*/
-
-    /*if( sensor_queue != 0 ) {
-        if (xQueuePeek(sensor_queue, &sensor_data2, ( TickType_t ) 10 )) { 
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 8; j++) {
-                    for (int k = 0; k < 3; k++) {
-                        temp_sensor_data[i][j][k] = sensor_data2[i][j][k];
-                    }
-                }
-            }
-        }
-    }*/
-
     if( sensor_queue != NULL ) {
         if (xQueueReceive(sensor_queue, &temp_sensor_data, ( TickType_t ) 100 ) == pdPASS) {  
         }
     }
     
-    Serial.print("\nAvailable places in sensor queue: ");
-    Serial.print(uxQueueSpacesAvailable( sensor_queue ));
-    Serial.print("\nMessages waiting in sensor queue: ");
-    Serial.print(uxQueueMessagesWaiting( sensor_queue ));
-
     client.setServer(mqtt_server, mqtt_port);
 
     if (client.connect("ESP32Client")) {
@@ -181,6 +150,27 @@ void publish_state(void) {
         Serial.println("Could not connect to MQTT server");
     }
 }
+
+void publish_queues(void) {
+    
+    const char* topic;
+    char sensor_queue_status[5];
+    String sensor_queue_status_temp;
+
+    client.setServer(mqtt_server, 1883);
+
+    sensor_queue_status_temp = String(uxQueueMessagesWaiting( sensor_queue )) + "/" + String(uxQueueSpacesAvailable( sensor_queue ));
+
+    if (client.connect("ESP32Client")) {
+        sensor_queue_status_temp.toCharArray(sensor_queue_status,5);
+        topic="OSVentilation/system/sensor_queue_status";
+        client.publish(topic,sensor_queue_status);
+    }
+    else {
+        Serial.println("Could not connect to MQTT server");
+    }
+}
+
 
 void subscribe(void) {
 

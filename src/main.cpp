@@ -40,7 +40,7 @@ void setup() {
   start_task_read_sensors();
   //start_task_display();
   start_task_statemachine();
-  start_task_mqtt();
+  //start_task_mqtt();
   start_task_influxdb();
   //start_task_system();
 

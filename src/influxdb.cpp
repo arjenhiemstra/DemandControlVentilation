@@ -28,23 +28,18 @@ void write_sensor_data(void) {
     //Serial.println("\nTemp sensor data in queue for influxdb:");
     if( sensor_queue != NULL ) {
         if (xQueueReceive(sensor_queue, &temp_sensor_data, ( TickType_t ) 100 ) == pdPASS) {  
-            //for (int i = 0; i < 2; i++) {
-                //for (int j = 0; j < 8; j++) {
-                    //Serial.print("\n");
-                    //for (int k = 0; k < 3; k++) {
-                        //temp_sensor_data[i][j][k] = sensor_data2[i][j][k];
-                        //Serial.print(temp_sensor_data[i][j][k]);
-                        //Serial.print("\t\t");
-                    //}
-                //}
-            //}
         }
     }
+    else {
+        Serial.print("Receive - Queue handle is NULL");
+    }
+    
     Serial.print("\nAvailable places in sensor queue: ");
     Serial.print(uxQueueSpacesAvailable( sensor_queue ));
     Serial.print("\nMessages waiting in sensor queue: ");
     Serial.print(uxQueueMessagesWaiting( sensor_queue ));
 
+    /*
     // Check server connection
     if (client.validateConnection()) {
         Serial.println("\nConnected to InfluxDB: ");
@@ -87,6 +82,7 @@ void write_sensor_data(void) {
             }
         } 
     }
+    */
 }
 
 void write_valve_position_data(void) {
