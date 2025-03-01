@@ -21,7 +21,7 @@ void read_sensors(void) {
     bool sensor_config_file_present;
 
     const char* path;
-    float temp_sensor_data[2][8][3]= {0};    //First write to temp array to keep mutex as short as possible
+    float temp_sensor_data[2][8][3]= {0};
     int bus=0;
 
     String sensor_tmp;
@@ -88,10 +88,10 @@ void read_sensors(void) {
                         temp_sensor_data[bus][slot][1] = DHT2.getHumidity();
                         Wire1.endTransmission();
                     }
-                    Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type_temp);Serial.print("\t");
-                    Serial.print(temp_sensor_data[bus][slot][0]);Serial.print("\t\t\t");
-                    Serial.print(temp_sensor_data[bus][slot][1]);Serial.print("\t\t");
-                    Serial.print(temp_sensor_data[bus][slot][2]);Serial.print("\n");
+                    //Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type_temp);Serial.print("\t");
+                    //Serial.print(temp_sensor_data[bus][slot][0]);Serial.print("\t\t\t");
+                    //Serial.print(temp_sensor_data[bus][slot][1]);Serial.print("\t\t");
+                    //Serial.print(temp_sensor_data[bus][slot][2]);Serial.print("\n");
                     
                 }
                 
@@ -119,10 +119,10 @@ void read_sensors(void) {
                         temp_sensor_data[bus][slot][1] = humidity.relative_humidity;
                     }
 
-                    Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type_temp);Serial.print("\t");
-                    Serial.print(temp_sensor_data[bus][slot][0]);Serial.print("\t\t\t");
-                    Serial.print(temp_sensor_data[bus][slot][1]);Serial.print("\t\t");
-                    Serial.print(temp_sensor_data[bus][slot][2]);Serial.print("\n");
+                    //Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type_temp);Serial.print("\t");
+                    //Serial.print(temp_sensor_data[bus][slot][0]);Serial.print("\t\t\t");
+                    //Serial.print(temp_sensor_data[bus][slot][1]);Serial.print("\t\t");
+                    //Serial.print(temp_sensor_data[bus][slot][2]);Serial.print("\n");
                     
                 }
                 
@@ -179,10 +179,10 @@ void read_sensors(void) {
                         Wire1.endTransmission();
                     }
 
-                    Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type_temp);Serial.print("\t");
-                    Serial.print(temp_sensor_data[bus][slot][0]);Serial.print("\t\t\t");
-                    Serial.print(temp_sensor_data[bus][slot][1]);Serial.print("\t\t");
-                    Serial.print(temp_sensor_data[bus][slot][2]);Serial.print("\n");
+                    //Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type_temp);Serial.print("\t");
+                    //Serial.print(temp_sensor_data[bus][slot][0]);Serial.print("\t\t\t");
+                    //Serial.print(temp_sensor_data[bus][slot][1]);Serial.print("\t\t");
+                    //Serial.print(temp_sensor_data[bus][slot][2]);Serial.print("\n");
                     
                 }
                 else {
@@ -190,10 +190,10 @@ void read_sensors(void) {
                     temp_sensor_data[bus][slot][1] = 0.00;
                     temp_sensor_data[bus][slot][2] = 0.00;
                     
-                    Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type_temp);Serial.print("\t");
-                    Serial.print(temp_sensor_data[bus][slot][0]);Serial.print("\t\t\t");
-                    Serial.print(temp_sensor_data[bus][slot][1]);Serial.print("\t\t");
-                    Serial.print(temp_sensor_data[bus][slot][2]);Serial.print("\n");
+                    //Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type_temp);Serial.print("\t");
+                    //Serial.print(temp_sensor_data[bus][slot][0]);Serial.print("\t\t\t");
+                    //Serial.print(temp_sensor_data[bus][slot][1]);Serial.print("\t\t");
+                    //Serial.print(temp_sensor_data[bus][slot][2]);Serial.print("\n");
                     
                 }
             }
@@ -232,18 +232,5 @@ void read_sensors(void) {
     Serial.print(uxQueueSpacesAvailable( sensor_queue ));
     Serial.print("\nMessages waiting in sensor queue: ");
     Serial.print(uxQueueMessagesWaiting( sensor_queue ));
-
-    /*if (sensor_variable_mutex != NULL) {
-        if(xSemaphoreTake(sensor_variable_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 8; j++) {
-                    for (int k = 0; k < 3; k++) {
-                        sensor_data[i][j][k] = temp_sensor_data[i][j][k];
-                    }
-                }
-            }
-            xSemaphoreGive(sensor_variable_mutex);
-        }
-    }*/
 }
 
