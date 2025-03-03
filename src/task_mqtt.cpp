@@ -14,8 +14,8 @@ void task_mqtt_code(void * pvParameters)
         Serial.println("\nUpdate MQTT....");
         publish_sensor_data();
         //publish_valve_positions();
-        publish_uptime();
-        publish_queues();
+        //publish_uptime();
+        //publish_queues();
         //publish_state();
         Serial.println("MQTT update done");
         vTaskDelay(20000);

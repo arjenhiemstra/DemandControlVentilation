@@ -8,14 +8,24 @@ void publish_sensor_data(void) {
     String measurement;
     char topic[200];
     char sensor_value[8];
-    float temp_sensor_data[2][8][3];
+    float queque_sensor_data[2][8][3];
     int bus;
     int slot;
 
     if( sensor_queue != NULL ) {
-        if (xQueueReceive(sensor_queue, &temp_sensor_data, ( TickType_t ) 100 ) == pdPASS) {  
+        if (xQueueReceive(sensor_queue, &queque_sensor_data, ( TickType_t ) 0 ) == pdPASS) {  
         }
     }
+    else {
+        Serial.print("\n\nReceive - Queue handle is NULL");
+    }
+
+    vTaskDelay(100);
+    
+    Serial.print("\nAvailable places in sensor queue: ");
+    Serial.print(uxQueueSpacesAvailable( sensor_queue ));
+    Serial.print("\nMessages waiting in sensor queue: ");
+    Serial.print(uxQueueMessagesWaiting( sensor_queue ));
     
     client.setServer(mqtt_server, mqtt_port);
 
@@ -23,24 +33,24 @@ void publish_sensor_data(void) {
         for (int bus=0;bus<2;bus++) {
             for (int slot=0;slot<8;slot++) {
                         
-                if (temp_sensor_data[bus][slot][0] > 2 )  {
+                if (queque_sensor_data[bus][slot][0] > 2 )  {
                     measurement = "/temperature";
                     ("OSVentilation/bus/" + String(bus) + "/sensor" + String(slot) + measurement).toCharArray(topic,200);
-                    String(temp_sensor_data[bus][slot][0]).toCharArray(sensor_value,8);
+                    String(queque_sensor_data[bus][slot][0]).toCharArray(sensor_value,8);
                     client.publish(topic, sensor_value);
                 }
 
-                if (temp_sensor_data[bus][slot][1] > 2 )  {
+                if (queque_sensor_data[bus][slot][1] > 2 )  {
                     measurement = "/humidity";
                     ("OSVentilation/bus/" + String(bus) + "/sensor" + String(slot) + measurement).toCharArray(topic,200);
-                    String(temp_sensor_data[bus][slot][1]).toCharArray(sensor_value,8);
+                    String(queque_sensor_data[bus][slot][1]).toCharArray(sensor_value,8);
                     client.publish(topic, sensor_value);
                 }
 
-                if (temp_sensor_data[bus][slot][2] > 2 )  {
+                if (queque_sensor_data[bus][slot][2] > 2 )  {
                     measurement = "/CO2";
                     ("OSVentilation/bus/" + String(bus) + "/sensor" + String(slot) + measurement).toCharArray(topic,200);
-                    String(temp_sensor_data[bus][slot][2]).toCharArray(sensor_value,8);
+                    String(queque_sensor_data[bus][slot][2]).toCharArray(sensor_value,8);
                     client.publish(topic, sensor_value);
                 }
             }
