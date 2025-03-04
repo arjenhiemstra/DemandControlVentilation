@@ -200,7 +200,7 @@ void read_sensors(void) {
         }
     }
 
-    vTaskDelay(100);
+    vTaskDelay(200);
    
     //check if transmission is properly done, if not
     byte wire_status;
