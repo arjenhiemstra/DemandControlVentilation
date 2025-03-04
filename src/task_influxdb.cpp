@@ -4,7 +4,7 @@ TaskHandle_t task_influxdb;
 
 void start_task_influxdb(void) {
 
-    xTaskCreate(task_influxdb_code, "task_influxdb", 10000, NULL, 2, &task_influxdb);
+    xTaskCreate(task_influxdb_code, "task_influxdb", 10000, NULL, 3, &task_influxdb);
 }
 
 void task_influxdb_code(void * pvParameters)
