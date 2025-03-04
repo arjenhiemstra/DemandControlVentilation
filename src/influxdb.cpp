@@ -10,11 +10,6 @@ void write_sensor_data(void) {
     
     //Serial.println("\nTemp sensor data in queue for influxdb:");
     if (xQueueReceive(sensor_queue, &queque_sensor_data, 0) == pdTRUE) {     
-   
-        Serial.print("\nAvailable places in sensor queue: ");
-        Serial.print(uxQueueSpacesAvailable( sensor_queue ));
-        Serial.print("\nMessages waiting in sensor queue: ");
-        Serial.print(uxQueueMessagesWaiting( sensor_queue ));
 
         Serial.println("\n\nBus\tSensor\tTemperature (°C)\tHumidity (%)\tCO2 (ppm)");
         for (int i = 0; i < 2; i++) {
@@ -74,6 +69,10 @@ void write_sensor_data(void) {
             Serial.print(client.getLastErrorMessage());
         }
     }
+    Serial.print("\nAvailable places in sensor queue: ");
+    Serial.print(uxQueueSpacesAvailable( sensor_queue ));
+    Serial.print("\nMessages waiting in sensor queue: ");
+    Serial.print(uxQueueMessagesWaiting( sensor_queue ));
 }
 
 void write_valve_position_data(void) {

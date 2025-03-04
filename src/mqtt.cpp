@@ -13,12 +13,7 @@ void publish_sensor_data(void) {
     int slot;
 
     if (xQueueReceive(sensor_queue, &queque_sensor_data, 0 ) == pdTRUE) {  
-
-        Serial.print("\nAvailable places in sensor queue: ");
-        Serial.print(uxQueueSpacesAvailable( sensor_queue ));
-        Serial.print("\nMessages waiting in sensor queue: ");
-        Serial.print(uxQueueMessagesWaiting( sensor_queue ));
-        
+       
         client.setServer(mqtt_server, mqtt_port);
 
         if (client.connect("ESP32Client")) {
@@ -52,6 +47,10 @@ void publish_sensor_data(void) {
             Serial.print("Could not connect to MQTT server");
         }
     }
+    Serial.print("\nAvailable places in sensor queue: ");
+    Serial.print(uxQueueSpacesAvailable( sensor_queue ));
+    Serial.print("\nMessages waiting in sensor queue: ");
+    Serial.print(uxQueueMessagesWaiting( sensor_queue ));
 }
 
 void publish_valve_positions(void) {
