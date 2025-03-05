@@ -13,7 +13,7 @@ void task_statemachine_code(void * pvParameters)
   init_statemachine();
   for (;;) { 
     vTaskDelay(30000);
-    Serial.print("\n\nLocal time is: ");
+    //Serial.print("\n\nLocal time is: ");
     //current_time();
     //run_statemachine();
   }

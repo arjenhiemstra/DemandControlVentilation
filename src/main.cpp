@@ -37,7 +37,8 @@ void setup() {
   sensor_config_data_read();
   startTaskwebcode();
   start_task_valvecontrol();
-  start_task_read_sensors();
+  start_task_i2c();
+  //start_task_read_sensors();
   //start_task_display();
   start_task_statemachine();
   start_task_mqtt();

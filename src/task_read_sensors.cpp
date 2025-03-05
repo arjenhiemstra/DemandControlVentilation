@@ -11,7 +11,7 @@ void start_task_read_sensors(void) {
 void task_read_sensors_code(void * pvParameters)
 {
     for(;;) {
-        read_sensors();
+        //read_sensors();
         vTaskDelay(5000);
     }
   

@@ -1,8 +1,8 @@
 #include "display.h"
 
-LiquidCrystal_I2C lcd(LCDADDR, LCD_COLUMNS, LCD_ROWS);
+//LiquidCrystal_I2C lcd(LCDADDR, LCD_COLUMNS, LCD_ROWS);
 
-void display_sensors(void) {
+//void display_sensors(void) {
 
     /*
         0 	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15  16  17  18  19
@@ -13,7 +13,7 @@ void display_sensors(void) {
     3 |	C	O	2	:	1	2	0	0	p	p	m					
     */
 
-    float queue_sensor_data[2][8][3];        //local variable to store sensor data from queue
+    /*float queue_sensor_data[2][8][3];        //local variable to store sensor data from queue
     int slot = 0;
     int bus = 0;
 
@@ -75,9 +75,9 @@ void display_sensors(void) {
     Serial.print(uxQueueSpacesAvailable( sensor_queue ));
     Serial.print("\nMessages waiting in sensor queue: ");
     Serial.print(uxQueueMessagesWaiting( sensor_queue ));
-}
+}*/
 
-void display_valve_positions(void) {
+//void display_valve_positions(void) {
 
     /* Display layout
 
@@ -90,7 +90,7 @@ void display_valve_positions(void) {
     
     */
       
-    const char* path = "/json/valvepositions.json";
+    /*const char* path = "/json/valvepositions.json";
     bool status_file_present;
     String json;
     JsonDocument doc;
@@ -210,3 +210,5 @@ void display_time_and_date(void) {
         lcd.clear();
     }
 }
+
+*/
