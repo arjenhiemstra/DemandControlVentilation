@@ -1,7 +1,7 @@
 #include "statemachine.h"
 
 String new_state = "0";
-
+float statemachine_sensor_data[2][8][3];
 
 void init_statemachine(void) {
     state = "init";
@@ -9,39 +9,15 @@ void init_statemachine(void) {
 
 void run_statemachine(void) {
 
-    
-
-    //Copy array to local array with active mutex an then run slow display function without mutex
-    /*if (sensor_variable_mutex != NULL) {
-        if(xSemaphoreTake(sensor_variable_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 8; j++) {
-                    for (int k = 0; k < 3; k++) {
-                        temp_sensor_data[i][j][k] = sensor_data[i][j][k];
-                    }
-                }
-            }
-            xSemaphoreGive(sensor_variable_mutex);
-            vTaskDelay(50);
-        }
-    }*/
-
-    Serial.println("\nTemp sensor data in queue for statemachine:");
-    float temp_sensor_data[2][8][3];
-    if( sensor_queue != 0 ) {
-        if (xQueuePeek(sensor_queue, &sensor_data2, ( TickType_t ) 10 )) {  
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 8; j++) {
-                    Serial.print("\n");
-                    for (int k = 0; k < 3; k++) {
-                        temp_sensor_data[i][j][k] = sensor_data2[i][j][k];
-                        Serial.print(temp_sensor_data[i][j][k]);
-                        Serial.print("\t\t");
-                    }
-                }
-            }
-        }
+    Serial.print("\nRead sensor data from queue for statemachine.");
+    if (xQueueReceive(sensor_queue, &statemachine_sensor_data, 0 ) == pdTRUE) {
+        //No action, just put data in variable?
     }
+
+    Serial.print("\nAvailable places in sensor queue: ");
+    Serial.print(uxQueueSpacesAvailable( sensor_queue ));
+    Serial.print("\nMessages waiting in sensor queue: ");
+    Serial.print(uxQueueMessagesWaiting( sensor_queue ));
     
     if (state == "init") {
         init_transitions();
@@ -134,7 +110,7 @@ void day_transitions(void) {
         }
     }
 
-    float temp_sensor_data[2][8][3];
+    /*float temp_sensor_data[2][8][3];
     if( sensor_queue != 0 ) {
         if (xQueuePeek(sensor_queue, &sensor_data2, ( TickType_t ) 10 )) {  
             for (int i = 0; i < 2; i++) {
@@ -145,7 +121,7 @@ void day_transitions(void) {
                 }
             }
         }
-    }
+    }*/
 
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
@@ -157,12 +133,12 @@ void day_transitions(void) {
         new_state = "night";
     }
     //Assuming that CO2 sensor is on slot 2 of bus 1. CO2 has priority over others
-    else if (temp_sensor_data[1][2][2] > 1000) {
+    else if (statemachine_sensor_data[1][2][2] > 1000) {
         Serial.println("It's day and high CO2. Transit to high_co2_day state");
         new_state = "high_co2_day";
     }
     //Assuming TH is on slot 0 of bus 0
-    /*else if (temp_sensor_data[0][0][1] > 85) {
+    /*else if (statemachine_sensor_data[0][0][1] > 85) {
         Serial.print("It's day and high RH. Transit to high_rh_day state.");
         new_state = "high_rh_day";
     }
@@ -198,19 +174,6 @@ void night_transitions(void) {
         }
     }
 
-    float temp_sensor_data[2][8][3];
-    if( sensor_queue != 0 ) {
-        if (xQueuePeek(sensor_queue, &sensor_data2, ( TickType_t ) 10 )) {  
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 8; j++) {
-                    for (int k = 0; k < 3; k++) {
-                        temp_sensor_data[i][j][k] = sensor_data2[i][j][k];
-                    }
-                }
-            }
-        }
-    }
-
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
     // valves in default position
@@ -224,12 +187,12 @@ void night_transitions(void) {
         Serial.println("It is after 9, before 21 and weekend. Transit to day");
         new_state = "day";
     }
-    else if (temp_sensor_data[1][2][2] > 1000) {
+    else if (statemachine_sensor_data[1][2][2] > 1000) {
         Serial.println("It is and CO2 level is high. Transit to high_co2_night");
         new_state = "high_co2_night";
     }
     //Assuming RH sensor is on slot 0 of bus 0
-    /*else if (temp_sensor_data[0][0][1] > 85) {
+    /*else if (statemachine_sensor_data[0][0][1] > 85) {
         Serial.print("It's night and high RH. Transit to high high_rh_night.");
         new_state = "high_rh_day";
     }
@@ -261,25 +224,12 @@ void high_co2_day_transitions(void) {
         }
     }
 
-    float temp_sensor_data[2][8][3];
-    if( sensor_queue != 0 ) {
-        if (xQueuePeek(sensor_queue, &sensor_data2, ( TickType_t ) 10 )) { 
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 8; j++) {
-                    for (int k = 0; k < 3; k++) {
-                        temp_sensor_data[i][j][k] = sensor_data2[i][j][k];
-                    }
-                }
-            }
-        }
-    }
-
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
     // valves in default position
 
     // Conditions for transition
-    if (temp_sensor_data[1][2][2] < 800) {
+    if (statemachine_sensor_data[1][2][2] < 800) {
         Serial.println("It is day and CO2 level is low enough. Transit to day.");
         new_state = "day";
     }
@@ -310,19 +260,6 @@ void high_co2_night_transitions(void) {
         }
     }
 
-    float temp_sensor_data[2][8][3];
-    if( sensor_queue != 0 ) {
-        if (xQueuePeek(sensor_queue, &sensor_data2, ( TickType_t ) 10 )) { 
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 8; j++) {
-                    for (int k = 0; k < 3; k++) {
-                        temp_sensor_data[i][j][k] = sensor_data2[i][j][k];
-                    }
-                }
-            }
-        }
-    }
-
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
     // valves in default position
@@ -336,7 +273,7 @@ void high_co2_night_transitions(void) {
         Serial.println("It is after 8, before 21 and weekend. Transit to high_co2_day.");
         new_state = "high_co2_day";
     }
-    else if (temp_sensor_data[1][2][2] < 800) {
+    else if (statemachine_sensor_data[1][2][2] < 800) {
         Serial.println("It is night and CO2 level is low enough. Transit to night.");
         new_state = "night";
     }
@@ -363,25 +300,12 @@ void high_rh_day_transitions(void) {
         }
     }
 
-    float temp_sensor_data[2][8][3];
-    if( sensor_queue != 0 ) {
-        if (xQueuePeek(sensor_queue, &sensor_data2, ( TickType_t ) 10 )) { 
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 8; j++) {
-                    for (int k = 0; k < 3; k++) {
-                        temp_sensor_data[i][j][k] = sensor_data2[i][j][k];
-                    }
-                }
-            }
-        }
-    }
-
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
     // valves in default position
 
     // Conditions for transition
-    if (temp_sensor_data[0][0][1] < 70) {
+    if (statemachine_sensor_data[0][0][1] < 70) {
         Serial.println("It's night and high RH. Transit to day");
         new_state = "day";
     }
@@ -412,25 +336,12 @@ void high_rh_night_transitions(void) {
         }
     }
 
-    float temp_sensor_data[2][8][3];
-    if( sensor_queue != 0 ) {
-        if (xQueuePeek(sensor_queue, &sensor_data2, ( TickType_t ) 10 )) { 
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 8; j++) {
-                    for (int k = 0; k < 3; k++) {
-                        temp_sensor_data[i][j][k] = sensor_data2[i][j][k];
-                    }
-                }
-            }
-        }
-    }
-
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
     // valves in default position
 
     // Conditions for transition
-    if (temp_sensor_data[0][0][1] < 70) {
+    if (statemachine_sensor_data[0][0][1] < 70) {
         Serial.println("It's night and RH is low enough. Transit to night.");
         new_state = "night";
     }
@@ -496,19 +407,6 @@ void valve_cycle_day_transitions(void) {
         }
     }
 
-    float temp_sensor_data[2][8][3];
-    if( sensor_queue != 0 ) {
-        if (xQueuePeek(sensor_queue, &sensor_data2, ( TickType_t ) 10 )) {  
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 8; j++) {
-                    for (int k = 0; k < 3; k++) {
-                        temp_sensor_data[i][j][k] = sensor_data2[i][j][k];
-                    }
-                }
-            }
-        }
-    }
-
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
     // valves in default position
@@ -518,11 +416,11 @@ void valve_cycle_day_transitions(void) {
         Serial.println("It's not valve cycle time. Transit to day");
         new_state = "day";
     }
-    else if (temp_sensor_data[0][0][1] > 85) {
+    else if (statemachine_sensor_data[0][0][1] > 85) {
         Serial.println("It's day and high RH. Transit to high_rh_day state.");
         new_state = "high_rh_day";
     }
-    else if (temp_sensor_data[1][2][2] > 1000) {
+    else if (statemachine_sensor_data[1][2][2] > 1000) {
         Serial.println("It is valve_cycle_day and CO2 level is high. Transit to high_co2_day");
         new_state = "high_co2_day";
     }
@@ -549,19 +447,6 @@ void valve_cycle_night_transitions(void) {
         }
     }
 
-    float temp_sensor_data[2][8][3];
-    if( sensor_queue != 0 ) {
-        if (xQueuePeek(sensor_queue, &sensor_data2, ( TickType_t ) 10 )) {  
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 8; j++) {
-                    for (int k = 0; k < 3; k++) {
-                        temp_sensor_data[i][j][k] = sensor_data2[i][j][k];
-                    }
-                }
-            }
-        }
-    }
-
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
     // valves in default position
@@ -571,11 +456,11 @@ void valve_cycle_night_transitions(void) {
         Serial.println("It's not valve_cycle time. Transit to night");
         new_state = "night";
     }
-    else if (temp_sensor_data[0][0][1] > 85) {
+    else if (statemachine_sensor_data[0][0][1] > 85) {
         Serial.println("It's valve_cycle_day and high RH. Transit to high_rh_day state.");
         new_state = "high_rh_night";
     }
-    else if (temp_sensor_data[1][2][2] > 1000) {
+    else if (statemachine_sensor_data[1][2][2] > 1000) {
         Serial.println("It is valve_cycle_night and CO2 level is high. Transit to high_co2_night");
         new_state = "high_co2_night";
     }

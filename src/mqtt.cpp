@@ -156,23 +156,33 @@ void publish_state(void) {
 void publish_queues(void) {
     
     const char* topic;
-    char sensor_queue_status[5];
-    String sensor_queue_status_temp;
+    char sensor_queue_waiting[5];
+    char sensor_queue_space_avail[5];
+    String sensor_queue_waiting_str;
+    String sensor_queue_space_avail_str;
 
     client.setServer(mqtt_server, 1883);
 
-    sensor_queue_status_temp = String(uxQueueMessagesWaiting( sensor_queue )) + "/" + String(uxQueueSpacesAvailable( sensor_queue ));
+    sensor_queue_waiting_str = String(uxQueueMessagesWaiting(sensor_queue));
+    sensor_queue_space_avail_str = String(uxQueueSpacesAvailable( sensor_queue ));
 
     if (client.connect("ESP32Client")) {
-        sensor_queue_status_temp.toCharArray(sensor_queue_status,5);
-        topic="OSVentilation/system/sensor_queue_status";
-        client.publish(topic,sensor_queue_status);
+        sensor_queue_waiting_str.toCharArray(sensor_queue_waiting,5);
+        topic="OSVentilation/system/queue_sensor_data_waiting";
+        client.publish(topic,sensor_queue_waiting);
+
+        vTaskDelay(50);
+
+        sensor_queue_space_avail_str.toCharArray(sensor_queue_space_avail,5);
+        topic="OSVentilation/system/queue_sensor_data_space_avail";
+        client.publish(topic,sensor_queue_space_avail);
+
     }
     else {
         Serial.println("Could not connect to MQTT server");
     }
+    
 }
-
 
 void subscribe(void) {
 
