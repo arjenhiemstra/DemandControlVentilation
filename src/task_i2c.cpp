@@ -30,6 +30,7 @@ void task_i2c_code(void * pvParameters)
         if (rtc_time_multiplier == 4) {         //4 * 5 seconds
             Serial.print("\n\nLocal time is: ");
             current_time();
+            rtc_time_multiplier = 0;
         }
         
     }

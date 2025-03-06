@@ -1,19 +1,3 @@
-/*
-This sensor interacts with the sensors and writes the values to a global variable. The input for 
-this function is the sensors config file which is stored in LittleFS. The measured values must be
-stored in a global variable so other tasks, e.g. statemachine, web inteface, MQTT communication can use this data. 
-Permanent storage of measured data is not required so a two dimensional array would be most suitable
-which is in memory only.
-
-Note that not all sensors have CO2 measurement so the mesasured value stays 0 (as array is initialised with zeros)
-
-Sequence:
-
-1. Read sensor config file
-2. Get measurement data from sensors
-3. Write measured values to varaible
-*/
-
 #include "i2c.h"
 
 LiquidCrystal_I2C lcd(LCDADDR, LCD_COLUMNS, LCD_ROWS);

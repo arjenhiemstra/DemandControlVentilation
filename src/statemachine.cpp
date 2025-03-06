@@ -60,11 +60,13 @@ void run_statemachine(void) {
 
 void init_transitions(void) {
 
-    Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
-    rtc.begin(&Wire);
+    //Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
+    //rtc.begin(&Wire);
 
-    DateTime now = rtc.now();
+    //DateTime now = rtc.now();
     String fanspeed = "low";
+    int temp_hour;
+    int temp_day_of_week;
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
@@ -74,16 +76,24 @@ void init_transitions(void) {
         }
     }
 
+    if (date_time_mutex != NULL) {
+        if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            temp_hour = hourStr.toInt();
+            temp_day_of_week = dayOfWeek.toInt();
+            xSemaphoreGive(date_time_mutex);
+        }
+    }
+
     //valve_position_statemachine();
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed); 
 
     // Conditions to transit to other state
-     if (now.hour() >= 8 && now.hour() < 21 && now.dayOfTheWeek() != 0 && now.dayOfTheWeek() != 6)  {
+     if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != 0 && temp_day_of_week != 6)  {
         Serial.println("\nIt is after 7, before 21 and a weekday. Transit to day.");
         new_state = "day";
     }
-    else if (now.hour() >= 9 && now.hour() < 21 && (now.dayOfTheWeek() == 0 || now.dayOfTheWeek() == 6)) {
+    else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == 0 || temp_day_of_week == 6)) {
         Serial.println("\nIt is after 8 and before 21 and weekend. Transit to day.");
         new_state = "day";
     }
@@ -109,19 +119,6 @@ void day_transitions(void) {
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
-
-    /*float temp_sensor_data[2][8][3];
-    if( sensor_queue != 0 ) {
-        if (xQueuePeek(sensor_queue, &sensor_data2, ( TickType_t ) 10 )) {  
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 8; j++) {
-                    for (int k = 0; k < 3; k++) {
-                        temp_sensor_data[i][j][k] = sensor_data2[i][j][k];
-                    }
-                }
-            }
-        }
-    }*/
 
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
