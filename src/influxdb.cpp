@@ -9,22 +9,8 @@ void write_sensor_data(void) {
     float queque_sensor_data[2][8][3];
     
     //Serial.println("\nTemp sensor data in queue for influxdb:");
-    if (xQueueReceive(sensor_queue, &queque_sensor_data, 0) == pdTRUE) {     
-
-        Serial.println("\n\nBus\tSensor\tTemperature (°C)\tHumidity (%)\tCO2 (ppm)");
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 8; j++) {
-                Serial.print("\n");
-                Serial.print(i);
-                Serial.print("\t");
-                Serial.print(j);
-                Serial.print("\t");
-                for (int k = 0; k < 3; k++) {
-                    Serial.print(queque_sensor_data[i][j][k]);
-                    Serial.print("\t\t");
-                }
-            }
-        }
+    //if (xQueueReceive(sensor_queue, &queque_sensor_data, 0) == pdTRUE) {
+    if (xQueuePeek(sensor_queue, &queque_sensor_data, 0) == pdTRUE) {     
     
         // Check server connection. Only write data when connected.
         if (client.validateConnection()) {
@@ -69,10 +55,6 @@ void write_sensor_data(void) {
             Serial.print(client.getLastErrorMessage());
         }
     }
-    Serial.print("\nAvailable places in sensor queue: ");
-    Serial.print(uxQueueSpacesAvailable( sensor_queue ));
-    Serial.print("\nMessages waiting in sensor queue: ");
-    Serial.print(uxQueueMessagesWaiting( sensor_queue ));
 }
 
 void write_valve_position_data(void) {
@@ -98,7 +80,7 @@ void write_valve_position_data(void) {
 
         deserializeJson(doc, json);
 
-        Serial.println("Writing valve position data to influxDB.");
+        Serial.print("\nWriting valve position data to influxDB.");
         for(int i=0;i<12;i++) {
             
             valve_pos_temp = doc["valve"+String(i)];
@@ -131,9 +113,10 @@ void write_system_uptime(void) {
     sensor.clearTags();
     //sensor.addTag("system","system");
     sensor.addField("uptime", uptime);
-    Serial.println("Writing uptime to influxDB.");
+    Serial.print("\nWriting uptime to influxDB.");
     if (!client.writePoint(sensor)) {
-        Serial.print("InfluxDB write failed: ");
-        Serial.println(client.getLastErrorMessage());
+        Serial.print("\nInfluxDB write failed: ");
+        Serial.print(client.getLastErrorMessage());
     }
 }
+

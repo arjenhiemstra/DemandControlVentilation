@@ -20,6 +20,6 @@ void display_sensors(void);
 void display_valve_positions(void);
 void display_time_and_date(void);
 void sync_rtc_ntp(void);
-void current_time(void);
+String current_time(void);
 
 #endif

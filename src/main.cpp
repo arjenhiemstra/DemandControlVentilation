@@ -21,7 +21,8 @@ void setup() {
   valve_control_data_mutex = xSemaphoreCreateMutex();
 
   float temp[2][8][3];
-  sensor_queue = xQueueCreate(10, sizeof(temp));
+  //sensor_queue = xQueueCreate(10, sizeof(temp));
+  sensor_queue = xQueueCreate(1, sizeof(temp));
 
   // First switch off all outputs which randomly come up at power on
   init_registers();
@@ -38,13 +39,10 @@ void setup() {
   startTaskwebcode();
   start_task_valvecontrol();
   start_task_i2c();
-  //start_task_read_sensors();
-  //start_task_display();
   start_task_statemachine();
   start_task_mqtt();
   start_task_influxdb();
   //start_task_system();
-
 }
 
 void loop() { }

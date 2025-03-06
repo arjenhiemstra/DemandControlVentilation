@@ -6,6 +6,7 @@
 #include <freertos/task.h>
 
 #include "i2c.h"
+#include "globals.h"
 
 // function declarations
 void start_task_i2c(void);

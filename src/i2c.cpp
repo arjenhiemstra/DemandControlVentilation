@@ -88,10 +88,11 @@ void read_sensors(void) {
 
                         AHT20_1.begin();
                         AHT20_1.getEvent(&humidity, &temperature);
-                        Wire.endTransmission();
                         
                         temp_sensor_data[bus][slot][0] = temperature.temperature;
                         temp_sensor_data[bus][slot][1] = humidity.relative_humidity;
+                        
+                        Wire.endTransmission();
                     }
                     if (bus==1) {
                         Adafruit_AHTX0 AHT20_2;
@@ -99,10 +100,11 @@ void read_sensors(void) {
 
                         AHT20_2.begin();
                         AHT20_2.getEvent(&humidity, &temperature);
-                        Wire1.endTransmission();
                         
                         temp_sensor_data[bus][slot][0] = temperature.temperature;
                         temp_sensor_data[bus][slot][1] = humidity.relative_humidity;
+                        
+                        Wire1.endTransmission();
                     }
 
                     //Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type_temp);Serial.print("\t");
@@ -194,15 +196,12 @@ void read_sensors(void) {
     
     wire_status = Wire.endTransmission();
     wire1_status = Wire1.endTransmission();
-
-    Serial.print("\n\nSystem uptime: ");
-    Serial.print(esp_timer_get_time()/1000000/60);
-    Serial.print(" min\n");
     
     if (wire_status == 0x00 && wire1_status == 0x00)
     {
         if(sensor_queue !=NULL) {
-            if (xQueueSendToFront(sensor_queue, &temp_sensor_data, (TickType_t) 100) != pdPASS){
+            //if (xQueueSendToFront(sensor_queue, &temp_sensor_data, (TickType_t) 100) != pdPASS){
+            if (xQueueOverwrite(sensor_queue, &temp_sensor_data) != pdPASS){
                 Serial.println("\nNo queue space for sending data to queue.\n");
             }
         }
@@ -213,11 +212,6 @@ void read_sensors(void) {
     else {
         Serial.print("I2C communication problem");
     }
-    
-    Serial.print("\nAvailable places in sensor queue: ");
-    Serial.print(uxQueueSpacesAvailable( sensor_queue ));
-    Serial.print("\nMessages waiting in sensor queue: ");
-    Serial.print(uxQueueMessagesWaiting( sensor_queue ));
 }
 
 void display_sensors(void) {
@@ -242,7 +236,8 @@ void display_sensors(void) {
     lcd.noAutoscroll();
     lcd.noCursor();   
 
-    if (xQueueReceive(sensor_queue, &queue_sensor_data, 0 ) == pdTRUE) {
+    //if (xQueueReceive(sensor_queue, &queue_sensor_data, 0 ) == pdTRUE) {
+    if (xQueuePeek(sensor_queue, &queue_sensor_data, 0 ) == pdTRUE) {
         for (int bus=0;bus<2;bus++) {
             for (int slot=0;slot<8;slot++) {
                         
@@ -288,11 +283,7 @@ void display_sensors(void) {
     }
 
     lcd.clear();
-
-    Serial.print("\nAvailable places in sensor queue: ");
-    Serial.print(uxQueueSpacesAvailable( sensor_queue ));
-    Serial.print("\nMessages waiting in sensor queue: ");
-    Serial.print(uxQueueMessagesWaiting( sensor_queue ));
+    Wire1.endTransmission();
 }
 
 void display_valve_positions(void) {
@@ -387,14 +378,15 @@ void display_valve_positions(void) {
     vTaskDelay(5000);
     lcd.clear();
     lcd.noBacklight(); 
+    Wire1.endTransmission();
 }
 
 void display_time_and_date(void) {
 
     int64_t uptime;
+    
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
     lcd.init();
-
     lcd.clear();
     lcd.backlight();
     
@@ -426,13 +418,14 @@ void display_time_and_date(void) {
         lcd.print(" min");
         vTaskDelay(5000);
         lcd.clear();
+        Wire1.endTransmission();
     }
 }
 
-void current_time(void) {
+String current_time(void) {
 
     char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-    //String formattedTime;
+    String formattedTime;
 
     Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
     rtc.begin(&Wire);
@@ -449,11 +442,12 @@ void current_time(void) {
             minuteStr = (now.minute() < 10 ? "0" : "") + String(now.minute(), DEC);
             secondStr = (now.second() < 10 ? "0" : "") + String(now.second(), DEC);
             dayOfWeek = daysOfTheWeek[now.dayOfTheWeek()];
-            String formattedTime = dayOfWeek + ", " + yearStr + "-" + monthStr + "-" + dayStr + " " + hourStr + ":" + minuteStr + ":" + secondStr;
-            Serial.println(formattedTime);
+            formattedTime = dayOfWeek + ", " + yearStr + "-" + monthStr + "-" + dayStr + " " + hourStr + ":" + minuteStr + ":" + secondStr;
             xSemaphoreGive(date_time_mutex);
         }
     }
+    Wire.endTransmission();
+    return formattedTime;
 }
 
 void sync_rtc_ntp(void) {
@@ -471,10 +465,13 @@ void sync_rtc_ntp(void) {
         Serial.println("Failed to obtain time");
         return;
     }
-    Serial.println("ESP32 Time synchronized with NTP server.");
-    Serial.println("Current time: ");
-    Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
+    Serial.print("\nESP32 Time synchronized with NTP server.");
+    Serial.print("\nCurrent time: ");
+    Serial.print(&timeinfo, "%A, %B %d %Y %H:%M:%S");
 
     // Sync the RTC with the NTP time
     rtc.adjust(DateTime(timeinfo.tm_year + 1900, timeinfo.tm_mon + 1, timeinfo.tm_mday, timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec));
+    Wire.endTransmission();
 }
+
+

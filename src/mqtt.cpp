@@ -12,7 +12,8 @@ void publish_sensor_data(void) {
     int bus;
     int slot;
 
-    if (xQueueReceive(sensor_queue, &queque_sensor_data, 0 ) == pdTRUE) {  
+    //if (xQueueReceive(sensor_queue, &queque_sensor_data, 0 ) == pdTRUE) {
+    if (xQueuePeek(sensor_queue, &queque_sensor_data, 0 ) == pdTRUE) {  
        
         client.setServer(mqtt_server, mqtt_port);
 
@@ -47,10 +48,6 @@ void publish_sensor_data(void) {
             Serial.print("Could not connect to MQTT server");
         }
     }
-    Serial.print("\nAvailable places in sensor queue: ");
-    Serial.print(uxQueueSpacesAvailable( sensor_queue ));
-    Serial.print("\nMessages waiting in sensor queue: ");
-    Serial.print(uxQueueMessagesWaiting( sensor_queue ));
 }
 
 void publish_valve_positions(void) {
@@ -109,7 +106,7 @@ void publish_uptime(void) {
         client.publish(topic,uptime);
     }
     else {
-        Serial.println("Could not connect to MQTT server");
+        Serial.print("\nCould not connect to MQTT server");
     }
 }
 
@@ -179,7 +176,7 @@ void publish_queues(void) {
 
     }
     else {
-        Serial.println("Could not connect to MQTT server");
+        Serial.print("\nCould not connect to MQTT server");
     }
     
 }
