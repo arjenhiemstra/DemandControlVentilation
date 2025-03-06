@@ -10,7 +10,7 @@
 #include "globals.h"
 #include "fancontrol.h"
 #include "mqtt.h"
-#include "rtc.h"
+#include "timefunctions.h"
 #include "valvecontrol.h"
 
 // function declarations

@@ -60,11 +60,8 @@ void run_statemachine(void) {
 
 void init_transitions(void) {
 
-    //Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
-    //rtc.begin(&Wire);
-
-    //DateTime now = rtc.now();
     String fanspeed = "low";
+
     int temp_hour;
     int temp_day_of_week;
 
@@ -106,11 +103,8 @@ void init_transitions(void) {
 
 void day_transitions(void) {
 
-    Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
-    rtc.begin(&Wire);
-
-    DateTime now = rtc.now();
     String fanspeed = "medium";
+    int temp_hour;
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
@@ -120,12 +114,19 @@ void day_transitions(void) {
         }
     }
 
+    if (date_time_mutex != NULL) {
+        if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            temp_hour = hourStr.toInt();
+            xSemaphoreGive(date_time_mutex);
+        }
+    }
+
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
     // valves in default position
 
     // Condition to transit to other state
-    if (now.hour() >= 21) {
+    if (temp_hour >= 21) {
         Serial.println("It's night. Transit to night.");        
         new_state = "night";
     }

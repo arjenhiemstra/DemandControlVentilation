@@ -17,6 +17,7 @@
 #include "task_system.h"
 #include "task_influxdb.h"
 #include "rtc.h"
+#include "LiquidCrystal_I2C.h"
 
 #include "valvecontrol.h"
 #include "globals.h"

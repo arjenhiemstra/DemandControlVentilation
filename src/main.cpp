@@ -64,6 +64,7 @@ void setup_wifi() {
   Serial.print("\n\n");
   vTaskDelay(1000);
   sync_rtc_ntp();
+  vTaskDelay(1000);
 }
 
 void init_registers(void) {

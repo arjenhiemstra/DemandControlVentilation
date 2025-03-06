@@ -51,10 +51,6 @@ extern JsonDocument settings_i2c_data;
 extern JsonDocument settings_fan_data;
 extern JsonDocument settings_statemachine_data;
 
-//Sensor data arrays for Wire and Wire1
-extern float sensor_data[2][8][3];
-extern float sensor_data2[2][8][3];
-
 extern String wire_sensor_config_string;
 extern String wire1_sensor_config_string;
 

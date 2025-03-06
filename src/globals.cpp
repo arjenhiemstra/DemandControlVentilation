@@ -29,10 +29,6 @@ JsonDocument settings_i2c_data;
 JsonDocument settings_fan_data;
 JsonDocument settings_statemachine_data;
 
-//Sensor data arrays for Wire and Wire1
-//float sensor_data[2][8][3] = { 0 };
-//float sensor_data2[2][8][3] = { 0 };
-
 String wire_sensor_config_string = {};
 String wire1_sensor_config_string = {};
 
