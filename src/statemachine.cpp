@@ -158,11 +158,9 @@ void day_transitions(void) {
 
 void night_transitions(void) {
 
-    Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
-    rtc.begin(&Wire);
-
-    DateTime now = rtc.now();
     String fanspeed = "low";
+    int temp_hour;
+    int temp_day_of_week;
 
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
@@ -172,16 +170,24 @@ void night_transitions(void) {
         }
     }
 
+    if (date_time_mutex != NULL) {
+        if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            temp_hour = hourStr.toInt();
+            temp_day_of_week = dayOfWeek.toInt();
+            xSemaphoreGive(date_time_mutex);
+        }
+    }
+
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
     // valves in default position
 
     // Conditions to transit to other state
-    if (now.hour() >= 8 && now.hour() < 21 && now.dayOfTheWeek() > 0 && now.dayOfTheWeek() < 6)  {
+    if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week > 0 && temp_day_of_week < 6)  {
         Serial.println("It is after 8, before 21 and a weekday. Transit to day.");
         new_state = "day";
     }
-    else if (now.hour() >= 9 && now.hour() < 21 && (now.dayOfTheWeek() == 0 || now.dayOfTheWeek() == 6)) {
+    else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == 0 || temp_day_of_week == 6)) {
         Serial.println("It is after 9, before 21 and weekend. Transit to day");
         new_state = "day";
     }
@@ -208,17 +214,21 @@ void night_transitions(void) {
 
 void high_co2_day_transitions(void) {
 
-    Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
-    rtc.begin(&Wire);
-
-    DateTime now = rtc.now();
     String fanspeed = "high";
+    int temp_hour;
 
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             state = "high_co2_day";
             xSemaphoreGive(statemachine_state_mutex);
+        }
+    }
+
+    if (date_time_mutex != NULL) {
+        if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            temp_hour = hourStr.toInt();
+            xSemaphoreGive(date_time_mutex);
         }
     }
 
@@ -231,7 +241,7 @@ void high_co2_day_transitions(void) {
         Serial.println("It is day and CO2 level is low enough. Transit to day.");
         new_state = "day";
     }
-    else if (now.hour() >= 21) {
+    else if (temp_hour >= 21) {
         Serial.println("It's night but CO2 levels are still high. Transit to high_co2_night");        
         new_state = "high_co2_night";
     }
@@ -244,11 +254,10 @@ void high_co2_day_transitions(void) {
 
 void high_co2_night_transitions(void) {
 
-    Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
-    rtc.begin(&Wire);
-
-    DateTime now = rtc.now();
     String fanspeed = "low";
+    
+    int temp_hour;
+    int temp_day_of_week;
 
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
@@ -258,16 +267,24 @@ void high_co2_night_transitions(void) {
         }
     }
 
+    if (date_time_mutex != NULL) {
+        if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            temp_hour = hourStr.toInt();
+            temp_day_of_week = dayOfWeek.toInt();
+            xSemaphoreGive(date_time_mutex);
+        }
+    }
+
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
     // valves in default position
 
     // Conditions for transition
-    if (now.hour() >= 8 && now.hour() < 21 && now.dayOfTheWeek() > 0 && now.dayOfTheWeek() < 6)  {
+    if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week > 0 && temp_day_of_week < 6)  {
         Serial.println("It is after 7, before 21 and a weekday. Transit to high_co2_day.");
         new_state = "high_co2_day";
     }
-    else if (now.hour() >= 9 && now.hour() < 21 && (now.dayOfTheWeek() == 0 || now.dayOfTheWeek() == 6)) {
+    else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == 0 || temp_day_of_week == 6)) {
         Serial.println("It is after 8, before 21 and weekend. Transit to high_co2_day.");
         new_state = "high_co2_day";
     }
@@ -284,17 +301,22 @@ void high_co2_night_transitions(void) {
 
 void high_rh_day_transitions(void) {
 
-    Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
-    rtc.begin(&Wire);
-
-    DateTime now = rtc.now();
     String fanspeed = "high";
+
+    int temp_hour;
 
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             state = "high_rh_day";
             xSemaphoreGive(statemachine_state_mutex);
+        }
+    }
+
+    if (date_time_mutex != NULL) {
+        if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            temp_hour = hourStr.toInt();
+            xSemaphoreGive(date_time_mutex);
         }
     }
 
@@ -307,7 +329,7 @@ void high_rh_day_transitions(void) {
         Serial.println("It's night and high RH. Transit to day");
         new_state = "day";
     }
-    else if (now.hour() >= 21) {
+    else if (temp_hour >= 21) {
         Serial.println("It's night but rh levels are still high. Transit to high_rh_night");        
         new_state = "high_rh_night";
     }
@@ -320,17 +342,23 @@ void high_rh_day_transitions(void) {
 
 void high_rh_night_transitions(void) {
 
-    Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
-    rtc.begin(&Wire);
-
-    DateTime now = rtc.now();
     String fanspeed = "low";
+    int temp_hour;
+    int temp_day_of_week;
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             state = "high_rh_night";
             xSemaphoreGive(statemachine_state_mutex);
+        }
+    }
+
+    if (date_time_mutex != NULL) {
+        if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            temp_hour = hourStr.toInt();
+            temp_day_of_week = dayOfWeek.toInt();
+            xSemaphoreGive(date_time_mutex);
         }
     }
 
@@ -343,11 +371,11 @@ void high_rh_night_transitions(void) {
         Serial.println("It's night and RH is low enough. Transit to night.");
         new_state = "night";
     }
-    else if (now.hour() >= 8 && now.hour() < 21 && now.dayOfTheWeek() > 0 && now.dayOfTheWeek() < 6)  {
+    else if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week > 0 && temp_day_of_week < 6)  {
         Serial.println("It is after 7, before 21 and a weekday but RH is still high. Transit to high_rh_day.");
         new_state = "high_rh_day";
     }
-    else if (now.hour() >= 9 && now.hour() < 21 && (now.dayOfTheWeek() == 0 || now.dayOfTheWeek() == 6)) {
+    else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == 0 || temp_day_of_week == 6)) {
         Serial.println("It is after 8, before 21 and weekend but RH is still high. Transit to high_rh_day ");
         new_state = "high_rh_day";
     }
@@ -360,10 +388,6 @@ void high_rh_night_transitions(void) {
 
 void cooking_transitions(void) {
 
-    Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
-    rtc.begin(&Wire);
-
-    DateTime now = rtc.now();
     String fanspeed = "high";
 
     // Actions for this sate
@@ -373,6 +397,7 @@ void cooking_transitions(void) {
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
+   
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
     // valves in default position
@@ -391,10 +416,6 @@ void cooking_transitions(void) {
 
 void valve_cycle_day_transitions(void) {
 
-    Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
-    rtc.begin(&Wire);
-
-    DateTime now = rtc.now();
     String fanspeed = "medium";
 
     // Actions for this state
@@ -431,10 +452,6 @@ void valve_cycle_day_transitions(void) {
 
 void valve_cycle_night_transitions(void) {
 
-    Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
-    rtc.begin(&Wire);
-
-    DateTime now = rtc.now();
     String fanspeed = "low";
 
     // Actions for this state
@@ -472,10 +489,6 @@ void valve_cycle_night_transitions(void) {
 //This state is for later
 void manual_high_speed_transitions(void) {
 
-    Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
-    rtc.begin(&Wire);
-
-    DateTime now = rtc.now();
     String fanspeed = "high";
 
     // Actions for this state
