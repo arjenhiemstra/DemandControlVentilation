@@ -76,7 +76,10 @@
                         </div>
                         <br>
                         <input type="submit" value="Save network configuration">
-                        <br><br><br>
+                        <br>
+                    </fieldset>
+                </form>
+            </p>
             <p>
                 <form class="pure-form pure-form-stacked" method="POST" action="/settings_mqtt">
                     <fieldset>
@@ -103,7 +106,10 @@
                         </div>
                         <br>
                         <input type="submit" value="Save MQTT settings">
-                        <br><br><br>
+                        <br>
+                    </fieldset>
+                </form>
+            </p>    
             <p>
                 <form class="pure-form pure-form-stacked" method="POST" action="/settings_i2c">
                     <fieldset>
@@ -119,26 +125,31 @@
                             </div>
                             <div class="pure-u-1 pure-u-md-1-2">
                                 <label for="display_i2c_adddress">Display I2C address:</label>
-                                <input type="text" placeholder="default 0x27" value="%DISPLAY_I2C_ADDRESS%" name="display_i2c_adddress" id="display_i2c_adddress" class="pure-input-3-4" />
+                                <input type="text" placeholder="default 0x27" value="%DISPLAY_I2C_ADDRESS%" name="display_i2c_address" id="display_i2c_address" class="pure-input-3-4" />
                             </div>
                         </div>
                         <br>
                         <input type="submit" value="Save I2C settings">
-                        <br><br><br>
+                        <br>
+                    </fieldset>
+                </form>
+            </p>
             <p>
                 <form class="pure-form pure-form-stacked" method="POST" action="/settings_fan">
                     <fieldset>
-                        <legend>Fan control settings - By MQTT subscribe or http request - %STATUS_FAN_CONTROL_CONFIG%</legend>
-                        <div class="pure-u-1 pure-u-md-1-2">
-                            <label for="fan_control_mode">Fan control mode:</label>
-                            <select id="fan_control_mode" name="fan_control_mode" id="fan_control_mode" class="pure-input-1-2">
-                                <option selected>%FAN_CONTROL_MODE%</option>
-                                <option>MQTT publish</option>
-                                <option>HTTP API</option>
-                            </select>
+                        <legend>Fan control settings, by MQTT subscribe or http request - %STATUS_FAN_CONTROL_CONFIG%</legend>
+                        <div class="pure-g">
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="fan_control_mode">Fan control mode:</label>
+                                <select id="fan_control_mode" name="fan_control_mode" id="fan_control_mode" class="pure-input-3-4">
+                                    <option selected>%FAN_CONTROL_MODE%</option>
+                                    <option>MQTT publish</option>
+                                    <option>HTTP API</option>
+                                </select>
+                            </div>
                             <div class="pure-u-1 pure-u-md-1-2">
                                 <label for="fan_control_mqqt_topic">Fan control MQTT publish topic:</label>
-                                <input type="text" placeholder="URL" value="%FAN_CONTROL_MQTT_TOPIC%" name="fan_control_mqtt_topic" id="fan_control_mqtt_topic" class="pure-input-3-4" />
+                                <input type="text" placeholder="MQTT topic" value="%FAN_CONTROL_MQTT_TOPIC%" name="fan_control_mqtt_topic" id="fan_control_mqtt_topic" class="pure-input-3-4" />
                             </div>
                             <div class="pure-u-1 pure-u-md-1-2">
                                 <label for="fan_control_url_high_speed">Fan control URL high speed:</label>
@@ -155,49 +166,59 @@
                         </div>
                         <br>
                         <input type="submit" value="Save fan control settings">
-                        <br><br><br>
+                        <br>
+                    </fieldset>
+                </form>
+            </p>
             <p>
                 <form class="pure-form pure-form-stacked" method="POST" action="/settings_statemachine">
                     <fieldset>
                         <legend>State machine settings - Define which sensors are used in statemachine for RH and CO2 - %STATUS_STATEMACHINE_CONFIG%</legend>
-                        <div class="pure-u-1 pure-u-md-1-2">
-                            <label for="statemachine_rh_sensor">Statemachine humidity sensor:</label>
-                            <select id="statemachine_rh_sensor" name="statemachine_rh_sensor" id="statemachine_rh_sensor" class="pure-input-1-2">
-                                <option selected>%STATEMACHINE_RH_SENSOR%</option>
-                                <option>Bus0 - Sensor0</option>
-                                <option>Bus0 - Sensor1</option>
-                                <option>Bus0 - Sensor2</option>
-                                <option>Bus0 - Sensor3</option>
-                                <option>Bus0 - Sensor4</option>
-                                <option>Bus0 - Sensor5</option>
-                                <option>Bus0 - Sensor6</option>
-                                <option>Bus1 - Sensor0</option>
-                                <option>Bus1 - Sensor1</option>
-                                <option>Bus1 - Sensor2</option>
-                                <option>Bus1 - Sensor3</option>
-                                <option>Bus1 - Sensor4</option>
-                                <option>Bus1 - Sensor5</option>
-                                <option>Bus1 - Sensor6</option>
-                            </select>
-                            <label for="statemachine_co2_sensor">Statemachine CO2 sensor:</label>
-                            <select id="statemachine_co2_sensor" name="statemachine_co2_sensor" id="statemachine_co2_sensor" class="pure-input-1-2">
-                                <option selected>%STATEMACHINE_CO2_SENSOR%</option>
-                                <option>Bus0 - Sensor0</option>
-                                <option>Bus0 - Sensor1</option>
-                                <option>Bus0 - Sensor2</option>
-                                <option>Bus0 - Sensor3</option>
-                                <option>Bus0 - Sensor4</option>
-                                <option>Bus0 - Sensor5</option>
-                                <option>Bus0 - Sensor6</option>
-                                <option>Bus1 - Sensor0</option>
-                                <option>Bus1 - Sensor1</option>
-                                <option>Bus1 - Sensor2</option>
-                                <option>Bus1 - Sensor3</option>
-                                <option>Bus1 - Sensor4</option>
-                                <option>Bus1 - Sensor5</option>
-                                <option>Bus1 - Sensor6</option>
-                            </select>
+                        <div class="pure-g">
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="statemachine_rh_sensor">Statemachine humidity sensor:</label>
+                                <select id="statemachine_rh_sensor" name="statemachine_rh_sensor" id="statemachine_rh_sensor" class="pure-input-3-4">
+                                    <option selected>%STATEMACHINE_RH_SENSOR%</option>
+                                    <option>Bus0 - Sensor0</option>
+                                    <option>Bus0 - Sensor1</option>
+                                    <option>Bus0 - Sensor2</option>
+                                    <option>Bus0 - Sensor3</option>
+                                    <option>Bus0 - Sensor4</option>
+                                    <option>Bus0 - Sensor5</option>
+                                    <option>Bus0 - Sensor6</option>
+                                    <option>Bus1 - Sensor0</option>
+                                    <option>Bus1 - Sensor1</option>
+                                    <option>Bus1 - Sensor2</option>
+                                    <option>Bus1 - Sensor3</option>
+                                    <option>Bus1 - Sensor4</option>
+                                    <option>Bus1 - Sensor5</option>
+                                    <option>Bus1 - Sensor6</option>
+                                </select>
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="statemachine_co2_sensor">Statemachine CO2 sensor:</label>
+                                <select id="statemachine_co2_sensor" name="statemachine_co2_sensor" id="statemachine_co2_sensor" class="pure-input-3-4">
+                                    <option selected>%STATEMACHINE_CO2_SENSOR%</option>
+                                    <option>Bus0 - Sensor0</option>
+                                    <option>Bus0 - Sensor1</option>
+                                    <option>Bus0 - Sensor2</option>
+                                    <option>Bus0 - Sensor3</option>
+                                    <option>Bus0 - Sensor4</option>
+                                    <option>Bus0 - Sensor5</option>
+                                    <option>Bus0 - Sensor6</option>
+                                    <option>Bus1 - Sensor0</option>
+                                    <option>Bus1 - Sensor1</option>
+                                    <option>Bus1 - Sensor2</option>
+                                    <option>Bus1 - Sensor3</option>
+                                    <option>Bus1 - Sensor4</option>
+                                    <option>Bus1 - Sensor5</option>
+                                    <option>Bus1 - Sensor6</option>
+                                </select>
+                            </div>
                         </div>
+                        <br>
+                        <input type="submit" value="Save statemachine settings">
+                        <br>
                     </fieldset>
                 </form>
             </p>

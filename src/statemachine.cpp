@@ -98,11 +98,11 @@ void init_transitions(void) {
 
     // Conditions to transit to other state
      if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
-        Serial.print("\nIt is after 7, before 21 and a weekday. Transit to day.");
+        Serial.print("\nIt is after 8, before 21 and a weekday. Transit to day.");
         new_state = "day";
     }
     else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday")) {
-        Serial.print("\nIt is after 8 and before 21 and weekend. Transit to day.");
+        Serial.print("\nIt is after 9 and before 21 and weekend. Transit to day.");
         new_state = "day";
     }
     else {
@@ -293,11 +293,11 @@ void high_co2_night_transitions(void) {
 
     // Conditions for transition
     if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
-        Serial.print("\nIt is after 7, before 21 and a weekday. Transit to high_co2_day.");
+        Serial.print("\nIt is after 8, before 21 and a weekday. Transit to high_co2_day.");
         new_state = "high_co2_day";
     }
     else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday")) {
-        Serial.print("\nIt is after 8, before 21 and weekend. Transit to high_co2_day.");
+        Serial.print("\nIt is after 9, before 21 and weekend. Transit to high_co2_day.");
         new_state = "high_co2_day";
     }
     else if (statemachine_sensor_data[1][2][2] < 800) {
@@ -385,11 +385,11 @@ void high_rh_night_transitions(void) {
         new_state = "night";
     }
     else if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
-        Serial.print("\nIt is after 7, before 21 and a weekday but RH is still high. Transit to high_rh_day.");
+        Serial.print("\nIt is after 8, before 21 and a weekday but RH is still high. Transit to high_rh_day.");
         new_state = "high_rh_day";
     }
     else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday")) {
-        Serial.print("\nIt is after 8, before 21 and weekend but RH is still high. Transit to high_rh_day ");
+        Serial.print("\nIt is after 9, before 21 and weekend but RH is still high. Transit to high_rh_day ");
         new_state = "high_rh_day";
     }
     else {

@@ -166,12 +166,12 @@ void Taskwebcode(void *pvParameters) {
 
   //Settings web pages processing
   server.on("/settings", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(LittleFS, "/html/settings.html", "text/html");
+    //request->send(LittleFS, "/html/settings.html", "text/html");
+    request->send(LittleFS, "/html/settings.html", String(), false, settings_processor);
   });
 
   //Save settings from network settings
   server.on("/settings_network", HTTP_POST, [](AsyncWebServerRequest *request) {
-    
     if (settings_network_mutex != NULL) {
       if(xSemaphoreTake(settings_network_mutex, ( TickType_t ) 10 ) == pdTRUE) {
         int params = request->params();
@@ -265,7 +265,7 @@ void Taskwebcode(void *pvParameters) {
               settings_i2c_data["bus0_multiplexer_address"] = p->value().c_str();;
             }
             if (p->name() == BUS1_MULTIPLEXER_ADDRESS) {
-              settings_i2c_data["bus0_multiplexer_address"] = p->value().c_str();;
+              settings_i2c_data["bus1_multiplexer_address"] = p->value().c_str();;
             }
             if (p->name() == DISPLAY_I2C_ADDRESS) {
               settings_i2c_data["display_i2c_address"] = p->value().c_str();;
@@ -824,6 +824,11 @@ void Taskwebcode(void *pvParameters) {
     write_config_file(path2, sensor_config2);
 
     request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
+  });
+
+  //Statemachine web pages processing
+  server.on("/statemachine", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(LittleFS, "/html/statemachine.html", "text/html");
   });
 
   // Start server
