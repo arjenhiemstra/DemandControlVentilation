@@ -14,7 +14,6 @@ void read_sensors(void) {
     String sensor_type_temp;
     String sensor_address_temp;
         
-    //Serial.println("\n\nBus\tSensor\tType\tTemperature (°C)\tHumidity (%)\tCO2 (ppm)");
     for(bus=0;bus<2;bus++) {
         
         if (bus==0) {
@@ -73,12 +72,7 @@ void read_sensors(void) {
                         temp_sensor_data[bus][slot][0] = DHT2.getTemperature();
                         temp_sensor_data[bus][slot][1] = DHT2.getHumidity();
                         Wire1.endTransmission();
-                    }
-                    //Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type_temp);Serial.print("\t");
-                    //Serial.print(temp_sensor_data[bus][slot][0]);Serial.print("\t\t\t");
-                    //Serial.print(temp_sensor_data[bus][slot][1]);Serial.print("\t\t");
-                    //Serial.print(temp_sensor_data[bus][slot][2]);Serial.print("\n");
-                    
+                    }                   
                 }
                 
                 else if (sensor_type_temp == "AHT20") {     
@@ -105,13 +99,7 @@ void read_sensors(void) {
                         temp_sensor_data[bus][slot][1] = humidity.relative_humidity;
                         
                         Wire1.endTransmission();
-                    }
-
-                    //Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type_temp);Serial.print("\t");
-                    //Serial.print(temp_sensor_data[bus][slot][0]);Serial.print("\t\t\t");
-                    //Serial.print(temp_sensor_data[bus][slot][1]);Serial.print("\t\t");
-                    //Serial.print(temp_sensor_data[bus][slot][2]);Serial.print("\n");
-                    
+                    }                   
                 }
                 
                 else if (sensor_type_temp == "SCD40" || sensor_type_temp == "SCD41") {
@@ -166,23 +154,11 @@ void read_sensors(void) {
                         }
                         Wire1.endTransmission();
                     }
-
-                    //Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type_temp);Serial.print("\t");
-                    //Serial.print(temp_sensor_data[bus][slot][0]);Serial.print("\t\t\t");
-                    //Serial.print(temp_sensor_data[bus][slot][1]);Serial.print("\t\t");
-                    //Serial.print(temp_sensor_data[bus][slot][2]);Serial.print("\n");
-                    
                 }
                 else {
                     temp_sensor_data[bus][slot][0] = 0.00;
                     temp_sensor_data[bus][slot][1] = 0.00;
                     temp_sensor_data[bus][slot][2] = 0.00;
-                    
-                    //Serial.print(bus);Serial.print("\t");Serial.print(slot);Serial.print("\t");Serial.print(sensor_type_temp);Serial.print("\t");
-                    //Serial.print(temp_sensor_data[bus][slot][0]);Serial.print("\t\t\t");
-                    //Serial.print(temp_sensor_data[bus][slot][1]);Serial.print("\t\t");
-                    //Serial.print(temp_sensor_data[bus][slot][2]);Serial.print("\n");
-                    
                 }
             }
         }

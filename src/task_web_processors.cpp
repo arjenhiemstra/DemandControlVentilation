@@ -405,12 +405,6 @@ String status_processor(const String& var) {
     return String();
 }
 
-String settings_processor(const String& var) {
-
-    return String();
-
-}
-
 String valvecontrol_processor(const String& var) {
 
   const char* path = "/json/valvepositions.json";
@@ -436,4 +430,200 @@ String valvecontrol_processor(const String& var) {
   }
 
   return String();
+}
+
+String settings_processor(const String& var) {
+
+    const char* settings_network_path = "/json/settings_network.json";
+    const char* settings_mqtt_path = "/json/settings_mqtt.json";
+    const char* settings_i2c_path = "/json/settings_i2c.json";
+    const char* settings_fan_path = "/json/settings_fan.json";
+    const char* settings_statemachine_path = "/json/settings_statemachine.json";
+    const char* status;
+    bool settings_network_file_present;
+    bool settings_mqtt_file_present;
+    bool settings_i2c_file_present;
+    bool settings_fan_file_present;
+    bool settings_statemachine_file_present;
+
+    String settings_network_json;
+    String settings_mqtt_json;
+    String settings_i2c_json;
+    String settings_fan_json;
+    String settings_statemachine_json;
+    JsonDocument settings_network_doc;
+    JsonDocument settings_mqtt_doc;
+    JsonDocument settings_i2c_doc;
+    JsonDocument settings_fan_doc;
+    JsonDocument settings_statemachine_doc;
+  
+    /*Network settings processor*/
+    if (settings_network_mutex != NULL) {
+        if(xSemaphoreTake(settings_network_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            settings_network_file_present = check_file_exists(settings_network_path);
+            if (settings_network_file_present == 1) {
+                settings_network_json = read_config_file(settings_network_path);
+                deserializeJson(settings_network_doc, settings_network_json);
+            }
+            xSemaphoreGive(settings_network_mutex);
+        }
+    }
+
+    if (settings_network_file_present == 1) {
+        status = "<b><font color=\"green\">Network settings file found.</font></b>";
+        if (var == "STATUS_NETWORK_CONFIG") {
+            return F(status);
+        }
+    }
+    else {
+        status = "<b><font color=\"red\">Network settings file not found. Create a file with button below.</font></b>";
+        if (var == "STATUS_NETWORK_CONFIG") {
+            return F(status);
+        }
+    }
+
+    if(var == "SSID")
+        return (settings_network_doc[String("ssid")]);
+    if(var == "WIFI_PASSWORD")
+        return (settings_network_doc[String("wifi_password")]);
+    if(var == "IP_ADDRESS")
+        return (settings_network_doc[String("ip_address")]);
+    if(var == "SUBNET_MASK")
+        return (settings_network_doc[String("subnet_mask")]);
+    if(var == "GATEWAY")
+        return (settings_network_doc[String("gateway")]);
+    if(var == "PRIMARY_DNS")
+        return (settings_network_doc[String("primary_dns")]);
+    if(var == "SECONDARY_DNS")
+        return (settings_network_doc[String("secondary_dns")]);
+
+    /*MQTT Settings processor*/
+    if (settings_mqtt_mutex != NULL) {
+        if(xSemaphoreTake(settings_mqtt_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            settings_mqtt_file_present = check_file_exists(settings_mqtt_path);
+            if (settings_mqtt_file_present == 1) {
+                settings_mqtt_json = read_config_file(settings_mqtt_path);
+                deserializeJson(settings_mqtt_doc, settings_mqtt_json);
+            }
+            xSemaphoreGive(settings_mqtt_mutex);
+        }
+    }
+
+    if (settings_mqtt_file_present == 1) {
+        status = "<b><font color=\"green\">Network settings file found.</font></b>";
+        if (var == "STATUS_NETWORK_CONFIG") {
+            return F(status);
+        }
+    }
+    else {
+        status = "<b><font color=\"red\">Network settings file not found. Create a file with button below.</font></b>";
+        if (var == "STATUS_NETWORK_CONFIG") {
+            return F(status);
+        }
+    }
+
+    if(var == "MQTT_SERVER")
+        return (settings_mqtt_doc[String("mqtt_server")]);
+    if(var == "MQTT_PORT")
+        return (settings_mqtt_doc[String("mqtt_port")]);
+    if(var == "MQTT_BASE_TOPIC")
+        return (settings_mqtt_doc[String("mqtt_base_topic")]);
+
+    /*I2C Settings processor*/
+    if (settings_i2c_mutex != NULL) {
+        if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            settings_i2c_file_present = check_file_exists(settings_i2c_path);
+            if (settings_i2c_file_present == 1) {
+                settings_i2c_json = read_config_file(settings_i2c_path);
+                deserializeJson(settings_i2c_doc, settings_i2c_json);
+            }
+            xSemaphoreGive(settings_i2c_mutex);
+        }
+    }
+
+    if (settings_i2c_file_present == 1) {
+        status = "<b><font color=\"green\">Network settings file found.</font></b>";
+        if (var == "STATUS_I2C_HARDWARE_CONFIG") {
+            return F(status);
+        }
+    }
+    else {
+        status = "<b><font color=\"red\">Network settings file not found. Create a file with button below.</font></b>";
+        if (var == "STATUS_I2C_HARDWARE_CONFIG") {
+            return F(status);
+        }
+    }
+
+    if(var == "BUS0_MULTIPLEXER_ADDRESS")
+        return (settings_i2c_doc[String("bus0_multiplexer_address")]);
+    if(var == "BUS1_MULTIPLEXER_ADDRESS")
+        return (settings_i2c_doc[String("bus1_multiplexer_address")]);
+    if(var == "DISPLAY_I2C_ADDRESS")
+        return (settings_i2c_doc[String("display_i2c_address")]);
+
+    /*Fan settings processor*/
+    if (settings_fan_mutex != NULL) {
+        if(xSemaphoreTake(settings_fan_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            settings_fan_file_present = check_file_exists(settings_fan_path);
+            if (settings_fan_file_present == 1) {
+                settings_fan_json = read_config_file(settings_fan_path);
+                deserializeJson(settings_i2c_doc, settings_fan_json);
+            }
+            xSemaphoreGive(settings_fan_mutex);
+        }
+    }
+
+    if (settings_fan_file_present == 1) {
+        status = "<b><font color=\"green\">Network settings file found.</font></b>";
+        if (var == "STATUS_FAN_CONTROL_CONFIG") {
+            return F(status);
+        }
+    }
+    else {
+        status = "<b><font color=\"red\">Network settings file not found. Create a file with button below.</font></b>";
+        if (var == "STATUS_FAN_CONTROL_CONFIG") {
+            return F(status);
+        }
+    }
+
+    if(var == "FAN_CONTROL_MQTT_TOPIC")
+        return (settings_i2c_doc[String("fan_control_mqtt_topic")]);
+    if(var == "FAN_CONTROL_URL_HIGH_SPEED")
+        return (settings_i2c_doc[String("fan_control_url_high_speed")]);
+    if(var == "FAN_CONTROL_URL_MEDIUM_SPEED")
+        return (settings_i2c_doc[String("fan_control_url_medium_speed")]);
+    if(var == "FAN_CONTROL_URL_LOW_SPEED")
+        return (settings_i2c_doc[String("fan_control_url_low_speed")]);
+
+    /*Statemachine settings processor*/
+    if (settings_statemachine_mutex != NULL) {
+        if(xSemaphoreTake(settings_statemachine_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            settings_statemachine_file_present = check_file_exists(settings_statemachine_path);
+            if (settings_statemachine_file_present == 1) {
+                settings_statemachine_json = read_config_file(settings_statemachine_path);
+                deserializeJson(settings_statemachine_doc, settings_statemachine_json);
+            }
+            xSemaphoreGive(settings_statemachine_mutex);
+        }
+    }
+
+    if (settings_statemachine_file_present == 1) {
+        status = "<b><font color=\"green\">Network settings file found.</font></b>";
+        if (var == "STATUS_STATEMACHINE_CONFIG") {
+            return F(status);
+        }
+    }
+    else {
+        status = "<b><font color=\"red\">Network settings file not found. Create a file with button below.</font></b>";
+        if (var == "STATUS_STATEMACHINE_CONFIG") {
+            return F(status);
+        }
+    }
+
+    if(var == "STATEMACHINE_RH_SENSOR")
+        return (settings_statemachine_doc[String("statemachine_rh_sensor")]);
+    if(var == "STATEMACHINE_CO2_SENSOR")
+        return (settings_statemachine_doc[String("statemachine_co2_sensor")]);
+
+    return String();
 }

@@ -71,9 +71,10 @@ void run_statemachine(void) {
 void init_transitions(void) {
 
     String fanspeed = "low";
+    String temp_day_of_week;
 
     int temp_hour;
-    int temp_day_of_week;
+    
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
@@ -86,7 +87,7 @@ void init_transitions(void) {
     if (date_time_mutex != NULL) {
         if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             temp_hour = hourStr.toInt();
-            temp_day_of_week = dayOfWeek.toInt();
+            temp_day_of_week = dayOfWeek;
             xSemaphoreGive(date_time_mutex);
         }
     }
@@ -96,11 +97,11 @@ void init_transitions(void) {
     publish_fanspeed(fanspeed); 
 
     // Conditions to transit to other state
-     if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != 0 && temp_day_of_week != 6)  {
+     if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
         Serial.print("\nIt is after 7, before 21 and a weekday. Transit to day.");
         new_state = "day";
     }
-    else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == 0 || temp_day_of_week == 6)) {
+    else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday")) {
         Serial.print("\nIt is after 8 and before 21 and weekend. Transit to day.");
         new_state = "day";
     }
@@ -169,9 +170,10 @@ void day_transitions(void) {
 void night_transitions(void) {
 
     String fanspeed = "low";
-    int temp_hour;
-    int temp_day_of_week;
+    String temp_day_of_week;
 
+    int temp_hour;
+    
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
@@ -193,11 +195,11 @@ void night_transitions(void) {
     // valves in default position
 
     // Conditions to transit to other state
-    if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week > 0 && temp_day_of_week < 6)  {
+    if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
         Serial.print("\nIt is after 8, before 21 and a weekday. Transit to day.");
         new_state = "day";
     }
-    else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == 0 || temp_day_of_week == 6)) {
+    else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday")) {
         Serial.print("\nIt is after 9, before 21 and weekend. Transit to day");
         new_state = "day";
     }
@@ -265,10 +267,10 @@ void high_co2_day_transitions(void) {
 void high_co2_night_transitions(void) {
 
     String fanspeed = "low";
+    String temp_day_of_week;
     
     int temp_hour;
-    int temp_day_of_week;
-
+    
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
@@ -290,11 +292,11 @@ void high_co2_night_transitions(void) {
     // valves in default position
 
     // Conditions for transition
-    if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week > 0 && temp_day_of_week < 6)  {
+    if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
         Serial.print("\nIt is after 7, before 21 and a weekday. Transit to high_co2_day.");
         new_state = "high_co2_day";
     }
-    else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == 0 || temp_day_of_week == 6)) {
+    else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday")) {
         Serial.print("\nIt is after 8, before 21 and weekend. Transit to high_co2_day.");
         new_state = "high_co2_day";
     }
@@ -353,8 +355,9 @@ void high_rh_day_transitions(void) {
 void high_rh_night_transitions(void) {
 
     String fanspeed = "low";
+    String temp_day_of_week;
+
     int temp_hour;
-    int temp_day_of_week;
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
@@ -381,11 +384,11 @@ void high_rh_night_transitions(void) {
         Serial.print("\nIt's night and RH is low enough. Transit to night.");
         new_state = "night";
     }
-    else if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week > 0 && temp_day_of_week < 6)  {
+    else if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
         Serial.print("\nIt is after 7, before 21 and a weekday but RH is still high. Transit to high_rh_day.");
         new_state = "high_rh_day";
     }
-    else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == 0 || temp_day_of_week == 6)) {
+    else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday")) {
         Serial.print("\nIt is after 8, before 21 and weekend but RH is still high. Transit to high_rh_day ");
         new_state = "high_rh_day";
     }
