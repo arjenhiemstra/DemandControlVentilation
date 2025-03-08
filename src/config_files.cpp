@@ -1,5 +1,6 @@
 #include "config_files.h"
 
+//Read both sensor config files an place contents in global variable
 void sensor_config_data_read() {
  
     const char* path1 = "/json/sensor_config1.json";
@@ -59,6 +60,7 @@ void sensor_config_data_read() {
     }
 }
 
+//Write valve config files with all valve positions 0
 void valve_status_file_create() {
     
     File file;
@@ -87,6 +89,7 @@ void valve_status_file_create() {
     }
 }
 
+//Delete file with path as input variable
 void delete_file(const char* path) {
     
     if (LittleFS.remove(path)) {
@@ -107,10 +110,9 @@ bool check_file_exists(const char* path) {
     }
 }
 
+// Functions read config file from file with file path as input and returns the contents of the file as a string. 
+// Assumes presents of file was checked before calling this function.
 String read_config_file(const char* path) {
-
-    // Functions read config file from file with file path as input and return the contents of the file as a string. 
-    // Assumes presents of fule was checked.
 
     File file = LittleFS.open(path, "r");
     String valve_positions;
@@ -125,6 +127,7 @@ String read_config_file(const char* path) {
 
 }
 
+//Write string to file, path and contents as string as parameters
 void write_config_file(const char* path, String file_contents) { 
 
     File file;
@@ -144,47 +147,4 @@ void write_config_file(const char* path, String file_contents) {
     file.close();
 }
 
-/*bool verify_valve_position_file_contents(void) {
-
-    int i;
-    File file;
-
-    //Assumes file exists
-    file = LittleFS.open("/valvepositions.json", "r");
-    if(!file) {
-        Serial.println("Failed to open file");
-        return false;
-    }
-    
-    JsonDocument doc;
-    DeserializationError error = deserializeJson(doc, file);
-
-    if (error) {
-        Serial.print("deserializeJson() failed: ");
-        Serial.println(error.c_str());
-        return false;
-    }
-
-    // Access the JSON data
-    //const char* valve0_pos = doc["valve0"];
-    int valve0_pos;
-    for(i=0;i<12;i++) {
-         "valve" + String(i) + "_pos" = 0;
-        Serial.print(valve0_pos);
-        
-        //= doc[("valve" + String(i))];
-        //int valve0_pos = doc[("valve" + i)];
-        //if (("valve" + String(i) + "_pos") >= 0 || ("valve" + String(i) + "_pos") <25) {
-        // if (valve0_pos >= 0 || valve0_pos <25) {
-        //     return true;
-        // }
-        // else {
-        //     return false;
-        //     break;
-        // }
-    }
-    
-    file.close();
-    return 0;
-}
-*/
+//Read settings files and save contents in global varaibles

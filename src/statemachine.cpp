@@ -74,7 +74,6 @@ void init_transitions(void) {
     String temp_day_of_week;
 
     int temp_hour;
-    
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
@@ -156,7 +155,7 @@ void day_transitions(void) {
         new_state = "cooking";
     }
     /*else if (valve_cycle_times_day() == true) {
-        Serial.print("It's day and valve_cycle_time_day. Transit to vavle_cycle_day state");
+        Serial.print("It's day and valve_cycle_time_day. Transit to valve_cycle_day state");
         new_state = "valve_cycle_day";
     }*/
     //Manual high speed mode is ignored for now
