@@ -248,14 +248,15 @@ Hides the menu at `48em`, but modify this based on your app's needs.
 
 
 /*Toggle switch*/
-/*$green: #56c080;*/
+/*$green: #56c080;
 
 *,
 *:before,
 *:after {
 	box-sizing: border-box;
-}
+}*/
 
+/*
 body {
 	font-family: -apple-system,".SFNSText-Regular","Helvetica Neue","Roboto","Segoe UI",sans-serif;
 }
@@ -308,4 +309,5 @@ body {
 	margin-left: 5px;
 	position: relative;
 	top: 2px;
-}
+}*/
+

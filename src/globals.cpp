@@ -12,8 +12,17 @@ SemaphoreHandle_t settings_fan_mutex = NULL;
 SemaphoreHandle_t settings_statemachine_mutex = NULL;
 SemaphoreHandle_t statemachine_state_mutex = NULL;          // for state of statemechine
 
+SemaphoreHandle_t settings_state_day_mutex = NULL;
+SemaphoreHandle_t settings_state_night_mutex = NULL;
+SemaphoreHandle_t settings_state_highco2day_mutex = NULL;
+SemaphoreHandle_t settings_state_highco2night_mutex = NULL;
+SemaphoreHandle_t settings_state_highrhday_mutex = NULL;
+SemaphoreHandle_t settings_state_highrhnight_mutex = NULL;
+SemaphoreHandle_t settings_state_cooking_mutex = NULL;
+SemaphoreHandle_t settings_state_cyclingday_mutex = NULL;
+SemaphoreHandle_t settings_state_cyclingnight_mutex = NULL;
+
 QueueHandle_t sensor_queue;
-//QueueHandle_t sensor_queue;
 
 //Global for valve control data
 JsonDocument valve_control_data;
@@ -28,6 +37,18 @@ JsonDocument settings_mqtt_data;
 JsonDocument settings_i2c_data;
 JsonDocument settings_fan_data;
 JsonDocument settings_statemachine_data;
+
+//Define globals for valve settings per state
+JsonDocument settings_state_day;
+JsonDocument settings_state_night;
+JsonDocument settings_state_highco2day;
+JsonDocument settings_state_highco2night;
+JsonDocument settings_state_highrhday;
+JsonDocument settings_state_highrhnight;
+JsonDocument settings_state_cooking;
+JsonDocument settings_state_cyclingday;
+JsonDocument settings_state_cyclingnight;
+
 
 String wire_sensor_config_string = {};
 String wire1_sensor_config_string = {};

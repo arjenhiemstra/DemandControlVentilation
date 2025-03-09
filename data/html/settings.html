@@ -34,23 +34,22 @@
 
     <div id="main">
         <div class="header">
-            <h2>OSVentilationPy Status Page</h2>
-            <h4>Opens Source demand controlled Ventilation system</h4>
+            <h2>OSVentilation Settings Page</h2>
         </div>
 
         <div class="content">
-            <h2 class="content-subhead">Ventilation system settings</h2>
+            <h4 class="content-subhead">Network configuration - %STATUS_NETWORK_CONFIG%</h4>
             <p>
                 <form class="pure-form pure-form-stacked" method="POST" action="/settings_network">
                     <fieldset>
-                        <legend>Network configuration - %STATUS_NETWORK_CONFIG%</legend>
                         <div class="pure-g">
                             <div class="pure-u-1 pure-u-md-1-1">
-                                <label class="toggle">
-                                    <input class="toggle-checkbox" type="checkbox">
-                                    <div class="toggle-switch"></div>
-                                    <span class="toggle-label">Enable DHCP</span>
-                                </label>
+                                <label for="enable_dhcp">Enable DHCP:</label>
+                                <select id="wire_sensor0_type" name="enable_dhcp" id="enable_dhcp" class="pure-input-1-1">
+                                    <option selected>%ENABLE_DHCP%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
                             <div class="pure-u-1 pure-u-md-1-2">
                                 <label for="ssid">SSID:</label>
@@ -82,22 +81,23 @@
                             </div>
                         </div>
                         <br>
-                        <input type="submit" value="Save network configuration">
+                        <input type="submit" value="Save network configuration" class="pure-button-primary button-small pure-button">
                         <br>
                     </fieldset>
                 </form>
             </p>
+            <h4 class="content-subhead">MQTT configuration - %STATUS_MQTT_CONFIG%</h4>
             <p>
                 <form class="pure-form pure-form-stacked" method="POST" action="/settings_mqtt">
                     <fieldset>
-                        <legend>MQTT configuration - %STATUS_MQTT_CONFIG%</legend>
                         <div class="pure-g">
                             <div class="pure-u-1 pure-u-md-1-1">
-                                <label class="toggle">
-                                    <input class="toggle-checkbox" type="checkbox">
-                                    <div class="toggle-switch"></div>
-                                    <span class="toggle-label">Enable MQTT</span>
-                                </label>
+                                <label for="enable_mqtt">Enable MQTT:</label>
+                                <select id="enable_mqtt" name="enable_mqtt" id="enable_mqtt" class="pure-input-1-1">
+                                    <option selected>%ENABLE_MQTT%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
                             <div class="pure-u-1 pure-u-md-1-2">
                                 <label for="mqtt_server">MQTT Server:</label>
@@ -113,15 +113,15 @@
                             </div>
                         </div>
                         <br>
-                        <input type="submit" value="Save MQTT settings">
+                        <input type="submit" value="Save MQTT settings" class="pure-button-primary button-ssmall pure-button">
                         <br>
                     </fieldset>
                 </form>
-            </p>    
+            </p> 
+            <h4 class="content-subhead">Hardware I2C configuration - %STATUS_I2C_HARDWARE_CONFIG%</h4>   
             <p>
                 <form class="pure-form pure-form-stacked" method="POST" action="/settings_i2c">
                     <fieldset>
-                        <legend>Hardware I2C configuration - %STATUS_I2C_HARDWARE_CONFIG%</legend>
                         <div class="pure-g">
                             <div class="pure-u-1 pure-u-md-1-2">
                                 <label for="bus0_multiplexer_address">Bus0 (Wire) I2C Multiplexer address:</label>
@@ -132,11 +132,12 @@
                                 <input type="text" placeholder="default 0x70" value="%BUS1_MULTIPLEXER_ADDRESS%" name="bus1_multiplexer_address" id="bus1_multiplexer_address" class="pure-input-3-4" />
                             </div>
                             <div class="pure-u-1 pure-u-md-1-2">
-                                <label class="toggle">
-                                    <input class="toggle-checkbox" type="checkbox">
-                                    <div class="toggle-switch"></div>
-                                    <span class="toggle-label">Enable Display</span>
-                                </label>
+                                <label for="enable_lcd">Enable display:</label>
+                                <select id="enable_lcd" name="enable_lcd" id="enable_lcd" class="pure-input-1-1">
+                                    <option selected>%ENABLE_LCD%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
                             <div class="pure-u-1 pure-u-md-1-2">
                                 <label for="display_i2c_adddress">Display I2C address:</label>
@@ -144,15 +145,15 @@
                             </div>
                         </div>
                         <br>
-                        <input type="submit" value="Save I2C settings">
+                        <input type="submit" value="Save I2C settings" class="pure-button-primary button-xsmall pure-button">
                         <br>
                     </fieldset>
                 </form>
             </p>
+            <h4 class="content-subhead">Fan control settings, by MQTT subscribe or http request - %STATUS_FAN_CONTROL_CONFIG%</h4> 
             <p>
                 <form class="pure-form pure-form-stacked" method="POST" action="/settings_fan">
                     <fieldset>
-                        <legend>Fan control settings, by MQTT subscribe or http request - %STATUS_FAN_CONTROL_CONFIG%</legend>
                         <div class="pure-g">
                             <div class="pure-u-1 pure-u-md-1-2">
                                 <label for="fan_control_mode">Fan control mode:</label>
@@ -180,15 +181,15 @@
                             </div>
                         </div>
                         <br>
-                        <input type="submit" value="Save fan control settings">
+                        <input type="submit" value="Save fan control settings" class="pure-button-primary button-xsmall pure-button">
                         <br>
                     </fieldset>
                 </form>
             </p>
+            <h4 class="content-subhead">State machine settings - Define which sensors are used in statemachine for RH and CO2 - %STATUS_STATEMACHINE_CONFIG%</h4> 
             <p>
                 <form class="pure-form pure-form-stacked" method="POST" action="/settings_statemachine">
                     <fieldset>
-                        <legend>State machine settings - Define which sensors are used in statemachine for RH and CO2 - %STATUS_STATEMACHINE_CONFIG%</legend>
                         <div class="pure-g">
                             <div class="pure-u-1 pure-u-md-1-2">
                                 <label for="statemachine_rh_sensor">Statemachine humidity sensor:</label>
@@ -232,7 +233,7 @@
                             </div>
                         </div>
                         <br>
-                        <input type="submit" value="Save statemachine settings">
+                        <input type="submit" value="Save statemachine settings" class="pure-button-primary button-xsmall pure-button">
                         <br>
                     </fieldset>
                 </form>

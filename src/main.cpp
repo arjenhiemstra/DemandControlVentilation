@@ -20,8 +20,18 @@ void setup() {
   statemachine_state_mutex = xSemaphoreCreateMutex();
   valve_control_data_mutex = xSemaphoreCreateMutex();
 
+  settings_state_day_mutex = xSemaphoreCreateMutex();
+  settings_state_night_mutex = xSemaphoreCreateMutex();
+  settings_state_highco2day_mutex = xSemaphoreCreateMutex();
+  settings_state_highco2night_mutex = xSemaphoreCreateMutex();
+  settings_state_highrhday_mutex = xSemaphoreCreateMutex();
+  settings_state_highrhnight_mutex = xSemaphoreCreateMutex();
+  settings_state_cooking_mutex = xSemaphoreCreateMutex();
+  settings_state_cyclingday_mutex = xSemaphoreCreateMutex();
+  settings_state_cyclingnight_mutex = xSemaphoreCreateMutex();
+
   float temp[2][8][3];
-  //sensor_queue = xQueueCreate(10, sizeof(temp));
+
   sensor_queue = xQueueCreate(1, sizeof(temp));
 
   // First switch off all outputs which randomly come up at power on

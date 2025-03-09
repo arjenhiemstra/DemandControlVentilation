@@ -459,6 +459,8 @@ String settings_processor(const String& var) {
         status = "<font color=\"green\">Network settings file found.</font>";
         if (var == "STATUS_NETWORK_CONFIG")
             return F(status);
+        if(var == "ENABLE_DHCP")
+            return (settings_network_doc[String("enable_dhcp")]);
         if(var == "SSID")
             return (settings_network_doc[String("ssid")]);
         if(var == "WIFI_PASSWORD")
@@ -480,9 +482,7 @@ String settings_processor(const String& var) {
             return F(status);
         }
     }
-
     
-
     /*MQTT Settings processor*/
     if (settings_mqtt_mutex != NULL) {
         if(xSemaphoreTake(settings_mqtt_mutex, ( TickType_t ) 10 ) == pdTRUE) {
@@ -499,6 +499,8 @@ String settings_processor(const String& var) {
         status = "<font color=\"green\">MQTT settings file found.</font>";
         if (var == "STATUS_MQTT_CONFIG") 
             return F(status);
+        if(var == "ENABLE_MQTT")
+            return (settings_mqtt_doc[String("enable_mqtt")]);
         if(var == "MQTT_SERVER")
             return (settings_mqtt_doc[String("mqtt_server")]);
         if(var == "MQTT_PORT")
@@ -533,6 +535,8 @@ String settings_processor(const String& var) {
             return (settings_i2c_doc[String("bus0_multiplexer_address")]);
         if(var == "BUS1_MULTIPLEXER_ADDRESS")
             return (settings_i2c_doc[String("bus1_multiplexer_address")]);
+        if(var == "ENABLE_LCD")   
+            return (settings_i2c_doc[String("enable_lcd")]);
         if(var == "DISPLAY_I2C_ADDRESS")
             return (settings_i2c_doc[String("display_i2c_address")]);
     }
@@ -605,5 +609,38 @@ String settings_processor(const String& var) {
         }
     }
 
+    return String();
+}
+
+String settings_valve_state(const String& var) {
+    
+    /*Day state*/
+
+
+    /*Night state*/
+
+
+    /*High CO2 day state*/
+
+
+    /*High CO2 night state*/
+
+
+    /*High RH day state*/
+
+
+    /*High RH night state*/
+
+
+    /*Cooking state*/
+
+
+    /*Valve cycling day state*/
+
+
+    /*Valve cycling night state*/
+
+    
+    
     return String();
 }

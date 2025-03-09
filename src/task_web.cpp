@@ -109,6 +109,7 @@ const char* WIRE_SENSOR_CONFIG = "wire_sensor_config";
 const char* WIRE1_SENSOR_CONFIG = "wire1_sensor_config";
 
 const char* STATUS_NETWORK_CONFIG = "status_network_config";
+const char* ENABLE_DHCP = "enable_dhcp";
 const char* SSID = "ssid";
 const char* WIFI_PASSWORD = "wifi_password";
 const char* IP_ADDRESS = "ip_address";
@@ -118,6 +119,7 @@ const char* PRIMARY_DNS = "primary_dns";
 const char* SECONDARY_DNS = "secondary_dns";
 
 const char* STATUS_MQTT_CONFIG = "status_mqtt_config";
+const char* ENABLE_MQTT = "enable_mqtt";
 const char* MQTT_SERVER = "mqtt_server";
 const char* MQTT_PORT = "mqtt_port";
 const char* MQTT_BASE_TOPIC = "mqtt_base_topic";
@@ -125,6 +127,7 @@ const char* MQTT_BASE_TOPIC = "mqtt_base_topic";
 const char* STATUS_I2C_CONFIG = "status_i2c_config";
 const char* BUS0_MULTIPLEXER_ADDRESS = "bus0_multiplexer_address";
 const char* BUS1_MULTIPLEXER_ADDRESS = "bus0_multiplexer_address";
+const char* ENABLE_LCD = "enable_lcd";
 const char* DISPLAY_I2C_ADDRESS = "display_i2c_address";
 
 const char* STATUS_FAN_CONTROL_CONFIG = "status_fan_control_config";
@@ -137,6 +140,150 @@ const char* FAN_CONTROL_URL_LOW_SPEED = "fan_control_url_low_speed";
 const char* STATUS_STATEMACHINE_CONFIG = "status_statemachine_config";
 const char* STATEMACHINE_RH_SENSOR = "statemachine_rh_sensor";
 const char* STATEMACHINE_CO2_SENSOR = "statemachine_co2_sensor";
+
+const char* STATEMACHINE_VALVE_DAY_CONFIG = "statemachine_valve_day_config";
+const char* ENABLE_STATE_DAY = "enable_state_day";
+const char* NAME_STATE_DAY = "name_state_day";
+const char* VALVE0_POSITION_DAY = "valve0_position_day";
+const char* VALVE1_POSITION_DAY = "valve1_position_day";
+const char* VALVE2_POSITION_DAY = "valve2_position_day";
+const char* VALVE3_POSITION_DAY = "valve3_position_day";
+const char* VALVE4_POSITION_DAY = "valve4_position_day";
+const char* VALVE5_POSITION_DAY = "valve5_position_day";
+const char* VALVE6_POSITION_DAY = "valve6_position_day";
+const char* VALVE7_POSITION_DAY = "valve7_position_day";
+const char* VALVE8_POSITION_DAY = "valve8_position_day";
+const char* VALVE9_POSITION_DAY = "valve9_position_day";
+const char* VALVE10_POSITION_DAY = "valve10_position_day";
+const char* VALVE11_POSITION_DAY = "valve11_position_day";
+
+const char* STATEMACHINE_VALVE_NIGHT_CONFIG = "statemachine_valve_night_config";
+const char* ENABLE_STATE_NIGHT = "enable_state_night";
+const char* NAME_STATE_NIGHT = "name_state_night";
+const char* VALVE0_POSITION_NIGHT = "valve0_position_night";
+const char* VALVE1_POSITION_NIGHT = "valve1_position_night";
+const char* VALVE2_POSITION_NIGHT = "valve2_position_night";
+const char* VALVE3_POSITION_NIGHT = "valve3_position_night";
+const char* VALVE4_POSITION_NIGHT = "valve4_position_night";
+const char* VALVE5_POSITION_NIGHT = "valve5_position_night";
+const char* VALVE6_POSITION_NIGHT = "valve6_position_night";
+const char* VALVE7_POSITION_NIGHT = "valve7_position_night";
+const char* VALVE8_POSITION_NIGHT = "valve8_position_night";
+const char* VALVE9_POSITION_NIGHT = "valve9_position_night";
+const char* VALVE10_POSITION_NIGHT = "valve10_position_night";
+const char* VALVE11_POSITION_NIGHT = "valve11_position_night";
+
+const char* STATEMACHINE_VALVE_HIGHCO2DAY_CONFIG = "statemachine_valve_highco2day_config";
+const char* ENABLE_STATE_HIGHCO2DAY = "enable_state_highco2day";
+const char* NAME_STATE_HIGHCO2DAY = "name_state_highco2day";
+const char* VALVE0_POSITION_HIGHCO2DAY = "valve0_position_highco2day";
+const char* VALVE1_POSITION_HIGHCO2DAY = "valve1_position_highco2day";
+const char* VALVE2_POSITION_HIGHCO2DAY = "valve2_position_highco2day";
+const char* VALVE3_POSITION_HIGHCO2DAY = "valve3_position_highco2day";
+const char* VALVE4_POSITION_HIGHCO2DAY = "valve4_position_highco2day";
+const char* VALVE5_POSITION_HIGHCO2DAY = "valve5_position_highco2day";
+const char* VALVE6_POSITION_HIGHCO2DAY = "valve6_position_highco2day";
+const char* VALVE7_POSITION_HIGHCO2DAY = "valve7_position_highco2day";
+const char* VALVE8_POSITION_HIGHCO2DAY = "valve8_position_highco2day";
+const char* VALVE9_POSITION_HIGHCO2DAY = "valve9_position_highco2day";
+const char* VALVE10_POSITION_HIGHCO2DAY = "valve10_position_highco2day";
+const char* VALVE11_POSITION_HIGHCO2DAY = "valve11_position_highco2day";
+
+const char* STATEMACHINE_VALVE_HIGHCO2NIGHT_CONFIG = "statemachine_valve_highco2night_config";
+const char* ENABLE_STATE_HIGHCO2NIGHT = "enable_state_highco2night";
+const char* NAME_STATE_HIGHCO2NIGHT = "name_state_highco2night";
+const char* VALVE0_POSITION_HIGHCO2NIGHT = "valve0_position_highco2night";
+const char* VALVE1_POSITION_HIGHCO2NIGHT = "valve1_position_highco2night";
+const char* VALVE2_POSITION_HIGHCO2NIGHT = "valve2_position_highco2night";
+const char* VALVE3_POSITION_HIGHCO2NIGHT = "valve3_position_highco2night";
+const char* VALVE4_POSITION_HIGHCO2NIGHT = "valve4_position_highco2night";
+const char* VALVE5_POSITION_HIGHCO2NIGHT = "valve5_position_highco2night";
+const char* VALVE6_POSITION_HIGHCO2NIGHT = "valve6_position_highco2night";
+const char* VALVE7_POSITION_HIGHCO2NIGHT = "valve7_position_highco2night";
+const char* VALVE8_POSITION_HIGHCO2NIGHT = "valve8_position_highco2night";
+const char* VALVE9_POSITION_HIGHCO2NIGHT = "valve9_position_highco2night";
+const char* VALVE10_POSITION_HIGHCO2NIGHT = "valve10_position_highco2night";
+const char* VALVE11_POSITION_HIGHCO2NIGHT = "valve11_position_highco2night";
+
+const char* STATEMACHINE_VALVE_HIGHRHDAY_CONFIG = "statemachine_valve_highrhday_config";
+const char* ENABLE_STATE_HIGHRHDAY = "enable_state_highrhday";
+const char* NAME_STATE_HIGHRHDAY = "name_state_highrhday";
+const char* VALVE0_POSITION_HIGHRHDAY = "valve0_position_highrhday";
+const char* VALVE1_POSITION_HIGHRHDAY = "valve1_position_highrhday";
+const char* VALVE2_POSITION_HIGHRHDAY = "valve2_position_highrhday";
+const char* VALVE3_POSITION_HIGHRHDAY = "valve3_position_highrhday";
+const char* VALVE4_POSITION_HIGHRHDAY = "valve4_position_highrhday";
+const char* VALVE5_POSITION_HIGHRHDAY = "valve5_position_highrhday";
+const char* VALVE6_POSITION_HIGHRHDAY = "valve6_position_highrhday";
+const char* VALVE7_POSITION_HIGHRHDAY = "valve7_position_highrhday";
+const char* VALVE8_POSITION_HIGHRHDAY = "valve8_position_highrhday";
+const char* VALVE9_POSITION_HIGHRHDAY = "valve9_position_highrhday";
+const char* VALVE10_POSITION_HIGHRHDAY = "valve10_position_highrhday";
+const char* VALVE11_POSITION_HIGHRHDAY = "valve11_position_highrhday";
+
+const char* STATEMACHINE_VALVE_HIGHRHNIGHT_CONFIG = "statemachine_valve_highrhnight_config";
+const char* ENABLE_STATE_HIGHRHNIGHT = "enable_state_highrhnight";
+const char* NAME_STATE_HIGHRHNIGHT = "name_state_highrhnight";
+const char* VALVE0_POSITION_HIGHRHNIGHT = "valve0_position_highrhnight";
+const char* VALVE1_POSITION_HIGHRHNIGHT = "valve1_position_highrhnight";
+const char* VALVE2_POSITION_HIGHRHNIGHT = "valve2_position_highrhnight";
+const char* VALVE3_POSITION_HIGHRHNIGHT = "valve3_position_highrhnight";
+const char* VALVE4_POSITION_HIGHRHNIGHT = "valve4_position_highrhnight";
+const char* VALVE5_POSITION_HIGHRHNIGHT = "valve5_position_highrhnight";
+const char* VALVE6_POSITION_HIGHRHNIGHT = "valve6_position_highrhnight";
+const char* VALVE7_POSITION_HIGHRHNIGHT = "valve7_position_highrhnight";
+const char* VALVE8_POSITION_HIGHRHNIGHT = "valve8_position_highrhnight";
+const char* VALVE9_POSITION_HIGHRHNIGHT = "valve9_position_highrhnight";
+const char* VALVE10_POSITION_HIGHRHNIGHT = "valve10_position_highrhnight";
+const char* VALVE11_POSITION_HIGHRHNIGHT = "valve11_position_highrhnight";
+
+const char* STATEMACHINE_VALVE_COOKING_CONFIG = "statemachine_valve_cooking_config";
+const char* ENABLE_STATE_COOKING = "enable_state_cooking";
+const char* NAME_STATE_COOKING = "name_state_cooking";
+const char* VALVE0_POSITION_COOKING = "valve0_position_cooking";
+const char* VALVE1_POSITION_COOKING = "valve1_position_cooking";
+const char* VALVE2_POSITION_COOKING = "valve2_position_cooking";
+const char* VALVE3_POSITION_COOKING = "valve3_position_cooking";
+const char* VALVE4_POSITION_COOKING = "valve4_position_cooking";
+const char* VALVE5_POSITION_COOKING = "valve5_position_cooking";
+const char* VALVE6_POSITION_COOKING = "valve6_position_cooking";
+const char* VALVE7_POSITION_COOKING = "valve7_position_cooking";
+const char* VALVE8_POSITION_COOKING = "valve8_position_cooking";
+const char* VALVE9_POSITION_COOKING = "valve9_position_cooking";
+const char* VALVE10_POSITION_COOKING = "valve10_position_cooking";
+const char* VALVE11_POSITION_COOKING = "valve11_position_cooking";
+
+const char* STATEMACHINE_VALVE_CYCLINGDAY_CONFIG = "statemachine_valve_cyclingday_config";
+const char* ENABLE_STATE_CYCLINGDAY = "enable_state_cyclingday";
+const char* NAME_STATE_CYCLINGDAY = "name_state_cyclingday";
+const char* VALVE0_POSITION_CYCLINGDAY = "valve0_position_cyclingday";
+const char* VALVE1_POSITION_CYCLINGDAY = "valve1_position_cyclingday";
+const char* VALVE2_POSITION_CYCLINGDAY = "valve2_position_cyclingday";
+const char* VALVE3_POSITION_CYCLINGDAY = "valve3_position_cyclingday";
+const char* VALVE4_POSITION_CYCLINGDAY = "valve4_position_cyclingday";
+const char* VALVE5_POSITION_CYCLINGDAY = "valve5_position_cyclingday";
+const char* VALVE6_POSITION_CYCLINGDAY = "valve6_position_cyclingday";
+const char* VALVE7_POSITION_CYCLINGDAY = "valve7_position_cyclingday";
+const char* VALVE8_POSITION_CYCLINGDAY = "valve8_position_cyclingday";
+const char* VALVE9_POSITION_CYCLINGDAY = "valve9_position_cyclingday";
+const char* VALVE10_POSITION_CYCLINGDAY = "valve10_position_cyclingday";
+const char* VALVE11_POSITION_CYCLINGDAY = "valve11_position_cyclingday";
+
+const char* STATEMACHINE_VALVE_CYCLINGNIGHT_CONFIG = "statemachine_valve_cyclingnight_config";
+const char* ENABLE_STATE_CYCLINGNIGHT = "enable_state_cyclingnight";
+const char* NAME_STATE_CYCLINGNIGHT = "name_state_cyclingnight";
+const char* VALVE0_POSITION_CYCLINGNIGHT = "valve0_position_cyclingnight";
+const char* VALVE1_POSITION_CYCLINGNIGHT = "valve1_position_cyclingnight";
+const char* VALVE2_POSITION_CYCLINGNIGHT = "valve2_position_cyclingnight";
+const char* VALVE3_POSITION_CYCLINGNIGHT = "valve3_position_cyclingnight";
+const char* VALVE4_POSITION_CYCLINGNIGHT = "valve4_position_cyclingnight";
+const char* VALVE5_POSITION_CYCLINGNIGHT = "valve5_position_cyclingnight";
+const char* VALVE6_POSITION_CYCLINGNIGHT = "valve6_position_cyclingnight";
+const char* VALVE7_POSITION_CYCLINGNIGHT = "valve7_position_cyclingnight";
+const char* VALVE8_POSITION_CYCLINGNIGHT = "valve8_position_cyclingnight";
+const char* VALVE9_POSITION_CYCLINGNIGHT = "valve9_position_cyclingnight";
+const char* VALVE10_POSITION_CYCLINGNIGHT = "valve10_position_cyclingnight";
+const char* VALVE11_POSITION_CYCLINGNIGHT = "valve11_position_cyclingnight";
 
 void startTaskwebcode(void) {
 
@@ -178,6 +325,9 @@ void Taskwebcode(void *pvParameters) {
         for(int i=0;i<params;i++){
           const AsyncWebParameter* p = request->getParam(i);
           if(p->isPost()){
+            if (p->name() == ENABLE_DHCP) {
+              settings_network_data["enable_dhcp"] = p->value().c_str();;
+            }
             if (p->name() == SSID) {
               settings_network_data["ssid"] = p->value().c_str();;
             }
@@ -226,6 +376,9 @@ void Taskwebcode(void *pvParameters) {
             if (p->name() == STATUS_MQTT_CONFIG) {
               settings_mqtt_data["status_mqtt_config"] = p->value().c_str();;
             }
+            if (p->name() == ENABLE_MQTT) {
+              settings_mqtt_data["enable_mqtt"] = p->value().c_str();;
+            }
             if (p->name() == MQTT_SERVER) {
               settings_mqtt_data["mqtt_server"] = p->value().c_str();;
             }
@@ -266,6 +419,9 @@ void Taskwebcode(void *pvParameters) {
             }
             if (p->name() == BUS1_MULTIPLEXER_ADDRESS) {
               settings_i2c_data["bus1_multiplexer_address"] = p->value().c_str();;
+            }
+            if (p->name() == ENABLE_LCD) {
+              settings_i2c_data["enable_lcd"] = p->value().c_str();;
             }
             if (p->name() == DISPLAY_I2C_ADDRESS) {
               settings_i2c_data["display_i2c_address"] = p->value().c_str();;
@@ -714,7 +870,6 @@ void Taskwebcode(void *pvParameters) {
   });
   
   server.on("/sensorconfig2", HTTP_POST, [](AsyncWebServerRequest *request) {
-    
     int params = request->params();
     for(int i=0;i<params;i++){
       const AsyncWebParameter* p = request->getParam(i);
@@ -830,6 +985,46 @@ void Taskwebcode(void *pvParameters) {
   server.on("/statemachine", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send(LittleFS, "/html/statemachine.html", "text/html");
   });
+
+  server.on("/settings_valve_day", HTTP_POST, [](AsyncWebServerRequest *request) {
+    
+    if (settings_state_day_mutex != NULL) {
+      if(xSemaphoreTake(settings_state_day_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        int params = request->params();
+        for(int i=0;i<params;i++){
+          const AsyncWebParameter* p = request->getParam(i);
+          if(p->isPost()){
+            if (p->name() == ENABLE_STATE_DAY) {
+              settings_state_day["enable_state_day"] = p->value().c_str();;
+            }
+            if (p->name() == NAME_STATE_DAY) {
+              settings_state_day["name_state_day"] = p->value().c_str();
+            }     
+            if (p->name() == VALVE0_POSITION_DAY) {
+              settings_state_day["valve0_position_day"] = p->value().c_str();
+            }
+            if (p->name() ==  VALVE1_POSITION_DAY) {
+              settings_state_day["valve1_position_day"] = p->value().c_str();;
+            }
+            if (p->name() ==  VALVE2_POSITION_DAY) {
+              settings_state_day["valve2_position_day"] = p->value().c_str();;
+            }
+            if (p->name() ==  VALVE3_POSITION_DAY) {
+              settings_state_day["valve3_position_day"] = p->value().c_str();;
+            }
+          }
+        }
+        const char* path2 = "/json/settings_state_day.json";
+        String settings_state_day_str;
+
+        serializeJson(settings_state_day, settings_state_day_str);
+        write_config_file(path2, settings_state_day_str);
+      }
+    }
+    request->send(LittleFS, "/html/statemachine.html", String(), false, settings_valve_state);
+    xSemaphoreGive(settings_state_day_mutex);
+  });
+
 
   // Start server
   server.begin();

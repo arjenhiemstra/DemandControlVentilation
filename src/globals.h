@@ -32,6 +32,16 @@ extern SemaphoreHandle_t settings_fan_mutex;
 extern SemaphoreHandle_t settings_statemachine_mutex;
 extern SemaphoreHandle_t statemachine_state_mutex;
 
+extern SemaphoreHandle_t settings_state_day_mutex;
+extern SemaphoreHandle_t settings_state_night_mutex;
+extern SemaphoreHandle_t settings_state_highco2day_mutex;
+extern SemaphoreHandle_t settings_state_highco2night_mutex;
+extern SemaphoreHandle_t settings_state_highrhday_mutex;
+extern SemaphoreHandle_t settings_state_highrhnight_mutex;
+extern SemaphoreHandle_t settings_state_cooking_mutex;
+extern SemaphoreHandle_t settings_state_cyclingday_mutex;
+extern SemaphoreHandle_t settings_state_cyclingnight_mutex;
+
 extern QueueHandle_t sensor_queue;
 
 //Global for valve control data
@@ -50,6 +60,17 @@ extern JsonDocument settings_mqtt_data;
 extern JsonDocument settings_i2c_data;
 extern JsonDocument settings_fan_data;
 extern JsonDocument settings_statemachine_data;
+
+//Define globals for valve settings per state
+extern JsonDocument settings_state_day;
+extern JsonDocument settings_state_night;
+extern JsonDocument settings_state_highco2day;
+extern JsonDocument settings_state_highco2night;
+extern JsonDocument settings_state_highrhday;
+extern JsonDocument settings_state_highrhnight;
+extern JsonDocument settings_state_cooking;
+extern JsonDocument settings_state_cyclingday;
+extern JsonDocument settings_state_cyclingnight;
 
 extern String wire_sensor_config_string;
 extern String wire1_sensor_config_string;
