@@ -672,39 +672,39 @@ String settings_valve_state(const String& var) {
             xSemaphoreGive(settings_state_day_mutex);
         }
     }
-
+ 
     if (settings_state_day_present == 1) {
         status = "<font color=\"green\">Ok.</font>";
         if (var == "STATUS_STATE_DAY_CONFIG") 
             return F(status);
-        if(var == " ENABLE_STATE_DAY")
+        if(var == "ENABLE_STATE_DAY")
             return (settings_state_day_doc[String("enable_state_day")]);
         if(var == "NAME_STATE_DAY")
             return (settings_state_day_doc[String("name_state_day")]);
         if(var == "VALVE0_POSITION_DAY")
-            return (settings_state_day_doc[String("valve0_state_day")]);
+            return (settings_state_day_doc[String("valve0_position_day")]);
         if(var == "VALVE1_POSITION_DAY")
-            return (settings_state_day_doc[String("valve1_state_day")]);
+            return (settings_state_day_doc[String("valve1_position_day")]);
         if(var == "VALVE2_POSITION_DAY")
-            return (settings_state_day_doc[String("valve2_state_day")]);
+            return (settings_state_day_doc[String("valve2_position_day")]);
         if(var == "VALVE3_POSITION_DAY")
-            return (settings_state_day_doc[String("valve3_state_day")]);
+            return (settings_state_day_doc[String("valve3_position_day")]);
         if(var == "VALVE4_POSITION_DAY")
-            return (settings_state_day_doc[String("valve4_state_day")]);
+            return (settings_state_day_doc[String("valve4_position_day")]);
         if(var == "VALVE5_POSITION_DAY")
-            return (settings_state_day_doc[String("valve5_state_day")]);
+            return (settings_state_day_doc[String("valve5_position_day")]);
         if(var == "VALVE6_POSITION_DAY")
-            return (settings_state_day_doc[String("valve6_state_day")]);
+            return (settings_state_day_doc[String("valve6_position_day")]);
         if(var == "VALVE7_POSITION_DAY")
-            return (settings_state_day_doc[String("valve7_state_day")]);
+            return (settings_state_day_doc[String("valve7_position_day")]);
         if(var == "VALVE8_POSITION_DAY")
-            return (settings_state_day_doc[String("valve8_state_day")]);
+            return (settings_state_day_doc[String("valve8_position_day")]);
         if(var == "VALVE9_POSITION_DAY")
-            return (settings_state_day_doc[String("valve9_state_day")]);
+            return (settings_state_day_doc[String("valve9_position_day")]);
         if(var == "VALVE10_POSITION_DAY")
-            return (settings_state_day_doc[String("valve10_state_day")]);
+            return (settings_state_day_doc[String("valve10_position_day")]);
         if(var == "VALVE11_POSITION_DAY")
-            return (settings_state_day_doc[String("valve11_state_day")]);
+            return (settings_state_day_doc[String("valve11_position_day")]);
     }
     else {
         status = "<font color=\"red\">Settings file not found.</font>";
@@ -729,34 +729,34 @@ String settings_valve_state(const String& var) {
         status = "<font color=\"green\">Ok.</font>";
         if (var == "STATUS_STATE_NIGHT_CONFIG") 
             return F(status);
-        if(var == " ENABLE_STATE_NIGHT")
+        if(var == "ENABLE_STATE_NIGHT")
             return (settings_state_night_doc[String("enable_state_night")]);
         if(var == "NAME_STATE_NIGHT")
             return (settings_state_night_doc[String("name_state_night")]);
         if(var == "VALVE0_POSITION_NIGHT")
-            return (settings_state_night_doc[String("valve0_state_night")]);
+            return (settings_state_night_doc[String("valve0_position_night")]);
         if(var == "VALVE1_POSITION_NIGHT")
-            return (settings_state_night_doc[String("valve1_state_night")]);
+            return (settings_state_night_doc[String("valve1_position_night")]);
         if(var == "VALVE2_POSITION_NIGHT")
-            return (settings_state_night_doc[String("valve2_state_night")]);
+            return (settings_state_night_doc[String("valve2_position_night")]);
         if(var == "VALVE3_POSITION_NIGHT")
-            return (settings_state_night_doc[String("valve3_state_night")]);
+            return (settings_state_night_doc[String("valve3_position_night")]);
         if(var == "VALVE4_POSITION_NIGHT")
-            return (settings_state_night_doc[String("valve4_state_night")]);
+            return (settings_state_night_doc[String("valve4_position_night")]);
         if(var == "VALVE5_POSITION_NIGHT")
-            return (settings_state_night_doc[String("valve5_state_night")]);
+            return (settings_state_night_doc[String("valve5_position_night")]);
         if(var == "VALVE6_POSITION_NIGHT")
-            return (settings_state_night_doc[String("valve6_state_night")]);
+            return (settings_state_night_doc[String("valve6_position_night")]);
         if(var == "VALVE7_POSITION_NIGHT")
-            return (settings_state_night_doc[String("valve7_state_night")]);
+            return (settings_state_night_doc[String("valve7_position_night")]);
         if(var == "VALVE8_POSITION_NIGHT")
-            return (settings_state_night_doc[String("valve8_state_night")]);
+            return (settings_state_night_doc[String("valve8_position_night")]);
         if(var == "VALVE9_POSITION_NIGHT")
-            return (settings_state_night_doc[String("valve9_state_night")]);
+            return (settings_state_night_doc[String("valve9_position_night")]);
         if(var == "VALVE10_POSITION_NIGHT")
-            return (settings_state_night_doc[String("valve10_state_night")]);
+            return (settings_state_night_doc[String("valve10_position_night")]);
         if(var == "VALVE11_POSITION_NIGHT")
-            return (settings_state_night_doc[String("valve11_state_night")]);
+            return (settings_state_night_doc[String("valve11_position_night")]);
     }
     else {
         status = "<font color=\"red\">Settings file not found.</font>";
@@ -781,34 +781,34 @@ String settings_valve_state(const String& var) {
         status = "<font color=\"green\">Ok.</font>";
         if (var == "STATUS_STATE_HIGHCO2DAY_CONFIG") 
             return F(status);
-        if(var == " ENABLE_STATE_HIGHCO2DAY")
+        if(var == "ENABLE_STATE_HIGHCO2DAY")
             return (settings_state_highco2day_doc[String("enable_state_highco2day")]);
         if(var == "NAME_STATE_HIGHCO2DAY")
             return (settings_state_highco2day_doc[String("name_state_highco2day")]);
         if(var == "VALVE0_POSITION_HIGHCO2DAY")
-            return (settings_state_highco2day_doc[String("valve0_state_highco2day")]);
+            return (settings_state_highco2day_doc[String("valve0_position_highco2day")]);
         if(var == "VALVE1_POSITION_HIGHCO2DAY")
-            return (settings_state_highco2day_doc[String("valve1_state_highco2day")]);
+            return (settings_state_highco2day_doc[String("valve1_position_highco2day")]);
         if(var == "VALVE2_POSITION_HIGHCO2DAY")
-            return (settings_state_highco2day_doc[String("valve2_state_highco2day")]);
+            return (settings_state_highco2day_doc[String("valve2_position_highco2day")]);
         if(var == "VALVE3_POSITION_HIGHCO2DAY")
-            return (settings_state_highco2day_doc[String("valve3_state_highco2day")]);
+            return (settings_state_highco2day_doc[String("valve3_position_highco2day")]);
         if(var == "VALVE4_POSITION_HIGHCO2DAY")
-            return (settings_state_highco2day_doc[String("valve4_state_highco2day")]);
+            return (settings_state_highco2day_doc[String("valve4_position_highco2day")]);
         if(var == "VALVE5_POSITION_HIGHCO2DAY")
-            return (settings_state_highco2day_doc[String("valve5_state_highco2day")]);
+            return (settings_state_highco2day_doc[String("valve5_position_highco2day")]);
         if(var == "VALVE6_POSITION_HIGHCO2DAY")
-            return (settings_state_highco2day_doc[String("valve6_state_highco2day")]);
+            return (settings_state_highco2day_doc[String("valve6_position_highco2day")]);
         if(var == "VALVE7_POSITION_HIGHCO2DAY")
-            return (settings_state_highco2day_doc[String("valve7_state_highco2day")]);
+            return (settings_state_highco2day_doc[String("valve7_position_highco2day")]);
         if(var == "VALVE8_POSITION_HIGHCO2DAY")
-            return (settings_state_highco2day_doc[String("valve8_state_highco2day")]);
+            return (settings_state_highco2day_doc[String("valve8_position_highco2day")]);
         if(var == "VALVE9_POSITION_HIGHCO2DAY")
-            return (settings_state_highco2day_doc[String("valve9_state_highco2day")]);
+            return (settings_state_highco2day_doc[String("valve9_position_highco2day")]);
         if(var == "VALVE10_POSITION_HIGHCO2DAY")
-            return (settings_state_highco2day_doc[String("valve10_state_highco2day")]);
+            return (settings_state_highco2day_doc[String("valve10_position_highco2day")]);
         if(var == "VALVE11_POSITION_HIGHCO2DAY")
-            return (settings_state_highco2day_doc[String("valve11_state_highco2day")]);
+            return (settings_state_highco2day_doc[String("valve11_position_highco2day")]);
     }
     else {
         status = "<font color=\"red\">Settings file not found.</font>";
@@ -818,7 +818,7 @@ String settings_valve_state(const String& var) {
     }
 
     /*High CO2 night state*/
-    if (settings_state_highco2night_mutex != NULL) {
+    /*if (settings_state_highco2night_mutex != NULL) {
         if(xSemaphoreTake(settings_state_highco2night_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             settings_state_highco2night_present = check_file_exists(settings_state_highco2night_path);
             if (settings_state_highco2night_present == 1) {
@@ -833,44 +833,44 @@ String settings_valve_state(const String& var) {
         status = "<font color=\"green\">Ok.</font>";
         if (var == "STATUS_STATE_HIGHCO2NIGHT_CONFIG") 
             return F(status);
-        if(var == " ENABLE_STATE_HIGHCO2NIGHT")
+        if(var == "ENABLE_STATE_HIGHCO2NIGHT")
             return (settings_state_highco2night_doc[String("enable_state_highco2night")]);
         if(var == "NAME_STATE_HIGHCO2NIGHT")
             return (settings_state_highco2night_doc[String("name_state_highco2night")]);
         if(var == "VALVE0_POSITION_HIGHCO2NIGHT")
-            return (settings_state_highco2night_doc[String("valve0_state_highco2night")]);
+            return (settings_state_highco2night_doc[String("valve0_position_highco2night")]);
         if(var == "VALVE1_POSITION_HIGHCO2NIGHT")
-            return (settings_state_highco2night_doc[String("valve1_state_highco2night")]);
+            return (settings_state_highco2night_doc[String("valve1_position_highco2night")]);
         if(var == "VALVE2_POSITION_HIGHCO2NIGHT")
-            return (settings_state_highco2night_doc[String("valve2_state_highco2night")]);
+            return (settings_state_highco2night_doc[String("valve2_position_highco2night")]);
         if(var == "VALVE3_POSITION_HIGHCO2NIGHT")
-            return (settings_state_highco2night_doc[String("valve3_state_highco2night")]);
+            return (settings_state_highco2night_doc[String("valve3_position_highco2night")]);
         if(var == "VALVE4_POSITION_HIGHCO2NIGHT")
-            return (settings_state_highco2night_doc[String("valve4_state_highco2night")]);
+            return (settings_state_highco2night_doc[String("valve4_position_highco2night")]);
         if(var == "VALVE5_POSITION_HIGHCO2NIGHT")
-            return (settings_state_highco2night_doc[String("valve5_state_highco2night")]);
+            return (settings_state_highco2night_doc[String("valve5_position_highco2night")]);
         if(var == "VALVE6_POSITION_HIGHCO2NIGHT")
-            return (settings_state_highco2night_doc[String("valve6_state_highco2night")]);
+            return (settings_state_highco2night_doc[String("valve6_position_highco2night")]);
         if(var == "VALVE7_POSITION_HIGHCO2NIGHT")
-            return (settings_state_night_doc[String("valve7_state_highco2night")]);
+            return (settings_state_highco2night_doc[String("valve7_position_highco2night")]);
         if(var == "VALVE8_POSITION_HIGHCO2NIGHT")
-            return (settings_state_highco2night_doc[String("valve8_state_highco2night")]);
+            return (settings_state_highco2night_doc[String("valve8_position_highco2night")]);
         if(var == "VALVE9_POSITION_HIGHCO2NIGHT")
-            return (settings_state_highco2night_doc[String("valve9_state_highco2night")]);
+            return (settings_state_highco2night_doc[String("valve9_position_highco2night")]);
         if(var == "VALVE10_POSITION_HIGHCO2NIGHT")
-            return (settings_state_highco2night_doc[String("valve10_state_highco2night")]);
+            return (settings_state_highco2night_doc[String("valve10_position_highco2night")]);
         if(var == "VALVE11_POSITION_HIGHCO2NIGHT")
-            return (settings_state_highco2night_doc[String("valve11_state_highco2night")]);
+            return (settings_state_highco2night_doc[String("valve11_position_highco2night")]);
     }
     else {
         status = "<font color=\"red\">Settings file not found.</font>";
         if (var == "STATUS_STATE_HIGHCO2NIGHT_CONFIG") {
             return F(status);
         }
-    }
+    }*/
 
     /*High RH day state*/
-    if (settings_state_highrhday_mutex != NULL) {
+    /*if (settings_state_highrhday_mutex != NULL) {
         if(xSemaphoreTake(settings_state_highrhday_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             settings_state_highrhday_present = check_file_exists(settings_state_highrhday_path);
             if (settings_state_highrhday_present == 1) {
@@ -885,44 +885,44 @@ String settings_valve_state(const String& var) {
         status = "<font color=\"green\">Ok.</font>";
         if (var == "STATUS_STATE_HIGHRHDAY_CONFIG") 
             return F(status);
-        if(var == " ENABLE_STATE_HIGHRHDAY")
+        if(var == "ENABLE_STATE_HIGHRHDAY")
             return (settings_state_highrhday_doc[String("enable_state_highrhday")]);
         if(var == "NAME_STATE_DAY")
             return (settings_state_highrhday_doc[String("name_state_highrhday")]);
         if(var == "VALVE0_POSITION_HIGHRHDAY")
-            return (settings_state_highrhday_doc[String("valve0_state_highrhday")]);
+            return (settings_state_highrhday_doc[String("valve0_position_highrhday")]);
         if(var == "VALVE1_POSITION_HIGHRHDAY")
-            return (settings_state_highrhday_doc[String("valve1_state_highrhday")]);
+            return (settings_state_highrhday_doc[String("valve1_position_highrhday")]);
         if(var == "VALVE2_POSITION_HIGHRHDAY")
-            return (settings_state_highrhday_doc[String("valve2_state_highrhday")]);
+            return (settings_state_highrhday_doc[String("valve2_position_highrhday")]);
         if(var == "VALVE3_POSITION_HIGHRHDAY")
-            return (settings_state_highrhday_doc[String("valve3_state_highrhday")]);
+            return (settings_state_highrhday_doc[String("valve3_position_highrhday")]);
         if(var == "VALVE4_POSITION_HIGHRHDAY")
-            return (settings_state_highrhday_doc[String("valve4_state_highrhday")]);
+            return (settings_state_highrhday_doc[String("valve4_position_highrhday")]);
         if(var == "VALVE5_POSITION_HIGHRHDAY")
-            return (settings_state_highrhday_doc[String("valve5_state_highrhday")]);
+            return (settings_state_highrhday_doc[String("valve5_position_highrhday")]);
         if(var == "VALVE6_POSITION_HIGHRHDAY")
-            return (settings_state_highrhday_doc[String("valve6_state_highrhday")]);
+            return (settings_state_highrhday_doc[String("valve6_position_highrhday")]);
         if(var == "VALVE7_POSITION_HIGHRHDAY")
-            return (settings_state_highrhday_doc[String("valve7_state_highrhday")]);
+            return (settings_state_highrhday_doc[String("valve7_position_highrhday")]);
         if(var == "VALVE8_POSITION_HIGHRHDAY")
-            return (settings_state_highrhday_doc[String("valve8_state_highrhday")]);
+            return (settings_state_highrhday_doc[String("valve8_position_highrhday")]);
         if(var == "VALVE9_POSITION_HIGHRHDAY")
-            return (settings_state_highrhday_doc[String("valve9_state_highrhday")]);
+            return (settings_state_highrhday_doc[String("valve9_position_highrhday")]);
         if(var == "VALVE10_POSITION_HIGHRHDAY")
-            return (settings_state_highrhday_doc[String("valve10_state_highrhday")]);
+            return (settings_state_highrhday_doc[String("valve10_position_highrhday")]);
         if(var == "VALVE11_POSITION_HIGHRHDAY")
-            return (settings_state_highrhday_doc[String("valve11_state_highrhday")]);
+            return (settings_state_highrhday_doc[String("valve11_position_highrhday")]);
     }
     else {
         status = "<font color=\"red\">Settings file not found.</font>";
         if (var == "STATUS_STATE_HIGHRHDAY_CONFIG") {
             return F(status);
         }
-    }
+    }*/
 
     /*High RH night state*/
-    if (settings_state_highrhnight_mutex != NULL) {
+    /*if (settings_state_highrhnight_mutex != NULL) {
         if(xSemaphoreTake(settings_state_highrhnight_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             settings_state_highrhnight_present = check_file_exists(settings_state_highrhnight_path);
             if (settings_state_highrhnight_present == 1) {
@@ -937,44 +937,44 @@ String settings_valve_state(const String& var) {
         status = "<font color=\"green\">Ok.</font>";
         if (var == "STATUS_STATE_HIGHRHNIGHT_CONFIG") 
             return F(status);
-        if(var == " ENABLE_STATE_HIGHRHNIGHT")
+        if(var == "ENABLE_STATE_HIGHRHNIGHT")
             return (settings_state_highrhnight_doc[String("enable_state_highrhnight")]);
         if(var == "NAME_STATE_HIGHRHNIGHT")
             return (settings_state_highrhnight_doc[String("name_state_highrhnight")]);
         if(var == "VALVE0_POSITION_HIGHRHNIGHT")
-            return (settings_state_highrhnight_doc[String("valve0_state_highrhnight")]);
+            return (settings_state_highrhnight_doc[String("valve0_position_highrhnight")]);
         if(var == "VALVE1_POSITION_HIGHRHNIGHT")
-            return (settings_state_highrhnight_doc[String("valve1_state_highrhnight")]);
+            return (settings_state_highrhnight_doc[String("valve1_position_highrhnight")]);
         if(var == "VALVE2_POSITION_HIGHRHNIGHT")
-            return (settings_state_highrhnight_doc[String("valve2_state_highrhnight")]);
+            return (settings_state_highrhnight_doc[String("valve2_position_highrhnight")]);
         if(var == "VALVE3_POSITION_HIGHRHNIGHT")
-            return (settings_state_highrhnight_doc[String("valve3_state_highrhnight")]);
+            return (settings_state_highrhnight_doc[String("valve3_position_highrhnight")]);
         if(var == "VALVE4_POSITION_HIGHRHNIGHT")
-            return (settings_state_highrhnight_doc[String("valve4_state_highrhnight")]);
+            return (settings_state_highrhnight_doc[String("valve4_position_highrhnight")]);
         if(var == "VALVE5_POSITION_HIGHRHNIGHT")
-            return (settings_state_highrhnight_doc[String("valve5_state_highrhnight")]);
+            return (settings_state_highrhnight_doc[String("valve5_position_highrhnight")]);
         if(var == "VALVE6_POSITION_HIGHRHNIGHT")
-            return (settings_state_highrhnight_doc[String("valve6_state_highrhnight")]);
+            return (settings_state_highrhnight_doc[String("valve6_position_highrhnight")]);
         if(var == "VALVE7_POSITION_HIGHRHNIGHT")
-            return (settings_state_highrhnight_doc[String("valve7_state_highrhnight")]);
+            return (settings_state_highrhnight_doc[String("valve7_position_highrhnight")]);
         if(var == "VALVE8_POSITION_HIGHRHNIGHT")
-            return (settings_state_highrhnight_doc[String("valve8_state_highrhnight")]);
+            return (settings_state_highrhnight_doc[String("valve8_position_highrhnight")]);
         if(var == "VALVE9_POSITION_HIGHRHNIGHT")
-            return (settings_state_highrhnight_doc[String("valve9_state_highrhnight")]);
+            return (settings_state_highrhnight_doc[String("valve9_position_highrhnight")]);
         if(var == "VALVE10_POSITION_HIGHRHNIGHT")
-            return (settings_state_highrhnight_doc[String("valve10_state_highrhnight")]);
+            return (settings_state_highrhnight_doc[String("valve10_position_highrhnight")]);
         if(var == "VALVE11_POSITION_HIGHRHNIGHT")
-            return (settings_state_highrhnight_doc[String("valve11_state_highrhnight")]);
+            return (settings_state_highrhnight_doc[String("valve11_position_highrhnight")]);
     }
     else {
         status = "<font color=\"red\">Settings file not found.</font>";
         if (var == "STATUS_STATE_HIGHRHNIGHT_CONFIG") {
             return F(status);
         }
-    }
+    }*/
 
     /*Cooking state*/
-    if (settings_state_cooking_mutex != NULL) {
+    /*if (settings_state_cooking_mutex != NULL) {
         if(xSemaphoreTake(settings_state_cooking_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             settings_state_cooking_present = check_file_exists(settings_state_cooking_path);
             if (settings_state_cooking_present == 1) {
@@ -989,44 +989,44 @@ String settings_valve_state(const String& var) {
         status = "<font color=\"green\">Ok.</font>";
         if (var == "STATUS_STATE_COOKING_CONFIG") 
             return F(status);
-        if(var == " ENABLE_STATE_COOKING")
+        if(var == "ENABLE_STATE_COOKING")
             return (settings_state_cooking_doc[String("enable_state_cooking")]);
         if(var == "NAME_STATE_COOKING")
             return (settings_state_cooking_doc[String("name_state_cooking")]);
         if(var == "VALVE0_POSITION_COOKING")
-            return (settings_state_cooking_doc[String("valve0_state_cooking")]);
+            return (settings_state_cooking_doc[String("valve0_position_cooking")]);
         if(var == "VALVE1_POSITION_COOKING")
-            return (settings_state_cooking_doc[String("valve1_state_cooking")]);
+            return (settings_state_cooking_doc[String("valve1_position_cooking")]);
         if(var == "VALVE2_POSITION_COOKING")
-            return (settings_state_cooking_doc[String("valve2_state_cooking")]);
+            return (settings_state_cooking_doc[String("valve2_position_cooking")]);
         if(var == "VALVE3_POSITION_COOKING")
-            return (settings_state_cooking_doc[String("valve3_state_cooking")]);
+            return (settings_state_cooking_doc[String("valve3_position_cooking")]);
         if(var == "VALVE4_POSITION_COOKING")
-            return (settings_state_cooking_doc[String("valve4_state_cooking")]);
+            return (settings_state_cooking_doc[String("valve4_position_cooking")]);
         if(var == "VALVE5_POSITION_COOKING")
-            return (settings_state_cooking_doc[String("valve5_state_cooking")]);
+            return (settings_state_cooking_doc[String("valve5_position_cooking")]);
         if(var == "VALVE6_POSITION_COOKING")
-            return (settings_state_cooking_doc[String("valve6_state_cooking")]);
+            return (settings_state_cooking_doc[String("valve6_position_cooking")]);
         if(var == "VALVE7_POSITION_COOKING")
-            return (settings_state_cooking_doc[String("valve7_state_cooking")]);
+            return (settings_state_cooking_doc[String("valve7_position_cooking")]);
         if(var == "VALVE8_POSITION_COOKING")
-            return (settings_state_cooking_doc[String("valve8_state_cooking")]);
+            return (settings_state_cooking_doc[String("valve8_position_cooking")]);
         if(var == "VALVE9_POSITION_COOKING")
-            return (settings_state_cooking_doc[String("valve9_state_cooking")]);
+            return (settings_state_cooking_doc[String("valve9_position_cooking")]);
         if(var == "VALVE10_POSITION_COOKING")
-            return (settings_state_cooking_doc[String("valve10_state_cooking")]);
+            return (settings_state_cooking_doc[String("valve10_position_cooking")]);
         if(var == "VALVE11_POSITION_COOKING")
-            return (settings_state_cooking_doc[String("valve11_state_cooking")]);
+            return (settings_state_cooking_doc[String("valve11_position_cooking")]);
     }
     else {
         status = "<font color=\"red\">Settings file not found.</font>";
         if (var == "STATUS_STATE_COOKING_CONFIG") {
             return F(status);
         }
-    }
+    }*/
 
     /*Valve cycling day state*/
-    if (settings_state_cyclingday_mutex != NULL) {
+    /*if (settings_state_cyclingday_mutex != NULL) {
         if(xSemaphoreTake(settings_state_cyclingday_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             settings_state_cyclingday_present = check_file_exists(settings_state_cyclingday_path);
             if (settings_state_cyclingday_present == 1) {
@@ -1041,44 +1041,44 @@ String settings_valve_state(const String& var) {
         status = "<font color=\"green\">Ok.</font>";
         if (var == "STATUS_STATE_CYCLINGDAY_CONFIG") 
             return F(status);
-        if(var == " ENABLE_STATE_CYCLINGDAY")
+        if(var == "ENABLE_STATE_CYCLINGDAY")
             return (settings_state_cyclingday_doc[String("enable_state_cyclingday")]);
         if(var == "NAME_STATE_CYCLINGDAY")
             return (settings_state_cyclingday_doc[String("name_state_cyclingday")]);
         if(var == "VALVE0_POSITION_CYCLINGDAY")
-            return (settings_state_cyclingday_doc[String("valve0_state_cyclingday")]);
+            return (settings_state_cyclingday_doc[String("valve0_position_cyclingday")]);
         if(var == "VALVE1_POSITION_CYCLINGDAY")
-            return (settings_state_cyclingday_doc[String("valve1_state_cyclingday")]);
+            return (settings_state_cyclingday_doc[String("valve1_position_cyclingday")]);
         if(var == "VALVE2_POSITION_CYCLINGDAY")
-            return (settings_state_cyclingday_doc[String("valve2_state_cyclingday")]);
+            return (settings_state_cyclingday_doc[String("valve2_position_cyclingday")]);
         if(var == "VALVE3_POSITION_CYCLINGDAY")
-            return (settings_state_cyclingday_doc[String("valve3_state_cyclingday")]);
+            return (settings_state_cyclingday_doc[String("valve3_position_cyclingday")]);
         if(var == "VALVE4_POSITION_CYCLINGDAY")
-            return (settings_state_cyclingday_doc[String("valve4_state_cyclingday")]);
+            return (settings_state_cyclingday_doc[String("valve4_position_cyclingday")]);
         if(var == "VALVE5_POSITION_CYCLINGDAY")
-            return (settings_state_cyclingday_doc[String("valve5_state_cyclingday")]);
+            return (settings_state_cyclingday_doc[String("valve5_position_cyclingday")]);
         if(var == "VALVE6_POSITION_CYCLINGDAY")
-            return (settings_state_cyclingday_doc[String("valve6_state_cyclingday")]);
+            return (settings_state_cyclingday_doc[String("valve6_position_cyclingday")]);
         if(var == "VALVE7_POSITION_CYCLINGDAY")
-            return (settings_state_cyclingday_doc[String("valve7_state_cyclingday")]);
+            return (settings_state_cyclingday_doc[String("valve7_position_cyclingday")]);
         if(var == "VALVE8_POSITION_CYCLINGDAY")
-            return (settings_state_cyclingday_doc[String("valve8_state_cyclingday")]);
+            return (settings_state_cyclingday_doc[String("valve8_position_cyclingday")]);
         if(var == "VALVE9_POSITION_CYCLINGDAY")
-            return (settings_state_cyclingday_doc[String("valve9_state_cyclingday")]);
+            return (settings_state_cyclingday_doc[String("valve9_position_cyclingday")]);
         if(var == "VALVE10_POSITION_CYCLINGDAY")
-            return (settings_state_cyclingday_doc[String("valve10_state_cyclingday")]);
+            return (settings_state_cyclingday_doc[String("valve10_position_cyclingday")]);
         if(var == "VALVE11_POSITION_CYCLINGDAY")
-            return (settings_state_cyclingday_doc[String("valve11_state_cyclingday")]);
+            return (settings_state_cyclingday_doc[String("valve11_position_cyclingday")]);
     }
     else {
         status = "<font color=\"red\">Settings file not found.</font>";
         if (var == "STATUS_STATE_CYCLINGDAY_CONFIG") {
             return F(status);
         }
-    }
+    }*/
 
     /*Valve cycling night state*/
-    if (settings_state_cyclingnight_mutex != NULL) {
+    /*if (settings_state_cyclingnight_mutex != NULL) {
         if(xSemaphoreTake(settings_state_cyclingnight_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             settings_state_cyclingnight_present = check_file_exists(settings_state_cyclingnight_path);
             if (settings_state_cyclingnight_present == 1) {
@@ -1093,41 +1093,41 @@ String settings_valve_state(const String& var) {
         status = "<font color=\"green\">Ok.</font>";
         if (var == "STATUS_STATE_CYCLINGNIGHT_CONFIG") 
             return F(status);
-        if(var == " ENABLE_STATE_CYCLINGNIGHT")
+        if(var == "ENABLE_STATE_CYCLINGNIGHT")
             return (settings_state_cyclingnight_doc[String("enable_state_cyclingnight")]);
         if(var == "NAME_STATE_CYCLINGNIGHT")
             return (settings_state_cyclingnight_doc[String("name_state_cyclingnight")]);
         if(var == "VALVE0_POSITION_CYCLINGNIGHT")
-            return (settings_state_cyclingnight_doc[String("valve0_state_cyclingnight")]);
+            return (settings_state_cyclingnight_doc[String("valve0_position_cyclingnight")]);
         if(var == "VALVE1_POSITION_CYCLINGNIGHT")
-            return (settings_state_cyclingnight_doc[String("valve1_state_cyclingnight")]);
+            return (settings_state_cyclingnight_doc[String("valve1_position_cyclingnight")]);
         if(var == "VALVE2_POSITION_CYCLINGNIGHT")
-            return (settings_state_cyclingnight_doc[String("valve2_state_cyclingnight")]);
+            return (settings_state_cyclingnight_doc[String("valve2_position_cyclingnight")]);
         if(var == "VALVE3_POSITION_CYCLINGNIGHT")
-            return (settings_state_cyclingnight_doc[String("valve3_state_cyclingnight")]);
+            return (settings_state_cyclingnight_doc[String("valve3_position_cyclingnight")]);
         if(var == "VALVE4_POSITION_CYCLINGNIGHT")
-            return (settings_state_cyclingnight_doc[String("valve4_state_cyclingnight")]);
+            return (settings_state_cyclingnight_doc[String("valve4_position_cyclingnight")]);
         if(var == "VALVE5_POSITION_CYCLINGNIGHT")
-            return (settings_state_cyclingnight_doc[String("valve5_state_cyclingnight")]);
+            return (settings_state_cyclingnight_doc[String("valve5_position_cyclingnight")]);
         if(var == "VALVE6_POSITION_CYCLINGNIGHT")
-            return (settings_state_cyclingnight_doc[String("valve6_state_cyclingnight")]);
+            return (settings_state_cyclingnight_doc[String("valve6_position_cyclingnight")]);
         if(var == "VALVE7_POSITION_CYCLINGNIGHT")
-            return (settings_state_cyclingnight_doc[String("valve7_state_cyclingnight")]);
+            return (settings_state_cyclingnight_doc[String("valve7_position_cyclingnight")]);
         if(var == "VALVE8_POSITION_CYCLINGNIGHT")
-            return (settings_state_cyclingnight_doc[String("valve8_state_cyclingnight")]);
+            return (settings_state_cyclingnight_doc[String("valve8_position_cyclingnight")]);
         if(var == "VALVE9_POSITION_CYCLINGNIGHT")
-            return (settings_state_cyclingnight_doc[String("valve9_state_cyclingnight")]);
+            return (settings_state_cyclingnight_doc[String("valve9_position_cyclingnight")]);
         if(var == "VALVE10_POSITION_CYCLINGNIGHT")
-            return (settings_state_cyclingnight_doc[String("valve10_state_cyclingnight")]);
+            return (settings_state_cyclingnight_doc[String("valve10_position_cyclingnight")]);
         if(var == "VALVE11_POSITION_CYCLINGNIGHT")
-            return (settings_state_cyclingnight_doc[String("valve11_state_cyclingnight")]);
+            return (settings_state_cyclingnight_doc[String("valve11_position_cyclingnight")]);
     }
     else {
         status = "<font color=\"red\">Settings file not found.</font>";
         if (var == "STATUS_STATE_CYCLINGNIGHT_CONFIG") {
             return F(status);
         }
-    }
+    }*/
         
     return String();
 }

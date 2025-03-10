@@ -983,7 +983,8 @@ void Taskwebcode(void *pvParameters) {
 
   //Statemachine web pages processing
   server.on("/statemachine", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(LittleFS, "/html/statemachine.html", "text/html");
+    //request->send(LittleFS, "/html/statemachine.html", "text/html");
+    request->send(LittleFS, "/html/statemachine.html", String(), false, settings_valve_state);
   });
 
   server.on("/settings_valve_day", HTTP_POST, [](AsyncWebServerRequest *request) {
@@ -993,43 +994,58 @@ void Taskwebcode(void *pvParameters) {
         for(int i=0;i<params;i++){
           const AsyncWebParameter* p = request->getParam(i);
           if(p->isPost()){
-            if (p->name() == ENABLE_STATE_DAY) 
+            if (p->name() == ENABLE_STATE_DAY) {
               settings_state_day["enable_state_day"] = p->value().c_str();
-            if (p->name() == NAME_STATE_DAY) 
+            }
+            if (p->name() == NAME_STATE_DAY) {
               settings_state_day["name_state_day"] = p->value().c_str();
-            if (p->name() == VALVE0_POSITION_DAY)
+            }
+            if (p->name() == VALVE0_POSITION_DAY) {
               settings_state_day["valve0_position_day"] = p->value().c_str();
-            if (p->name() ==  VALVE1_POSITION_DAY) 
+            }
+            if (p->name() ==  VALVE1_POSITION_DAY) {
               settings_state_day["valve1_position_day"] = p->value().c_str();
-            if (p->name() ==  VALVE2_POSITION_DAY) 
+            }
+            if (p->name() ==  VALVE2_POSITION_DAY) {
               settings_state_day["valve2_position_day"] = p->value().c_str();
-            if (p->name() ==  VALVE3_POSITION_DAY) 
+            }
+            if (p->name() ==  VALVE3_POSITION_DAY) {
               settings_state_day["valve3_position_day"] = p->value().c_str();
-            if (p->name() ==  VALVE4_POSITION_DAY) 
+            }
+            if (p->name() ==  VALVE4_POSITION_DAY) {
               settings_state_day["valve4_position_day"] = p->value().c_str();
-            if (p->name() ==  VALVE5_POSITION_DAY) 
+            }
+            if (p->name() ==  VALVE5_POSITION_DAY) {
               settings_state_day["valve5_position_day"] = p->value().c_str();
-            if (p->name() ==  VALVE6_POSITION_DAY) 
+            }
+            if (p->name() ==  VALVE6_POSITION_DAY) {
               settings_state_day["valve6_position_day"] = p->value().c_str();
-            if (p->name() ==  VALVE7_POSITION_DAY) 
+            }
+            if (p->name() ==  VALVE7_POSITION_DAY) {
               settings_state_day["valve7_position_day"] = p->value().c_str();
-            if (p->name() ==  VALVE8_POSITION_DAY) 
+            }
+            if (p->name() ==  VALVE8_POSITION_DAY) {
               settings_state_day["valve8_position_day"] = p->value().c_str();
-            if (p->name() ==  VALVE9_POSITION_DAY) 
+            }
+            if (p->name() ==  VALVE9_POSITION_DAY) {
               settings_state_day["valve9_position_day"] = p->value().c_str();
-            if (p->name() ==  VALVE10_POSITION_DAY) 
+            }
+            if (p->name() ==  VALVE10_POSITION_DAY) {
               settings_state_day["valve10_position_day"] = p->value().c_str();
-            if (p->name() ==  VALVE11_POSITION_DAY) 
+            }
+            if (p->name() ==  VALVE11_POSITION_DAY) {
               settings_state_day["valve11_position_day"] = p->value().c_str();
+            }
           }
         }
-        const char* path2 = "/json/settings_state_day.json";
+        const char* path_day = "/json/settings_state_day.json";
         String settings_state_day_str;
 
         serializeJson(settings_state_day, settings_state_day_str);
-        write_config_file(path2, settings_state_day_str);
+        write_config_file(path_day, settings_state_day_str);
       }
     }
+    //request->send(LittleFS, "/html/statemachine.html", "text/html");
     request->send(LittleFS, "/html/statemachine.html", String(), false, settings_valve_state);
     xSemaphoreGive(settings_state_day_mutex);
   });
@@ -1071,11 +1087,11 @@ void Taskwebcode(void *pvParameters) {
               settings_state_night["valve11_position_night"] = p->value().c_str();
           }
         }
-        const char* path2 = "/json/settings_state_night.json";
+        const char* path_night = "/json/settings_state_night.json";
         String settings_state_night_str;
 
         serializeJson(settings_state_night, settings_state_night_str);
-        write_config_file(path2, settings_state_night_str);
+        write_config_file(path_night, settings_state_night_str);
       }
     }
     request->send(LittleFS, "/html/statemachine.html", String(), false, settings_valve_state);
