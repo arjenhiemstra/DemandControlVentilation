@@ -1135,11 +1135,11 @@ void Taskwebcode(void *pvParameters) {
               settings_state_highco2day["valve11_position_highco2day"] = p->value().c_str();
           }
         }
-        const char* path2 = "/json/settings_state_highco2day.json";
+        const char* path_highco2day = "/json/settings_state_highco2day.json";
         String settings_state_highco2day_str;
 
         serializeJson(settings_state_highco2day, settings_state_highco2day_str);
-        write_config_file(path2, settings_state_highco2day_str);
+        write_config_file(path_highco2day, settings_state_highco2day_str);
       }
     }
     request->send(LittleFS, "/html/statemachine.html", String(), false, settings_valve_state);
