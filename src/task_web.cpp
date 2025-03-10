@@ -141,7 +141,7 @@ const char* STATUS_STATEMACHINE_CONFIG = "status_statemachine_config";
 const char* STATEMACHINE_RH_SENSOR = "statemachine_rh_sensor";
 const char* STATEMACHINE_CO2_SENSOR = "statemachine_co2_sensor";
 
-const char* STATEMACHINE_VALVE_DAY_CONFIG = "statemachine_valve_day_config";
+const char* STATUS_STATE_DAY_CONFIG = "status_state_day_config";
 const char* ENABLE_STATE_DAY = "enable_state_day";
 const char* NAME_STATE_DAY = "name_state_day";
 const char* VALVE0_POSITION_DAY = "valve0_position_day";
@@ -157,7 +157,7 @@ const char* VALVE9_POSITION_DAY = "valve9_position_day";
 const char* VALVE10_POSITION_DAY = "valve10_position_day";
 const char* VALVE11_POSITION_DAY = "valve11_position_day";
 
-const char* STATEMACHINE_VALVE_NIGHT_CONFIG = "statemachine_valve_night_config";
+const char* STATUS_STATE_NIGHT_CONFIG = "statemachine_valve_night_config";
 const char* ENABLE_STATE_NIGHT = "enable_state_night";
 const char* NAME_STATE_NIGHT = "name_state_night";
 const char* VALVE0_POSITION_NIGHT = "valve0_position_night";
@@ -173,7 +173,7 @@ const char* VALVE9_POSITION_NIGHT = "valve9_position_night";
 const char* VALVE10_POSITION_NIGHT = "valve10_position_night";
 const char* VALVE11_POSITION_NIGHT = "valve11_position_night";
 
-const char* STATEMACHINE_VALVE_HIGHCO2DAY_CONFIG = "statemachine_valve_highco2day_config";
+const char* STATUS_STATE_HIGHCO2DAY_CONFIG = "statemachine_valve_highco2day_config";
 const char* ENABLE_STATE_HIGHCO2DAY = "enable_state_highco2day";
 const char* NAME_STATE_HIGHCO2DAY = "name_state_highco2day";
 const char* VALVE0_POSITION_HIGHCO2DAY = "valve0_position_highco2day";
@@ -189,7 +189,7 @@ const char* VALVE9_POSITION_HIGHCO2DAY = "valve9_position_highco2day";
 const char* VALVE10_POSITION_HIGHCO2DAY = "valve10_position_highco2day";
 const char* VALVE11_POSITION_HIGHCO2DAY = "valve11_position_highco2day";
 
-const char* STATEMACHINE_VALVE_HIGHCO2NIGHT_CONFIG = "statemachine_valve_highco2night_config";
+const char* STATUS_STATE_HIGHCO2NIGHT_CONFIG = "statemachine_valve_highco2night_config";
 const char* ENABLE_STATE_HIGHCO2NIGHT = "enable_state_highco2night";
 const char* NAME_STATE_HIGHCO2NIGHT = "name_state_highco2night";
 const char* VALVE0_POSITION_HIGHCO2NIGHT = "valve0_position_highco2night";
@@ -205,7 +205,7 @@ const char* VALVE9_POSITION_HIGHCO2NIGHT = "valve9_position_highco2night";
 const char* VALVE10_POSITION_HIGHCO2NIGHT = "valve10_position_highco2night";
 const char* VALVE11_POSITION_HIGHCO2NIGHT = "valve11_position_highco2night";
 
-const char* STATEMACHINE_VALVE_HIGHRHDAY_CONFIG = "statemachine_valve_highrhday_config";
+const char* STATUS_STATE_HIGHRHDAY_CONFIG = "statemachine_valve_highrhday_config";
 const char* ENABLE_STATE_HIGHRHDAY = "enable_state_highrhday";
 const char* NAME_STATE_HIGHRHDAY = "name_state_highrhday";
 const char* VALVE0_POSITION_HIGHRHDAY = "valve0_position_highrhday";
@@ -221,7 +221,7 @@ const char* VALVE9_POSITION_HIGHRHDAY = "valve9_position_highrhday";
 const char* VALVE10_POSITION_HIGHRHDAY = "valve10_position_highrhday";
 const char* VALVE11_POSITION_HIGHRHDAY = "valve11_position_highrhday";
 
-const char* STATEMACHINE_VALVE_HIGHRHNIGHT_CONFIG = "statemachine_valve_highrhnight_config";
+const char* STATUS_STATE_HIGHRHNIGHT_CONFIG = "statemachine_valve_highrhnight_config";
 const char* ENABLE_STATE_HIGHRHNIGHT = "enable_state_highrhnight";
 const char* NAME_STATE_HIGHRHNIGHT = "name_state_highrhnight";
 const char* VALVE0_POSITION_HIGHRHNIGHT = "valve0_position_highrhnight";
@@ -237,7 +237,7 @@ const char* VALVE9_POSITION_HIGHRHNIGHT = "valve9_position_highrhnight";
 const char* VALVE10_POSITION_HIGHRHNIGHT = "valve10_position_highrhnight";
 const char* VALVE11_POSITION_HIGHRHNIGHT = "valve11_position_highrhnight";
 
-const char* STATEMACHINE_VALVE_COOKING_CONFIG = "statemachine_valve_cooking_config";
+const char* STATUS_STATE_COOKING_CONFIG = "statemachine_valve_cooking_config";
 const char* ENABLE_STATE_COOKING = "enable_state_cooking";
 const char* NAME_STATE_COOKING = "name_state_cooking";
 const char* VALVE0_POSITION_COOKING = "valve0_position_cooking";
@@ -253,7 +253,7 @@ const char* VALVE9_POSITION_COOKING = "valve9_position_cooking";
 const char* VALVE10_POSITION_COOKING = "valve10_position_cooking";
 const char* VALVE11_POSITION_COOKING = "valve11_position_cooking";
 
-const char* STATEMACHINE_VALVE_CYCLINGDAY_CONFIG = "statemachine_valve_cyclingday_config";
+const char* STATUS_STATE_CYCLINGDAY_CONFIG = "statemachine_valve_cyclingday_config";
 const char* ENABLE_STATE_CYCLINGDAY = "enable_state_cyclingday";
 const char* NAME_STATE_CYCLINGDAY = "name_state_cyclingday";
 const char* VALVE0_POSITION_CYCLINGDAY = "valve0_position_cyclingday";
@@ -269,7 +269,7 @@ const char* VALVE9_POSITION_CYCLINGDAY = "valve9_position_cyclingday";
 const char* VALVE10_POSITION_CYCLINGDAY = "valve10_position_cyclingday";
 const char* VALVE11_POSITION_CYCLINGDAY = "valve11_position_cyclingday";
 
-const char* STATEMACHINE_VALVE_CYCLINGNIGHT_CONFIG = "statemachine_valve_cyclingnight_config";
+const char* STATUS_STATE_CYCLINGNIGHT_CONFIG = "statemachine_valve_cyclingnight_config";
 const char* ENABLE_STATE_CYCLINGNIGHT = "enable_state_cyclingnight";
 const char* NAME_STATE_CYCLINGNIGHT = "name_state_cyclingnight";
 const char* VALVE0_POSITION_CYCLINGNIGHT = "valve0_position_cyclingnight";
@@ -987,31 +987,40 @@ void Taskwebcode(void *pvParameters) {
   });
 
   server.on("/settings_valve_day", HTTP_POST, [](AsyncWebServerRequest *request) {
-    
     if (settings_state_day_mutex != NULL) {
       if(xSemaphoreTake(settings_state_day_mutex, ( TickType_t ) 10 ) == pdTRUE) {
         int params = request->params();
         for(int i=0;i<params;i++){
           const AsyncWebParameter* p = request->getParam(i);
           if(p->isPost()){
-            if (p->name() == ENABLE_STATE_DAY) {
-              settings_state_day["enable_state_day"] = p->value().c_str();;
-            }
-            if (p->name() == NAME_STATE_DAY) {
+            if (p->name() == ENABLE_STATE_DAY) 
+              settings_state_day["enable_state_day"] = p->value().c_str();
+            if (p->name() == NAME_STATE_DAY) 
               settings_state_day["name_state_day"] = p->value().c_str();
-            }     
-            if (p->name() == VALVE0_POSITION_DAY) {
+            if (p->name() == VALVE0_POSITION_DAY)
               settings_state_day["valve0_position_day"] = p->value().c_str();
-            }
-            if (p->name() ==  VALVE1_POSITION_DAY) {
-              settings_state_day["valve1_position_day"] = p->value().c_str();;
-            }
-            if (p->name() ==  VALVE2_POSITION_DAY) {
-              settings_state_day["valve2_position_day"] = p->value().c_str();;
-            }
-            if (p->name() ==  VALVE3_POSITION_DAY) {
-              settings_state_day["valve3_position_day"] = p->value().c_str();;
-            }
+            if (p->name() ==  VALVE1_POSITION_DAY) 
+              settings_state_day["valve1_position_day"] = p->value().c_str();
+            if (p->name() ==  VALVE2_POSITION_DAY) 
+              settings_state_day["valve2_position_day"] = p->value().c_str();
+            if (p->name() ==  VALVE3_POSITION_DAY) 
+              settings_state_day["valve3_position_day"] = p->value().c_str();
+            if (p->name() ==  VALVE4_POSITION_DAY) 
+              settings_state_day["valve4_position_day"] = p->value().c_str();
+            if (p->name() ==  VALVE5_POSITION_DAY) 
+              settings_state_day["valve5_position_day"] = p->value().c_str();
+            if (p->name() ==  VALVE6_POSITION_DAY) 
+              settings_state_day["valve6_position_day"] = p->value().c_str();
+            if (p->name() ==  VALVE7_POSITION_DAY) 
+              settings_state_day["valve7_position_day"] = p->value().c_str();
+            if (p->name() ==  VALVE8_POSITION_DAY) 
+              settings_state_day["valve8_position_day"] = p->value().c_str();
+            if (p->name() ==  VALVE9_POSITION_DAY) 
+              settings_state_day["valve9_position_day"] = p->value().c_str();
+            if (p->name() ==  VALVE10_POSITION_DAY) 
+              settings_state_day["valve10_position_day"] = p->value().c_str();
+            if (p->name() ==  VALVE11_POSITION_DAY) 
+              settings_state_day["valve11_position_day"] = p->value().c_str();
           }
         }
         const char* path2 = "/json/settings_state_day.json";
@@ -1025,6 +1034,389 @@ void Taskwebcode(void *pvParameters) {
     xSemaphoreGive(settings_state_day_mutex);
   });
 
+  server.on("/settings_valve_night", HTTP_POST, [](AsyncWebServerRequest *request) {
+    if (settings_state_night_mutex != NULL) {
+      if(xSemaphoreTake(settings_state_night_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        int params = request->params();
+        for(int i=0;i<params;i++){
+          const AsyncWebParameter* p = request->getParam(i);
+          if(p->isPost()){
+            if (p->name() == ENABLE_STATE_NIGHT) 
+              settings_state_night["enable_state_night"] = p->value().c_str();
+            if (p->name() == NAME_STATE_NIGHT) 
+              settings_state_night["name_state_night"] = p->value().c_str();
+            if (p->name() == VALVE0_POSITION_NIGHT)
+              settings_state_night["valve0_position_night"] = p->value().c_str();
+            if (p->name() ==  VALVE1_POSITION_NIGHT) 
+              settings_state_night["valve1_position_night"] = p->value().c_str();
+            if (p->name() ==  VALVE2_POSITION_NIGHT) 
+              settings_state_night["valve2_position_night"] = p->value().c_str();
+            if (p->name() ==  VALVE3_POSITION_NIGHT) 
+              settings_state_night["valve3_position_night"] = p->value().c_str();
+            if (p->name() ==  VALVE4_POSITION_NIGHT) 
+              settings_state_night["valve4_position_night"] = p->value().c_str();
+            if (p->name() ==  VALVE5_POSITION_NIGHT) 
+              settings_state_night["valve5_position_night"] = p->value().c_str();
+            if (p->name() ==  VALVE6_POSITION_NIGHT) 
+              settings_state_night["valve6_position_night"] = p->value().c_str();
+            if (p->name() ==  VALVE7_POSITION_NIGHT) 
+              settings_state_night["valve7_position_night"] = p->value().c_str();
+            if (p->name() ==  VALVE8_POSITION_NIGHT) 
+              settings_state_night["valve8_position_night"] = p->value().c_str();
+            if (p->name() ==  VALVE9_POSITION_NIGHT) 
+              settings_state_night["valve9_position_night"] = p->value().c_str();
+            if (p->name() ==  VALVE10_POSITION_NIGHT) 
+              settings_state_night["valve10_position_night"] = p->value().c_str();
+            if (p->name() ==  VALVE11_POSITION_NIGHT) 
+              settings_state_night["valve11_position_night"] = p->value().c_str();
+          }
+        }
+        const char* path2 = "/json/settings_state_night.json";
+        String settings_state_night_str;
+
+        serializeJson(settings_state_night, settings_state_night_str);
+        write_config_file(path2, settings_state_night_str);
+      }
+    }
+    request->send(LittleFS, "/html/statemachine.html", String(), false, settings_valve_state);
+    xSemaphoreGive(settings_state_night_mutex);
+  });
+
+  server.on("/settings_valve_highco2day", HTTP_POST, [](AsyncWebServerRequest *request) {
+    if (settings_state_highco2day_mutex != NULL) {
+      if(xSemaphoreTake(settings_state_highco2day_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        int params = request->params();
+        for(int i=0;i<params;i++){
+          const AsyncWebParameter* p = request->getParam(i);
+          if(p->isPost()){
+            if (p->name() == ENABLE_STATE_HIGHCO2DAY) 
+              settings_state_highco2day["enable_state_highco2day"] = p->value().c_str();
+            if (p->name() == NAME_STATE_HIGHCO2DAY) 
+              settings_state_highco2day["name_state_highco2day"] = p->value().c_str();
+            if (p->name() == VALVE0_POSITION_HIGHCO2DAY)
+              settings_state_highco2day["valve0_position_highco2day"] = p->value().c_str();
+            if (p->name() ==  VALVE1_POSITION_HIGHCO2DAY) 
+              settings_state_highco2day["valve1_position_highco2day"] = p->value().c_str();
+            if (p->name() ==  VALVE2_POSITION_HIGHCO2DAY) 
+              settings_state_highco2day["valve2_position_highco2day"] = p->value().c_str();
+            if (p->name() ==  VALVE3_POSITION_HIGHCO2DAY) 
+              settings_state_highco2day["valve3_position_highco2day"] = p->value().c_str();
+            if (p->name() ==  VALVE4_POSITION_HIGHCO2DAY) 
+              settings_state_highco2day["valve4_position_highco2day"] = p->value().c_str();
+            if (p->name() ==  VALVE5_POSITION_HIGHCO2DAY) 
+              settings_state_highco2day["valve5_position_highco2day"] = p->value().c_str();
+            if (p->name() ==  VALVE6_POSITION_HIGHCO2DAY) 
+              settings_state_highco2day["valve6_position_highco2day"] = p->value().c_str();
+            if (p->name() ==  VALVE7_POSITION_HIGHCO2DAY) 
+              settings_state_highco2day["valve7_position_highco2day"] = p->value().c_str();
+            if (p->name() ==  VALVE8_POSITION_HIGHCO2DAY) 
+              settings_state_highco2day["valve8_position_highco2day"] = p->value().c_str();
+            if (p->name() ==  VALVE9_POSITION_HIGHCO2DAY) 
+              settings_state_highco2day["valve9_position_highco2day"] = p->value().c_str();
+            if (p->name() ==  VALVE10_POSITION_HIGHCO2DAY) 
+              settings_state_highco2day["valve10_position_highco2day"] = p->value().c_str();
+            if (p->name() ==  VALVE11_POSITION_HIGHCO2DAY) 
+              settings_state_highco2day["valve11_position_highco2day"] = p->value().c_str();
+          }
+        }
+        const char* path2 = "/json/settings_state_highco2day.json";
+        String settings_state_highco2day_str;
+
+        serializeJson(settings_state_highco2day, settings_state_highco2day_str);
+        write_config_file(path2, settings_state_highco2day_str);
+      }
+    }
+    request->send(LittleFS, "/html/statemachine.html", String(), false, settings_valve_state);
+    xSemaphoreGive(settings_state_highco2day_mutex);
+  });
+  
+  server.on("/settings_valve_highco2night", HTTP_POST, [](AsyncWebServerRequest *request) {
+    if (settings_state_highco2night_mutex != NULL) {
+      if(xSemaphoreTake(settings_state_highco2night_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        int params = request->params();
+        for(int i=0;i<params;i++){
+          const AsyncWebParameter* p = request->getParam(i);
+          if(p->isPost()){
+            if (p->name() == ENABLE_STATE_HIGHCO2NIGHT) 
+              settings_state_night["enable_state_highco2night"] = p->value().c_str();
+            if (p->name() == NAME_STATE_HIGHCO2NIGHT) 
+              settings_state_night["name_state_highco2night"] = p->value().c_str();
+            if (p->name() == VALVE0_POSITION_HIGHCO2NIGHT)
+              settings_state_night["valve0_position_highco2night"] = p->value().c_str();
+            if (p->name() ==  VALVE1_POSITION_HIGHCO2NIGHT) 
+              settings_state_night["valve1_position_highco2night"] = p->value().c_str();
+            if (p->name() ==  VALVE2_POSITION_HIGHCO2NIGHT) 
+              settings_state_night["valve2_position_highco2night"] = p->value().c_str();
+            if (p->name() ==  VALVE3_POSITION_HIGHCO2NIGHT) 
+              settings_state_night["valve3_position_highco2night"] = p->value().c_str();
+            if (p->name() ==  VALVE4_POSITION_HIGHCO2NIGHT) 
+              settings_state_night["valve4_position_highco2night"] = p->value().c_str();
+            if (p->name() ==  VALVE5_POSITION_HIGHCO2NIGHT) 
+              settings_state_night["valve5_position_highco2night"] = p->value().c_str();
+            if (p->name() ==  VALVE6_POSITION_HIGHCO2NIGHT) 
+              settings_state_night["valve6_position_highco2night"] = p->value().c_str();
+            if (p->name() ==  VALVE7_POSITION_HIGHCO2NIGHT) 
+              settings_state_night["valve7_position_highco2night"] = p->value().c_str();
+            if (p->name() ==  VALVE8_POSITION_HIGHCO2NIGHT) 
+              settings_state_night["valve8_position_night"] = p->value().c_str();
+            if (p->name() ==  VALVE9_POSITION_HIGHCO2NIGHT) 
+              settings_state_night["valve9_position_highco2night"] = p->value().c_str();
+            if (p->name() ==  VALVE10_POSITION_HIGHCO2NIGHT) 
+              settings_state_night["valve10_position_highco2night"] = p->value().c_str();
+            if (p->name() ==  VALVE11_POSITION_HIGHCO2NIGHT) 
+              settings_state_night["valve11_position_highco2night"] = p->value().c_str();
+          }
+        }
+        const char* path2 = "/json/settings_state_highco2night.json";
+        String settings_state_highco2night_str;
+
+        serializeJson(settings_state_highco2night, settings_state_highco2night_str);
+        write_config_file(path2, settings_state_highco2night_str);
+      }
+    }
+    request->send(LittleFS, "/html/statemachine.html", String(), false, settings_valve_state);
+    xSemaphoreGive(settings_state_highco2night_mutex);
+  });
+
+  server.on("/settings_valve_highrhday", HTTP_POST, [](AsyncWebServerRequest *request) {
+    if (settings_state_highrhday_mutex != NULL) {
+      if(xSemaphoreTake(settings_state_highrhday_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        int params = request->params();
+        for(int i=0;i<params;i++){
+          const AsyncWebParameter* p = request->getParam(i);
+          if(p->isPost()){
+            if (p->name() == ENABLE_STATE_HIGHRHDAY) 
+              settings_state_highrhday["enable_state_highrhday"] = p->value().c_str();
+            if (p->name() == NAME_STATE_HIGHRHDAY) 
+              settings_state_highrhday["name_state_highrhday"] = p->value().c_str();
+            if (p->name() == VALVE0_POSITION_DAY)
+              settings_state_highrhday["valve0_position_highrhday"] = p->value().c_str();
+            if (p->name() ==  VALVE1_POSITION_HIGHRHDAY) 
+              settings_state_highrhday["valve1_position_highrhday"] = p->value().c_str();
+            if (p->name() ==  VALVE2_POSITION_HIGHRHDAY) 
+              settings_state_highrhday["valve2_position_highrhday"] = p->value().c_str();
+            if (p->name() ==  VALVE3_POSITION_HIGHRHDAY) 
+              settings_state_highrhday["valve3_position_highrhday"] = p->value().c_str();
+            if (p->name() ==  VALVE4_POSITION_HIGHRHDAY) 
+              settings_state_highrhday["valve4_position_highrhday"] = p->value().c_str();
+            if (p->name() ==  VALVE5_POSITION_HIGHRHDAY) 
+              settings_state_highrhday["valve5_position_highrhday"] = p->value().c_str();
+            if (p->name() ==  VALVE6_POSITION_HIGHRHDAY) 
+              settings_state_highrhday["valve6_position_highrhday"] = p->value().c_str();
+            if (p->name() ==  VALVE7_POSITION_HIGHRHDAY) 
+              settings_state_highrhday["valve7_position_highrhday"] = p->value().c_str();
+            if (p->name() ==  VALVE8_POSITION_HIGHRHDAY) 
+              settings_state_highrhday["valve8_position_highrhday"] = p->value().c_str();
+            if (p->name() ==  VALVE9_POSITION_HIGHRHDAY) 
+              settings_state_highrhday["valve9_position_highrhday"] = p->value().c_str();
+            if (p->name() ==  VALVE10_POSITION_HIGHRHDAY) 
+              settings_state_highrhday["valve10_position_highrhday"] = p->value().c_str();
+            if (p->name() ==  VALVE11_POSITION_HIGHRHDAY) 
+              settings_state_highrhday["valve11_position_highrhday"] = p->value().c_str();
+          }
+        }
+        const char* path2 = "/json/settings_state_highrhday.json";
+        String settings_state_highrhday_str;
+
+        serializeJson(settings_state_highrhday, settings_state_highrhday_str);
+        write_config_file(path2, settings_state_highrhday_str);
+      }
+    }
+    request->send(LittleFS, "/html/statemachine.html", String(), false, settings_valve_state);
+    xSemaphoreGive(settings_state_highrhday_mutex);
+  });
+
+  server.on("/settings_valve_highrhnight", HTTP_POST, [](AsyncWebServerRequest *request) {
+    if (settings_state_highrhnight_mutex != NULL) {
+      if(xSemaphoreTake(settings_state_highrhnight_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        int params = request->params();
+        for(int i=0;i<params;i++){
+          const AsyncWebParameter* p = request->getParam(i);
+          if(p->isPost()){
+            if (p->name() == ENABLE_STATE_HIGHRHNIGHT) 
+              settings_state_highrhnight["enable_state_highrhnight"] = p->value().c_str();
+            if (p->name() == NAME_STATE_HIGHRHNIGHT) 
+              settings_state_highrhnight["name_state_highrhnight"] = p->value().c_str();
+            if (p->name() == VALVE0_POSITION_HIGHRHNIGHT)
+              settings_state_highrhnight["valve0_position_highrhnight"] = p->value().c_str();
+            if (p->name() ==  VALVE1_POSITION_HIGHRHNIGHT) 
+              settings_state_highrhnight["valve1_position_highrhnight"] = p->value().c_str();
+            if (p->name() ==  VALVE2_POSITION_HIGHRHNIGHT) 
+              settings_state_highrhnight["valve2_position_highrhnight"] = p->value().c_str();
+            if (p->name() ==  VALVE3_POSITION_HIGHRHNIGHT) 
+              settings_state_highrhnight["valve3_position_highrhnight"] = p->value().c_str();
+            if (p->name() ==  VALVE4_POSITION_HIGHRHNIGHT) 
+              settings_state_highrhnight["valve4_position_highrhnight"] = p->value().c_str();
+            if (p->name() ==  VALVE5_POSITION_HIGHRHNIGHT) 
+              settings_state_highrhnight["valve5_position_highrhnight"] = p->value().c_str();
+            if (p->name() ==  VALVE6_POSITION_HIGHRHNIGHT) 
+              settings_state_highrhnight["valve6_position_highrhnight"] = p->value().c_str();
+            if (p->name() ==  VALVE7_POSITION_HIGHRHNIGHT) 
+              settings_state_highrhnight["valve7_position_highrhnight"] = p->value().c_str();
+            if (p->name() ==  VALVE8_POSITION_HIGHRHNIGHT) 
+              settings_state_highrhnight["valve8_position_highrhnight"] = p->value().c_str();
+            if (p->name() ==  VALVE9_POSITION_HIGHRHNIGHT) 
+              settings_state_highrhnight["valve9_position_highrhnight"] = p->value().c_str();
+            if (p->name() ==  VALVE10_POSITION_HIGHRHNIGHT) 
+              settings_state_highrhnight["valve10_position_highrhnight"] = p->value().c_str();
+            if (p->name() ==  VALVE11_POSITION_HIGHRHNIGHT) 
+              settings_state_highrhnight["valve11_position_highrhnight"] = p->value().c_str();
+          }
+        }
+        const char* path2 = "/json/settings_state_highrhnight.json";
+        String settings_state_highrhnight_str;
+
+        serializeJson(settings_state_highrhnight, settings_state_highrhnight_str);
+        write_config_file(path2, settings_state_highrhnight_str);
+      }
+    }
+    request->send(LittleFS, "/html/statemachine.html", String(), false, settings_valve_state);
+    xSemaphoreGive(settings_state_highrhnight_mutex);
+  });
+
+  server.on("/settings_valve_cooking", HTTP_POST, [](AsyncWebServerRequest *request) {
+    if (settings_state_cooking_mutex != NULL) {
+      if(xSemaphoreTake(settings_state_cooking_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        int params = request->params();
+        for(int i=0;i<params;i++){
+          const AsyncWebParameter* p = request->getParam(i);
+          if(p->isPost()){
+            if (p->name() == ENABLE_STATE_COOKING) 
+              settings_state_cooking["enable_state_cooking"] = p->value().c_str();
+            if (p->name() == NAME_STATE_COOKING) 
+              settings_state_cooking["name_state_cooking"] = p->value().c_str();
+            if (p->name() == VALVE0_POSITION_COOKING)
+              settings_state_cooking["valve0_position_cooking"] = p->value().c_str();
+            if (p->name() ==  VALVE1_POSITION_COOKING) 
+              settings_state_cooking["valve1_position_cooking"] = p->value().c_str();
+            if (p->name() ==  VALVE2_POSITION_COOKING) 
+              settings_state_cooking["valve2_position_cooking"] = p->value().c_str();
+            if (p->name() ==  VALVE3_POSITION_COOKING) 
+              settings_state_cooking["valve3_position_cooking"] = p->value().c_str();
+            if (p->name() ==  VALVE4_POSITION_COOKING) 
+              settings_state_cooking["valve4_position_cooking"] = p->value().c_str();
+            if (p->name() ==  VALVE5_POSITION_COOKING) 
+              settings_state_cooking["valve5_position_cooking"] = p->value().c_str();
+            if (p->name() ==  VALVE6_POSITION_COOKING) 
+              settings_state_cooking["valve6_position_cooking"] = p->value().c_str();
+            if (p->name() ==  VALVE7_POSITION_COOKING) 
+              settings_state_cooking["valve7_position_cooking"] = p->value().c_str();
+            if (p->name() ==  VALVE8_POSITION_COOKING) 
+              settings_state_cooking["valve8_position_cooking"] = p->value().c_str();
+            if (p->name() ==  VALVE9_POSITION_COOKING) 
+              settings_state_cooking["valve9_position_cooking"] = p->value().c_str();
+            if (p->name() ==  VALVE10_POSITION_COOKING) 
+              settings_state_cooking["valve10_position_cooking"] = p->value().c_str();
+            if (p->name() ==  VALVE11_POSITION_COOKING) 
+              settings_state_cooking["valve11_position_cooking"] = p->value().c_str();
+          }
+        }
+        const char* path = "/json/settings_state_cooking.json";
+        String settings_state_cooking_str;
+
+        serializeJson(settings_state_cooking, settings_state_cooking_str);
+        write_config_file(path, settings_state_cooking_str);
+      }
+    }
+    request->send(LittleFS, "/html/statemachine.html", String(), false, settings_valve_state);
+    xSemaphoreGive(settings_state_highrhnight_mutex);
+  });
+
+  server.on("/settings_valve_cyclingday", HTTP_POST, [](AsyncWebServerRequest *request) {
+    if (settings_state_cyclingday_mutex != NULL) {
+      if(xSemaphoreTake(settings_state_cyclingday_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        int params = request->params();
+        for(int i=0;i<params;i++){
+          const AsyncWebParameter* p = request->getParam(i);
+          if(p->isPost()){
+            if (p->name() == ENABLE_STATE_CYCLINGDAY) 
+              settings_state_cyclingday["enable_state_cyclingday"] = p->value().c_str();
+            if (p->name() == NAME_STATE_CYCLINGDAY) 
+              settings_state_cyclingday["name_state_cyclingday"] = p->value().c_str();
+            if (p->name() == VALVE0_POSITION_CYCLINGDAY)
+              settings_state_cyclingday["valve0_position_cyclingday"] = p->value().c_str();
+            if (p->name() ==  VALVE1_POSITION_CYCLINGDAY) 
+              settings_state_cyclingday["valve1_position_cyclingday"] = p->value().c_str();
+            if (p->name() ==  VALVE2_POSITION_CYCLINGDAY) 
+              settings_state_cyclingday["valve2_position_cyclingday"] = p->value().c_str();
+            if (p->name() ==  VALVE3_POSITION_CYCLINGDAY) 
+              settings_state_cyclingday["valve3_position_cyclingday"] = p->value().c_str();
+            if (p->name() ==  VALVE4_POSITION_CYCLINGDAY) 
+              settings_state_cyclingday["valve4_position_cyclingday"] = p->value().c_str();
+            if (p->name() ==  VALVE5_POSITION_CYCLINGDAY) 
+              settings_state_cyclingday["valve5_position_cyclingday"] = p->value().c_str();
+            if (p->name() ==  VALVE6_POSITION_CYCLINGDAY) 
+              settings_state_cyclingday["valve6_position_cyclingday"] = p->value().c_str();
+            if (p->name() ==  VALVE7_POSITION_CYCLINGDAY) 
+              settings_state_cyclingday["valve7_position_cyclingday"] = p->value().c_str();
+            if (p->name() ==  VALVE8_POSITION_CYCLINGDAY) 
+              settings_state_cyclingday["valve8_position_cyclingday"] = p->value().c_str();
+            if (p->name() ==  VALVE9_POSITION_CYCLINGDAY) 
+              settings_state_cyclingday["valve9_position_cyclingday"] = p->value().c_str();
+            if (p->name() ==  VALVE10_POSITION_CYCLINGDAY) 
+              settings_state_cyclingday["valve10_position_cyclingday"] = p->value().c_str();
+            if (p->name() ==  VALVE11_POSITION_CYCLINGDAY) 
+              settings_state_cyclingday["valve11_position_cyclingday"] = p->value().c_str();
+          }
+        }
+        const char* path = "/json/settings_state_cyclingday.json";
+        String settings_state_cyclingday_str;
+
+        serializeJson(settings_state_cyclingday, settings_state_cyclingday_str);
+        write_config_file(path, settings_state_cyclingday_str);
+      }
+    }
+    request->send(LittleFS, "/html/statemachine.html", String(), false, settings_valve_state);
+    xSemaphoreGive(settings_state_cyclingday_mutex);
+  });
+
+  server.on("/settings_valve_cyclingnight", HTTP_POST, [](AsyncWebServerRequest *request) {
+    if (settings_state_cyclingnight_mutex != NULL) {
+      if(xSemaphoreTake(settings_state_cyclingnight_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        int params = request->params();
+        for(int i=0;i<params;i++){
+          const AsyncWebParameter* p = request->getParam(i);
+          if(p->isPost()){
+            if (p->name() == ENABLE_STATE_CYCLINGNIGHT) 
+              settings_state_cyclingnight["enable_state_cyclingnight"] = p->value().c_str();
+            if (p->name() == NAME_STATE_CYCLINGNIGHT) 
+              settings_state_cyclingnight["name_state_cyclingnight"] = p->value().c_str();
+            if (p->name() == VALVE0_POSITION_CYCLINGNIGHT)
+              settings_state_cyclingnight["valve0_position_cyclingnight"] = p->value().c_str();
+            if (p->name() ==  VALVE1_POSITION_CYCLINGNIGHT) 
+              settings_state_cyclingnight["valve1_position_cyclingnight"] = p->value().c_str();
+            if (p->name() ==  VALVE2_POSITION_CYCLINGNIGHT) 
+              settings_state_cyclingnight["valve2_position_cyclingnight"] = p->value().c_str();
+            if (p->name() ==  VALVE3_POSITION_CYCLINGNIGHT) 
+              settings_state_cyclingnight["valve3_position_cyclingnight"] = p->value().c_str();
+            if (p->name() ==  VALVE4_POSITION_CYCLINGNIGHT) 
+              settings_state_cyclingnight["valve4_position_cyclingnight"] = p->value().c_str();
+            if (p->name() ==  VALVE5_POSITION_CYCLINGNIGHT) 
+              settings_state_cyclingnight["valve5_position_cyclingnight"] = p->value().c_str();
+            if (p->name() ==  VALVE6_POSITION_CYCLINGNIGHT) 
+              settings_state_cyclingnight["valve6_position_cyclingnight"] = p->value().c_str();
+            if (p->name() ==  VALVE7_POSITION_CYCLINGNIGHT) 
+              settings_state_cyclingnight["valve7_position_cyclingnight"] = p->value().c_str();
+            if (p->name() ==  VALVE8_POSITION_CYCLINGNIGHT) 
+              settings_state_cyclingnight["valve8_position_cyclingnight"] = p->value().c_str();
+            if (p->name() ==  VALVE9_POSITION_CYCLINGNIGHT) 
+              settings_state_cyclingnight["valve9_position_cyclingnight"] = p->value().c_str();
+            if (p->name() ==  VALVE10_POSITION_CYCLINGNIGHT) 
+              settings_state_cyclingnight["valve10_position_cyclingnight"] = p->value().c_str();
+            if (p->name() ==  VALVE11_POSITION_CYCLINGNIGHT) 
+              settings_state_cyclingnight["valve11_position_cyclingnight"] = p->value().c_str();
+          }
+        }
+        const char* path = "/json/settings_state_cyclingnight.json";
+        String settings_state_cyclingnight_str;
+
+        serializeJson(settings_state_cyclingnight, settings_state_cyclingnight_str);
+        write_config_file(path, settings_state_cyclingnight_str);
+      }
+    }
+    request->send(LittleFS, "/html/statemachine.html", String(), false, settings_valve_state);
+    xSemaphoreGive(settings_state_cyclingnight_mutex);
+  });
 
   // Start server
   server.begin();
