@@ -975,11 +975,12 @@ String settings_valve_state(const String& var) {
     }
 
     /*Cooking state*/
-    if (settings_state_cooking_mutex != NULL) {
+    /*if (settings_state_cooking_mutex != NULL) {
         if(xSemaphoreTake(settings_state_cooking_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             settings_state_cooking_present = check_file_exists(settings_state_cooking_path);
             if (settings_state_cooking_present == 1) {
                 settings_state_cooking_json = read_config_file(settings_state_cooking_path);
+                Serial.print(settings_state_cooking_json);
                 deserializeJson(settings_state_cooking_doc, settings_state_cooking_json);
             }
             xSemaphoreGive(settings_state_cooking_mutex);
@@ -1024,7 +1025,7 @@ String settings_valve_state(const String& var) {
         if (var == "STATUS_STATE_COOKING_CONFIG") {
             return F(status);
         }
-    }
+    }*/
 
     /*Valve cycling day state*/
     /*if (settings_state_cyclingday_mutex != NULL) {
