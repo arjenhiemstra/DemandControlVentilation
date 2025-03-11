@@ -818,7 +818,7 @@ String settings_valve_state(const String& var) {
     }
 
     /*High CO2 night state*/
-    if (settings_state_highco2night_mutex != NULL) {
+    /*if (settings_state_highco2night_mutex != NULL) {
         if(xSemaphoreTake(settings_state_highco2night_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             settings_state_highco2night_present = check_file_exists(settings_state_highco2night_path);
             if (settings_state_highco2night_present == 1) {
@@ -868,10 +868,10 @@ String settings_valve_state(const String& var) {
         if (var == "STATUS_STATE_HIGHCO2NIGHT_CONFIG") {
             return F(status);
         }
-    }
+    }*/
 
     /*High RH day state*/
-    if (settings_state_highrhday_mutex != NULL) {
+    /*if (settings_state_highrhday_mutex != NULL) {
         if(xSemaphoreTake(settings_state_highrhday_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             settings_state_highrhday_present = check_file_exists(settings_state_highrhday_path);
             if (settings_state_highrhday_present == 1) {
@@ -920,10 +920,10 @@ String settings_valve_state(const String& var) {
         if (var == "STATUS_STATE_HIGHRHDAY_CONFIG") {
             return F(status);
         }
-    }
+    }*/
 
     /*High RH night state*/
-    if (settings_state_highrhnight_mutex != NULL) {
+    /*if (settings_state_highrhnight_mutex != NULL) {
         if(xSemaphoreTake(settings_state_highrhnight_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             settings_state_highrhnight_present = check_file_exists(settings_state_highrhnight_path);
             if (settings_state_highrhnight_present == 1) {
@@ -972,7 +972,7 @@ String settings_valve_state(const String& var) {
         if (var == "STATUS_STATE_HIGHRHNIGHT_CONFIG") {
             return F(status);
         }
-    }
+    }*/
 
     /*Cooking state*/
     /*if (settings_state_cooking_mutex != NULL) {
