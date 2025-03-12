@@ -26,10 +26,6 @@ void sensor_config_data_read() {
                 file.close();
                 
                 deserializeJson(wire_sensor_data, sensor_config1_string);
-                
-                //Serial.print("Wire - Read back contents from global variable: \n");
-                //serializeJson(wire_sensor_data, Serial);
-                //Serial.print("\n\n");
             }
             xSemaphoreGive(sensor_config_file_mutex);
         }
@@ -50,17 +46,64 @@ void sensor_config_data_read() {
                 file.close();
 
                 deserializeJson(wire1_sensor_data, sensor_config2_string);
-
-                //Serial.print("Wire1 - Read back contents from global variable: \n");
-                //serializeJson(wire1_sensor_data, Serial);
-                //Serial.print("\n\n");
             }
             xSemaphoreGive(sensor_config_file_mutex);
         }
     }
 }
 
-//Write valve config files with all valve positions 0
+//Function to read settings (e.g. valve positions) for each state and put these in the global variable
+void valve_settings_config_read() {
+    
+    const char* settings_state_day_path = "/json/settings_state_day.json";
+    const char* settings_state_night_path = "/json/settings_state_night.json";
+
+    String settings_state_day_str;
+    String settings_state_night_str;
+
+    bool settings_state_day_present = 0;
+    bool settings_state_night_present = 0;
+    
+    if (settings_state_day_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_day_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            
+            settings_state_day_present = check_file_exists(settings_state_day_path);
+
+            if (settings_state_day_present == 1) {
+                File file = LittleFS.open(settings_state_day_path, "r");
+
+                while(file.available()) {
+                    settings_state_day_str = file.readString();
+                }
+                file.close();
+                
+                deserializeJson(settings_state_day, settings_state_day_str);
+            }
+            xSemaphoreGive(settings_state_day_mutex);
+        }
+    }
+
+    if (settings_state_night_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_night_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            
+            settings_state_night_present = check_file_exists(settings_state_night_path);
+
+            if (settings_state_night_present == 1) {
+                File file = LittleFS.open(settings_state_night_path, "r");
+
+                while(file.available()) {
+                    settings_state_night_str = file.readString();
+                }
+                file.close();
+                
+                deserializeJson(settings_state_night, settings_state_night_str);
+            }
+            xSemaphoreGive(settings_state_night_mutex);
+        }
+    }
+}
+
+//Write valve status file with all valve positions 0
 void valve_status_file_create() {
     
     File file;
