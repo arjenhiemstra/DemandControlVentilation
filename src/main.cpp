@@ -46,6 +46,7 @@ void setup() {
 
   setup_wifi();
   sensor_config_data_read();
+  valve_settings_config_read();
   startTaskwebcode();
   start_task_valvecontrol();
   start_task_i2c();

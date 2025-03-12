@@ -78,6 +78,9 @@ void valve_settings_config_read() {
                 file.close();
                 
                 deserializeJson(settings_state_day, settings_state_day_str);
+                Serial.print("\n\nSettings from file: ");
+                Serial.print(settings_state_day_str);
+                Serial.print("\n\n");
             }
             xSemaphoreGive(settings_state_day_mutex);
         }

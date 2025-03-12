@@ -1042,6 +1042,9 @@ void Taskwebcode(void *pvParameters) {
         String settings_state_day_str;
 
         serializeJson(settings_state_day, settings_state_day_str);
+        Serial.print("\n\nSettings saved to file: ");
+        Serial.print(settings_state_day_str);
+        Serial.print("\n\n");
         write_config_file(path_day, settings_state_day_str);
       }
     }
