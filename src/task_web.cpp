@@ -983,7 +983,6 @@ void Taskwebcode(void *pvParameters) {
 
   //Statemachine web pages processing
   server.on("/statemachine", HTTP_GET, [](AsyncWebServerRequest *request) {
-    //request->send(LittleFS, "/html/statemachine.html", "text/html");
     request->send(LittleFS, "/html/statemachine.html", String(), false, settings_valve_state);
   });
 
@@ -1053,7 +1052,7 @@ void Taskwebcode(void *pvParameters) {
     xSemaphoreGive(settings_state_day_mutex);
   });
 
-  server.on("/settings_valve_night", HTTP_POST, [](AsyncWebServerRequest *request) {
+  /*server.on("/settings_valve_night", HTTP_POST, [](AsyncWebServerRequest *request) {
     if (settings_state_night_mutex != NULL) {
       if(xSemaphoreTake(settings_state_night_mutex, ( TickType_t ) 10 ) == pdTRUE) {
         int params = request->params();
@@ -1435,7 +1434,7 @@ void Taskwebcode(void *pvParameters) {
     }
     request->send(LittleFS, "/html/statemachine.html", String(), false, settings_valve_state);
     xSemaphoreGive(settings_state_cyclingnight_mutex);
-  });
+  });*/
 
   // Start server
   server.begin();

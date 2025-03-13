@@ -662,24 +662,8 @@ String settings_valve_state(const String& var) {
     JsonDocument settings_state_cyclingnight_doc;
     
     /*Day state*/
-    /*if (settings_state_day_mutex != NULL) {
-        if(xSemaphoreTake(settings_state_day_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            settings_state_day_present = check_file_exists(settings_state_day_path);
-            if (settings_state_day_present == 1) {
-                settings_state_day_json = read_config_file(settings_state_day_path);
-                deserializeJson(settings_state_day_doc, settings_state_day_json);
-            }
-            xSemaphoreGive(settings_state_day_mutex);
-        }
-    }*/
-
-        //if (settings_state_day_present == 1) {
-        //status = "<font color=\"green\">Ok.</font>";
- 
-    if (settings_state_day_mutex != NULL) {
-        if(xSemaphoreTake(settings_state_day_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            //if (var == "STATUS_STATE_DAY_CONFIG") 
-                //return F(status);
+    //if (settings_state_day_mutex != NULL) {
+        //if(xSemaphoreTake(settings_state_day_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             if(var == "ENABLE_STATE_DAY")
                 return (settings_state_day[String("enable_state_day")]);
             if(var == "NAME_STATE_DAY")
@@ -708,9 +692,9 @@ String settings_valve_state(const String& var) {
                 return (settings_state_day[String("valve10_position_day")]);
             if(var == "VALVE11_POSITION_DAY")
                 return (settings_state_day[String("valve11_position_day")]);
-            xSemaphoreGive(settings_state_day_mutex);
-        }
-    }
+            //xSemaphoreGive(settings_state_day_mutex);
+        //}
+    //}
     //}
     //else {
         //status = "<font color=\"red\">Settings file not found.</font>";
