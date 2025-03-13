@@ -59,16 +59,22 @@ void valve_settings_config_read() {
     const char* settings_state_night_path = "/json/settings_state_night.json";
     const char* settings_state_highco2day_path = "/json/settings_state_highco2day.json";
     const char* settings_state_highco2night_path = "/json/settings_state_highco2night.json";
+    const char* settings_state_highrhday_path = "/json/settings_state_highrhday.json";
+    const char* settings_state_highrhnight_path = "/json/settings_state_highrhnight.json";
 
     String settings_state_day_str;
     String settings_state_night_str;
     String settings_state_highco2day_str;
     String settings_state_highco2night_str;
+    String settings_state_highrhday_str;
+    String settings_state_highrhnight_str;
 
     bool settings_state_day_present = 0;
     bool settings_state_night_present = 0;
     bool settings_state_highco2day_present = 0;
     bool settings_state_highco2night_present = 0;
+    bool settings_state_highrhday_present = 0;
+    bool settings_state_highrhnight_present = 0;
     
     if (settings_state_day_mutex != NULL) {
         if(xSemaphoreTake(settings_state_day_mutex, ( TickType_t ) 100 ) == pdTRUE) {
@@ -146,6 +152,44 @@ void valve_settings_config_read() {
                 deserializeJson(settings_state_highco2night, settings_state_highco2night_str);
             }
             xSemaphoreGive(settings_state_highco2night_mutex);
+        }
+    }
+
+    if (settings_state_highrhday_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_highrhday_mutex, ( TickType_t ) 100 ) == pdTRUE) {
+            
+            settings_state_highrhday_present = check_file_exists(settings_state_highrhday_path);
+
+            if (settings_state_highrhday_present == 1) {
+                File file = LittleFS.open(settings_state_highrhday_path, "r");
+
+                while(file.available()) {
+                    settings_state_highrhday_str = file.readString();
+                }
+                file.close();
+                
+                deserializeJson(settings_state_highrhday, settings_state_highrhday_str);
+            }
+            xSemaphoreGive(settings_state_highrhday_mutex);
+        }
+    }
+
+    if (settings_state_highrhnight_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_highrhnight_mutex, ( TickType_t ) 100 ) == pdTRUE) {
+            
+            settings_state_highrhnight_present = check_file_exists(settings_state_highrhnight_path);
+
+            if (settings_state_highrhnight_present == 1) {
+                File file = LittleFS.open(settings_state_highrhnight_path, "r");
+
+                while(file.available()) {
+                    settings_state_highrhnight_str = file.readString();
+                }
+                file.close();
+                
+                deserializeJson(settings_state_highrhnight, settings_state_highrhnight_str);
+            }
+            xSemaphoreGive(settings_state_highrhnight_mutex);
         }
     }
 }
