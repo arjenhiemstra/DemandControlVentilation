@@ -61,6 +61,9 @@ void valve_settings_config_read() {
     const char* settings_state_highco2night_path = "/json/settings_state_highco2night.json";
     const char* settings_state_highrhday_path = "/json/settings_state_highrhday.json";
     const char* settings_state_highrhnight_path = "/json/settings_state_highrhnight.json";
+    const char* settings_state_cooking_path = "/json/settings_state_cooking.json";
+    const char* settings_state_cyclingday_path = "/json/settings_state_cyclingday.json";
+    const char* settings_state_cyclingnight_path = "/json/settings_state_cyclingnight.json";
 
     String settings_state_day_str;
     String settings_state_night_str;
@@ -68,6 +71,9 @@ void valve_settings_config_read() {
     String settings_state_highco2night_str;
     String settings_state_highrhday_str;
     String settings_state_highrhnight_str;
+    String settings_state_cooking_str;
+    String settings_state_cyclingday_str;
+    String settings_state_cyclingnight_str;
 
     bool settings_state_day_present = 0;
     bool settings_state_night_present = 0;
@@ -75,6 +81,9 @@ void valve_settings_config_read() {
     bool settings_state_highco2night_present = 0;
     bool settings_state_highrhday_present = 0;
     bool settings_state_highrhnight_present = 0;
+    bool settings_state_cooking_present = 0;
+    bool settings_state_cyclingday_present = 0;
+    bool settings_state_cyclingnight_present = 0;
     
     if (settings_state_day_mutex != NULL) {
         if(xSemaphoreTake(settings_state_day_mutex, ( TickType_t ) 100 ) == pdTRUE) {
@@ -190,6 +199,66 @@ void valve_settings_config_read() {
                 deserializeJson(settings_state_highrhnight, settings_state_highrhnight_str);
             }
             xSemaphoreGive(settings_state_highrhnight_mutex);
+        }
+    }
+
+    if (settings_state_cooking_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_cooking_mutex, ( TickType_t ) 100 ) == pdTRUE) {
+            
+            settings_state_cooking_present = check_file_exists(settings_state_cooking_path);
+
+            if (settings_state_cooking_present == 1) {
+                File file = LittleFS.open(settings_state_cooking_path, "r");
+
+                while(file.available()) {
+                    settings_state_cooking_str = file.readString();
+                }
+                file.close();
+                
+                deserializeJson(settings_state_cooking, settings_state_cooking_str);
+            }
+            xSemaphoreGive(settings_state_cooking_mutex);
+        }
+    }
+
+    if (settings_state_cyclingday_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_cyclingday_mutex, ( TickType_t ) 100 ) == pdTRUE) {
+            
+            settings_state_cyclingday_present = check_file_exists(settings_state_cyclingday_path);
+
+            if (settings_state_cyclingday_present == 1) {
+                File file = LittleFS.open(settings_state_cyclingday_path, "r");
+
+                while(file.available()) {
+                    settings_state_cyclingday_str = file.readString();
+                }
+                file.close();
+                
+                deserializeJson(settings_state_cyclingday, settings_state_cyclingday_str);
+                Serial.print("\n\nSettings from file: ");
+                Serial.print(settings_state_cyclingday_str);
+                Serial.print("\n\n");
+            }
+            xSemaphoreGive(settings_state_cyclingday_mutex);
+        }
+    }
+
+    if (settings_state_night_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_cyclingnight_mutex, ( TickType_t ) 100 ) == pdTRUE) {
+            
+            settings_state_cyclingnight_present = check_file_exists(settings_state_cyclingnight_path);
+
+            if (settings_state_cyclingnight_present == 1) {
+                File file = LittleFS.open(settings_state_cyclingnight_path, "r");
+
+                while(file.available()) {
+                    settings_state_cyclingnight_str = file.readString();
+                }
+                file.close();
+                
+                deserializeJson(settings_state_cyclingnight, settings_state_cyclingnight_str);
+            }
+            xSemaphoreGive(settings_state_cyclingnight_mutex);
         }
     }
 }
