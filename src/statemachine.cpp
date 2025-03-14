@@ -94,7 +94,6 @@ void init_transitions(void) {
     //valve_position_statemachine();
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
-    
 
     // Conditions to transit to other state
      if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
@@ -115,6 +114,7 @@ void init_transitions(void) {
 void day_transitions(void) {
 
     String fanspeed = "medium";
+    String statemachine_state;
     int temp_hour;
 
     // Actions for this state
@@ -134,7 +134,8 @@ void day_transitions(void) {
 
     set_fanspeed(fanspeed);
     publish_fanspeed(fanspeed);
-    // valves in default position
+    statemachine_state = "day";
+    valve_position_statemachine(statemachine_state);
 
     // Condition to transit to other state
     if (temp_hour >= 21) {
@@ -146,7 +147,7 @@ void day_transitions(void) {
         Serial.print("\nIt's day and high CO2. Transit to high_co2_day state");
         new_state = "high_co2_day";
     }
-    //Assuming TH is on slot 0 of bus 0
+    //Assuming RH is on slot 0 of bus 0
     /*else if (statemachine_sensor_data[0][0][1] > 85) {
         Serial.print("It's day and high RH. Transit to high_rh_day state.");
         new_state = "high_rh_day";

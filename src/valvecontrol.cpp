@@ -250,12 +250,10 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
       for (j=0; j < (cycles * position_change); j++) {
         //Loop to make one cycle of the four coils in the motor
         for (k = 0; k < 4; k++) {
-          //ground latchPin and hold low for as long as you are transmitting
-          digitalWrite(latchPin, 0);
+          digitalWrite(latchPin, 0);                                //ground latchPin and hold low for as long as you are transmitting
           shiftOut(dataPin, clockPin, MSBFIRST, output[2][k]);
           shiftOut(dataPin, clockPin, MSBFIRST, output[1][k]);
           shiftOut(dataPin, clockPin, MSBFIRST, output[0][k]);
-          //take the latch pin high so the LEDs will light up:
           digitalWrite(latchPin, HIGH);
           //delay(10); // This delay decides the speed of turning in ms
           vTaskDelay(10);      
@@ -276,7 +274,6 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
           shiftOut(dataPin, clockPin, MSBFIRST, output[1][k]);
           shiftOut(dataPin, clockPin, MSBFIRST, output[0][k]);
           digitalWrite(latchPin, HIGH);
-          //delay(10);
           vTaskDelay(10);
         }
       }
