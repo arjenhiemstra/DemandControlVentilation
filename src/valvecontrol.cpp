@@ -1,5 +1,6 @@
 #include "valvecontrol.h"
 
+//Control valves from web interface
 void move_valve(void) {
 
     //Data pins for 74HC595
@@ -88,7 +89,7 @@ void move_valve(void) {
                 direction = valve_control_data["valve"+String(i)+"_data"][2];
                 xSemaphoreGive(valve_control_data_mutex);
             }
-        }      
+        }
         
         valve_pos = doc["valve"+String(i)];
 
@@ -293,7 +294,7 @@ void all_outputs_off(int dataPin, int clockPin, int latchPin) {
 }
 
 
-void valve_position_statemachine(void) {
+void valve_position_statemachine(String statemachine_state) {
 
 /*
 The move_valve function works with requested position move value and is not with absolute positions of the valves.  
@@ -319,12 +320,7 @@ Data structure for each JSON valve_control_data Structure
 
     JsonDocument state_valve_pos_doc;
 
-    if (statemachine_state_mutex != NULL) {
-        if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            state_valve_pos_path = ("/json/" + state + ".json").c_str();
-            xSemaphoreGive(statemachine_state_mutex);
-        }
-    }
+    state_valve_pos_path = ("/json/settings_state_" + statemachine_state + ".json").c_str();
 
     //Requested valve positions based on valve position settings files
     state_valve_pos_file_present = check_file_exists(state_valve_pos_path);
@@ -359,9 +355,10 @@ Data structure for each JSON valve_control_data Structure
                 actual_valve_pos_json = read_config_file(actual_valve_pos_path);
             }
             xSemaphoreGive(valve_position_file_mutex);
-            deserializeJson(actual_valve_pos_doc, actual_valve_pos_json);
         }
     }
+    
+    deserializeJson(actual_valve_pos_doc, actual_valve_pos_json);
 
     for (i=0;i<12;i++) {
         valve_number = i;

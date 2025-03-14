@@ -93,7 +93,8 @@ void init_transitions(void) {
 
     //valve_position_statemachine();
     set_fanspeed(fanspeed);
-    publish_fanspeed(fanspeed); 
+    publish_fanspeed(fanspeed);
+    
 
     // Conditions to transit to other state
      if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
@@ -273,7 +274,7 @@ void high_co2_night_transitions(void) {
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            state = "high_co2_night";
+            state = "highco2night";
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
@@ -293,11 +294,11 @@ void high_co2_night_transitions(void) {
     // Conditions for transition
     if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
         Serial.print("\nIt is after 8, before 21 and a weekday. Transit to high_co2_day.");
-        new_state = "high_co2_day";
+        new_state = "highco2day";
     }
     else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday")) {
         Serial.print("\nIt is after 9, before 21 and weekend. Transit to high_co2_day.");
-        new_state = "high_co2_day";
+        new_state = "highco2day";
     }
     else if (statemachine_sensor_data[1][2][2] < 800) {
         Serial.print("\nIt is night and CO2 level is low enough. Transit to night.");
@@ -305,7 +306,7 @@ void high_co2_night_transitions(void) {
     }
     else {
         Serial.print("\nConditions have not changed, CO2 is still high, so remain in high_co2_night state");
-        new_state = "high_co2_night";
+        new_state = "highco2night";
     }
     state = new_state;
 }
@@ -319,7 +320,7 @@ void high_rh_day_transitions(void) {
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            state = "high_rh_day";
+            state = "highrhday";
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
@@ -342,11 +343,11 @@ void high_rh_day_transitions(void) {
     }
     else if (temp_hour >= 21) {
         Serial.print("\nIt's night but rh levels are still high. Transit to high_rh_night");        
-        new_state = "high_rh_night";
+        new_state = "highrhnight";
     }
     else {
         Serial.print("\nConditions have not changed, RH is still high, so remain in high_rh_day state");
-        new_state = "high_rh_day";
+        new_state = "highrhday";
     }
     state = new_state;
 }
@@ -361,7 +362,7 @@ void high_rh_night_transitions(void) {
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            state = "high_rh_night";
+            state = "highrhnight";
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
@@ -385,15 +386,15 @@ void high_rh_night_transitions(void) {
     }
     else if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
         Serial.print("\nIt is after 8, before 21 and a weekday but RH is still high. Transit to high_rh_day.");
-        new_state = "high_rh_day";
+        new_state = "highrhday";
     }
     else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday")) {
         Serial.print("\nIt is after 9, before 21 and weekend but RH is still high. Transit to high_rh_day ");
-        new_state = "high_rh_day";
+        new_state = "highrhday";
     }
     else {
         Serial.print("\nConditions have not changed, RH is still high, so remain in high_rh_night state");
-        new_state = "high_rh_night";
+        new_state = "highrhnight";
     }
     state = new_state;
 }
@@ -433,7 +434,7 @@ void valve_cycle_day_transitions(void) {
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            state = "valve_cycle_day";
+            state = "cyclingday";
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
@@ -449,15 +450,15 @@ void valve_cycle_day_transitions(void) {
     }
     else if (statemachine_sensor_data[0][0][1] > 85) {
         Serial.print("\nIt's day and high RH. Transit to high_rh_day state.");
-        new_state = "high_rh_day";
+        new_state = "highrhday";
     }
     else if (statemachine_sensor_data[1][2][2] > 1000) {
         Serial.print("\nIt is valve_cycle_day and CO2 level is high. Transit to high_co2_day");
-        new_state = "high_co2_day";
+        new_state = "highco2day";
     }
     else {
         Serial.print("\nConditions have not changed, valve_cycle_day is still active, so remain in valve_cycle_day state");
-        new_state = "valve_cycle_day";
+        new_state = "cyclingday";
     }
     state = new_state;
 }
@@ -469,7 +470,7 @@ void valve_cycle_night_transitions(void) {
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            state = "valve_cycle_night";
+            state = "cyclingnight";
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
@@ -485,15 +486,15 @@ void valve_cycle_night_transitions(void) {
     }
     else if (statemachine_sensor_data[0][0][1] > 85) {
         Serial.print("\nIt's valve_cycle_day and high RH. Transit to high_rh_day state.");
-        new_state = "high_rh_night";
+        new_state = "highrhnight";
     }
     else if (statemachine_sensor_data[1][2][2] > 1000) {
         Serial.print("\nIt is valve_cycle_night and CO2 level is high. Transit to high_co2_night");
-        new_state = "high_co2_night";
+        new_state = "highco2night";
     }
     else {
         Serial.print("\nConditions have not changed, valve_cycle_day is still active, so remain in valve_cycle_night state");
-        new_state = "valve_cycle_night";
+        new_state = "cyclingnight";
     }
     state = new_state;
 }
