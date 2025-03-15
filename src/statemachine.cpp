@@ -99,7 +99,6 @@ void init_transitions(void) {
         }
     }
 
-    //valve_position_statemachine();
     set_fanspeed(temp_fanspeed);
 
     // Conditions to transit to other state
@@ -121,13 +120,14 @@ void init_transitions(void) {
 void day_transitions(void) {
 
     String temp_fanspeed;
-    String statemachine_state;
+    String statemachine_state = "day";
+    
     int temp_hour;
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            state = "day";
+            state = statemachine_state;
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
@@ -183,6 +183,7 @@ void day_transitions(void) {
 
 void night_transitions(void) {
 
+    String statemachine_state = "night";
     String temp_fanspeed;
     String temp_day_of_week;
 
@@ -191,7 +192,7 @@ void night_transitions(void) {
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            state = "night";
+            state = statemachine_state;
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
@@ -247,13 +248,15 @@ void night_transitions(void) {
 
 void high_co2_day_transitions(void) {
 
+    String statemachine_state = "highco2day";
     String temp_fanspeed;
+    
     int temp_hour;
 
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            state = "highco2day";
+            state = statemachine_state;
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
@@ -294,6 +297,7 @@ void high_co2_day_transitions(void) {
 
 void high_co2_night_transitions(void) {
 
+    String statemachine_state = "highco2night";
     String temp_fanspeed;
     String temp_day_of_week;
     
@@ -302,7 +306,7 @@ void high_co2_night_transitions(void) {
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            state = "highco2night";
+            state = statemachine_state;
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
@@ -348,6 +352,7 @@ void high_co2_night_transitions(void) {
 
 void high_rh_day_transitions(void) {
 
+    String statemachine_state = "highrhday";
     String temp_fanspeed = "high";
 
     int temp_hour;
@@ -355,7 +360,7 @@ void high_rh_day_transitions(void) {
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            state = "highrhday";
+            state = statemachine_state;
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
@@ -396,6 +401,7 @@ void high_rh_day_transitions(void) {
 
 void high_rh_night_transitions(void) {
 
+    String statemachine_state = "highrhnight";
     String temp_fanspeed;
     String temp_day_of_week;
 
@@ -404,7 +410,7 @@ void high_rh_night_transitions(void) {
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            state = "highrhnight";
+            state = statemachine_state;
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
@@ -450,12 +456,13 @@ void high_rh_night_transitions(void) {
 
 void cooking_transitions(void) {
 
+    String statemachine_state = "cooking";
     String temp_fanspeed;
 
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            state = "cooking";
+            state = statemachine_state;
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
@@ -485,12 +492,13 @@ void cooking_transitions(void) {
 
 void valve_cycle_day_transitions(void) {
 
+    String statemachine_state = "cyclingday";
     String temp_fanspeed;
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            state = "cyclingday";
+            state = statemachine_state;
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
@@ -528,12 +536,13 @@ void valve_cycle_day_transitions(void) {
 
 void valve_cycle_night_transitions(void) {
 
+    String statemachine_state = "cyclingnight";
     String temp_fanspeed;
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            state = "cyclingnight";
+            state = statemachine_state;
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
@@ -572,15 +581,17 @@ void valve_cycle_night_transitions(void) {
 //This state is for later
 void manual_high_speed_transitions(void) {
 
+    String statemachine_state = "manual_high_speed";
     String fanspeed = "high";
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            state = "manual_high_speed";
+            state = statemachine_state;
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
     set_fanspeed(fanspeed);
     // valves in default position
 }
+

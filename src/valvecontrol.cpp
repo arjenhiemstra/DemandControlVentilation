@@ -317,9 +317,8 @@ Data structure for each JSON valve_control_data Structure
 
     JsonDocument state_valve_pos_doc;
 
-    state_valve_pos_path = ("/json/settings_state_" + statemachine_state + ".json").c_str();
-
     //Requested valve positions based on valve position settings files
+    state_valve_pos_path = ("/json/settings_state_" + statemachine_state + ".json").c_str();
     state_valve_pos_file_present = check_file_exists(state_valve_pos_path);
 
     if (state_valve_pos_file_present = 1) {
@@ -336,6 +335,8 @@ Data structure for each JSON valve_control_data Structure
     //Actual valve positions
     const char* actual_valve_pos_path = "/json/valvepositions.json";
     bool status_file_present;
+    int actual_valve_pos;
+    int state_valve_pos;
     int move;
     int direction;
     int valve_number;
@@ -358,8 +359,18 @@ Data structure for each JSON valve_control_data Structure
     deserializeJson(actual_valve_pos_doc, actual_valve_pos_json);
 
     for (i=0;i<12;i++) {
+        
         valve_number = i;
-        if (actual_valve_pos_doc[("valve" + String(i))] >= state_valve_pos_doc[("valve" + String(i))] ) {
+
+        actual_valve_pos = actual_valve_pos_doc[("valve" + String(i))];
+        state_valve_pos = state_valve_pos_doc[("valve" + String(i))];
+
+        Serial.print("\nActual valve position: ");
+        Serial.print(actual_valve_pos);
+        Serial.print("\nValve position from state: ");
+        Serial.print(state_valve_pos);
+
+        /*if (actual_valve_pos >= state_valve_pos) {
             
             //valve needs to close with difference. Check if within movements limits is done in move_valve function
             move = int(actual_valve_pos_doc[("valve" + String(i))]) - int(state_valve_pos_doc[("valve" + String(i))]);
@@ -370,6 +381,7 @@ Data structure for each JSON valve_control_data Structure
             move = int(state_valve_pos_doc[("valve" + String(i))]) - int(actual_valve_pos_doc[("valve" + String(i))]);
             direction = 1;
         }
+        
         if (valve_control_data_mutex != NULL) {
             if(xSemaphoreTake(valve_control_data_mutex, ( TickType_t ) 10 ) == pdTRUE) {
                 valve_control_data["valve"+String(i)+"_data"][0] = valve_number;
@@ -385,11 +397,11 @@ Data structure for each JSON valve_control_data Structure
             valve_control_data["checks"][0] = 1;
             valve_control_data["checks"][1] = 1;
             xSemaphoreGive(valve_control_data_mutex);
-        }
+        }*/
     }
 
     //finally the valves can be moved
-    move_valve();
+    //move_valve();
 }
 
 
