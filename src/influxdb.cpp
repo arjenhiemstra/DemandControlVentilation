@@ -209,9 +209,6 @@ void write_fanspeed(void) {
         temp_fanspeed_nr = 4;
     }
 
-    Serial.print("\n");
-    Serial.print(temp_fanspeed_nr);
-
     sensor.clearFields();
     sensor.clearTags();
     sensor.addField("fanspeed", temp_fanspeed_nr);
