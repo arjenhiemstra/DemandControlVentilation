@@ -1,7 +1,6 @@
 #include "globals.h"
 
 SemaphoreHandle_t sensor_config_file_mutex = NULL;          // For sensor configuration files
-//SemaphoreHandle_t sensor_variable_mutex = NULL;             // For sensors data variable
 SemaphoreHandle_t valve_position_file_mutex = NULL;         // For valve position file
 SemaphoreHandle_t valve_control_data_mutex = NULL;          // For valve control data variable
 SemaphoreHandle_t date_time_mutex = NULL;                   // For time variables
@@ -11,6 +10,7 @@ SemaphoreHandle_t settings_i2c_mutex = NULL;
 SemaphoreHandle_t settings_fan_mutex = NULL;
 SemaphoreHandle_t settings_statemachine_mutex = NULL;
 SemaphoreHandle_t statemachine_state_mutex = NULL;          // for state of statemechine
+SemaphoreHandle_t fanspeed_mutex = NULL;                    // for state of fan
 
 SemaphoreHandle_t settings_state_day_mutex = NULL;
 SemaphoreHandle_t settings_state_night_mutex = NULL;
@@ -74,4 +74,5 @@ String dayOfWeek = "";
 
 //Statemachine globals
 String state = "";
+String fanspeed = "";
 

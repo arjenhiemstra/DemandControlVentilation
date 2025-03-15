@@ -38,25 +38,25 @@ void run_statemachine(void) {
     else if (state == "night") {
         night_transitions();
     }
-    else if (state == "high_co2_day"){
+    else if (state == "highco2day"){
         high_co2_day_transitions();
     }
-    else if (state == "high_co2_night"){
+    else if (state == "highco2night"){
         high_co2_night_transitions();
     }
-    else if (state == "high_rh_day") {
+    else if (state == "highrhday") {
         high_rh_day_transitions();
     }
-    else if (state == "high_rh_night") {
+    else if (state == "highrhnight") {
         high_rh_night_transitions();
     }
     else if (state == "cooking") {
         cooking_transitions();
     }
-    else if (state == "valve_cycle_day") {
+    else if (state == "cyclingday") {
         valve_cycle_day_transitions();
     }
-    else if (state == "valve_cycle_night") {
+    else if (state == "cyclingnight") {
         valve_cycle_night_transitions();
     }
     else if (state == "manual_high_speed") {
@@ -70,8 +70,8 @@ void run_statemachine(void) {
 
 void init_transitions(void) {
 
-    String fanspeed = "low";
     String temp_day_of_week;
+    String temp_fanspeed;
 
     int temp_hour;
 
@@ -91,9 +91,20 @@ void init_transitions(void) {
         }
     }
 
+    if (fanspeed_mutex != NULL) {
+        if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            fanspeed = "low";
+            temp_fanspeed = fanspeed;
+            xSemaphoreGive(fanspeed_mutex);
+        }
+    }
+
+    Serial.print("\nTemp fanspeed is: ");
+    Serial.print(temp_fanspeed);
+
     //valve_position_statemachine();
-    set_fanspeed(fanspeed);
-    publish_fanspeed(fanspeed);
+    set_fanspeed(temp_fanspeed);
+    //publish_fanspeed(fanspeed);
 
     // Conditions to transit to other state
      if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
@@ -113,7 +124,7 @@ void init_transitions(void) {
 
 void day_transitions(void) {
 
-    String fanspeed = "medium";
+    String temp_fanspeed;
     String statemachine_state;
     int temp_hour;
 
@@ -132,10 +143,18 @@ void day_transitions(void) {
         }
     }
 
-    set_fanspeed(fanspeed);
-    publish_fanspeed(fanspeed);
-    statemachine_state = "day";
-    valve_position_statemachine(statemachine_state);
+    if (fanspeed_mutex != NULL) {
+        if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            fanspeed = "medium";
+            temp_fanspeed = fanspeed;
+            xSemaphoreGive(fanspeed_mutex);
+        }
+    }
+
+    set_fanspeed(temp_fanspeed);
+    //publish_fanspeed(fanspeed);
+    //statemachine_state = "day";
+    //valve_position_statemachine(statemachine_state);
 
     // Condition to transit to other state
     if (temp_hour >= 21) {
@@ -144,22 +163,22 @@ void day_transitions(void) {
     }
     //Assuming that CO2 sensor is on slot 2 of bus 1. CO2 has priority over others
     else if (statemachine_sensor_data[1][2][2] > 1000) {
-        Serial.print("\nIt's day and high CO2. Transit to high_co2_day state");
-        new_state = "high_co2_day";
+        Serial.print("\nIt's day and high CO2. Transit to highco2day state");
+        new_state = "highco2day";
     }
     //Assuming RH is on slot 0 of bus 0
-    /*else if (statemachine_sensor_data[0][0][1] > 85) {
-        Serial.print("It's day and high RH. Transit to high_rh_day state.");
-        new_state = "high_rh_day";
+    else if (statemachine_sensor_data[0][0][1] > 85) {
+        Serial.print("It's day and high RH. Transit to highrhday state.");
+        new_state = "highrhday";
     }
-    /*else if (cooking_times() == true) {
+    else if (cooking_times() == true) {
         Serial.print("It's day and cooking time. Transit to cooking state.");
         new_state = "cooking";
     }
-    /*else if (valve_cycle_times_day() == true) {
-        Serial.print("It's day and valve_cycle_time_day. Transit to valve_cycle_day state");
-        new_state = "valve_cycle_day";
-    }*/
+    else if (valve_cycle_times_day() == true) {
+        Serial.print("It's day and valve_cycle_time_day. Transit to valvecycleday state");
+        new_state = "cyclingday";
+    }
     //Manual high speed mode is ignored for now
     else {
         Serial.print("\nConditions have not changed, it's still day");
@@ -170,7 +189,7 @@ void day_transitions(void) {
 
 void night_transitions(void) {
 
-    String fanspeed = "low";
+    String temp_fanspeed;
     String temp_day_of_week;
 
     int temp_hour;
@@ -191,8 +210,16 @@ void night_transitions(void) {
         }
     }
 
-    set_fanspeed(fanspeed);
-    publish_fanspeed(fanspeed);
+    if (fanspeed_mutex != NULL) {
+        if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            fanspeed = "low";
+            temp_fanspeed = fanspeed;
+            xSemaphoreGive(fanspeed_mutex);
+        }
+    }
+
+    set_fanspeed(temp_fanspeed);
+    //publish_fanspeed(fanspeed);
     // valves in default position
 
     // Conditions to transit to other state
@@ -206,17 +233,17 @@ void night_transitions(void) {
     }
     else if (statemachine_sensor_data[1][2][2] > 1000) {
         Serial.print("\nIt is and CO2 level is high. Transit to high_co2_night");
-        new_state = "high_co2_night";
+        new_state = "highco2night";
     }
     //Assuming RH sensor is on slot 0 of bus 0
-    /*else if (statemachine_sensor_data[0][0][1] > 85) {
+    else if (statemachine_sensor_data[0][0][1] > 85) {
         Serial.print("It's night and high RH. Transit to high high_rh_night.");
-        new_state = "high_rh_day";
+        new_state = "highrhday";
     }
     else if (valve_cycle_times_night() == true) {
         Serial.print("It's night and valve_cycle time. Transit to valve_cycle_night.");
-        new_state = "valve_cycle_night";
-    }*/
+        new_state = "cyclingnight";
+    }
     //Manual high speed mode is ignored for now
     else {
         Serial.print("\nConditions have not changed, it's still night.");
@@ -227,13 +254,13 @@ void night_transitions(void) {
 
 void high_co2_day_transitions(void) {
 
-    String fanspeed = "high";
+    String temp_fanspeed;
     int temp_hour;
 
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            state = "high_co2_day";
+            state = "highco2day";
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
@@ -245,8 +272,16 @@ void high_co2_day_transitions(void) {
         }
     }
 
-    set_fanspeed(fanspeed);
-    publish_fanspeed(fanspeed);
+    if (fanspeed_mutex != NULL) {
+        if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            fanspeed = "high";
+            temp_fanspeed = fanspeed;
+            xSemaphoreGive(fanspeed_mutex);
+        }
+    }
+
+    set_fanspeed(temp_fanspeed);
+    //publish_fanspeed(fanspeed);
     // valves in default position
 
     // Conditions for transition
@@ -256,18 +291,18 @@ void high_co2_day_transitions(void) {
     }
     else if (temp_hour >= 21) {
         Serial.print("\nIt's night but CO2 levels are still high. Transit to high_co2_night");        
-        new_state = "high_co2_night";
+        new_state = "highco2night";
     }
     else {
         Serial.print("\nConditions have not changed, CO2 is still high, so remain in high_co2_day state");
-        new_state = "high_co2_day";
+        new_state = "highco2day";
     }
     state = new_state;
 }
 
 void high_co2_night_transitions(void) {
 
-    String fanspeed = "low";
+    String temp_fanspeed;
     String temp_day_of_week;
     
     int temp_hour;
@@ -288,8 +323,16 @@ void high_co2_night_transitions(void) {
         }
     }
 
-    set_fanspeed(fanspeed);
-    publish_fanspeed(fanspeed);
+    if (fanspeed_mutex != NULL) {
+        if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            fanspeed = "low";
+            temp_fanspeed = fanspeed;
+            xSemaphoreGive(fanspeed_mutex);
+        }
+    }
+
+    set_fanspeed(temp_fanspeed);
+    //publish_fanspeed(fanspeed);
     // valves in default position
 
     // Conditions for transition
@@ -314,7 +357,7 @@ void high_co2_night_transitions(void) {
 
 void high_rh_day_transitions(void) {
 
-    String fanspeed = "high";
+    String temp_fanspeed = "high";
 
     int temp_hour;
 
@@ -333,8 +376,16 @@ void high_rh_day_transitions(void) {
         }
     }
 
-    set_fanspeed(fanspeed);
-    publish_fanspeed(fanspeed);
+    if (fanspeed_mutex != NULL) {
+        if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            fanspeed = "high";
+            temp_fanspeed = fanspeed;
+            xSemaphoreGive(fanspeed_mutex);
+        }
+    }
+
+    set_fanspeed(temp_fanspeed);
+    //publish_fanspeed(fanspeed);
     // valves in default position
 
     // Conditions for transition
@@ -355,7 +406,7 @@ void high_rh_day_transitions(void) {
 
 void high_rh_night_transitions(void) {
 
-    String fanspeed = "low";
+    String temp_fanspeed;
     String temp_day_of_week;
 
     int temp_hour;
@@ -376,8 +427,16 @@ void high_rh_night_transitions(void) {
         }
     }
 
-    set_fanspeed(fanspeed);
-    publish_fanspeed(fanspeed);
+    if (fanspeed_mutex != NULL) {
+        if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            fanspeed = "low";
+            temp_fanspeed = fanspeed;
+            xSemaphoreGive(fanspeed_mutex);
+        }
+    }
+
+    set_fanspeed(temp_fanspeed);
+    //publish_fanspeed(fanspeed);
     // valves in default position
 
     // Conditions for transition
@@ -402,7 +461,7 @@ void high_rh_night_transitions(void) {
 
 void cooking_transitions(void) {
 
-    String fanspeed = "high";
+    String temp_fanspeed;
 
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
@@ -411,9 +470,17 @@ void cooking_transitions(void) {
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
+
+    if (fanspeed_mutex != NULL) {
+        if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            fanspeed = "high";
+            temp_fanspeed = fanspeed;
+            xSemaphoreGive(fanspeed_mutex);
+        }
+    }
    
-    set_fanspeed(fanspeed);
-    publish_fanspeed(fanspeed);
+    set_fanspeed(temp_fanspeed);
+    //publish_fanspeed(fanspeed);
     // valves in default position
 
     // Conditions for transition
@@ -430,7 +497,7 @@ void cooking_transitions(void) {
 
 void valve_cycle_day_transitions(void) {
 
-    String fanspeed = "medium";
+    String temp_fanspeed;
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
@@ -440,8 +507,16 @@ void valve_cycle_day_transitions(void) {
         }
     }
 
-    set_fanspeed(fanspeed);
-    publish_fanspeed(fanspeed);
+    if (fanspeed_mutex != NULL) {
+        if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            fanspeed = "medium";
+            temp_fanspeed = fanspeed;
+            xSemaphoreGive(fanspeed_mutex);
+        }
+    }
+
+    set_fanspeed(temp_fanspeed);
+    //publish_fanspeed(fanspeed);
     // valves in default position
 
     // Conditions for transition
@@ -466,7 +541,7 @@ void valve_cycle_day_transitions(void) {
 
 void valve_cycle_night_transitions(void) {
 
-    String fanspeed = "low";
+    String temp_fanspeed;
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
@@ -476,8 +551,16 @@ void valve_cycle_night_transitions(void) {
         }
     }
 
-    set_fanspeed(fanspeed);
-    publish_fanspeed(fanspeed);
+    if (fanspeed_mutex != NULL) {
+        if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            fanspeed = "low";
+            temp_fanspeed = fanspeed;
+            xSemaphoreGive(fanspeed_mutex);
+        }
+    }
+
+    set_fanspeed(temp_fanspeed);
+    //publish_fanspeed(ed);
     // valves in default position
 
     // Conditions for transition
@@ -513,6 +596,6 @@ void manual_high_speed_transitions(void) {
         }
     }
     set_fanspeed(fanspeed);
-    publish_fanspeed(fanspeed);
+    //publish_fanspeed(fanspeed);
     // valves in default position
 }

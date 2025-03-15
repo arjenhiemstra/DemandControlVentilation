@@ -12,6 +12,7 @@ void publish_sensor_data(void) {
     int bus;
     int slot;
 
+    Serial.print("\nPublish sensor data.");
     //if (xQueueReceive(sensor_queue, &queque_sensor_data, 0 ) == pdTRUE) {
     if (xQueuePeek(sensor_queue, &queque_sensor_data, 0 ) == pdTRUE) {  
        
@@ -61,6 +62,7 @@ void publish_valve_positions(void) {
     String json;
     JsonDocument doc;
 
+    Serial.print("\nPublish valve positions.");
     client.setServer(mqtt_server, 1883); 
 
     if (valve_position_file_mutex != NULL) {
@@ -98,6 +100,7 @@ void publish_uptime(void) {
     const char* topic;
     char uptime[200];
 
+    Serial.print("\nPublish uptime.");
     client.setServer(mqtt_server, 1883);
     
     if (client.connect("ESP32Client")) {
@@ -110,15 +113,24 @@ void publish_uptime(void) {
     }
 }
 
-void publish_fanspeed(String fanspeed) {
+void publish_fanspeed(void) {
     
+    String temp_fanspeed;
     const char* topic;
     char fan[20];
 
+    Serial.print("\nPublish fan speed.");
     client.setServer(mqtt_server, 1883);
 
+    if (fanspeed_mutex != NULL) {
+        if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            temp_fanspeed = fanspeed;
+            xSemaphoreGive(fanspeed_mutex);
+        }
+    }
+
     if (client.connect("ESP32Client")) {
-        fanspeed.toCharArray(fan,20);
+        temp_fanspeed.toCharArray(fan,20);
         topic="OSVentilation/status/fanspeed";
         client.publish(topic,fan);
     }
@@ -139,6 +151,7 @@ void publish_state(void) {
         }
     }
     
+    Serial.print("\nPublish statemachine state.");
     client.setServer(mqtt_server, 1883);
 
     if (client.connect("ESP32Client")) {
@@ -158,6 +171,7 @@ void publish_queues(void) {
     String sensor_queue_waiting_str;
     String sensor_queue_space_avail_str;
 
+    Serial.print("\nPublish queue.");
     client.setServer(mqtt_server, 1883);
 
     sensor_queue_waiting_str = String(uxQueueMessagesWaiting(sensor_queue));

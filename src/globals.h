@@ -31,6 +31,7 @@ extern SemaphoreHandle_t settings_i2c_mutex;
 extern SemaphoreHandle_t settings_fan_mutex;
 extern SemaphoreHandle_t settings_statemachine_mutex;
 extern SemaphoreHandle_t statemachine_state_mutex;
+extern SemaphoreHandle_t fanspeed_mutex;
 
 extern SemaphoreHandle_t settings_state_day_mutex;
 extern SemaphoreHandle_t settings_state_night_mutex;
@@ -96,6 +97,7 @@ extern String dayOfWeek;
 
 //Variables for statemachine
 extern String state;
+extern String fanspeed;
 
 //Function definitions
 
