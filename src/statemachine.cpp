@@ -99,12 +99,8 @@ void init_transitions(void) {
         }
     }
 
-    Serial.print("\nTemp fanspeed is: ");
-    Serial.print(temp_fanspeed);
-
     //valve_position_statemachine();
     set_fanspeed(temp_fanspeed);
-    //publish_fanspeed(fanspeed);
 
     // Conditions to transit to other state
      if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
@@ -152,8 +148,6 @@ void day_transitions(void) {
     }
 
     set_fanspeed(temp_fanspeed);
-    //publish_fanspeed(fanspeed);
-    //statemachine_state = "day";
     //valve_position_statemachine(statemachine_state);
 
     // Condition to transit to other state
@@ -219,7 +213,6 @@ void night_transitions(void) {
     }
 
     set_fanspeed(temp_fanspeed);
-    //publish_fanspeed(fanspeed);
     // valves in default position
 
     // Conditions to transit to other state
@@ -281,7 +274,6 @@ void high_co2_day_transitions(void) {
     }
 
     set_fanspeed(temp_fanspeed);
-    //publish_fanspeed(fanspeed);
     // valves in default position
 
     // Conditions for transition
@@ -332,7 +324,6 @@ void high_co2_night_transitions(void) {
     }
 
     set_fanspeed(temp_fanspeed);
-    //publish_fanspeed(fanspeed);
     // valves in default position
 
     // Conditions for transition
@@ -385,7 +376,6 @@ void high_rh_day_transitions(void) {
     }
 
     set_fanspeed(temp_fanspeed);
-    //publish_fanspeed(fanspeed);
     // valves in default position
 
     // Conditions for transition
@@ -436,7 +426,6 @@ void high_rh_night_transitions(void) {
     }
 
     set_fanspeed(temp_fanspeed);
-    //publish_fanspeed(fanspeed);
     // valves in default position
 
     // Conditions for transition
@@ -480,7 +469,6 @@ void cooking_transitions(void) {
     }
    
     set_fanspeed(temp_fanspeed);
-    //publish_fanspeed(fanspeed);
     // valves in default position
 
     // Conditions for transition
@@ -516,7 +504,6 @@ void valve_cycle_day_transitions(void) {
     }
 
     set_fanspeed(temp_fanspeed);
-    //publish_fanspeed(fanspeed);
     // valves in default position
 
     // Conditions for transition
@@ -560,7 +547,6 @@ void valve_cycle_night_transitions(void) {
     }
 
     set_fanspeed(temp_fanspeed);
-    //publish_fanspeed(ed);
     // valves in default position
 
     // Conditions for transition
@@ -596,6 +582,5 @@ void manual_high_speed_transitions(void) {
         }
     }
     set_fanspeed(fanspeed);
-    //publish_fanspeed(fanspeed);
     // valves in default position
 }

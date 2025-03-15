@@ -8,13 +8,12 @@ void publish_sensor_data(void) {
     String measurement;
     char topic[200];
     char sensor_value[8];
-    float queque_sensor_data[2][8][3];
+    float queue_sensor_data[2][8][3];
     int bus;
     int slot;
 
     Serial.print("\nPublish sensor data.");
-    //if (xQueueReceive(sensor_queue, &queque_sensor_data, 0 ) == pdTRUE) {
-    if (xQueuePeek(sensor_queue, &queque_sensor_data, 0 ) == pdTRUE) {  
+    if (xQueuePeek(sensor_queue, &queue_sensor_data, 0 ) == pdTRUE) {  
        
         client.setServer(mqtt_server, mqtt_port);
 
@@ -22,24 +21,24 @@ void publish_sensor_data(void) {
             for (int bus=0;bus<2;bus++) {
                 for (int slot=0;slot<8;slot++) {
                             
-                    if (queque_sensor_data[bus][slot][0] > 2 )  {
+                    if (queue_sensor_data[bus][slot][0] > 2 )  {
                         measurement = "/temperature";
                         ("OSVentilation/bus/" + String(bus) + "/sensor" + String(slot) + measurement).toCharArray(topic,200);
-                        String(queque_sensor_data[bus][slot][0]).toCharArray(sensor_value,8);
+                        String(queue_sensor_data[bus][slot][0]).toCharArray(sensor_value,8);
                         client.publish(topic, sensor_value);
                     }
 
-                    if (queque_sensor_data[bus][slot][1] > 2 )  {
+                    if (queue_sensor_data[bus][slot][1] > 2 )  {
                         measurement = "/humidity";
                         ("OSVentilation/bus/" + String(bus) + "/sensor" + String(slot) + measurement).toCharArray(topic,200);
-                        String(queque_sensor_data[bus][slot][1]).toCharArray(sensor_value,8);
+                        String(queue_sensor_data[bus][slot][1]).toCharArray(sensor_value,8);
                         client.publish(topic, sensor_value);
                     }
 
-                    if (queque_sensor_data[bus][slot][2] > 2 )  {
+                    if (queue_sensor_data[bus][slot][2] > 2 )  {
                         measurement = "/CO2";
                         ("OSVentilation/bus/" + String(bus) + "/sensor" + String(slot) + measurement).toCharArray(topic,200);
-                        String(queque_sensor_data[bus][slot][2]).toCharArray(sensor_value,8);
+                        String(queue_sensor_data[bus][slot][2]).toCharArray(sensor_value,8);
                         client.publish(topic, sensor_value);
                     }
                 }
@@ -163,7 +162,7 @@ void publish_state(void) {
     }
 }
 
-void publish_queues(void) {
+/*void publish_queues(void) {
     
     const char* topic;
     char sensor_queue_waiting[5];
@@ -193,9 +192,9 @@ void publish_queues(void) {
         Serial.print("\nCould not connect to MQTT server");
     }
     
-}
+}*/
 
-void subscribe(void) {
+/*void subscribe(void) {
 
-}
+}*/
 

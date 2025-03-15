@@ -6,11 +6,9 @@ void write_sensor_data(void) {
     Point sensor("Sensors");   
 
     //Copy array to local array with active mutex an then run slow display function without mutex
-    float queque_sensor_data[2][8][3];
-    
-    //Serial.println("\nTemp sensor data in queue for influxdb:");
-    //if (xQueueReceive(sensor_queue, &queque_sensor_data, 0) == pdTRUE) {
-    if (xQueuePeek(sensor_queue, &queque_sensor_data, 0) == pdTRUE) {     
+    float queue_sensor_data[2][8][3];
+
+    if (xQueuePeek(sensor_queue, &queue_sensor_data, 0) == pdTRUE) {     
     
         // Check server connection. Only write data when connected.
         if (client.validateConnection()) {
@@ -20,25 +18,23 @@ void write_sensor_data(void) {
             Serial.print("\nWriting sensor data to influxDB.");
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 8; j++) {           
-                    if (queque_sensor_data[i][j][0] > 0) {
+                    if (queue_sensor_data[i][j][0] > 0) {
                         sensor.clearFields();
                         sensor.clearTags();
                         String tag = "sensor" + String(j);
                         String bus = "bus" + String(i);
                         sensor.addTag("device",tag);
                         sensor.addTag("bus",bus);
-                        if (queque_sensor_data[i][j][0] > 3) {
-                            sensor.addField("temperature", queque_sensor_data[i][j][0]);
+                        if (queue_sensor_data[i][j][0] > 3) {
+                            sensor.addField("temperature", queue_sensor_data[i][j][0]);
                         }
-                        if (queque_sensor_data[i][j][1] > 5) {
-                            sensor.addField("humidity", queque_sensor_data[i][j][1]);
+                        if (queue_sensor_data[i][j][1] > 5) {
+                            sensor.addField("humidity", queue_sensor_data[i][j][1]);
                         }
-                        if (queque_sensor_data[i][j][2] > 5) {
-                            sensor.addField("CO2", queque_sensor_data[i][j][2]); 
+                        if (queue_sensor_data[i][j][2] > 5) {
+                            sensor.addField("CO2", queue_sensor_data[i][j][2]); 
                         }
                         
-                        //Serial.println("Writing sensor data to influxDB: ");
-                        //Serial.println(client.pointToLineProtocol(sensor));
                         client.pointToLineProtocol(sensor);
                 
                         if (!client.writePoint(sensor)) {
@@ -111,7 +107,6 @@ void write_system_uptime(void) {
     uptime = (esp_timer_get_time())/1000000;        //in sec
     sensor.clearFields();
     sensor.clearTags();
-    //sensor.addTag("system","system");
     sensor.addField("uptime", uptime);
     Serial.print("\nWriting uptime to influxDB.");
     if (!client.writePoint(sensor)) {
@@ -175,7 +170,6 @@ void write_state_info(void) {
 
     sensor.clearFields();
     sensor.clearTags();
-    //sensor.addTag("state",temp_state);
     sensor.addField("state", temp_state_nr);
     Serial.print("\nWriting statemachine state to influxDB.");
     if (!client.writePoint(sensor)) {
@@ -196,14 +190,10 @@ void write_fanspeed(void) {
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
             temp_fanspeed = fanspeed;
-            Serial.print("\n");
-            Serial.print(fanspeed);
             xSemaphoreGive(fanspeed_mutex);
         }
     }
 
-    Serial.print("\n");
-    Serial.print(temp_fanspeed);
 
     //Need to translate fanspeed to number for easy processing in Grafana
     if (temp_fanspeed == "low") {

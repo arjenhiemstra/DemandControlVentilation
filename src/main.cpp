@@ -9,7 +9,6 @@ void setup() {
   Serial.begin(115200);
 
   sensor_config_file_mutex = xSemaphoreCreateMutex();
-  //sensor_variable_mutex = xSemaphoreCreateMutex();
   valve_position_file_mutex = xSemaphoreCreateMutex();
   date_time_mutex = xSemaphoreCreateMutex();
   settings_network_mutex = xSemaphoreCreateMutex();
