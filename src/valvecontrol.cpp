@@ -311,27 +311,35 @@ Data structure for each JSON valve_control_data Structure
     "valve11_data": [valve_vumber,valve move,valvemove_direction]
 }
 */
-    const char* state_valve_pos_path;
     bool state_valve_pos_file_present;
+    String state_valve_pos_path;            //Must be String and not const char* because it is changed by the statemechine!!!
     String state_valve_pos_str;
 
     JsonDocument state_valve_pos_doc;
 
     //Requested valve positions based on valve position settings files
-    state_valve_pos_path = ("/json/settings_state_" + statemachine_state + ".json").c_str();
-    state_valve_pos_file_present = check_file_exists(state_valve_pos_path);
+    state_valve_pos_path = ("/json/settings_state_" + statemachine_state + ".json");
 
-    if (state_valve_pos_file_present = 1) {
+    Serial.print("\nPath is: ");
+    Serial.print(state_valve_pos_path);
+
+    if (settings_state_day_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_day_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            state_valve_pos_file_present = check_file_exists(state_valve_pos_path.c_str());
+            if (state_valve_pos_file_present = 1) {
         
-        File file = LittleFS.open(state_valve_pos_path, "r");
-
-        while(file.available()) {
-            state_valve_pos_str = file.readString();
+                File file = LittleFS.open(state_valve_pos_path, "r");
+        
+                while(file.available()) {
+                    state_valve_pos_str = file.readString();
+                }
+                file.close();
+            }        
+            xSemaphoreGive(settings_state_day_mutex);
         }
-        file.close();
-        deserializeJson(state_valve_pos_doc, state_valve_pos_str);
     }
-
+    deserializeJson(state_valve_pos_doc, state_valve_pos_str);
+    
     //Actual valve positions
     const char* actual_valve_pos_path = "/json/valvepositions.json";
     bool status_file_present;
@@ -370,7 +378,7 @@ Data structure for each JSON valve_control_data Structure
         Serial.print("\nValve position from state: ");
         Serial.print(state_valve_pos);
 
-        /*if (actual_valve_pos >= state_valve_pos) {
+        if (actual_valve_pos >= state_valve_pos) {
             
             //valve needs to close with difference. Check if within movements limits is done in move_valve function
             move = int(actual_valve_pos_doc[("valve" + String(i))]) - int(state_valve_pos_doc[("valve" + String(i))]);
@@ -397,7 +405,7 @@ Data structure for each JSON valve_control_data Structure
             valve_control_data["checks"][0] = 1;
             valve_control_data["checks"][1] = 1;
             xSemaphoreGive(valve_control_data_mutex);
-        }*/
+        }
     }
 
     //finally the valves can be moved

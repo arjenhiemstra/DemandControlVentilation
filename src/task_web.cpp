@@ -1186,7 +1186,7 @@ void Taskwebcode(void *pvParameters) {
           settings_state_highrhday["enable_state_highrhday"] = p->value().c_str();
         if (p->name() == NAME_STATE_HIGHRHDAY) 
           settings_state_highrhday["name_state_highrhday"] = p->value().c_str();
-        if (p->name() == VALVE0_POSITION_DAY)
+        if (p->name() == VALVE0_POSITION_HIGHRHDAY)
           settings_state_highrhday["valve0_position_highrhday"] = p->value().c_str();
         if (p->name() ==  VALVE1_POSITION_HIGHRHDAY) 
           settings_state_highrhday["valve1_position_highrhday"] = p->value().c_str();

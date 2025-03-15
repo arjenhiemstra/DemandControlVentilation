@@ -148,7 +148,7 @@ void day_transitions(void) {
     }
 
     set_fanspeed(temp_fanspeed);
-    //valve_position_statemachine(statemachine_state);
+    valve_position_statemachine(statemachine_state);
 
     // Condition to transit to other state
     if (temp_hour >= 21) {
@@ -214,8 +214,8 @@ void night_transitions(void) {
     }
 
     set_fanspeed(temp_fanspeed);
-    // valves in default position
-
+    valve_position_statemachine(statemachine_state);
+    
     // Conditions to transit to other state
     if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
         Serial.print("\nIt is after 8, before 21 and a weekday. Transit to day.");
@@ -277,7 +277,7 @@ void high_co2_day_transitions(void) {
     }
 
     set_fanspeed(temp_fanspeed);
-    // valves in default position
+    valve_position_statemachine(statemachine_state);
 
     // Conditions for transition
     if (statemachine_sensor_data[1][2][2] < 800) {
@@ -328,7 +328,7 @@ void high_co2_night_transitions(void) {
     }
 
     set_fanspeed(temp_fanspeed);
-    // valves in default position
+    valve_position_statemachine(statemachine_state);
 
     // Conditions for transition
     if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
@@ -381,7 +381,7 @@ void high_rh_day_transitions(void) {
     }
 
     set_fanspeed(temp_fanspeed);
-    // valves in default position
+    valve_position_statemachine(statemachine_state);
 
     // Conditions for transition
     if (statemachine_sensor_data[0][0][1] < 70) {
@@ -432,7 +432,7 @@ void high_rh_night_transitions(void) {
     }
 
     set_fanspeed(temp_fanspeed);
-    // valves in default position
+    valve_position_statemachine(statemachine_state);
 
     // Conditions for transition
     if (statemachine_sensor_data[0][0][1] < 70) {
@@ -476,7 +476,7 @@ void cooking_transitions(void) {
     }
    
     set_fanspeed(temp_fanspeed);
-    // valves in default position
+    valve_position_statemachine(statemachine_state);
 
     // Conditions for transition
     if (cooking_times() == false) {
@@ -512,7 +512,7 @@ void valve_cycle_day_transitions(void) {
     }
 
     set_fanspeed(temp_fanspeed);
-    // valves in default position
+    valve_position_statemachine(statemachine_state);
 
     // Conditions for transition
     if (valve_cycle_times_day() == false) {
@@ -556,7 +556,7 @@ void valve_cycle_night_transitions(void) {
     }
 
     set_fanspeed(temp_fanspeed);
-    // valves in default position
+    valve_position_statemachine(statemachine_state);
 
     // Conditions for transition
     if (valve_cycle_times_night() == false) {
@@ -592,6 +592,6 @@ void manual_high_speed_transitions(void) {
         }
     }
     set_fanspeed(fanspeed);
-    // valves in default position
+    valve_position_statemachine(statemachine_state);
 }
 
