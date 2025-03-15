@@ -338,6 +338,8 @@ Data structure for each JSON valve_control_data Structure
             xSemaphoreGive(settings_state_day_mutex);
         }
     }
+    Serial.print("\nFile contents is: ");
+    Serial.print(state_valve_pos_str);
     deserializeJson(state_valve_pos_doc, state_valve_pos_str);
     
     //Actual valve positions
@@ -365,12 +367,14 @@ Data structure for each JSON valve_control_data Structure
     }
     
     deserializeJson(actual_valve_pos_doc, actual_valve_pos_json);
+    Serial.print("\nJson doc contents is: ");
+    serializeJsonPretty(actual_valve_pos_doc,Serial);
 
     for (i=0;i<12;i++) {
         
         valve_number = i;
 
-        actual_valve_pos = actual_valve_pos_doc[("valve" + String(i))];
+        actual_valve_pos = actual_valve_pos_doc[("valve" + String(i) + "_position_" + statemachine_state)];
         state_valve_pos = state_valve_pos_doc[("valve" + String(i))];
 
         Serial.print("\nActual valve position: ");
