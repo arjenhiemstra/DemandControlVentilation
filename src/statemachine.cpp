@@ -102,7 +102,7 @@ void init_transitions(void) {
     set_fanspeed(temp_fanspeed);
 
     // Conditions to transit to other state
-     if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
+    if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
         Serial.print("\nIt is after 8, before 21 and a weekday. Transit to day.");
         new_state = "day";
     }

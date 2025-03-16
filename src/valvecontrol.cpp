@@ -338,15 +338,17 @@ Data structure for each JSON valve_control_data Structure
             xSemaphoreGive(settings_state_day_mutex);
         }
     }
-    Serial.print("\nFile contents is: ");
+    Serial.print("\nState file contents is: ");
     Serial.print(state_valve_pos_str);
     deserializeJson(state_valve_pos_doc, state_valve_pos_str);
+    Serial.print("\nState doc contents is: ");
+    serializeJson(state_valve_pos_doc, Serial);
     
     //Actual valve positions
     const char* actual_valve_pos_path = "/json/valvepositions.json";
     bool status_file_present;
-    int actual_valve_pos;
-    int state_valve_pos;
+    //int actual_valve_pos;
+    //int state_valve_pos;
     int move;
     int direction;
     int valve_number;
@@ -359,7 +361,7 @@ Data structure for each JSON valve_control_data Structure
 
     if (valve_position_file_mutex != NULL) {
         if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
-            if (status_file_present == 1) {
+            if (status_file_present = 1) {
                 actual_valve_pos_json = read_config_file(actual_valve_pos_path);
             }
             xSemaphoreGive(valve_position_file_mutex);
@@ -367,15 +369,15 @@ Data structure for each JSON valve_control_data Structure
     }
     
     deserializeJson(actual_valve_pos_doc, actual_valve_pos_json);
-    Serial.print("\nJson doc contents is: ");
+    Serial.print("\nActual valve pos doc contents is: ");
     serializeJsonPretty(actual_valve_pos_doc,Serial);
 
     for (i=0;i<12;i++) {
         
         valve_number = i;
 
-        actual_valve_pos = actual_valve_pos_doc[("valve" + String(i) + "_position_" + statemachine_state)];
-        state_valve_pos = state_valve_pos_doc[("valve" + String(i))];
+        int actual_valve_pos = int(actual_valve_pos_doc[("valve" + String(i) + "_position_" + statemachine_state)]);
+        int state_valve_pos = int(state_valve_pos_doc[("valve" + String(i))]);
 
         Serial.print("\nActual valve position: ");
         Serial.print(actual_valve_pos);

@@ -36,27 +36,27 @@ bool valve_cycle_times_day(void) {
     
     if (temp_hour==10 && temp_minute < 30)
         return true;
-    if (temp_hour==10 && temp_minute >= 30)
+    else if (temp_hour==10 && temp_minute >= 30)
         return false;
-    if (temp_hour==12 && temp_minute < 30)
+    else if (temp_hour==12 && temp_minute < 30)
         return true;
-    if (temp_hour==12 && temp_minute >= 30)
+    else if (temp_hour==12 && temp_minute >= 30)
         return false;
-    if (temp_hour==14 && temp_minute < 30)
+    else if (temp_hour==14 && temp_minute < 30)
         return true;
-    if (temp_hour==14 && temp_minute >= 30)
+    else if (temp_hour==14 && temp_minute >= 30)
         return false;
-    if (temp_hour==16 && temp_minute < 30)
+    else if (temp_hour==16 && temp_minute < 30)
         return true;
-    if (temp_hour==16 && temp_minute >= 30)
+    else if (temp_hour==16 && temp_minute >= 30)
         return false;
-    if (temp_hour==18 && temp_minute > 30)
+    else if (temp_hour==18 && temp_minute > 30)
         return true;
-    if (temp_hour==18 && temp_minute >= 58)
+    else if (temp_hour==18 && temp_minute >= 58)
         return false;
-    if (temp_hour==20 && temp_minute < 30)
+    else if (temp_hour==20 && temp_minute < 30)
         return true;
-    if (temp_hour==20 && temp_minute >= 30)
+    else if (temp_hour==20 && temp_minute >= 30)
         return false;
     else
         return false;
@@ -75,11 +75,22 @@ bool valve_cycle_times_night(void) {
         }
     }
 
-    //if (now.hour()==10 && now.minute() < 30)
-        //return true;
-    //if (now.hour()==10 && now.minute() >= 30)
-        //return false;
-
-    //else
+    if (temp_hour==23 && temp_minute < 30)
+        return true;
+    else if (temp_hour==23 && temp_minute >= 30)
+        return false;
+    else if (temp_hour==1 && temp_minute < 30)
+        return true;
+    else if (temp_hour==1 && temp_minute >= 30)
+        return false;
+    else if (temp_hour==3 && temp_minute < 30)
+        return true;
+    else if (temp_hour==3 && temp_minute >= 30)
+        return false;
+    else if (temp_hour==5 && temp_minute < 30)
+        return true;
+    else if (temp_hour==5 && temp_minute >= 30)
+        return false;
+    else
         return false;
 }
