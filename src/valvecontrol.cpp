@@ -154,7 +154,6 @@ void move_valve(void) {
             doc["valve"+String(i)] = new_valve_position;
         }
     }
-    Serial.print("\n\n");
 
     //write doc to file
     String new_valve_positions;
@@ -163,8 +162,8 @@ void move_valve(void) {
     //Convert from JsonDocument to String
     serializeJson(doc, new_valve_positions);
 
+    Serial.print("\n");
     Serial.print(new_valve_positions);
-    Serial.print("\n\n");
 
     if (valve_position_file_mutex != NULL) {
         if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 10 ) == pdTRUE) { 

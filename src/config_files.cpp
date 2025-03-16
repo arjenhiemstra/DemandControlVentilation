@@ -14,17 +14,13 @@ void sensor_config_data_read() {
     
     if (sensor_config_file_mutex != NULL) {
         if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            
             sensor_config1_file_present = check_file_exists(path1);
-
             if (sensor_config1_file_present = 1) {
                 File file = LittleFS.open(path1, "r");
-
                 while(file.available()) {
                     sensor_config1_string = file.readString();
                 }
                 file.close();
-                
                 deserializeJson(wire_sensor_data, sensor_config1_string);
             }
             xSemaphoreGive(sensor_config_file_mutex);
@@ -33,18 +29,13 @@ void sensor_config_data_read() {
 	
     if (sensor_config_file_mutex != NULL) {
         if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            
             sensor_config2_file_present = check_file_exists(path2);
-
             if (sensor_config2_file_present = 1) {
-                
                 File file = LittleFS.open(path2, "r");
-
                 while(file.available()) {
                     sensor_config2_string = file.readString();
                 }
                 file.close();
-
                 deserializeJson(wire1_sensor_data, sensor_config2_string);
             }
             xSemaphoreGive(sensor_config_file_mutex);
@@ -87,17 +78,13 @@ void valve_settings_config_read() {
     
     if (settings_state_day_mutex != NULL) {
         if(xSemaphoreTake(settings_state_day_mutex, ( TickType_t ) 100 ) == pdTRUE) {
-            
             settings_state_day_present = check_file_exists(settings_state_day_path);
-
             if (settings_state_day_present == 1) {
                 File file = LittleFS.open(settings_state_day_path, "r");
-
                 while(file.available()) {
                     settings_state_day_str = file.readString();
                 }
                 file.close();
-                
                 deserializeJson(settings_state_day, settings_state_day_str);
             }
             xSemaphoreGive(settings_state_day_mutex);
@@ -105,18 +92,14 @@ void valve_settings_config_read() {
     }
 
     if (settings_state_night_mutex != NULL) {
-        if(xSemaphoreTake(settings_state_night_mutex, ( TickType_t ) 100 ) == pdTRUE) {
-            
+        if(xSemaphoreTake(settings_state_night_mutex, ( TickType_t ) 100 ) == pdTRUE) { 
             settings_state_night_present = check_file_exists(settings_state_night_path);
-
             if (settings_state_night_present == 1) {
                 File file = LittleFS.open(settings_state_night_path, "r");
-
                 while(file.available()) {
                     settings_state_night_str = file.readString();
                 }
                 file.close();
-                
                 deserializeJson(settings_state_night, settings_state_night_str);
             }
             xSemaphoreGive(settings_state_night_mutex);
@@ -125,17 +108,13 @@ void valve_settings_config_read() {
 
     if (settings_state_highco2day_mutex != NULL) {
         if(xSemaphoreTake(settings_state_highco2day_mutex, ( TickType_t ) 100 ) == pdTRUE) {
-            
             settings_state_highco2day_present = check_file_exists(settings_state_highco2day_path);
-
             if (settings_state_highco2day_present == 1) {
                 File file = LittleFS.open(settings_state_highco2day_path, "r");
-
                 while(file.available()) {
                     settings_state_highco2day_str = file.readString();
                 }
                 file.close();
-                
                 deserializeJson(settings_state_highco2day, settings_state_highco2day_str);
             }
             xSemaphoreGive(settings_state_highco2day_mutex);
@@ -144,12 +123,9 @@ void valve_settings_config_read() {
 
     if (settings_state_highco2night_mutex != NULL) {
         if(xSemaphoreTake(settings_state_highco2night_mutex, ( TickType_t ) 100 ) == pdTRUE) {
-            
             settings_state_highco2night_present = check_file_exists(settings_state_highco2night_path);
-
             if (settings_state_highco2night_present == 1) {
                 File file = LittleFS.open(settings_state_highco2night_path, "r");
-
                 while(file.available()) {
                     settings_state_highco2night_str = file.readString();
                 }
@@ -163,17 +139,13 @@ void valve_settings_config_read() {
 
     if (settings_state_highrhday_mutex != NULL) {
         if(xSemaphoreTake(settings_state_highrhday_mutex, ( TickType_t ) 100 ) == pdTRUE) {
-            
             settings_state_highrhday_present = check_file_exists(settings_state_highrhday_path);
-
             if (settings_state_highrhday_present == 1) {
                 File file = LittleFS.open(settings_state_highrhday_path, "r");
-
                 while(file.available()) {
                     settings_state_highrhday_str = file.readString();
                 }
                 file.close();
-                
                 deserializeJson(settings_state_highrhday, settings_state_highrhday_str);
             }
             xSemaphoreGive(settings_state_highrhday_mutex);
@@ -266,19 +238,17 @@ void valve_status_file_create() {
 
     if (valve_position_file_mutex != NULL) {
         if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-
             file = LittleFS.open("/json/valvepositions.json", "w");
             if(!file) {
-                Serial.println("Failed to open file for writing");
+                Serial.println("\nFailed to open file for writing");
                 return;
             }
-
             // Write to the file
             if (file.println(default_valve_position_file)) {
-                Serial.println("File written");
+                Serial.println("\nValve status file written");
             } 
             else {
-                Serial.println("Write failed");
+                Serial.println("\nWrite failed");
             }
             file.close();
             xSemaphoreGive(valve_position_file_mutex);
@@ -290,10 +260,10 @@ void valve_status_file_create() {
 void delete_file(const char* path) {
     
     if (LittleFS.remove(path)) {
-        Serial.println("File deleted");
+        Serial.println("\nFile deleted");
     }
     else {
-        Serial.println("Delete failed");
+        Serial.println("\nDelete failed");
     }
 }
 
@@ -319,7 +289,6 @@ String read_config_file(const char* path) {
         valve_positions = file.readString();
     }
     file.close();
-
     return valve_positions;
 
 }
@@ -330,16 +299,14 @@ void write_config_file(const char* path, String file_contents) {
     File file;
     file = LittleFS.open(path, "w");
     if(!file) {
-        Serial.println("Failed to open file for writing");
+        Serial.println("\nFailed to open file for writing");
         return;
     }
-
-    // Write to the file
     if (file.println(file_contents)) {
-        Serial.println("File written");
+        Serial.println("\nConfig file written");
     } 
     else {
-        Serial.println("Write failed");
+        Serial.println("\nWrite failed");
     }
     file.close();
 }
