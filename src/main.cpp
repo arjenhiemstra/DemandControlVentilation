@@ -40,7 +40,7 @@ void setup() {
   // Begin LittleFS
   if (!LittleFS.begin())
   {
-    Serial.println("An Error has occurred while mounting LittleFS");
+    Serial.println("\nAn Error has occurred while mounting LittleFS");
     return;
   }
 
@@ -67,10 +67,8 @@ void setup_wifi() {
     return;
   }
   
-  Serial.println();
-  Serial.print("IP Address: ");
+  Serial.print("\nIP Address: ");
   Serial.print(WiFi.localIP());
-  Serial.print("\n\n");
   vTaskDelay(1000);
   sync_rtc_ntp();
   vTaskDelay(1000);

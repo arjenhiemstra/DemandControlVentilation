@@ -1,16 +1,16 @@
 {
     "enable_state_cooking": "On",
     "name_state_cooking": "cooking",
-    "valve0_position_cooking": 0,
-    "valve1_position_cooking": 0,
-    "valve2_position_cooking": 0,
+    "valve0_position_cooking": 20,
+    "valve1_position_cooking": 20,
+    "valve2_position_cooking": 4,
     "valve3_position_cooking": 0,
-    "valve4_position_cooking": 0,
-    "valve5_position_cooking": 0,
-    "valve6_position_cooking": 0,
+    "valve4_position_cooking": 4,
+    "valve5_position_cooking": 4,
+    "valve6_position_cooking": 4,
     "valve7_position_cooking": 0,
-    "valve8_position_cooking": 0,
-    "valve9_position_cooking": 0,
-    "valve10_position_cooking": 0,
-    "valve11_position_cooking": 0
+    "valve8_position_cooking": 4,
+    "valve9_position_cooking": 4,
+    "valve10_position_cooking": 4,
+    "valve11_position_cooking": 4
 }

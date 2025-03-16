@@ -1,16 +1,16 @@
 {
     "enable_state_cyclingnight": "On",
     "name_state_cyclingnight": "cyclingnight",
-    "valve0_position_cyclingnight": 0,
-    "valve1_position_cyclingnight": 0,
-    "valve2_position_cyclingnight": 0,
+    "valve0_position_cyclingnight": 4,
+    "valve1_position_cyclingnight": 4,
+    "valve2_position_cyclingnight": 4,
     "valve3_position_cyclingnight": 0,
     "valve4_position_cyclingnight": 0,
-    "valve5_position_cyclingnight": 0,
-    "valve6_position_cyclingnight": 0,
+    "valve5_position_cyclingnight": 4,
+    "valve6_position_cyclingnight": 24,
     "valve7_position_cyclingnight": 0,
-    "valve8_position_cyclingnight": 0,
-    "valve9_position_cyclingnight": 0,
-    "valve10_position_cyclingnight": 0,
-    "valve11_position_cyclingnight": 0
+    "valve8_position_cyclingnight": 4,
+    "valve9_position_cyclingnight": 4,
+    "valve10_position_cyclingnight": 4,
+    "valve11_position_cyclingnight": 4
 }

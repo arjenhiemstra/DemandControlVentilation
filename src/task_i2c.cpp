@@ -22,6 +22,7 @@ void task_i2c_code(void * pvParameters)
         sync_time_multiplier++;
       
         if (display_time_multiplier == 6) {         //Every 30 seconds (6*5)
+            Serial.print("\nStart task display....");
             display_time_and_date();
             display_sensors();
             display_valve_positions();
@@ -32,14 +33,15 @@ void task_i2c_code(void * pvParameters)
         }
 
         if (rtc_time_multiplier == 4) {             //Every 20 seconds (4*5)
-            Serial.print("\n\nLocal time is: ");
+            Serial.print("\nUpdate time....");
+            Serial.print("\nLocal time is: ");
             String temp_time = current_time();
             Serial.print(temp_time);
             rtc_time_multiplier = 0;
         }
 
         if (sync_time_multiplier == 720) {         //Every hour (3600/5)
-            Serial.print("\nSync RTC with NTP server");
+            Serial.print("\nSync RTC with NTP server...");
             sync_rtc_ntp();
             sync_time_multiplier = 0;
         }
