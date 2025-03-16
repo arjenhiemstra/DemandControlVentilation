@@ -12,7 +12,7 @@ void task_statemachine_code(void * pvParameters)
 {
   init_statemachine();
   for (;;) { 
-    vTaskDelay(30000);
+    vTaskDelay(60000);
     run_statemachine();
   }
 }
