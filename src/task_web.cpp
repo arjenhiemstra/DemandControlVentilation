@@ -38,6 +38,8 @@ String valve0_direction,valve1_direction,valve2_direction,valve3_direction,valve
 String check_valve_position;            // True when check is required if valve moves within operating range
 String store_valve_position_in_file;    // True to enable storing of new position in valve position file
 
+bool valve_move_locked;
+
 //Variables for sensor config page
 const char* WIRE_SENSOR0_TYPE = "wire_sensor0_type";
 const char* WIRE_SENSOR0_ADDRESS = "wire_sensor0_address";
@@ -286,13 +288,10 @@ const char* VALVE10_POSITION_CYCLINGNIGHT = "valve10_position_cyclingnight";
 const char* VALVE11_POSITION_CYCLINGNIGHT = "valve11_position_cyclingnight";
 
 void startTaskwebcode(void) {
-
   xTaskCreate(Taskwebcode, "Task_web", 10000, NULL, 9, &h_Task_web);
-
 }
 
 void Taskwebcode(void *pvParameters) {
-   
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
     //request->send(LittleFS, "/html/index.html", "text/html");
     request->send(LittleFS, "/html/index.html", String(), false, status_processor);
@@ -710,7 +709,22 @@ void Taskwebcode(void *pvParameters) {
         }
         request->send(LittleFS, "/html/valvecontrol.html", String(), false, valvecontrol_processor);
         xSemaphoreGive(valve_control_data_mutex);
-        xTaskNotifyGive(xTaskGetHandle("task_valvectrl"));
+        
+        // Disable valve moving when valves are already moving
+        if (lock_valve_move_mutex != NULL) {
+          if(xSemaphoreTake(lock_valve_move_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+              valve_move_locked = lock_valve_move;
+              xSemaphoreGive(lock_valve_move_mutex);
+          }
+        }
+        
+        // Only move valves when not moving by another function
+        if (valve_move_locked == 0) {
+          xTaskNotifyGive(xTaskGetHandle("task_valvectrl"));
+        }
+        else {
+          Serial.print("\nValves are locked for moving, try again");
+        }
       }
     }
   });
@@ -729,16 +743,6 @@ void Taskwebcode(void *pvParameters) {
 
   //Sensor config web page processing
   server.on("/sensorconfig", HTTP_GET, [](AsyncWebServerRequest *request){
-  
-    //Serial.print("\n\nwire sensor data from HTTP GET sensorconfig: \n\n");
-    //serializeJson(wire_sensor_data, Serial);
-    //Serial.print("\n\n");
-
-    //Update config file data for display in browser
-    //serializeJson(wire_sensor_data, wire_sensor_config_string);
-    //serializeJson(wire1_sensor_data, wire1_sensor_config_string);
-        
-    //request->send(LittleFS, "/html/sensor_config.html", "text/html");
     request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
   });
 
@@ -863,9 +867,6 @@ void Taskwebcode(void *pvParameters) {
     String sensor_config1;
     serializeJson(wire_sensor_data, sensor_config1);
     write_config_file(path1, sensor_config1);
-    //Update string to display config file contents after saving config
-    //serializeJson(wire_sensor_data, wire_sensor_config_string);
-    //request->send(LittleFS, "/html/sensor_config.html", "text/html");
     request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
   });
   
@@ -974,10 +975,8 @@ void Taskwebcode(void *pvParameters) {
     }
     const char* path2 = "/json/sensor_config2.json";
     String sensor_config2;
-
     serializeJson(wire1_sensor_data, sensor_config2);
     write_config_file(path2, sensor_config2);
-
     request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
   });
 
@@ -1037,11 +1036,9 @@ void Taskwebcode(void *pvParameters) {
     }
     const char* path_day = "/json/settings_state_day.json";
     String settings_state_day_str;
-
     serializeJson(settings_state_day, settings_state_day_str);
     write_config_file(path_day, settings_state_day_str);
     request->send(LittleFS, "/html/statemachine.html", String(), false, settings_valve_state);
-
   });
 
   server.on("/settings_valve_night", HTTP_POST, [](AsyncWebServerRequest *request) {

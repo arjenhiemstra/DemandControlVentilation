@@ -11,6 +11,7 @@ SemaphoreHandle_t settings_fan_mutex = NULL;                    // Fan control s
 SemaphoreHandle_t settings_statemachine_mutex = NULL;           // Statemachine settings
 SemaphoreHandle_t statemachine_state_mutex = NULL;              // for state of statemechine
 SemaphoreHandle_t fanspeed_mutex = NULL;                        // for state of fan
+SemaphoreHandle_t lock_valve_move_mutex = NULL;                 // for valve lock
 
 SemaphoreHandle_t settings_state_day_mutex = NULL;              // Day state settings
 SemaphoreHandle_t settings_state_night_mutex = NULL;            // Night state settings
@@ -25,27 +26,22 @@ SemaphoreHandle_t settings_state_cyclingnight_mutex = NULL;     // Valve cycle n
 QueueHandle_t sensor_queue;                                     // Handle for sensor queue data
 
 JsonDocument valve_control_data;                                // Global for valve control data
-
 JsonDocument wire_sensor_data;                                  // Global for bus0 sensor configuration
 JsonDocument wire1_sensor_data;                                 // Global for bus1 sensor configuration
-
 JsonDocument settings_network_data;                             // Define global network settings
 JsonDocument settings_mqtt_data;                                // Define global mqtt settings
 JsonDocument settings_i2c_data;                                 // Define global i2c settings
 JsonDocument settings_fan_data;                                 // Define global fanspeed settings
 JsonDocument settings_statemachine_data;                        // Define global statemachine settings
-
-//Define globals for valve settings per state
-JsonDocument settings_state_day;
-JsonDocument settings_state_night;
-JsonDocument settings_state_highco2day;
-JsonDocument settings_state_highco2night;
-JsonDocument settings_state_highrhday;
-JsonDocument settings_state_highrhnight;
-JsonDocument settings_state_cooking;
-JsonDocument settings_state_cyclingday;
-JsonDocument settings_state_cyclingnight;
-
+JsonDocument settings_state_day;                                // Settings for state day
+JsonDocument settings_state_night;                              // Settings for state night
+JsonDocument settings_state_highco2day;                         // Settings for state highco2day
+JsonDocument settings_state_highco2night;                       // Settings for state highco2night
+JsonDocument settings_state_highrhday;                          // Settings for state highrhday
+JsonDocument settings_state_highrhnight;                        // Settings for state highrhnight
+JsonDocument settings_state_cooking;                            // Settings for state cooking
+JsonDocument settings_state_cyclingday;                         // Settings for state valve cycling day
+JsonDocument settings_state_cyclingnight;                       // Settings for state valve cycling night
 
 String wire_sensor_config_string = {};
 String wire1_sensor_config_string = {};
@@ -59,6 +55,8 @@ RTC_DS3231 rtc;
 const char* ntp_server = "pool.ntp.org";
 const long gmt_offset_sec = 3600;                // Offset for GMT in seconds, 3600 for Europe/Amsterdam
 const int daylight_offset_sec = 3600;            // Daylight savings time in seconds, 3600 for Europe/Amsterdam
+
+bool lock_valve_move = 0;                       // Variable for skipping valve move when already moving
 
 //Date time data from RTC
 String yearStr = "";

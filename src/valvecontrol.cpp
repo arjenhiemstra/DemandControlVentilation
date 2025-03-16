@@ -186,6 +186,15 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
     //switching pattern for steppermotor in 8 bits.
     int pattern[4] = { B00000101, B00001001, B00001010, B00000110 };
 
+    // Disable valve moving when valves are already moving
+    if (lock_valve_move_mutex != NULL) {
+        if(xSemaphoreTake(lock_valve_move_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+            lock_valve_move = 1;
+            Serial.print("\nValves are locked for moving");
+            xSemaphoreGive(lock_valve_move_mutex);
+        }
+    }
+    
     //Valve 0 - 5 has the same output as valves 6-11
     if (valve_number >= 6) {
         valve_number = valve_number - 6;
@@ -239,41 +248,50 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
             break;
     }
 
-  //Direction is 0 (forwards or close)
-  if (direction == 1) {
-    //Loop to run the number of cycles to make one turn * the number of turns to make requested_position_change
-      for (j=0; j < (cycles * position_change); j++) {
-        //Loop to make one cycle of the four coils in the motor
-        for (k = 0; k < 4; k++) {
-          digitalWrite(latchPin, 0);                                //ground latchPin and hold low for as long as you are transmitting
-          shiftOut(dataPin, clockPin, MSBFIRST, output[2][k]);
-          shiftOut(dataPin, clockPin, MSBFIRST, output[1][k]);
-          shiftOut(dataPin, clockPin, MSBFIRST, output[0][k]);
-          digitalWrite(latchPin, HIGH);
-          //delay(10); // This delay decides the speed of turning in ms
-          vTaskDelay(10);      
+    //Direction is 0 (forwards or close)
+    if (direction == 1) {
+        //Loop to run the number of cycles to make one turn * the number of turns to make requested_position_change
+        for (j=0; j < (cycles * position_change); j++) {
+            //Loop to make one cycle of the four coils in the motor
+            for (k = 0; k < 4; k++) {
+            digitalWrite(latchPin, 0);                                //ground latchPin and hold low for as long as you are transmitting
+            shiftOut(dataPin, clockPin, MSBFIRST, output[2][k]);
+            shiftOut(dataPin, clockPin, MSBFIRST, output[1][k]);
+            shiftOut(dataPin, clockPin, MSBFIRST, output[0][k]);
+            digitalWrite(latchPin, HIGH);
+            //delay(10); // This delay decides the speed of turning in ms
+            vTaskDelay(10);      
+            }
         }
-      }
-    //after running all outputs should be off
-    all_outputs_off(dataPin, clockPin, latchPin);
-  }
+        //after running all outputs should be off
+        all_outputs_off(dataPin, clockPin, latchPin);
+    }
 
-  //Direction is 1 (backwards or open)
-  else {
-      //Loop to run the number of cycles to make one turn * the number of turns to make requested_position_change
-      for (j=0; j < (cycles*position_change); j++) {
-        //Loop to make one cycle of the four coils in the motor
-        for (k = 3; k > -1; k--) {
-          digitalWrite(latchPin, 0);
-          shiftOut(dataPin, clockPin, MSBFIRST, output[2][k]);
-          shiftOut(dataPin, clockPin, MSBFIRST, output[1][k]);
-          shiftOut(dataPin, clockPin, MSBFIRST, output[0][k]);
-          digitalWrite(latchPin, HIGH);
-          vTaskDelay(10);
+    //Direction is 1 (backwards or open)
+    else {
+        //Loop to run the number of cycles to make one turn * the number of turns to make requested_position_change
+        for (j=0; j < (cycles*position_change); j++) {
+            //Loop to make one cycle of the four coils in the motor
+            for (k = 3; k > -1; k--) {
+            digitalWrite(latchPin, 0);
+            shiftOut(dataPin, clockPin, MSBFIRST, output[2][k]);
+            shiftOut(dataPin, clockPin, MSBFIRST, output[1][k]);
+            shiftOut(dataPin, clockPin, MSBFIRST, output[0][k]);
+            digitalWrite(latchPin, HIGH);
+            vTaskDelay(10);
+            }
         }
-      }
-    all_outputs_off(dataPin, clockPin, latchPin);
-  }
+        all_outputs_off(dataPin, clockPin, latchPin);
+    }
+
+    // Enable valve moving
+    if (lock_valve_move_mutex != NULL) {
+        if(xSemaphoreTake(lock_valve_move_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+            lock_valve_move = 0;
+            Serial.print("\nValves are unlocked for moving");
+            xSemaphoreGive(lock_valve_move_mutex);
+        }
+    }
 }
 
 void all_outputs_off(int dataPin, int clockPin, int latchPin) {
@@ -284,7 +302,6 @@ void all_outputs_off(int dataPin, int clockPin, int latchPin) {
     shiftOut(dataPin, clockPin, MSBFIRST, 0);
     digitalWrite(latchPin, HIGH);
 }
-
 
 void valve_position_statemachine(String statemachine_state) {
 
@@ -315,9 +332,6 @@ Data structure for each JSON valve_control_data Structure
     //Requested valve positions based on valve position settings files
     state_valve_pos_path = ("/json/settings_state_" + statemachine_state + ".json");
 
-    Serial.print("\nPath is: ");
-    Serial.print(state_valve_pos_path);
-
     if (settings_state_day_mutex != NULL) {
         if(xSemaphoreTake(settings_state_day_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             state_valve_pos_file_present = check_file_exists(state_valve_pos_path.c_str());
@@ -333,10 +347,8 @@ Data structure for each JSON valve_control_data Structure
             xSemaphoreGive(settings_state_day_mutex);
         }
     }
-    deserializeJson(state_valve_pos_doc, state_valve_pos_str);
     
-    Serial.print("\nState doc contents is: ");
-    serializeJsonPretty(state_valve_pos_doc, Serial);
+    deserializeJson(state_valve_pos_doc, state_valve_pos_str);
     
     //Actual valve positions
     const char* actual_valve_pos_path = "/json/valvepositions.json";
@@ -361,35 +373,23 @@ Data structure for each JSON valve_control_data Structure
     }
     
     deserializeJson(actual_valve_pos_doc, actual_valve_pos_json);
-    
-    Serial.print("\nActual valve pos doc contents is: ");
-    serializeJsonPretty(actual_valve_pos_doc,Serial);
 
     for (i=0;i<12;i++) {
         
         valve_number = i;     
 
-        //String temp = "valve" + String(i);
-        //String valve_pos_str = doc[String(valve_nr_str)];
-
-
         int actual_valve_pos = actual_valve_pos_doc["valve" + String(i)]; 
         int state_valve_pos = state_valve_pos_doc["valve" + String(i) + "_position_" + statemachine_state];
 
-        Serial.print("\nActual valve position: ");
-        Serial.print(actual_valve_pos);
-        Serial.print("\nValve position from state: ");
-        Serial.print(state_valve_pos);
-
-        /*if (actual_valve_pos >= state_valve_pos) {
+        if (actual_valve_pos > state_valve_pos) {
             
             //valve needs to close with difference. Check if within movements limits is done in move_valve function
-            move = int(actual_valve_pos_doc[("valve" + String(i))]) - int(state_valve_pos_doc[("valve" + String(i))]);
+            move = actual_valve_pos - state_valve_pos;
             direction = 0;
         }
         else {
             //valve needs to open with difference. Check if within movement limits is done in move_valve function
-            move = int(state_valve_pos_doc[("valve" + String(i))]) - int(actual_valve_pos_doc[("valve" + String(i))]);
+            move = state_valve_pos - actual_valve_pos;
             direction = 1;
         }
         
@@ -400,19 +400,21 @@ Data structure for each JSON valve_control_data Structure
                 valve_control_data["valve"+String(i)+"_data"][2] = direction;
                 xSemaphoreGive(valve_control_data_mutex);
             }
-        }*/
+        }
     }
     
-    /*if (valve_control_data_mutex != NULL) {
+    if (valve_control_data_mutex != NULL) {
         if(xSemaphoreTake(valve_control_data_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             valve_control_data["checks"][0] = 1;
             valve_control_data["checks"][1] = 1;
+            Serial.print("\nValve control data: ");
+            serializeJson(valve_control_data, Serial);
             xSemaphoreGive(valve_control_data_mutex);
         }
-    }*/
+    }
 
     //finally the valves can be moved
-    //move_valve();
+    move_valve();
 }
 
 

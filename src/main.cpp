@@ -19,6 +19,7 @@ void setup() {
   statemachine_state_mutex = xSemaphoreCreateMutex();
   valve_control_data_mutex = xSemaphoreCreateMutex();
   fanspeed_mutex = xSemaphoreCreateMutex();
+  lock_valve_move_mutex = xSemaphoreCreateMutex();
 
   settings_state_day_mutex = xSemaphoreCreateMutex();
   settings_state_night_mutex = xSemaphoreCreateMutex();

@@ -72,7 +72,6 @@ void init_transitions(void) {
 
     String temp_day_of_week;
     String temp_fanspeed;
-
     int temp_hour;
 
     // Actions for this state
@@ -121,8 +120,8 @@ void day_transitions(void) {
 
     String temp_fanspeed;
     String statemachine_state = "day";
-    
     int temp_hour;
+    bool valve_move_locked;
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
@@ -147,8 +146,22 @@ void day_transitions(void) {
         }
     }
 
+    // Disable valve moving when valves are already moving
+    if (lock_valve_move_mutex != NULL) {
+        if(xSemaphoreTake(lock_valve_move_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+            valve_move_locked = lock_valve_move;
+            xSemaphoreGive(lock_valve_move_mutex);
+        }
+    }
+
     set_fanspeed(temp_fanspeed);
-    valve_position_statemachine(statemachine_state);
+
+    if (valve_move_locked == 0) {
+        valve_position_statemachine(statemachine_state);
+    }
+    else {
+        Serial.print("\nValves are locked for moving, will try again later");
+    }
 
     // Condition to transit to other state
     if (temp_hour >= 21) {
@@ -186,8 +199,8 @@ void night_transitions(void) {
     String statemachine_state = "night";
     String temp_fanspeed;
     String temp_day_of_week;
-
     int temp_hour;
+    bool valve_move_locked;
     
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
@@ -213,8 +226,22 @@ void night_transitions(void) {
         }
     }
 
+    // Disable valve moving when valves are already moving
+    if (lock_valve_move_mutex != NULL) {
+        if(xSemaphoreTake(lock_valve_move_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+            valve_move_locked = lock_valve_move;
+            xSemaphoreGive(lock_valve_move_mutex);
+        }
+    }
+
     set_fanspeed(temp_fanspeed);
-    valve_position_statemachine(statemachine_state);
+
+    if (valve_move_locked == 0) {
+        valve_position_statemachine(statemachine_state);
+    }
+    else {
+        Serial.print("\nValves are locked for moving, will try again later");
+    }
     
     // Conditions to transit to other state
     if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
@@ -250,8 +277,8 @@ void high_co2_day_transitions(void) {
 
     String statemachine_state = "highco2day";
     String temp_fanspeed;
-    
     int temp_hour;
+    bool valve_move_locked;
 
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
@@ -276,8 +303,22 @@ void high_co2_day_transitions(void) {
         }
     }
 
+    // Disable valve moving when valves are already moving
+    if (lock_valve_move_mutex != NULL) {
+        if(xSemaphoreTake(lock_valve_move_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+            valve_move_locked = lock_valve_move;
+            xSemaphoreGive(lock_valve_move_mutex);
+        }
+    }
+
     set_fanspeed(temp_fanspeed);
-    valve_position_statemachine(statemachine_state);
+
+    if (valve_move_locked == 0) {
+        valve_position_statemachine(statemachine_state);
+    }
+    else {
+        Serial.print("\nValves are locked for moving, will try again later");
+    }
 
     // Conditions for transition
     if (statemachine_sensor_data[1][2][2] < 800) {
@@ -300,8 +341,8 @@ void high_co2_night_transitions(void) {
     String statemachine_state = "highco2night";
     String temp_fanspeed;
     String temp_day_of_week;
-    
     int temp_hour;
+    bool valve_move_locked;
     
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
@@ -327,8 +368,22 @@ void high_co2_night_transitions(void) {
         }
     }
 
+    // Disable valve moving when valves are already moving
+    if (lock_valve_move_mutex != NULL) {
+        if(xSemaphoreTake(lock_valve_move_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+            valve_move_locked = lock_valve_move;
+            xSemaphoreGive(lock_valve_move_mutex);
+        }
+    }
+
     set_fanspeed(temp_fanspeed);
-    valve_position_statemachine(statemachine_state);
+    
+    if (valve_move_locked == 0) {
+        valve_position_statemachine(statemachine_state);
+    }
+    else {
+        Serial.print("\nValves are locked for moving, will try again later");
+    }
 
     // Conditions for transition
     if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
@@ -354,8 +409,8 @@ void high_rh_day_transitions(void) {
 
     String statemachine_state = "highrhday";
     String temp_fanspeed = "high";
-
     int temp_hour;
+    bool valve_move_locked;
 
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
@@ -380,8 +435,22 @@ void high_rh_day_transitions(void) {
         }
     }
 
+    // Disable valve moving when valves are already moving
+    if (lock_valve_move_mutex != NULL) {
+        if(xSemaphoreTake(lock_valve_move_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+            valve_move_locked = lock_valve_move;
+            xSemaphoreGive(lock_valve_move_mutex);
+        }
+    }
+
     set_fanspeed(temp_fanspeed);
-    valve_position_statemachine(statemachine_state);
+    
+    if (valve_move_locked == 0) {
+        valve_position_statemachine(statemachine_state);
+    }
+    else {
+        Serial.print("\nValves are locked for moving, will try again later");
+    }
 
     // Conditions for transition
     if (statemachine_sensor_data[0][0][1] < 70) {
@@ -404,8 +473,8 @@ void high_rh_night_transitions(void) {
     String statemachine_state = "highrhnight";
     String temp_fanspeed;
     String temp_day_of_week;
-
     int temp_hour;
+    bool valve_move_locked;
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
@@ -431,8 +500,22 @@ void high_rh_night_transitions(void) {
         }
     }
 
+    // Disable valve moving when valves are already moving
+    if (lock_valve_move_mutex != NULL) {
+        if(xSemaphoreTake(lock_valve_move_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+            valve_move_locked = lock_valve_move;
+            xSemaphoreGive(lock_valve_move_mutex);
+        }
+    }
+
     set_fanspeed(temp_fanspeed);
-    valve_position_statemachine(statemachine_state);
+
+    if (valve_move_locked == 0) {
+        valve_position_statemachine(statemachine_state);
+    }
+    else {
+        Serial.print("\nValves are locked for moving, will try again later");
+    }
 
     // Conditions for transition
     if (statemachine_sensor_data[0][0][1] < 70) {
@@ -458,6 +541,7 @@ void cooking_transitions(void) {
 
     String statemachine_state = "cooking";
     String temp_fanspeed;
+    bool valve_move_locked;
 
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
@@ -474,9 +558,23 @@ void cooking_transitions(void) {
             xSemaphoreGive(fanspeed_mutex);
         }
     }
+
+    // Disable valve moving when valves are already moving
+    if (lock_valve_move_mutex != NULL) {
+        if(xSemaphoreTake(lock_valve_move_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+            valve_move_locked = lock_valve_move;
+            xSemaphoreGive(lock_valve_move_mutex);
+        }
+    }
    
     set_fanspeed(temp_fanspeed);
-    valve_position_statemachine(statemachine_state);
+    
+    if (valve_move_locked == 0) {
+        valve_position_statemachine(statemachine_state);
+    }
+    else {
+        Serial.print("\nValves are locked for moving, will try again later");
+    }
 
     // Conditions for transition
     if (cooking_times() == false) {
@@ -494,6 +592,7 @@ void valve_cycle_day_transitions(void) {
 
     String statemachine_state = "cyclingday";
     String temp_fanspeed;
+    bool valve_move_locked;
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
@@ -511,8 +610,22 @@ void valve_cycle_day_transitions(void) {
         }
     }
 
+    // Disable valve moving when valves are already moving
+    if (lock_valve_move_mutex != NULL) {
+        if(xSemaphoreTake(lock_valve_move_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+            valve_move_locked = lock_valve_move;
+            xSemaphoreGive(lock_valve_move_mutex);
+        }
+    }
+
     set_fanspeed(temp_fanspeed);
-    valve_position_statemachine(statemachine_state);
+    
+    if (valve_move_locked == 0) {
+        valve_position_statemachine(statemachine_state);
+    }
+    else {
+        Serial.print("\nValves are locked for moving, will try again later");
+    }
 
     // Conditions for transition
     if (valve_cycle_times_day() == false) {
@@ -538,6 +651,7 @@ void valve_cycle_night_transitions(void) {
 
     String statemachine_state = "cyclingnight";
     String temp_fanspeed;
+    bool valve_move_locked;
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
@@ -555,8 +669,22 @@ void valve_cycle_night_transitions(void) {
         }
     }
 
+    // Disable valve moving when valves are already moving
+    if (lock_valve_move_mutex != NULL) {
+        if(xSemaphoreTake(lock_valve_move_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+            valve_move_locked = lock_valve_move;
+            xSemaphoreGive(lock_valve_move_mutex);
+        }
+    }
+
     set_fanspeed(temp_fanspeed);
-    valve_position_statemachine(statemachine_state);
+    
+    if (valve_move_locked == 0) {
+        valve_position_statemachine(statemachine_state);
+    }
+    else {
+        Serial.print("\nValves are locked for moving, will try again later");
+    }
 
     // Conditions for transition
     if (valve_cycle_times_night() == false) {
@@ -583,6 +711,7 @@ void manual_high_speed_transitions(void) {
 
     String statemachine_state = "manual_high_speed";
     String fanspeed = "high";
+    bool valve_move_locked;
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
@@ -591,7 +720,22 @@ void manual_high_speed_transitions(void) {
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
+
+    // Disable valve moving when valves are already moving
+    if (lock_valve_move_mutex != NULL) {
+        if(xSemaphoreTake(lock_valve_move_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+            valve_move_locked = lock_valve_move;
+            xSemaphoreGive(lock_valve_move_mutex);
+        }
+    }
+
     set_fanspeed(fanspeed);
-    valve_position_statemachine(statemachine_state);
+    
+    if (valve_move_locked == 0) {
+        valve_position_statemachine(statemachine_state);
+    }
+    else {
+        Serial.print("\nValves are locked for moving, will try again later");
+    }
 }
 

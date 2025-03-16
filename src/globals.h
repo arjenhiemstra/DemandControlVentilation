@@ -5,23 +5,19 @@
 #include <ArduinoJson.h>
 #include <RTClib.h>
 
-//Wire I/O settings (SDA1/SCL1) and Wire1 I/O settings (SDA2/SCL2)
-#define I2C_SCL1 38
+#define I2C_SCL1 38                                                 // Wire I/O settings (SDA1/SCL1) and 
 #define I2C_SDA1 39
-#define I2C_SCL2 40
+#define I2C_SCL2 40                                                 // Wire1 I/O settings (SDA2/SCL2)
 #define I2C_SDA2 41
 
-//LCD display
-#define LCD_ROWS 4
-#define LCD_COLUMNS 20
-#define LCDADDR 0x27
 
-//TCA9548 address
-#define TCAADDR 0x70
+#define LCD_ROWS 4                                                  // LCD display rows
+#define LCD_COLUMNS 20                                              // LCD display columns
+#define LCDADDR 0x27                                                // LCD I2C address
 
-//Mutexes
+#define TCAADDR 0x70                                                //TCA9548 address
+
 extern SemaphoreHandle_t sensor_config_file_mutex;
-//extern SemaphoreHandle_t sensor_variable_mutex;
 extern SemaphoreHandle_t valve_position_file_mutex;
 extern SemaphoreHandle_t valve_control_data_mutex;
 extern SemaphoreHandle_t date_time_mutex;
@@ -32,6 +28,7 @@ extern SemaphoreHandle_t settings_fan_mutex;
 extern SemaphoreHandle_t settings_statemachine_mutex;
 extern SemaphoreHandle_t statemachine_state_mutex;
 extern SemaphoreHandle_t fanspeed_mutex;
+extern SemaphoreHandle_t lock_valve_move_mutex;
 
 extern SemaphoreHandle_t settings_state_day_mutex;
 extern SemaphoreHandle_t settings_state_night_mutex;
@@ -45,24 +42,14 @@ extern SemaphoreHandle_t settings_state_cyclingnight_mutex;
 
 extern QueueHandle_t sensor_queue;
 
-//Global for valve control data
 extern JsonDocument valve_control_data;
-
-//Define globals for sensor configuration
 extern JsonDocument wire_sensor_data;
 extern JsonDocument wire1_sensor_data;
-
-extern String wire_sensor_config1_string;
-extern String sensor_config2_string;
-
-//Define lobal for settings configuration
 extern JsonDocument settings_network_data;
 extern JsonDocument settings_mqtt_data;
 extern JsonDocument settings_i2c_data;
 extern JsonDocument settings_fan_data;
 extern JsonDocument settings_statemachine_data;
-
-//Define globals for valve settings per state
 extern JsonDocument settings_state_day;
 extern JsonDocument settings_state_night;
 extern JsonDocument settings_state_highco2day;
@@ -76,17 +63,16 @@ extern JsonDocument settings_state_cyclingnight;
 extern String wire_sensor_config_string;
 extern String wire1_sensor_config_string;
 
-//Settings for MQTT
 extern const char* mqtt_server;
 extern const int mqtt_port;
 
-//Settings for RTC
 extern RTC_DS3231 rtc;
 extern const char* ntp_server;
 extern const long gmt_offset_sec;
 extern const int daylight_offset_sec;
 
-//Variables for RTC data
+extern bool lock_valve_move;
+
 extern String yearStr;
 extern String monthStr;
 extern String dayStr;
@@ -95,7 +81,6 @@ extern String minuteStr;
 extern String secondStr;
 extern String dayOfWeek;
 
-//Variables for statemachine
 extern String state;
 extern String fanspeed;
 
