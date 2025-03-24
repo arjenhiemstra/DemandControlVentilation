@@ -8,6 +8,8 @@
 #include "i2c.h"
 #include "globals.h"
 
+//#define pushButton_pin 9
+
 // function declarations
 void start_task_i2c(void);
 void task_i2c_code(void *pvParameters);

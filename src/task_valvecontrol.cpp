@@ -12,8 +12,6 @@ void task_valvecontrol_code(void * pvParameters)
 {
   for (;;) { 
     ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-    //Serial.print("\n\nValvecontrol running on core: ");
-    //Serial.print(xPortGetCoreID());
     move_valve();
   }
   

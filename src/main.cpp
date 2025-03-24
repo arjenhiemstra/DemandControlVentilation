@@ -54,7 +54,6 @@ void setup() {
   start_task_statemachine();
   start_task_mqtt();
   start_task_influxdb();
-  //start_task_system();
 }
 
 void loop() { }

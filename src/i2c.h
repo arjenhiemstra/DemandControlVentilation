@@ -14,6 +14,8 @@
 #include "config_files.h"
 #include "LiquidCrystal_I2C.h"          //Not library version but adjusted for using Wire1
 
+#define pushButton_pin 9
+
 //Function definitions
 void read_sensors(void);
 void display_sensors(void);
@@ -21,5 +23,8 @@ void display_valve_positions(void);
 void display_time_and_date(void);
 void sync_rtc_ntp(void);
 String current_time(void);
+void IRAM_ATTR lcd_baclight_pb_isr(void);
+void pb_start_display(void);
+void init_display_off(void);
 
 #endif

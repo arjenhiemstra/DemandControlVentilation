@@ -14,6 +14,7 @@
 #include "task_statemachine.h"
 #include "task_system.h"
 #include "task_influxdb.h"
+#include "task_pushbuttons.h"
 #include "rtc.h"
 #include "LiquidCrystal_I2C.h"
 

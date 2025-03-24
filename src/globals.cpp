@@ -57,6 +57,7 @@ const long gmt_offset_sec = 3600;                // Offset for GMT in seconds, 3
 const int daylight_offset_sec = 3600;            // Daylight savings time in seconds, 3600 for Europe/Amsterdam
 
 bool lock_valve_move = 0;                       // Variable for skipping valve move when already moving
+bool pb_toggle = false;
 
 //Date time data from RTC
 String yearStr = "";

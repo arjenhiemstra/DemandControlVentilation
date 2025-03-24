@@ -208,7 +208,7 @@ void display_sensors(void) {
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
 
     lcd.init();
-    lcd.backlight();
+    //lcd.backlight();
     lcd.noAutoscroll();
     lcd.noCursor();   
 
@@ -258,7 +258,7 @@ void display_sensors(void) {
         }
     }
 
-    lcd.clear();
+    //lcd.clear();
     Wire1.endTransmission();
 }
 
@@ -283,8 +283,8 @@ void display_valve_positions(void) {
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
     lcd.init();
 
-    lcd.clear();
-    lcd.backlight();
+    //lcd.clear();
+    //lcd.backlight();
     
     status_file_present = check_file_exists(path);
 
@@ -353,7 +353,6 @@ void display_valve_positions(void) {
     lcd.print(valve11_pos);
     vTaskDelay(5000);
     lcd.clear();
-    lcd.noBacklight(); 
     Wire1.endTransmission();
 }
 
@@ -363,8 +362,8 @@ void display_time_and_date(void) {
     
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
     lcd.init();
-    lcd.clear();
-    lcd.backlight();
+    //lcd.clear();
+    //lcd.backlight();
     
     if (date_time_mutex != NULL) {
         if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
@@ -450,4 +449,32 @@ void sync_rtc_ntp(void) {
     Wire.endTransmission();
 }
 
+void IRAM_ATTR lcd_baclight_pb_isr() {
+    pb_toggle = true;
+}
 
+void pb_start_display(void) {
+
+    pb_toggle = false;      
+    
+    Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
+    lcd.init();
+    lcd.backlight();
+    Wire1.endTransmission();
+    
+    display_time_and_date();
+    display_sensors();
+    display_valve_positions();
+    
+    Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
+    lcd.noBacklight();
+    Wire1.endTransmission();
+}
+
+void init_display_off(void) {
+    Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
+    lcd.init();
+    lcd.clear();
+    lcd.noBacklight();
+    Wire1.endTransmission();
+}

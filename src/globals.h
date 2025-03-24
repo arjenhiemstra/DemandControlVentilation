@@ -72,6 +72,7 @@ extern const long gmt_offset_sec;
 extern const int daylight_offset_sec;
 
 extern bool lock_valve_move;
+extern bool pb_toggle;
 
 extern String yearStr;
 extern String monthStr;
