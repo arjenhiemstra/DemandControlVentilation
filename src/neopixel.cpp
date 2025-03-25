@@ -1,3 +1,4 @@
+/*
 R	    G	    B					        R	    G	    B	
 128	    128	    0	    High CO2			128	    128	    0	
 128	    128	    128	    Valve cycling		128	    128	    128	
@@ -7,7 +8,7 @@ R	    G	    B					        R	    G	    B
 0	    128	    128	    High RH				0	    128	    128	    Fan medium
 0	    0	    0	    -				    0	    0	    0	
 0	    0	    128	    Day				    0	    0	    128	    Fan low
-
+*/
 
 
 
