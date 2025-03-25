@@ -13,5 +13,6 @@
 
 //Function definitions
 void ws2812b_test(void);
+void led1_day_time(void);
 
 #endif
