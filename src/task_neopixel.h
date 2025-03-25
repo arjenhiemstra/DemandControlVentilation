@@ -8,8 +8,6 @@
 #include "neopixel.h"
 #include "globals.h"
 
-//#define pushButton_pin 9
-
 // function declarations
 void start_task_neopixel(void);
 void task_neopixel_code(void *pvParameters);

@@ -199,7 +199,7 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
     if (lock_valve_move_mutex != NULL) {
         if(xSemaphoreTake(lock_valve_move_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
             lock_valve_move = 1;
-            Serial.print("\nValves are locked for moving");
+            //Serial.print("\nValves are locked for moving");
             xSemaphoreGive(lock_valve_move_mutex);
         }
     }

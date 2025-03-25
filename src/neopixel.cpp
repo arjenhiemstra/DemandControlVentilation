@@ -14,59 +14,119 @@ R	    G	    B					                R	    G	    B
 
 Adafruit_NeoPixel ws2812b(NUM_PIXELS, PIN_WS2812B, NEO_GRB + NEO_KHZ800);
 
-
-void led1_day_time(void) {
+void led_red_on(int pixel, int brightness) {
 
     ws2812b.begin();
     ws2812b.clear();
 
-    ws2812b.setPixelColor(pixel, ws2812b.Color(128, 0, 0));  // it only takes effect if pixels.show() is called
+    ws2812b.setPixelColor(pixel, ws2812b.Color(brightness, 0, 0));
+    ws2812b.show();
+}
+
+void led_green_on(int pixel, int brightness) {
+
+    ws2812b.begin();
+    ws2812b.clear();
+
+    ws2812b.setPixelColor(pixel, ws2812b.Color(0, brightness, 0));
+    ws2812b.show();
+}
+
+void led_blue_on(int pixel, int brightness) {
+
+    ws2812b.begin();
+    ws2812b.clear();
+
+    ws2812b.setPixelColor(pixel, ws2812b.Color(0, 0, brightness));
+    ws2812b.show();
+}
+
+void led_yellow_on(int pixel, int brightness) {
+
+    ws2812b.begin();
+    ws2812b.clear();
+
+    ws2812b.setPixelColor(pixel, ws2812b.Color(brightness, brightness, 0));
+    ws2812b.show();
+}
+
+void led_purple_on(int pixel, int brightness) {
+
+    ws2812b.begin();
+    ws2812b.clear();
+
+    ws2812b.setPixelColor(pixel, ws2812b.Color(brightness, 0, brightness));
+    ws2812b.show();
+}
+
+void led_red_blink(int pixel, int brightness) {
+
+    ws2812b.begin();
+    ws2812b.clear();
+
+    ws2812b.setPixelColor(pixel, ws2812b.Color(brightness, 0, 0));
     ws2812b.show();
 
+    vTaskDelay(100);
+    ws2812b.clear();
+    ws2812b.show();  
+    vTaskDelay(100);
 }
 
+void led_green_blink(int pixel, int brightness) {
 
-
-
-void ws2812b_test(void) {
-
-    Serial.print("\nRunning Neopixel function");
-
-    for (int pixel=0; pixel < NUM_PIXELS; pixel++) {
         ws2812b.begin();
-        ws2812b.clear();  // set all pixel colors to 'off'. It only takes effect if pixels.show() is called
+        ws2812b.clear();
 
-        // turn pixels to green one-by-one with delay between each pixel
-        ws2812b.setPixelColor(pixel, ws2812b.Color(128, 0, 0));
+        ws2812b.setPixelColor(pixel, ws2812b.Color(0, brightness, 0));
         ws2812b.show();
-        vTaskDelay(1000);
 
-        // turn off all pixels for two seconds
+        vTaskDelay(100);
         ws2812b.clear();
         ws2812b.show();  
-        vTaskDelay(1000);
-
-        // turn on all pixels to red at the same time for two seconds
-        ws2812b.setPixelColor(pixel, ws2812b.Color(0, 128, 0));  // it only takes effect if pixels.show() is called
-        ws2812b.show();  
-        vTaskDelay(1000);
-
-        // turn off all pixels for two seconds
-        ws2812b.clear();
-        ws2812b.show();  
-        vTaskDelay(1000);
-
-        // turn on all pixels to blue at the same time for two seconds
-        ws2812b.setPixelColor(pixel, ws2812b.Color(0, 0, 128));  // it only takes effect if pixels.show() is called
-        ws2812b.show();  
-        vTaskDelay(1000);
-
-        // turn off all pixels for one seconds
-        ws2812b.clear();
-        ws2812b.show();  // update to the WS2812B Led Strip
-        
-        vTaskDelay(3000);
-
-    }
-
+        vTaskDelay(100);
 }
+
+void led_blue_blink(int pixel, int brightness) {
+
+        ws2812b.begin();
+        ws2812b.clear();
+
+        ws2812b.setPixelColor(pixel, ws2812b.Color(0, 0, brightness));
+        ws2812b.show();
+
+        vTaskDelay(100);
+        ws2812b.clear();
+        ws2812b.show();  
+        vTaskDelay(100);
+}
+
+void led_yellow_blink(int pixel, int brightness) {
+
+    ws2812b.begin();
+    ws2812b.clear();
+
+    ws2812b.setPixelColor(pixel, ws2812b.Color(brightness, brightness, 0));
+    ws2812b.show();
+
+    vTaskDelay(100);
+    ws2812b.clear();
+    ws2812b.show();  
+    vTaskDelay(100);
+}
+
+void led_purple_blink(int pixel, int brightness) {
+
+    ws2812b.begin();
+    ws2812b.clear();
+
+    ws2812b.setPixelColor(pixel, ws2812b.Color(brightness, 0, brightness));
+    ws2812b.show();
+
+    vTaskDelay(100);
+    ws2812b.clear();
+    ws2812b.show();  
+    vTaskDelay(100);
+}
+
+
