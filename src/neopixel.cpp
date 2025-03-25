@@ -1,3 +1,19 @@
+R	    G	    B					        R	    G	    B	
+128	    128	    0	    High CO2			128	    128	    0	
+128	    128	    128	    Valve cycling		128	    128	    128	
+128	    0	    0	    Night				128	    0	    0	    No WIFI
+128	    0	    128	    Manual				128	    0	    128	    Fan high
+0	    128	    0	    Cooking				0	    128	    0	    Valves moving
+0	    128	    128	    High RH				0	    128	    128	    Fan medium
+0	    0	    0	    -				    0	    0	    0	
+0	    0	    128	    Day				    0	    0	    128	    Fan low
+
+
+
+
+
+
+
 #include "neopixel.h"
 
 Adafruit_NeoPixel ws2812b(NUM_PIXELS, PIN_WS2812B, NEO_GRB + NEO_KHZ800);
