@@ -208,11 +208,9 @@ void display_sensors(void) {
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
 
     lcd.init();
-    //lcd.backlight();
     lcd.noAutoscroll();
     lcd.noCursor();   
 
-    //if (xQueueReceive(sensor_queue, &queue_sensor_data, 0 ) == pdTRUE) {
     if (xQueuePeek(sensor_queue, &queue_sensor_data, 0 ) == pdTRUE) {
         for (int bus=0;bus<2;bus++) {
             for (int slot=0;slot<8;slot++) {
@@ -257,8 +255,6 @@ void display_sensors(void) {
             }
         }
     }
-
-    //lcd.clear();
     Wire1.endTransmission();
 }
 
@@ -282,10 +278,7 @@ void display_valve_positions(void) {
 
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
     lcd.init();
-
-    //lcd.clear();
-    //lcd.backlight();
-    
+   
     status_file_present = check_file_exists(path);
 
     if (valve_position_file_mutex != NULL) {
@@ -361,18 +354,16 @@ void display_time_and_date(void) {
  /*
         0 	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15  16  17  18  19
        -------------------------------------------------------------------------------
-    0 |	S   a   t   u   r   d   a   y       3   1   -   1   2   -   2   0   25
+    0 |	W   e   d   n   e   s   d   a   y       3   1   -   1   2   -   2   0   2   5
     1 |	2   3   :   5   9   :   0   0				
     2 |	U   p   t   i   m   e   :       9   9   9   9   9   9       m   i   n			
-    3 |	S   t   a   t   e   :   
+    3 |	S   t   a   t   e   :       f   a   n   h   i   g   h   s   p   e   e   d
 */
 
     int64_t uptime;
     
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
     lcd.init();
-    //lcd.clear();
-    //lcd.backlight();
     
     if (date_time_mutex != NULL) {
         if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
@@ -395,11 +386,22 @@ void display_time_and_date(void) {
 
             xSemaphoreGive(date_time_mutex);       
         }
+        
         uptime = esp_timer_get_time();
         lcd.setCursor(0,2);
         lcd.print("Uptime: ");
         lcd.print(uptime/1000000/60);         // in minutes
         lcd.print(" min");
+        
+        lcd.setCursor(0,3);
+        lcd.print("State: ");
+        if (statemachine_state_mutex != NULL) {
+            if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+                lcd.print(state);
+                xSemaphoreGive(statemachine_state_mutex);
+            }
+        }
+
         vTaskDelay(5000);
         lcd.clear();
         Wire1.endTransmission();

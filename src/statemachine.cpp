@@ -59,7 +59,7 @@ void run_statemachine(void) {
     else if (state == "cyclingnight") {
         valve_cycle_night_transitions();
     }
-    else if (state == "manual_high_speed") {
+    else if (state == "fanhighspeed") {
         manual_high_speed_transitions();
     }
     else {
