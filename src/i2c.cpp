@@ -358,6 +358,15 @@ void display_valve_positions(void) {
 
 void display_time_and_date(void) {
 
+ /*
+        0 	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15  16  17  18  19
+       -------------------------------------------------------------------------------
+    0 |	S   a   t   u   r   d   a   y       3   1   -   1   2   -   2   0   25
+    1 |	2   3   :   5   9   :   0   0				
+    2 |	U   p   t   i   m   e   :       9   9   9   9   9   9       m   i   n			
+    3 |	S   t   a   t   e   :   
+*/
+
     int64_t uptime;
     
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
@@ -370,14 +379,14 @@ void display_time_and_date(void) {
             lcd.setCursor(0,0);
             lcd.print(dayOfWeek);
 
-            lcd.setCursor(0,1);
+            lcd.setCursor(9,0);
             lcd.print(dayStr);
             lcd.print("-");
             lcd.print(monthStr);
             lcd.print("-");
             lcd.print(yearStr);
             
-            lcd.setCursor(0,2);
+            lcd.setCursor(0,1);
             lcd.print(hourStr);
             lcd.print(":");
             lcd.print(minuteStr);
@@ -387,7 +396,7 @@ void display_time_and_date(void) {
             xSemaphoreGive(date_time_mutex);       
         }
         uptime = esp_timer_get_time();
-        lcd.setCursor(0,3);
+        lcd.setCursor(0,2);
         lcd.print("Uptime: ");
         lcd.print(uptime/1000000/60);         // in minutes
         lcd.print(" min");
