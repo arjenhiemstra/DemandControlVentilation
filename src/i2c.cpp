@@ -369,8 +369,9 @@ void display_time_and_date(void) {
         if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             lcd.setCursor(0,0);
             lcd.print(dayOfWeek);
+            lcd.print(" ");
 
-            lcd.setCursor(9,0);
+            //lcd.setCursor(9,0);
             lcd.print(dayStr);
             lcd.print("-");
             lcd.print(monthStr);
@@ -393,19 +394,49 @@ void display_time_and_date(void) {
         lcd.print(uptime/1000000/60);         // in minutes
         lcd.print(" min");
         
-        lcd.setCursor(0,3);
-        lcd.print("State: ");
-        if (statemachine_state_mutex != NULL) {
-            if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-                lcd.print(state);
-                xSemaphoreGive(statemachine_state_mutex);
-            }
-        }
+        
 
         vTaskDelay(5000);
         lcd.clear();
         Wire1.endTransmission();
     }
+}
+
+void display_state_fan(void) {
+
+    /*
+           0 	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15  16  17  18  19
+          -------------------------------------------------------------------------------
+       0 |	S   t   a   t   e   :       f   a   n   h   i   g   h   s   p   e   e   d
+       1 |	F   a   n   s   p   e   e   d   :   M   e   d   i   u   m				
+       2 |			
+       3 |	
+   */
+        
+    Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
+    lcd.init();
+
+    lcd.setCursor(0,0);
+    lcd.print("State: ");
+    if (statemachine_state_mutex != NULL) {
+        if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            lcd.print(state);
+            xSemaphoreGive(statemachine_state_mutex);
+        }
+    }
+
+    lcd.setCursor(0,1);
+    lcd.print("Fan speed: ");
+    if (fanspeed_mutex != NULL) {
+        if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            lcd.print(fanspeed);
+            xSemaphoreGive(fanspeed_mutex);
+        }
+    }
+
+    vTaskDelay(5000);
+    lcd.clear();
+    Wire1.endTransmission();  
 }
 
 String current_time(void) {
@@ -446,7 +477,7 @@ void sync_rtc_ntp(void) {
     DateTime now = rtc.now();
 
     //configTime(gmt_offset_sec, daylight_offset_sec, ntp_server);  // Configure time with NTP server
-    configTzTime("CET-1CEST,M3.30.0/2,M10.26.0/3", "pool.ntp.org");
+    configTzTime("CET-1CEST,M3.5.0,M10.5.0/3", "pool.ntp.org");
     if (!getLocalTime(&timeinfo)) {
         Serial.println("Failed to obtain time");
         return;
@@ -474,6 +505,7 @@ void pb_start_display(void) {
     Wire1.endTransmission();
     
     display_time_and_date();
+    display_state_fan();
     display_sensors();
     display_valve_positions();
     
