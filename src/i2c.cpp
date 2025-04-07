@@ -77,7 +77,8 @@ void read_sensors(void) {
                 
                 else if (sensor_type_temp == "AHT20") {     
                     if (bus==0) {
-                        Adafruit_AHTX0 AHT20_1;
+                        
+                        /*Adafruit_AHTX0 AHT20_1;
                         sensors_event_t humidity, temperature;
 
                         AHT20_1.begin();
@@ -86,10 +87,17 @@ void read_sensors(void) {
                         temp_sensor_data[bus][slot][0] = temperature.temperature;
                         temp_sensor_data[bus][slot][1] = humidity.relative_humidity;
                         
+                        Wire.endTransmission();*/
+
+                        DFRobot_AHT20 AHT20_1;
+                        AHT20_1.begin();
+                        temp_sensor_data[bus][slot][0] = AHT20_1.getTemperature_C();
+                        temp_sensor_data[bus][slot][1] = AHT20_1.getHumidity_RH();
                         Wire.endTransmission();
+
                     }
                     if (bus==1) {
-                        Adafruit_AHTX0 AHT20_2;
+                        /*Adafruit_AHTX0 AHT20_2;
                         sensors_event_t humidity, temperature;
 
                         AHT20_2.begin();
@@ -98,7 +106,13 @@ void read_sensors(void) {
                         temp_sensor_data[bus][slot][0] = temperature.temperature;
                         temp_sensor_data[bus][slot][1] = humidity.relative_humidity;
                         
-                        Wire1.endTransmission();
+                        Wire1.endTransmission();*/
+
+                        DFRobot_AHT20 AHT20_2;
+                        AHT20_2.begin();
+                        temp_sensor_data[bus][slot][0] = AHT20_2.getTemperature_C();
+                        temp_sensor_data[bus][slot][1] = AHT20_2.getHumidity_RH();
+                        Wire.endTransmission();
                     }                   
                 }
                 

@@ -6,9 +6,10 @@
 #include <ArduinoJson.h>
 #include <Wire.h>
 #include <DHT20.h>
-#include <Adafruit_AHTX0.h>
+//#include <Adafruit_AHTX0.h>
 #include <SensirionI2cScd4x.h>
 #include <RTClib.h>
+#include <DFRobot_AHT20.h>
 
 #include "globals.h"
 #include "config_files.h"
