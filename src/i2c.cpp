@@ -53,7 +53,7 @@ void read_sensors(void) {
                     Wire1.write(1 << slot);
                     Wire1.endTransmission();
                 }
-                if (sensor_type_temp == "DHT20") {
+                if (sensor_type_temp == "DHT20" || sensor_type_temp == "AHT20") {
                     
                     if (bus==0) {
                         DHT20 DHT1(&Wire);
@@ -75,10 +75,11 @@ void read_sensors(void) {
                     }                   
                 }
                 
+                /*
                 else if (sensor_type_temp == "AHT20") {     
                     if (bus==0) {
                         
-                        /*Adafruit_AHTX0 AHT20_1;
+                        Adafruit_AHTX0 AHT20_1;
                         sensors_event_t humidity, temperature;
 
                         AHT20_1.begin();
@@ -87,7 +88,7 @@ void read_sensors(void) {
                         temp_sensor_data[bus][slot][0] = temperature.temperature;
                         temp_sensor_data[bus][slot][1] = humidity.relative_humidity;
                         
-                        Wire.endTransmission();*/
+                        Wire.endTransmission();
 
                         DFRobot_AHT20 AHT20_1;
                         AHT20_1.begin();
@@ -97,7 +98,7 @@ void read_sensors(void) {
 
                     }
                     if (bus==1) {
-                        /*Adafruit_AHTX0 AHT20_2;
+                        Adafruit_AHTX0 AHT20_2;
                         sensors_event_t humidity, temperature;
 
                         AHT20_2.begin();
@@ -106,7 +107,7 @@ void read_sensors(void) {
                         temp_sensor_data[bus][slot][0] = temperature.temperature;
                         temp_sensor_data[bus][slot][1] = humidity.relative_humidity;
                         
-                        Wire1.endTransmission();*/
+                        Wire1.endTransmission();
 
                         DFRobot_AHT20 AHT20_2;
                         AHT20_2.begin();
@@ -114,7 +115,7 @@ void read_sensors(void) {
                         temp_sensor_data[bus][slot][1] = AHT20_2.getHumidity_RH();
                         Wire.endTransmission();
                     }                   
-                }
+                }*/
                 
                 else if (sensor_type_temp == "SCD40" || sensor_type_temp == "SCD41") {
                         
