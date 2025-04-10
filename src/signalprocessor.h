@@ -1,7 +1,7 @@
 #ifndef SIGNALPROCESSOR_H
 #define SIGNALPROCESSOR_H
 
-#define SENSOR_SAMPLES 20
+#define MAX_FIFO_SIZE 20
 
 #include <Arduino.h>
 #include <freertos/FreeRTOS.h>
@@ -10,6 +10,8 @@
 #include "globals.h"
 
 // function declarations
-float average(int,int,int,float);
+void fifo_average(void);
+void fifoPush(float);
+float fifoAverage(void);
 
 #endif
