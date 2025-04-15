@@ -15,6 +15,7 @@
 
 //Function definitions
 void publish_sensor_data(void);
+void publish_avg_sensor_data(void);
 void publish_valve_positions(void);
 void publish_uptime(void);
 void publish_fanspeed(void);

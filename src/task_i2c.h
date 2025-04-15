@@ -7,8 +7,7 @@
 
 #include "i2c.h"
 #include "globals.h"
-
-//#define pushButton_pin 9
+#include "signalprocessor.h"
 
 // function declarations
 void start_task_i2c(void);

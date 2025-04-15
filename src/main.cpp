@@ -34,6 +34,7 @@ void setup() {
   float temp[2][8][3];
 
   sensor_queue = xQueueCreate(1, sizeof(temp));
+  sensor_avg_queue = xQueueCreate(1, sizeof(temp));
 
   // First switch off all outputs which randomly come up at power on
   init_registers();

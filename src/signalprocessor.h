@@ -10,8 +10,8 @@
 #include "globals.h"
 
 // function declarations
-void fifo_average(void);
-void fifoPush(float);
-float fifoAverage(void);
+void sensor_data_average(void);
+void fifoPush(int,int,int,float,int);
+float fifoAverage(int,int,int,int);
 
 #endif

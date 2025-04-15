@@ -2,6 +2,7 @@
 
 String new_state = "0";
 float statemachine_sensor_data[2][8][3];
+float statemachine_avg_sensor_data[2][8][3];
 
 void init_statemachine(void) {
     state = "init";
@@ -10,7 +11,6 @@ void init_statemachine(void) {
 void run_statemachine(void) {
 
     Serial.print("\nRead sensor data from queue for statemachine.");
-    //if (xQueueReceive(sensor_queue, &statemachine_sensor_data, 0 ) == pdTRUE) {
     if (xQueuePeek(sensor_queue, &statemachine_sensor_data, 0 ) == pdTRUE) {
         Serial.print("\n\nBus\tSensor\tTemperature (°C)\tHumidity (%)\tCO2 (ppm)");
         for (int i = 0; i < 2; i++) {
@@ -27,7 +27,28 @@ void run_statemachine(void) {
             }
         }
     }
-    Serial.print("\n");  
+    Serial.print("\n");
+    
+    
+    Serial.print("\nRead average sensor data from queue for statemachine.");
+    if (xQueuePeek(sensor_avg_queue, &statemachine_avg_sensor_data, 0 ) == pdTRUE) {
+        Serial.print("\n\nBus\tSensor\tTemperature (°C)\tHumidity (%)\tCO2 (ppm)");
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 8; j++) {
+                Serial.print("\n");
+                Serial.print(i);
+                Serial.print("\t\t");
+                Serial.print(j);
+                Serial.print("\t");
+                for (int k = 0; k < 3; k++) {
+                    Serial.print(statemachine_avg_sensor_data[i][j][k]);
+                    Serial.print("\t\t");
+                }
+            }
+        }
+    }
+    Serial.print("\n");
+    
     
     if (state == "init") {
         init_transitions();

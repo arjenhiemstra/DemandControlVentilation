@@ -14,45 +14,63 @@ Rolling  average for sensor
 #include "signalprocessor.h"
 
 float sensor_fifo[2][8][3][10];
-float temp = 0;
-int fifoSize = 0;           // Current number of elements in the FIFO.
-int fifoHead = 0;           // Index of the oldest element in the FIFO.
+float sum[48] = {0};
+int fifoSize[48] = {0};           // Current number of elements in the FIFO.
+int fifoHead[48] = {0};           // Index of the oldest element in the FIFO.
 
-void fifo_average(void) {
+void sensor_data_average(void) {
 
-    float sensor_data[2][8][3];
+    float sensor_data[2][8][3];         //actual sensor data from queque
+    float sensor_avg_data[2][8][3];     //Average sensor data to queque
+    int pos;
     
     if (xQueuePeek(sensor_queue, &sensor_data, 0 ) == pdTRUE) {
-        //Fill new array with data until queque is full
+        pos=0;
         for(int bus=0;bus<2;bus++) {
             for(int slot=0;slot<8;slot++) {
-                for(int measurement=0;measurement<3;measurement++) {
-                    fifoPush(sensor_data[bus][slot][measurement]); 
+                for(int measurement=0;measurement<3;measurement++) {                   
+                    fifoPush(bus, slot, measurement, sensor_data[bus][slot][measurement], pos);
+                    sensor_avg_data[bus][slot][measurement] = fifoAverage(bus, slot, measurement, pos);
+                    pos++;      //counter for fifoSize and fifoHead
                 }
             }
         }
-
-
+        if(sensor_avg_queue !=NULL) {
+            xQueueOverwrite(sensor_avg_queue, &sensor_avg_data);
+        }
+        else {
+            Serial.print("Send - Average sensor data queue handle is NULL");
+        }
     }
-
 }
 
-void fifoPush(float value) {
-    if (fifoSize < MAX_FIFO_SIZE) {
+void fifoPush(int bus, int slot, int measurement, float value, int pos) {
+
+    if (fifoSize[pos] < MAX_FIFO_SIZE) {
         // Add the value to the next available position.
-        sensor_fifo[2][8][3][(fifoHead + fifoSize) % MAX_FIFO_SIZE] = value;
-        fifoSize++;
-    } else {
+        sensor_fifo[bus][slot][measurement][(fifoHead[pos] + fifoSize[pos]) % MAX_FIFO_SIZE] = value;
+        fifoSize[pos] = fifoSize[pos] + 1;
+    } 
+    else {
         // Overwrite the oldest value and move the head forward.
-        sensor_fifo[2][8][3][fifoHead] = value;
-        fifoHead = (fifoHead + 1) % MAX_FIFO_SIZE;
+        sensor_fifo[bus][slot][measurement][fifoHead[pos]] = value;
+        fifoHead[pos] = (fifoHead[pos] + 1) % MAX_FIFO_SIZE;
     }
+    Serial.print("\n");
+    Serial.print(fifoHead[pos]);
+    Serial.print("\t\t");
+    Serial.print(fifoSize[pos]);
+    Serial.print("\t\t");
+    Serial.print(value);
 }
 
-float fifoAverage() {
-    float sum = 0.0;
-    for (int i = 0; i < fifoSize; i++) {
-        sum += sensor_fifo[2][8][3][(fifoHead + i) % MAX_FIFO_SIZE];
+float fifoAverage(int bus, int slot, int measurement, int pos) {
+    
+    float sum[pos]= {0.0};
+    
+    for (int i = 0; i < fifoSize[pos]; i++) {
+        sum[pos] += sensor_fifo[bus][slot][measurement][(fifoHead[pos] + i) % MAX_FIFO_SIZE];
     }
-    return fifoSize > 0 ? sum / fifoSize : 0.0;
+    
+    return fifoSize[pos] > 0 ? sum[pos] / fifoSize[pos] : 0.0;
 }

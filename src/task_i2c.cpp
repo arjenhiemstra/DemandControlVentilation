@@ -30,6 +30,7 @@ void task_i2c_code(void * pvParameters)
      
         if (read_sensors_multiplier == 500) {           //read every 5 seconds
             read_sensors();
+            sensor_data_average();
             read_sensors_multiplier = 0;
         }
 

@@ -13,6 +13,7 @@ void task_mqtt_code(void * pvParameters)
     for(;;) {
         Serial.print("\nUpdate MQTT....");
         publish_sensor_data();
+        publish_avg_sensor_data();
         publish_valve_positions();
         publish_uptime();
         publish_state();

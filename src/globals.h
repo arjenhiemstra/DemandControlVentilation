@@ -41,6 +41,7 @@ extern SemaphoreHandle_t settings_state_cyclingday_mutex;
 extern SemaphoreHandle_t settings_state_cyclingnight_mutex;
 
 extern QueueHandle_t sensor_queue;
+extern QueueHandle_t sensor_avg_queue;
 
 extern JsonDocument valve_control_data;
 extern JsonDocument wire_sensor_data;

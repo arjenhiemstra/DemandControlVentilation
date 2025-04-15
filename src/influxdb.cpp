@@ -53,6 +53,58 @@ void write_sensor_data(void) {
     }
 }
 
+void write_avg_sensor_data(void) {
+    
+    InfluxDBClient client(INFLUXDB_URL, INFLUXDB_ORG, INFLUXDB_BUCKET, INFLUXDB_TOKEN);
+    Point sensor("Sensors_avg");   
+
+    //Copy array to local array with active mutex an then run slow display function without mutex
+    float queue_avg_sensor_data[2][8][3];
+
+    if (xQueuePeek(sensor_avg_queue, &queue_avg_sensor_data, 0) == pdTRUE) {     
+        // Check server connection. Only write data when connected.
+        if (client.validateConnection()) {
+            Serial.print("\nConnected to InfluxDB: ");
+            Serial.print(client.getServerUrl());
+    
+            Serial.print("\nWriting average sensor data to influxDB.");
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 8; j++) {           
+                    if (queue_avg_sensor_data[i][j][0] > 0) {
+                        sensor.clearFields();
+                        sensor.clearTags();
+                        String tag = "sensor" + String(j);
+                        String bus = "bus" + String(i);
+                        sensor.addTag("device",tag);
+                        sensor.addTag("bus",bus);
+                        //if (queue_avg_sensor_data[i][j][0] > 3) {
+                            sensor.addField("temperature", queue_avg_sensor_data[i][j][0]);
+                        //}
+                        //if (queue_avg_sensor_data[i][j][1] > 5) {
+                            sensor.addField("humidity", queue_avg_sensor_data[i][j][1]);
+                        //}
+                        //if (queue_avg_sensor_data[i][j][2] > 5) {
+                            sensor.addField("CO2", queue_avg_sensor_data[i][j][2]); 
+                        //}
+                        
+                        client.pointToLineProtocol(sensor);
+                
+                        if (!client.writePoint(sensor)) {
+                            Serial.print("InfluxDB write failed: ");
+                            Serial.println(client.getLastErrorMessage());
+                        }
+                        vTaskDelay(50);
+                    }
+                } 
+            }
+        }
+        else {
+            Serial.print("\nInfluxDB connection failed: ");
+            Serial.print(client.getLastErrorMessage());
+        }
+    }
+}
+
 void write_valve_position_data(void) {
     
     InfluxDBClient client(INFLUXDB_URL, INFLUXDB_ORG, INFLUXDB_BUCKET, INFLUXDB_TOKEN);
@@ -63,6 +115,7 @@ void write_valve_position_data(void) {
     const char* path = "/json/valvepositions.json";
     bool status_file_present;
     int valve_pos_temp;
+    int valve_pos_sum=0;
 
     status_file_present = check_file_exists(path);
 
@@ -80,18 +133,21 @@ void write_valve_position_data(void) {
         for(int i=0;i<12;i++) {
             
             valve_pos_temp = doc["valve"+String(i)];
-                        
-            sensor.clearFields();
-            sensor.clearTags();
-            String tag = "valve" + String(i);
-            sensor.addTag("device",tag);
-            sensor.addField("position", valve_pos_temp);
-                        
-            client.pointToLineProtocol(sensor);
-    
-            if (!client.writePoint(sensor)) {
-                Serial.print("InfluxDB write failed: ");
-                Serial.println(client.getLastErrorMessage());
+            valve_pos_sum = valve_pos_sum + valve_pos_temp;
+            
+            if (valve_pos_sum != 0) {
+                sensor.clearFields();
+                sensor.clearTags();
+                String tag = "valve" + String(i);
+                sensor.addTag("device",tag);
+                sensor.addField("position", valve_pos_temp);
+                            
+                client.pointToLineProtocol(sensor);
+        
+                if (!client.writePoint(sensor)) {
+                    Serial.print("InfluxDB write failed: ");
+                    Serial.println(client.getLastErrorMessage());
+                }
             }
         }
     }

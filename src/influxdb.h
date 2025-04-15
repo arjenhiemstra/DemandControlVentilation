@@ -16,6 +16,7 @@
 
 // function declarations
 void write_sensor_data(void);
+void write_avg_sensor_data(void);
 void write_valve_position_data(void);
 void write_system_uptime(void);
 void write_state_info(void);

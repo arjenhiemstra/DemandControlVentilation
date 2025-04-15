@@ -24,6 +24,7 @@ SemaphoreHandle_t settings_state_cyclingday_mutex = NULL;       // Valve cycle d
 SemaphoreHandle_t settings_state_cyclingnight_mutex = NULL;     // Valve cycle night state settings
 
 QueueHandle_t sensor_queue;                                     // Handle for sensor queue data
+QueueHandle_t sensor_avg_queue;                                 // Handle for sensor queue data
 
 JsonDocument valve_control_data;                                // Global for valve control data
 JsonDocument wire_sensor_data;                                  // Global for bus0 sensor configuration
