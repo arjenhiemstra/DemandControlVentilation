@@ -59,6 +59,15 @@ void led_purple_on(int pixel, int brightness) {
     ws2812b.show();
 }
 
+void led_white_on(int pixel, int brightness) {
+
+    ws2812b.begin();
+    ws2812b.clear();
+
+    ws2812b.setPixelColor(pixel, ws2812b.Color(brightness, brightness, brightness));
+    ws2812b.show();
+}
+
 void led_red_blink(int pixel, int brightness) {
 
     ws2812b.begin();
@@ -129,4 +138,16 @@ void led_purple_blink(int pixel, int brightness) {
     vTaskDelay(100);
 }
 
+void led_white_blink(int pixel, int brightness) {
 
+    ws2812b.begin();
+    ws2812b.clear();
+
+    ws2812b.setPixelColor(pixel, ws2812b.Color(brightness, brightness, brightness));
+    ws2812b.show();
+
+    vTaskDelay(100);
+    ws2812b.clear();
+    ws2812b.show();  
+    vTaskDelay(100);
+}

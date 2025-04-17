@@ -12,6 +12,5 @@
 // function declarations
 void sensor_data_average(void);
 void fifoPush(int,int,int,float,int);
-float fifoAverage(int,int,int,int);
 
 #endif

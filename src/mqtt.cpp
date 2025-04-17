@@ -70,21 +70,21 @@ void publish_avg_sensor_data(void) {
                             
                     if (queue_sensor_avg_data[bus][slot][0] > 2 )  {
                         measurement = "/temperature";
-                        ("OSVentilation/bus/" + String(bus) + "/sensor_avg" + String(slot) + measurement).toCharArray(topic,200);
+                        ("OSVentilation/bus/" + String(bus) + "/sensor" + String(slot) + "_avg" + measurement).toCharArray(topic,200);
                         String(queue_sensor_avg_data[bus][slot][0]).toCharArray(sensor_avg_value,8);
                         client.publish(topic, sensor_avg_value);
                     }
 
                     if (queue_sensor_avg_data[bus][slot][1] > 2 )  {
                         measurement = "/humidity";
-                        ("OSVentilation/bus/" + String(bus) + "/sensor_avg" + String(slot) + measurement).toCharArray(topic,200);
+                        ("OSVentilation/bus/" + String(bus) + "/sensor" + String(slot) + "_avg" + measurement).toCharArray(topic,200);
                         String(queue_sensor_avg_data[bus][slot][1]).toCharArray(sensor_avg_value,8);
                         client.publish(topic, sensor_avg_value);
                     }
 
                     if (queue_sensor_avg_data[bus][slot][2] > 2 )  {
                         measurement = "/CO2";
-                        ("OSVentilation/bus/" + String(bus) + "/sensor_avg" + String(slot) + measurement).toCharArray(topic,200);
+                        ("OSVentilation/bus/" + String(bus) + "/sensor" + String(slot) + "_avg" + measurement).toCharArray(topic,200);
                         String(queue_sensor_avg_data[bus][slot][2]).toCharArray(sensor_avg_value,8);
                         client.publish(topic, sensor_avg_value);
                     }

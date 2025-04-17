@@ -190,7 +190,7 @@ void day_transitions(void) {
         new_state = "night";
     }
     //Assuming that CO2 sensor is on slot 2 of bus 1. CO2 has priority over others
-    else if (statemachine_sensor_data[1][2][2] > 1000) {
+    else if (statemachine_avg_sensor_data[1][2][2] > 1000) {
         Serial.print("\nIt's day and high CO2. Transit to highco2day state");
         new_state = "highco2day";
     }

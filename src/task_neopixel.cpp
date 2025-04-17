@@ -66,6 +66,14 @@ void task_neopixel_code(void * pvParameters) {
             pixel = 0;
             led_purple_blink(pixel, brightness);
         }
+        else if (temp_state == "cooking" && temp_valve_move_lock == 0) {
+            pixel = 0;
+            led_white_on(pixel, brightness);
+        }
+        else if (temp_state == "cooking" && temp_valve_move_lock == 1) {
+            pixel = 0;
+            led_white_blink(pixel, brightness);
+        }
         else {
             pixel = 0;
             led_red_on(pixel, brightness);

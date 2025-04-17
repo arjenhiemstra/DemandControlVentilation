@@ -19,11 +19,13 @@ void led_green_on(int, int);
 void led_blue_on(int, int);
 void led_yellow_on(int, int);
 void led_purple_on(int, int);
+void led_white_on(int, int);
 
 void led_red_blink(int, int);
 void led_green_blink(int, int);
 void led_blue_blink(int, int);
 void led_yellow_blink(int, int);
 void led_purple_blink(int, int);
+void led_white_blink(int, int);
 
 #endif
