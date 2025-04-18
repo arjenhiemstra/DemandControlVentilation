@@ -9,7 +9,8 @@ R	    G	    B					                R	    G	    B
 0	    0	    0	    -				            0	    0	    0	
 0	    0	    128	    Day				            0	    0	    128	    Fan low
 
-calling ws2812b.clear() is not required
+Notes:
+- Calling ws2812b.clear() is not required, just overwrite with new colors
 
 */
 
