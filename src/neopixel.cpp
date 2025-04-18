@@ -8,6 +8,9 @@ R	    G	    B					                R	    G	    B
 0	    128	    128	    High RH				        0	    128	    128	    Fan medium
 0	    0	    0	    -				            0	    0	    0	
 0	    0	    128	    Day				            0	    0	    128	    Fan low
+
+calling ws2812b.clear() is not required
+
 */
 
 #include "neopixel.h"
@@ -15,139 +18,103 @@ R	    G	    B					                R	    G	    B
 Adafruit_NeoPixel ws2812b(NUM_PIXELS, PIN_WS2812B, NEO_GRB + NEO_KHZ800);
 
 void led_red_on(int pixel, int brightness) {
-
     ws2812b.begin();
-    ws2812b.clear();
-
     ws2812b.setPixelColor(pixel, ws2812b.Color(brightness, 0, 0));
     ws2812b.show();
+    vTaskDelay(200);
 }
 
 void led_green_on(int pixel, int brightness) {
-
     ws2812b.begin();
-    ws2812b.clear();
-
     ws2812b.setPixelColor(pixel, ws2812b.Color(0, brightness, 0));
     ws2812b.show();
+    vTaskDelay(200);
 }
 
 void led_blue_on(int pixel, int brightness) {
-
     ws2812b.begin();
-    ws2812b.clear();
-
     ws2812b.setPixelColor(pixel, ws2812b.Color(0, 0, brightness));
     ws2812b.show();
+    vTaskDelay(200);
 }
 
 void led_yellow_on(int pixel, int brightness) {
-
     ws2812b.begin();
-    ws2812b.clear();
-
     ws2812b.setPixelColor(pixel, ws2812b.Color(brightness, brightness, 0));
     ws2812b.show();
+    vTaskDelay(200);
 }
 
 void led_purple_on(int pixel, int brightness) {
-
     ws2812b.begin();
-    ws2812b.clear();
-
     ws2812b.setPixelColor(pixel, ws2812b.Color(brightness, 0, brightness));
     ws2812b.show();
+    vTaskDelay(200);
 }
 
 void led_white_on(int pixel, int brightness) {
-
     ws2812b.begin();
-    ws2812b.clear();
-
     ws2812b.setPixelColor(pixel, ws2812b.Color(brightness, brightness, brightness));
     ws2812b.show();
+    vTaskDelay(200);
 }
 
 void led_red_blink(int pixel, int brightness) {
-
     ws2812b.begin();
-    ws2812b.clear();
-
     ws2812b.setPixelColor(pixel, ws2812b.Color(brightness, 0, 0));
     ws2812b.show();
-
-    vTaskDelay(100);
-    ws2812b.clear();
+    vTaskDelay(200);
+    ws2812b.setPixelColor(pixel, ws2812b.Color(0, 0, 0));
     ws2812b.show();  
-    vTaskDelay(100);
+    vTaskDelay(200);
 }
 
 void led_green_blink(int pixel, int brightness) {
-
-        ws2812b.begin();
-        ws2812b.clear();
-
-        ws2812b.setPixelColor(pixel, ws2812b.Color(0, brightness, 0));
-        ws2812b.show();
-
-        vTaskDelay(100);
-        ws2812b.clear();
-        ws2812b.show();  
-        vTaskDelay(100);
+    ws2812b.begin();
+    ws2812b.setPixelColor(pixel, ws2812b.Color(0, brightness, 0));
+    ws2812b.show();
+    vTaskDelay(200);
+    ws2812b.setPixelColor(pixel, ws2812b.Color(0, 0, 0));
+    ws2812b.show();  
+    vTaskDelay(200);
 }
 
 void led_blue_blink(int pixel, int brightness) {
-
-        ws2812b.begin();
-        ws2812b.clear();
-
-        ws2812b.setPixelColor(pixel, ws2812b.Color(0, 0, brightness));
-        ws2812b.show();
-
-        vTaskDelay(100);
-        ws2812b.clear();
-        ws2812b.show();  
-        vTaskDelay(100);
+    ws2812b.begin();
+    ws2812b.setPixelColor(pixel, ws2812b.Color(0, 0, brightness));
+    ws2812b.show();
+    vTaskDelay(200);
+    ws2812b.setPixelColor(pixel, ws2812b.Color(0, 0, 0));
+    ws2812b.show();  
+    vTaskDelay(200);
 }
 
 void led_yellow_blink(int pixel, int brightness) {
-
     ws2812b.begin();
-    ws2812b.clear();
-
     ws2812b.setPixelColor(pixel, ws2812b.Color(brightness, brightness, 0));
     ws2812b.show();
-
-    vTaskDelay(100);
-    ws2812b.clear();
+    vTaskDelay(200);
+    ws2812b.setPixelColor(pixel, ws2812b.Color(0, 0, 0));
     ws2812b.show();  
-    vTaskDelay(100);
+    vTaskDelay(200);
 }
 
 void led_purple_blink(int pixel, int brightness) {
-
     ws2812b.begin();
-    ws2812b.clear();
-
     ws2812b.setPixelColor(pixel, ws2812b.Color(brightness, 0, brightness));
     ws2812b.show();
-
-    vTaskDelay(100);
-    ws2812b.clear();
+    vTaskDelay(200);
+    ws2812b.setPixelColor(pixel, ws2812b.Color(0, 0, 0));
     ws2812b.show();  
-    vTaskDelay(100);
+    vTaskDelay(200);
 }
 
 void led_white_blink(int pixel, int brightness) {
-
     ws2812b.begin();
-    ws2812b.clear();
-
     ws2812b.setPixelColor(pixel, ws2812b.Color(brightness, brightness, brightness));
     ws2812b.show();
-
-    vTaskDelay(100);
-    ws2812b.clear();
+    vTaskDelay(200);
+    ws2812b.setPixelColor(pixel, ws2812b.Color(0, 0, 0));
     ws2812b.show();  
-    vTaskDelay(100);
+    vTaskDelay(200);
 }

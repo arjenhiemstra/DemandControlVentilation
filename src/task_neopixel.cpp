@@ -13,6 +13,7 @@ void task_neopixel_code(void * pvParameters) {
     int pixel;
     int brightness = 64;
     bool temp_valve_move_lock;
+    String temp_fanspeed;
     String temp_state;
 
     for(;;) {       
@@ -30,6 +31,14 @@ void task_neopixel_code(void * pvParameters) {
             }
         }
 
+        if (fanspeed_mutex != NULL) {
+            if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+                temp_fanspeed = fanspeed;
+                xSemaphoreGive(fanspeed_mutex);
+            }
+        }
+
+        //1st LED for status of statemachine
         if (temp_state == "init") {
             pixel = 0;
             led_red_blink(pixel, brightness);
@@ -80,7 +89,25 @@ void task_neopixel_code(void * pvParameters) {
 
         }
 
-        vTaskDelay(500);
+        //2nd LED for fanspeed
+        if (temp_fanspeed == "low") {
+            pixel = 1;
+            led_green_on(pixel, brightness);
+        }
+        else if (temp_fanspeed == "medium") {
+            pixel = 1;
+            led_yellow_on(pixel, brightness);
+        }
+        else if (temp_fanspeed == "high") {
+            pixel = 1;
+            led_red_on(pixel, brightness);
+        }
+        else {
+            pixel = 1;
+            led_red_blink(pixel, brightness);
+        }
+
+        //vTaskDelay(500);
 
      
     }
