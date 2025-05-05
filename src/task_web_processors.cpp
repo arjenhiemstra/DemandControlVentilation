@@ -426,6 +426,7 @@ String settings_processor(const String& var) {
     const char* settings_fan_path = "/json/settings_fan.json";
     const char* settings_statemachine_path = "/json/settings_statemachine.json";
     const char* status;
+    
     bool settings_network_file_present;
     bool settings_mqtt_file_present;
     bool settings_i2c_file_present;
@@ -437,6 +438,7 @@ String settings_processor(const String& var) {
     String settings_i2c_json;
     String settings_fan_json;
     String settings_statemachine_json;
+    
     JsonDocument settings_network_doc;
     JsonDocument settings_mqtt_doc;
     JsonDocument settings_i2c_doc;

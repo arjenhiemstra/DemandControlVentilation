@@ -11,66 +11,148 @@ void config_wifi(void) {
     bool network_config_file_present = 0;
     
     String network_config_string;
-    String ssid;
-    String wifi_password;
-    String ip_address;
-    String subnet_mask;
-    String gateway;
-    String primary_dns;
-    String secondary_dns;
+    //String enable_dhcp;
+    //String ssid;
+    //String wifi_password;
+    //String ip_address;
+    //String subnet_mask;
+    //String gateway;
+    //String primary_dns;
+    //String secondary_dns;
+
+    //int number[5][4] = {0};
 
     JsonDocument network_config;
 
-    network_config_file_present = check_file_exists(path);
-
-    if (network_config_file_present = 1) {
-        File file = LittleFS.open(path, "r");
-
-        while(file.available()) {
-            network_config_string = file.readString();
+    if (settings_network_mutex != NULL) {
+        if(xSemaphoreTake(settings_network_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            network_config_file_present = check_file_exists(path);
+            if (network_config_file_present == 1) {
+                File file = LittleFS.open(path, "r");
+                while(file.available()) {
+                    network_config_string = file.readString();
+                }
+                file.close();
+                deserializeJson(network_config, network_config_string);
+            }
+            xSemaphoreGive(settings_network_mutex);
         }
-        file.close();
-        
-        deserializeJson(network_config, network_config_string);
-
-        String ssid = network_config[String("ssid")];
-        
-        /*wifi_password = network_config[String("wifi_password")];
-        ip_address = network_config[String("ip_address")];
-        subnet_mask = network_config[String("subnet_mask")];
-        gateway = network_config[String("gateway")];
-        primary_dns = network_config[String("primary_dns")];
-        secondary_dns = network_config[String("secondary_dns")];*/
-        
     }
 
     //Print JsonDocument
+    Serial.print("\nNetwork config: ");
     serializeJson(network_config, Serial);
-    Serial.print("\n\n");
+
+    String enable_dhcp = network_config[String("enable_dhcp")];
+    String ssid = network_config[String("ssid")];
+    String wifi_password = network_config[String("wifi_password")];
 
     if (ssid != "" && wifi_password != "") {
-        //Connect to access point
-        WiFi.mode(WIFI_STA);
-
-        if (ip_address != "" && subnet_mask != "" && gateway != "" && (primary_dns != "" || secondary_dns != "")) {
-            //WiFi.config(ip_address,subnet_mask, gateway);
-            //WiFi.setDNS(primary_dns, secondary_dns);
+        if (enable_dhcp == "On") {
+            WiFi.mode(WIFI_STA);
+            WiFi.begin(ssid, wifi_password);
+            if (WiFi.waitForConnectResult() != WL_CONNECTED) {
+                Serial.println("WiFi Failed!");
+                return;
+            }
+            Serial.print("\nIP Address: ");
+            Serial.print(WiFi.localIP());
+            Serial.print(", Subnetmask: ");
+            Serial.print(WiFi.subnetMask());
+            Serial.print(", Gateway IP: ");
+            Serial.print(WiFi.gatewayIP());
+            Serial.print(", Primary DNS: ");
+            Serial.print(WiFi.dnsIP(0));
+            Serial.print(", Secondary DNS: ");
+            Serial.print(WiFi.dnsIP(1));
         }
+        else if (enable_dhcp == "Off") {
+            //Configure connection manual
+            String ip_address = network_config[String("ip_address")];
+            String subnet_mask = network_config[String("subnet_mask")];
+            String gateway = network_config[String("gateway")];
+            String primary_dns = network_config[String("primary_dns")];
+            String secondary_dns = network_config[String("secondary_dns")];
+        
+            //Create array of strings so it can be passed to a function to create an array with 5 ip addresses with each 4 ints for each IP address number
+            String networksettings[5] = { ip_address,subnet_mask,gateway,primary_dns,secondary_dns };
+            int** ip_address_numbers = splitStringsToInts(networksettings);
+        
+            //Make IPAddress objects from ip_address_numbers
+            IPAddress local_IP(ip_address_numbers[0][0],ip_address_numbers[0][1],ip_address_numbers[0][2],ip_address_numbers[0][3]);
+            IPAddress subnet_mask_IP(ip_address_numbers[1][0],ip_address_numbers[1][1],ip_address_numbers[1][2],ip_address_numbers[1][3]);
+            IPAddress gateway_IP(ip_address_numbers[2][0],ip_address_numbers[2][1],ip_address_numbers[2][2],ip_address_numbers[2][3]);
+            IPAddress primary_dns_IP(ip_address_numbers[3][0],ip_address_numbers[3][1],ip_address_numbers[3][2],ip_address_numbers[3][3]);
+            IPAddress secondary_dns_IP(ip_address_numbers[4][0],ip_address_numbers[4][1],ip_address_numbers[4][2],ip_address_numbers[4][3]);
+        
+            // Free allocated memory
+            for (int i = 0; i < 5; i++) {
+                delete[] ip_address_numbers[i];
+            }
+            delete[] ip_address_numbers;
 
-        WiFi.begin(ssid, wifi_password);
-
-        if (WiFi.waitForConnectResult() != WL_CONNECTED) {
-            Serial.println("WiFi Failed!");
-            return;
+            if (ip_address != "" && subnet_mask != "" && gateway != "" && (primary_dns != "" || secondary_dns != "")) {
+                WiFi.mode(WIFI_STA);
+                if (!WiFi.config(local_IP, gateway_IP, subnet_mask_IP, primary_dns_IP, secondary_dns_IP)) {
+                    Serial.println("STA Failed to configure");
+                }
+                WiFi.begin(ssid, wifi_password);
+                if (WiFi.waitForConnectResult() != WL_CONNECTED) {
+                    Serial.println("WiFi Failed!");
+                    return;
+                }
+                Serial.print("\nIP Address: ");
+                Serial.print(WiFi.localIP());
+                Serial.print(", Subnetmask: ");
+                Serial.print(WiFi.subnetMask());
+                Serial.print(", Gateway IP: ");
+                Serial.print(WiFi.gatewayIP());
+                Serial.print(", Primary DNS: ");
+                Serial.print(WiFi.dnsIP(0));
+                Serial.print(", Secondary DNS: ");
+                Serial.print(WiFi.dnsIP(1));
+            }
+            else {
+                Serial.print("\nConfiguration incomplete. Wifi cannot be configured");
+            }
         }
-
-        Serial.print("\n\nIP Address: ");
-        Serial.print(WiFi.localIP());
-        Serial.print("\n\n");
+        else {
+            Serial.print("\nWifi configuration failed");
+        }
     }
     else {
-        //No connection info so setup as access point
-        WiFi.mode(WIFI_AP);
+        //Configure here the ESP32 as accesspoint with default settings
+        WiFi.softAP("OSVENTILATION-WIFI", NULL);
+        IPAddress IP = WiFi.softAPIP();
+        Serial.print("\nAP IP address: ");
+        Serial.println(IP);
+    }      
+}
+
+int** splitStringsToInts(String input[]) {
+    
+    //5 string to convert in 4 ints each
+    int rows = 5;
+    int cols = 4;
+
+    // Allocate a 2D integer array dynamically
+    int** output = new int*[rows];
+    for (int i = 0; i < rows; i++) {
+        output[i] = new int[cols]; // Allocate columns
+        int start = 0, end = input[i].indexOf('.');
+        int count = 0;
+
+        while (end != -1 && count < cols) {
+            output[i][count++] = input[i].substring(start, end).toInt();  // Convert substring to int
+            start = end + 1;
+            end = input[i].indexOf('.', start);
+        }
+
+        // Capture the last token
+        if (count < cols) {
+            output[i][count++] = input[i].substring(start).toInt();
+        }
     }
 
+    return output; // Return the dynamically allocated array
 }

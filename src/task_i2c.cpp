@@ -46,7 +46,7 @@ void task_i2c_code(void * pvParameters)
             Serial.print(temp_time);
             Serial.print("\nSystem uptime: ");
             Serial.print(esp_timer_get_time()/1000000/60);
-            Serial.print(" min\n");
+            Serial.print(" min");
             rtc_time_multiplier = 0;
         }
 

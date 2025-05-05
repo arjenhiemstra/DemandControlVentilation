@@ -429,20 +429,20 @@ Data structure for each JSON valve_control_data Structure
 
     //finally the valves can be moved, should only be called if sum_move > 0
     if (sum_move > 0 ) {
-        Serial.print("\nThe sum of move is: ");
+        Serial.print("\nValve move sum is > 0 (");
         Serial.print(sum_move);
-        Serial.print("\nSum is > 0. Call function to move valves");
+        Serial.print("). Call function to move valves");
         move_valve();
     }
     else if (sum_move < 0) {
-        Serial.print("\nThe sum of move is: ");
+        Serial.print("\nValve move sum is < 0 (");
         Serial.print(sum_move);
-        Serial.print("\nSum is < 0. Error. Don't call function to move valves");
+        Serial.print("). Error. Don't call function to move valves");
     }
     else {
-        Serial.print("\nThe sum of move is: ");
+        Serial.print("\nValve move sum is ");
         Serial.print(sum_move);
-        Serial.print("\nSum is 0. Don't call function to move valves");
+        Serial.print(". Don't call function to move valves");
     }
 }
 

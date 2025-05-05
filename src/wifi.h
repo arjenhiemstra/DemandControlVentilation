@@ -11,5 +11,6 @@
 
 //Function definitions
 void config_wifi(void);
+int** splitStringsToInts(String[]);
 
 #endif
