@@ -13,9 +13,30 @@ void move_valve(void) {
     int latchPin2 = 15; // IO15 on ESP32-S3 and D25 on ESP32, connected to ST_CP (12) of 74HC595
     int dataPin2 = 16;  // IO16 on ESP32-S3 and D27 on ESP32, connected to DS (14) of 74HC595
 
+    //Temporary variables used after selection of I/O
     int clockPin;
     int latchPin;
     int dataPin;
+
+    const char* path = "/json/valvepositions.json";
+    
+    bool status_file_present;
+    
+    int valve_number;
+    int direction;
+    int valve_pos;
+    int valve_position_change;
+    int new_valve_position_change;
+    int new_valve_position;
+    int store_valve_position;
+    int check_valve_position;
+    
+    String json;
+    String new_valve_positions;
+
+    JsonDocument doc;
+    
+    File file;
 
     //Still required? already happens at init. Try if can be removed if outputs work
     pinMode(latchPin1, OUTPUT);
@@ -25,20 +46,6 @@ void move_valve(void) {
     pinMode(latchPin2, OUTPUT);
     pinMode(clockPin2, OUTPUT);
     pinMode(dataPin2, OUTPUT);
-
-    const char* path = "/json/valvepositions.json";
-    bool status_file_present;
-    int valve_number;
-    int valve_position_change;
-    int new_valve_position_change;
-    int new_valve_position;
-    int direction;
-    int store_valve_position;
-    int check_valve_position;
-    int valve_pos;
-
-    String json;
-    JsonDocument doc;
 
     if (valve_control_data_mutex != NULL) {
         if(xSemaphoreTake(valve_control_data_mutex, ( TickType_t ) 10 ) == pdTRUE) {
@@ -76,9 +83,7 @@ void move_valve(void) {
     }
 
     // Debug
-    Serial.print("\n\n");
-    Serial.print("Store new valve Position: " + String(store_valve_position) + ", Check valve position: " + String(check_valve_position));
-    Serial.print("\n");
+    Serial.print("\nStore new valve Position: " + String(store_valve_position) + ", Check valve position: " + String(check_valve_position));
 
     for(int i=0;i<12;i++) {
 
@@ -136,12 +141,6 @@ void move_valve(void) {
                 valvecontrol(direction, new_valve_position_change, valve_number, dataPin, clockPin, latchPin);
                 new_valve_position = valve_pos + new_valve_position_change;
             }
-            /*else {
-                new_valve_position_change = valve_position_change;
-                Serial.print ("\nCondition 5. Request move is: " + String(valve_position_change) + ". Current_position is: " + String(valve_pos) + ". Valve will move: " + String(new_valve_position_change) + ". Direction: " + String(direction));
-                valvecontrol(direction, new_valve_position_change, valve_number, dataPin, clockPin, latchPin);
-                new_valve_position = new_valve_position_change - valve_pos;
-            }*/
         }
         else {
             //no check required so just proceed with calling move valves function if movement is > 0
@@ -155,23 +154,21 @@ void move_valve(void) {
         }
     }
 
-    //write doc to file
-    String new_valve_positions;
-    File file;
-
     //Convert from JsonDocument to String
     serializeJson(doc, new_valve_positions);
 
     Serial.print("\n");
     Serial.print(new_valve_positions);
 
-    if (valve_position_file_mutex != NULL) {
-        if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
-            write_config_file(path, new_valve_positions);
-            xSemaphoreGive(valve_position_file_mutex);
+    //Write status file only if required
+    if (store_valve_position == 1) {
+        if (valve_position_file_mutex != NULL) {
+            if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+                write_config_file(path, new_valve_positions);
+                xSemaphoreGive(valve_position_file_mutex);
+            }
         }
     }
-
 }
 
 void valvecontrol(int direction, int position_change, int valve_number, int dataPin, int clockPin, int latchPin ) {
@@ -332,11 +329,23 @@ Data structure for each JSON valve_control_data Structure
     "valve11_data": [valve_vumber,valve move,valvemove_direction]
 }
 */
-    bool state_valve_pos_file_present;
+    
     String state_valve_pos_path;            //Must be String and not const char* because it is changed by the statemechine!!!
     String state_valve_pos_str;
+    String actual_valve_pos_json;
 
     JsonDocument state_valve_pos_doc;
+    JsonDocument actual_valve_pos_doc;
+
+    //Actual valve positions
+    const char* actual_valve_pos_path = "/json/valvepositions.json";
+    bool status_file_present;
+    bool state_valve_pos_file_present;
+    int move;
+    int direction;
+    int valve_number;
+    int i;
+    int sum_move = 0;          //temp variable for decision on writing config file (sum>0) or not (sum=0)
 
     //Requested valve positions based on valve position settings files
     state_valve_pos_path = ("/json/settings_state_" + statemachine_state + ".json");
@@ -358,18 +367,6 @@ Data structure for each JSON valve_control_data Structure
     }
     
     deserializeJson(state_valve_pos_doc, state_valve_pos_str);
-    
-    //Actual valve positions
-    const char* actual_valve_pos_path = "/json/valvepositions.json";
-    bool status_file_present;
-    int move;
-    int direction;
-    int valve_number;
-    int i;
-    
-    String actual_valve_pos_json;
-    JsonDocument actual_valve_pos_doc;
-    
     status_file_present = check_file_exists(actual_valve_pos_path);
 
     if (valve_position_file_mutex != NULL) {
@@ -394,11 +391,13 @@ Data structure for each JSON valve_control_data Structure
             
             //valve needs to close with difference. Check if within movements limits is done in move_valve function
             move = actual_valve_pos - state_valve_pos;
+            sum_move = sum_move + move;
             direction = 0;
         }
         else {
             //valve needs to open with difference. Check if within movement limits is done in move_valve function
             move = state_valve_pos - actual_valve_pos;
+            sum_move = sum_move + move;
             direction = 1;
         }
         
@@ -414,16 +413,37 @@ Data structure for each JSON valve_control_data Structure
     
     if (valve_control_data_mutex != NULL) {
         if(xSemaphoreTake(valve_control_data_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            valve_control_data["checks"][0] = 1;
-            valve_control_data["checks"][1] = 1;
+            if (sum_move == 0) {
+                valve_control_data["checks"][0] = 0;        //store not required
+                valve_control_data["checks"][1] = 1;        //check required
+            }
+            else {
+                valve_control_data["checks"][0] = 0;        //store required
+                valve_control_data["checks"][1] = 1;        //check required
+            }
             Serial.print("\nValve control data: ");
             serializeJson(valve_control_data, Serial);
             xSemaphoreGive(valve_control_data_mutex);
         }
     }
 
-    //finally the valves can be moved
-    move_valve();
+    //finally the valves can be moved, should only be called if sum_move > 0
+    if (sum_move > 0 ) {
+        Serial.print("\nThe sum of move is: ");
+        Serial.print(sum_move);
+        Serial.print("\nSum is > 0. Call function to move valves");
+        move_valve();
+    }
+    else if (sum_move < 0) {
+        Serial.print("\nThe sum of move is: ");
+        Serial.print(sum_move);
+        Serial.print("\nSum is < 0. Error. Don't call function to move valves");
+    }
+    else {
+        Serial.print("\nThe sum of move is: ");
+        Serial.print(sum_move);
+        Serial.print("\nSum is 0. Don't call function to move valves");
+    }
 }
 
 

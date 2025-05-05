@@ -9,7 +9,7 @@
 #include <Adafruit_NeoPixel.h>
 
 #define PIN_WS2812B 42                      // The ESP32 pin GPIO10 connected to WS2812B
-#define NUM_PIXELS 8                        // The number of LEDs (pixels) on WS2812B LED strip
+#define NUM_PIXELS 2                        // The number of LEDs (pixels) on WS2812B LED strip
 
 //Function definitions
 void ws2812b_test(void);
