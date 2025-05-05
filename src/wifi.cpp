@@ -11,16 +11,6 @@ void config_wifi(void) {
     bool network_config_file_present = 0;
     
     String network_config_string;
-    //String enable_dhcp;
-    //String ssid;
-    //String wifi_password;
-    //String ip_address;
-    //String subnet_mask;
-    //String gateway;
-    //String primary_dns;
-    //String secondary_dns;
-
-    //int number[5][4] = {0};
 
     JsonDocument network_config;
 
