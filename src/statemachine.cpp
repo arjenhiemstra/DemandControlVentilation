@@ -342,7 +342,7 @@ void high_co2_day_transitions(void) {
     }
 
     // Conditions for transition
-    if (statemachine_sensor_data[1][2][2] < 800) {
+    if (statemachine_sensor_data[0][0][2] < 800) {
         Serial.print("\nIt is day and CO2 level is low enough. Transit to day.");
         new_state = "day";
     }
