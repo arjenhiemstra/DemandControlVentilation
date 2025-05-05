@@ -418,7 +418,7 @@ Data structure for each JSON valve_control_data Structure
                 valve_control_data["checks"][1] = 1;        //check required
             }
             else {
-                valve_control_data["checks"][0] = 0;        //store required
+                valve_control_data["checks"][0] = 1;        //store required
                 valve_control_data["checks"][1] = 1;        //check required
             }
             Serial.print("\nValve control data: ");
