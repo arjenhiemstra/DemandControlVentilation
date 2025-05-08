@@ -3,16 +3,6 @@
 //Control valves from web interface
 void move_valve(void) {
 
-    //Data pins for 74HC595
-    int clockPin1 = 11; // IO11 on ESP32-S3 and D13 on ESP32, connected to SH_CP (11) of 74HC595
-    int latchPin1 = 12; // IO12 on ESP32-S3 and D12 on ESP32, connected to ST_CP (12) of 74HC595
-    int dataPin1 = 13;  // IO13 on ESP32-S3 and D14 on ESP32, connected to DS (14) of 74HC595
-
-    //Data pins for 74HC595
-    int clockPin2 = 14; // IO14 on ESP32-S3 and D26 on ESP32, connected to SH_CP (11) of 74HC595
-    int latchPin2 = 15; // IO15 on ESP32-S3 and D25 on ESP32, connected to ST_CP (12) of 74HC595
-    int dataPin2 = 16;  // IO16 on ESP32-S3 and D27 on ESP32, connected to DS (14) of 74HC595
-
     //Temporary variables used after selection of I/O
     int clockPin;
     int latchPin;
@@ -37,15 +27,6 @@ void move_valve(void) {
     JsonDocument doc;
     
     File file;
-
-    //Still required? already happens at init. Try if can be removed if outputs work
-    pinMode(latchPin1, OUTPUT);
-    pinMode(clockPin1, OUTPUT);
-    pinMode(dataPin1, OUTPUT);
-
-    pinMode(latchPin2, OUTPUT);
-    pinMode(clockPin2, OUTPUT);
-    pinMode(dataPin2, OUTPUT);
 
     if (valve_control_data_mutex != NULL) {
         if(xSemaphoreTake(valve_control_data_mutex, ( TickType_t ) 10 ) == pdTRUE) {
@@ -143,13 +124,11 @@ void move_valve(void) {
             }
         }
         else {
-            //no check required so just proceed with calling move valves function if movement is > 0
             valvecontrol(direction, valve_position_change, valve_number, dataPin, clockPin, latchPin);
         }
 
         //Storing new valve positions only makes sense in combination with new calculated positions
         if (store_valve_position == 1 && check_valve_position == 1) {
-            //code to write new positions to file
             doc["valve"+String(i)] = new_valve_position;
         }
     }
@@ -158,7 +137,7 @@ void move_valve(void) {
     serializeJson(doc, new_valve_positions);
 
     Serial.print("\n");
-    Serial.print(new_valve_positions);
+    //Serial.print(new_valve_positions);
 
     //Write status file only if required
     if (store_valve_position == 1) {
@@ -187,16 +166,17 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
     int k;                          // Counter to iterate through output array
 
     // Variables which are application settings
-    int cycles = 24;        //the number if cycles to complete one rotation of thre shaft
+    int cycles = 24;        //the number if cycles to complete one rotation of the shaft
 
     //switching pattern for steppermotor in 8 bits.
-    int pattern[4] = { B00000101, B00001001, B00001010, B00000110 };
+    int pattern1[4] = { B00000101, B00001001, B00001010, B00000110 };
+    int pattern2[4] = { B01010000, B10010000, B10100000, B01100000 };
 
     // Disable valve moving when valves are already moving
     if (lock_valve_move_mutex != NULL) {
         if(xSemaphoreTake(lock_valve_move_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
             lock_valve_move = 1;
-            //Serial.print("\nValves are locked for moving");
+            Serial.print("\nValves are locked for moving");
             xSemaphoreGive(lock_valve_move_mutex);
         }
     }
@@ -209,15 +189,14 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
     switch (valve_number) {
         case 0:
             for (i=0; i<4; i++) {
-                output[0][i] = pattern[i];
+                output[0][i] = pattern1[i];
                 output[1][i] = 0;
                 output[2][i] = 0;
             }
             break;  
         case 1:
             for (i=0; i<4; i++) {
-                output[0][i] = pattern[i];
-                output[0][i] = output[0][i] << 4; //shift four positions
+                output[0][i] = pattern2[i];
                 output[1][i] = 0;
                 output[2][i] = 0;
             }
@@ -225,15 +204,14 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
         case 2:
             for (i=0; i<4; i++) {
                 output[0][i] = 0;
-                output[1][i] = pattern[i];
+                output[1][i] = pattern1[i];
                 output[2][i] = 0;
             }
             break;
         case 3:
             for (i=0; i<4; i++) {
                 output[0][i] = 0;
-                output[1][i] = pattern[i];
-                output[1][i] = output[1][i] << 4; //shift four positions
+                output[1][i] = pattern2[i];
                 output[2][i] = 0;
             }
             break;
@@ -241,15 +219,14 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
             for (i=0; i<4; i++) {
                 output[0][i] = 0;
                 output[1][i] = 0;
-                output[2][i] = pattern[i];
+                output[2][i] = pattern1[i];
             }
             break;
         case 5:
             for (i=0; i<4; i++) {
                 output[0][i] = 0;
                 output[1][i] = 0;
-                output[2][i] = pattern[i];
-                output[2][i] = output[2][i] << 4; //shift four positions
+                output[2][i] = pattern2[i];
             }
             break;
     }
@@ -260,13 +237,12 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
         for (j=0; j < (cycles * position_change); j++) {
             //Loop to make one cycle of the four coils in the motor
             for (k = 0; k < 4; k++) {
-            digitalWrite(latchPin, 0);                                //ground latchPin and hold low for as long as you are transmitting
-            shiftOut(dataPin, clockPin, MSBFIRST, output[2][k]);
-            shiftOut(dataPin, clockPin, MSBFIRST, output[1][k]);
-            shiftOut(dataPin, clockPin, MSBFIRST, output[0][k]);
-            digitalWrite(latchPin, HIGH);
-            //delay(10); // This delay decides the speed of turning in ms
-            vTaskDelay(10);      
+                digitalWrite(latchPin, 0);                                //ground latchPin and hold low for as long as you are transmitting
+                shiftOut(dataPin, clockPin, MSBFIRST, output[2][k]);
+                shiftOut(dataPin, clockPin, MSBFIRST, output[1][k]);
+                shiftOut(dataPin, clockPin, MSBFIRST, output[0][k]);
+                digitalWrite(latchPin, HIGH);
+                vTaskDelay(10);
             }
         }
         //after running all outputs should be off
@@ -279,12 +255,12 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
         for (j=0; j < (cycles*position_change); j++) {
             //Loop to make one cycle of the four coils in the motor
             for (k = 3; k > -1; k--) {
-            digitalWrite(latchPin, 0);
-            shiftOut(dataPin, clockPin, MSBFIRST, output[2][k]);
-            shiftOut(dataPin, clockPin, MSBFIRST, output[1][k]);
-            shiftOut(dataPin, clockPin, MSBFIRST, output[0][k]);
-            digitalWrite(latchPin, HIGH);
-            vTaskDelay(10);
+                digitalWrite(latchPin, 0);
+                shiftOut(dataPin, clockPin, MSBFIRST, output[2][k]);
+                shiftOut(dataPin, clockPin, MSBFIRST, output[1][k]);
+                shiftOut(dataPin, clockPin, MSBFIRST, output[0][k]);
+                digitalWrite(latchPin, HIGH);
+                vTaskDelay(10);
             }
         }
         all_outputs_off(dataPin, clockPin, latchPin);
@@ -427,7 +403,7 @@ Data structure for each JSON valve_control_data Structure
         }
     }
 
-    //finally the valves can be moved, should only be called if sum_move > 0
+    //finally the valves can be moved but function move_valve() should only be called if sum_move > 0
     if (sum_move > 0 ) {
         Serial.print("\nValve move sum is > 0 (");
         Serial.print(sum_move);

@@ -10,7 +10,6 @@
 #define I2C_SCL2 40                                                 // Wire1 I/O settings (SDA2/SCL2)
 #define I2C_SDA2 41
 
-
 #define LCD_ROWS 4                                                  // LCD display rows
 #define LCD_COLUMNS 20                                              // LCD display columns
 #define LCDADDR 0x27                                                // LCD I2C address
@@ -85,6 +84,16 @@ extern String dayOfWeek;
 
 extern String state;
 extern String fanspeed;
+
+//Data pins for 74HC595
+extern int clockPin1; 
+extern int latchPin1; 
+extern int dataPin1; 
+
+//Data pins for 74HC595
+extern int clockPin2; 
+extern int latchPin2; 
+extern int dataPin2;  
 
 //Function definitions
 
