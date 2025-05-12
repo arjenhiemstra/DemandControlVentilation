@@ -16,5 +16,6 @@
         "string_view": "cpp",
         "initializer_list": "cpp",
         "regex": "cpp"
-    }
+    },
+    "platformio-ide.pioHomeServerHttpHost": "0.0.0.0"
 }
