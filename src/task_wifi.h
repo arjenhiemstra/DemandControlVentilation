@@ -1,0 +1,14 @@
+#ifndef TASK_WIFI_H    // To make sure you don't declare the function more than once by including the header multiple times.
+#define TASK_WIFI_H
+
+#include <Arduino.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+
+#include "wifi.h"
+
+// function declarations
+void start_task_wifi(void);
+void task_wifi_code(void * pvParameters);
+
+#endif

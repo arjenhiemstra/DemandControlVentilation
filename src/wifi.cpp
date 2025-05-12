@@ -55,8 +55,15 @@ void config_wifi(void) {
             Serial.print(WiFi.dnsIP(0));
             Serial.print(", Secondary DNS: ");
             Serial.print(WiFi.dnsIP(1));
+            if (ap_active_mutex != NULL) {
+                if(xSemaphoreTake(ap_active_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+                    ap_active = 0;
+                    xSemaphoreGive(ap_active_mutex);
+                }
+            }
         }
         else if (enable_dhcp == "Off") {
+            
             //Configure connection manual
             String ip_address = network_config[String("ip_address")];
             String subnet_mask = network_config[String("subnet_mask")];
@@ -101,6 +108,13 @@ void config_wifi(void) {
                 Serial.print(WiFi.dnsIP(0));
                 Serial.print(", Secondary DNS: ");
                 Serial.print(WiFi.dnsIP(1));
+                
+                if (ap_active_mutex != NULL) {
+                    if(xSemaphoreTake(ap_active_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+                        ap_active = 0;
+                        xSemaphoreGive(ap_active_mutex);
+                    }
+                }
             }
             else {
                 Serial.print("\nConfiguration incomplete. Wifi cannot be configured");
@@ -112,11 +126,24 @@ void config_wifi(void) {
     }
     else {
         //Configure here the ESP32 as accesspoint with default settings
+        WiFi.mode(WIFI_AP);
         WiFi.softAP("OSVENTILATION-WIFI", NULL);
         IPAddress IP = WiFi.softAPIP();
         Serial.print("\nAP IP address: ");
         Serial.println(IP);
-    }      
+        
+        if (ap_active_mutex != NULL) {
+            if(xSemaphoreTake(ap_active_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+                ap_active = 1;
+                xSemaphoreGive(ap_active_mutex);
+            }
+        }
+    }
+    
+    //Sync RTC with NTP server
+    if (WiFi.waitForConnectResult() == WL_CONNECTED && ap_active == 0) {
+        sync_rtc_ntp();
+    }
 }
 
 int** splitStringsToInts(String input[]) {

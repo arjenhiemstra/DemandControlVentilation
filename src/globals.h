@@ -28,6 +28,7 @@ extern SemaphoreHandle_t settings_statemachine_mutex;
 extern SemaphoreHandle_t statemachine_state_mutex;
 extern SemaphoreHandle_t fanspeed_mutex;
 extern SemaphoreHandle_t lock_valve_move_mutex;
+extern SemaphoreHandle_t ap_active_mutex;
 
 extern SemaphoreHandle_t settings_state_day_mutex;
 extern SemaphoreHandle_t settings_state_night_mutex;
@@ -73,6 +74,7 @@ extern const int daylight_offset_sec;
 
 extern bool lock_valve_move;
 extern bool pb_toggle;
+extern bool ap_active;
 
 extern String yearStr;
 extern String monthStr;

@@ -28,6 +28,7 @@ void setup() {
   valve_control_data_mutex = xSemaphoreCreateMutex();
   fanspeed_mutex = xSemaphoreCreateMutex();
   lock_valve_move_mutex = xSemaphoreCreateMutex();
+  ap_active_mutex = xSemaphoreCreateMutex();
 
   settings_state_day_mutex = xSemaphoreCreateMutex();
   settings_state_night_mutex = xSemaphoreCreateMutex();
@@ -54,7 +55,8 @@ void setup() {
     return;
   }
 
-  setup_wifi();
+  //setup_wifi();
+  start_task_wifi();
   sensor_config_data_read();
   valve_settings_config_read();
   startTaskwebcode();

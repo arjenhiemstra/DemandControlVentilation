@@ -12,6 +12,7 @@ SemaphoreHandle_t settings_statemachine_mutex = NULL;           // Statemachine 
 SemaphoreHandle_t statemachine_state_mutex = NULL;              // for state of statemechine
 SemaphoreHandle_t fanspeed_mutex = NULL;                        // for state of fan
 SemaphoreHandle_t lock_valve_move_mutex = NULL;                 // for valve lock
+SemaphoreHandle_t ap_active_mutex = NULL;                       // for accesspoint active
 
 SemaphoreHandle_t settings_state_day_mutex = NULL;              // Day state settings
 SemaphoreHandle_t settings_state_night_mutex = NULL;            // Night state settings
@@ -59,6 +60,7 @@ const int daylight_offset_sec = 3600;            // Daylight savings time in sec
 
 bool lock_valve_move = 0;                       // Variable for skipping valve move when already moving
 bool pb_toggle = false;
+bool ap_active = 0;
 
 //Date time data from RTC
 String yearStr = "";

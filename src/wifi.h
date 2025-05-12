@@ -8,6 +8,7 @@
 
 #include "globals.h"
 #include "config_files.h"
+#include "i2c.h"
 
 //Function definitions
 void config_wifi(void);

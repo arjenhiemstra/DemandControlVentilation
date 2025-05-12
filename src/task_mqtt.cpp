@@ -8,18 +8,30 @@ void start_task_mqtt(void) {
 
 }
 
-void task_mqtt_code(void * pvParameters)
-{
+void task_mqtt_code(void * pvParameters) {
+    
     for(;;) {
-        Serial.print("\nUpdate MQTT....");
-        publish_sensor_data();
-        publish_avg_sensor_data();
-        publish_valve_positions();
-        publish_uptime();
-        publish_state();
-        publish_fanspeed();
-        Serial.print("\nMQTT update done");
+        
+        bool ap_active_temp=0;
+        
+        if (ap_active_mutex != NULL) {
+            if(xSemaphoreTake(ap_active_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+                ap_active_temp = ap_active;
+                xSemaphoreGive(ap_active_mutex);
+            }
+        }
+        
+        if (WiFi.waitForConnectResult() == WL_CONNECTED && ap_active_temp == 0) {
+            Serial.print("\nUpdate MQTT....");
+            publish_sensor_data();
+            publish_avg_sensor_data();
+            publish_valve_positions();
+            publish_uptime();
+            publish_state();
+            publish_fanspeed();
+            Serial.print("\nMQTT update done");
+            //vTaskDelay(20000);
+        }
         vTaskDelay(20000);
     }
-  
 }
