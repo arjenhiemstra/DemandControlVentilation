@@ -1,4 +1,4 @@
-#include "wifi.h"
+#include "wifi_config.h"
 
 //open config file and check if SSID and password are not empty
 //if empty start WIFI as access point

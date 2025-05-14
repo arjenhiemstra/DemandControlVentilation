@@ -5,7 +5,7 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
-#include "wifi.h"
+#include "wifi_config.h"
 
 // function declarations
 void start_task_wifi(void);

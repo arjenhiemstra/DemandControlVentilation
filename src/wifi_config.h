@@ -1,5 +1,5 @@
-#ifndef WIFI_H
-#define WIFI_H
+#ifndef WIFI_CONFIG_H
+#define WIFI_CONFIG_H
 
 #include <Arduino.h>
 #include <LittleFS.h>
