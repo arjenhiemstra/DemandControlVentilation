@@ -316,6 +316,13 @@ void Taskwebcode(void *pvParameters) {
     request->send(LittleFS, "/html/settings.html", String(), false, settings_processor);
   });
 
+  //Reboot ESP32 button
+  server.on("/restart_esp32", HTTP_GET, [](AsyncWebServerRequest *request) {
+    //Request not required because the ESP32 will reboot
+    //request->send(LittleFS, "/html/settings.html", String(), false, settings_processor);
+    esp_restart();
+  });
+
   //Save settings from network settings
   server.on("/settings_network", HTTP_POST, [](AsyncWebServerRequest *request) {
     if (settings_network_mutex != NULL) {

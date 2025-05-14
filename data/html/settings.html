@@ -34,11 +34,16 @@
 
     <div id="main">
         <div class="header">
-            <h2>OSVentilation Settings Page</h2>
+            <h2>Settings</h2>
         </div>
 
         <div class="content">
             <h4 class="content-subhead">Network configuration - %STATUS_NETWORK_CONFIG%</h4>
+            <p>
+                <form method ="POST" action="/restart_esp32">
+                    <input type="submit" value="Restart ESP32">
+                </form>
+            </p>
             <p>
                 <form class="pure-form pure-form-stacked" method="POST" action="/settings_network">
                     <fieldset>
