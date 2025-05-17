@@ -1,0 +1,7 @@
+{
+    "fan_control_mode":"",
+    "fan_control_mqtt_topic":"",
+    "fan_control_url_high_speed":"",
+    "fan_control_url_medium_speed":"",
+    "fan_control_url_low_speed":""
+}

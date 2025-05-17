@@ -1,0 +1,6 @@
+{
+    "bus0_multiplexer_address":"",
+    "bus1_multiplexer_address":"",
+    "enable_lcd":"",
+    "display_i2c_address":""
+}
