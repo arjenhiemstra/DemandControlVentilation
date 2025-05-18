@@ -16,6 +16,8 @@
 
 #define TCAADDR 0x70                                                //TCA9548 address
 
+extern TaskHandle_t task_influxdb;
+
 extern SemaphoreHandle_t sensor_config_file_mutex;
 extern SemaphoreHandle_t valve_position_file_mutex;
 extern SemaphoreHandle_t valve_control_data_mutex;

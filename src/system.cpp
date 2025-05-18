@@ -12,12 +12,35 @@ void task_list(void) {
     Serial.print(ptrTaskList);
     Serial.println(F("**********************************"));*/
     
-    
+    /*
     char buffer1[2048] = {0};
     vTaskList(buffer1);
     Serial.println("\nTasklist: ");
     Serial.println(buffer1);
     Serial.println("\n");
-    vTaskDelay(10000);
+    vTaskDelay(10000);*/
+
+    UBaseType_t uxHighWaterMark;
+    size_t free_heap_size;
+    size_t minimum_ever_free_heap_size;
+    
+    uxHighWaterMark = uxTaskGetStackHighWaterMark(task_influxdb);
+    Serial.print("\nInfluxdb highwatermark: ");
+    Serial.print(uxHighWaterMark);
+
+    free_heap_size = xPortGetFreeHeapSize();
+    Serial.print("\nFree heap size: ");
+    Serial.print(free_heap_size);
+
+    minimum_ever_free_heap_size = xPortGetMinimumEverFreeHeapSize();
+    Serial.print("\nMinimum ever free heap size: ");
+    Serial.print(minimum_ever_free_heap_size);
+
+    //HeapStats_t xHeapStats;
+    //vPortGetHeapStats(&xHeapStats);
+
+    //printf("Available heap space: %u\n", xHeapStats.xAvailableHeapSpaceInBytes);
+    //printf("Number of allocations: %u\n", xHeapStats.xNumberOfSuccessfulAllocations);
+    //printf("Number of frees: %u\n", xHeapStats.xNumberOfSuccessfulFrees);
 
 }

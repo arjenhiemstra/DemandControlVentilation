@@ -1,6 +1,6 @@
 #include "task_influxdb.h"
 
-TaskHandle_t task_influxdb;
+
 
 void start_task_influxdb(void) {
 

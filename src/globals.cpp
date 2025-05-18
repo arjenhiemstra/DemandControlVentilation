@@ -1,5 +1,7 @@
 #include "globals.h"
 
+TaskHandle_t task_influxdb;
+
 SemaphoreHandle_t sensor_config_file_mutex = NULL;              // Sensor configuration files
 SemaphoreHandle_t valve_position_file_mutex = NULL;             // Valve position file
 SemaphoreHandle_t valve_control_data_mutex = NULL;              // Valve control data variable
