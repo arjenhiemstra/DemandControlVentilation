@@ -27,6 +27,7 @@ void task_influxdb_code(void * pvParameters)
             write_system_uptime();
             write_state_info();
             write_fanspeed();
+            write_heap_info();
         }
     } 
 }

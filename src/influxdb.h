@@ -21,5 +21,6 @@ void write_valve_position_data(void);
 void write_system_uptime(void);
 void write_state_info(void);
 void write_fanspeed(void);
+void write_heap_info(void);
 
 #endif

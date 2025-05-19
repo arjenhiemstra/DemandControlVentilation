@@ -12,8 +12,8 @@ void write_sensor_data(void) {
     
         // Check server connection. Only write data when connected.
         if (client.validateConnection()) {
-            Serial.print("\nConnected to InfluxDB: ");
-            Serial.print(client.getServerUrl());
+            //Serial.print("\nConnected to InfluxDB: ");
+            //Serial.print(client.getServerUrl());
     
             Serial.print("\nWriting sensor data to influxDB.");
             for (int i = 0; i < 2; i++) {
@@ -64,8 +64,8 @@ void write_avg_sensor_data(void) {
     if (xQueuePeek(sensor_avg_queue, &queue_avg_sensor_data, 0) == pdTRUE) {     
         // Check server connection. Only write data when connected.
         if (client.validateConnection()) {
-            Serial.print("\nConnected to InfluxDB: ");
-            Serial.print(client.getServerUrl());
+            //Serial.print("\nConnected to InfluxDB: ");
+            //Serial.print(client.getServerUrl());
     
             Serial.print("\nWriting average sensor data to influxDB.");
             for (int i = 0; i < 2; i++) {
@@ -278,35 +278,53 @@ void write_fanspeed(void) {
 
 void write_heap_info(void) {
 
-    UBaseType_t influxdb_hwm;
-    UBaseType_t i2c_hwm;
-    UBaseType_t mqtt_hwm;
-    UBaseType_t np_hwm;
-    UBaseType_t statemach_hwm;
-    UBaseType_t sys_hwm;
-    UBaseType_t valvectrl_hwm;
-    UBaseType_t web_hwm;
-    UBaseType_t wifi_hwm;
+    int influxdb_hwm;
+    int i2c_hwm;
+    int mqtt_hwm;
+    int np_hwm;
+    int statemach_hwm;
+    int sys_hwm;
+    int valvectrl_hwm;
+    int web_hwm;
+    int wifi_hwm;
 
-    size_t free_heap_size;
-    size_t minimum_ever_free_heap_size;
-    size_t available_heap_space_bytes;
+    int free_heap_size;
+    int minimum_ever_free_heap_size;
+    int available_heap_space_bytes;
     
-    influxdb_hwm = uxTaskGetStackHighWaterMark(task_influxdb);
-    i2c_hwm = uxTaskGetStackHighWaterMark(task_i2c);
-    mqtt_hwm = uxTaskGetStackHighWaterMark(task_mqtt);
-    np_hwm = uxTaskGetStackHighWaterMark(task_np);
-    statemach_hwm = uxTaskGetStackHighWaterMark(task_statemach);
-    sys_hwm = uxTaskGetStackHighWaterMark(task_sys);
-    valvectrl_hwm = uxTaskGetStackHighWaterMark(task_valvectrl);
-    web_hwm = uxTaskGetStackHighWaterMark(h_Task_web);
-    wifi_hwm = uxTaskGetStackHighWaterMark(task_wifi);
+    if (task_influxdb != NULL) {
+        influxdb_hwm = uxTaskGetStackHighWaterMark(task_influxdb);
+    }
+    if (task_i2c != NULL) {
+        i2c_hwm = uxTaskGetStackHighWaterMark(task_i2c);
+    }
+    if (task_mqtt != NULL) {
+        mqtt_hwm = uxTaskGetStackHighWaterMark(task_mqtt);
+    }
+    if (task_np != NULL) {
+        np_hwm = uxTaskGetStackHighWaterMark(task_np);
+    }
+    if (task_statemach != NULL) {
+        statemach_hwm = uxTaskGetStackHighWaterMark(task_statemach);
+    }
+    if (task_sys != NULL) {
+        sys_hwm = uxTaskGetStackHighWaterMark(task_sys);
+    }
+    if (task_valvectrl != NULL) {
+        valvectrl_hwm = uxTaskGetStackHighWaterMark(task_valvectrl);
+    }
+    if (h_Task_web != NULL) {
+        web_hwm = uxTaskGetStackHighWaterMark(h_Task_web);
+    }
+    if (task_wifi != NULL) {
+        wifi_hwm = uxTaskGetStackHighWaterMark(task_wifi);
+    }
 
-    Serial.print("\nTask\t\tHigh water mark");
-    Serial.print("\ntask_influxdb\t\t"); Serial.print(influxdb_hwm);
+    Serial.print("\nTask\t\t\tHigh water mark");
+    Serial.print("\ntask_influxdb\t\t"); Serial.print(influxdb_hwm);    
     Serial.print("\ntask_i2c\t\t"); Serial.print(i2c_hwm);
     Serial.print("\ntask_mqtt\t\t"); Serial.print(mqtt_hwm);
-    Serial.print("\ntask_np\t\t"); Serial.print(np_hwm);
+    Serial.print("\ntask_np\t\t\t"); Serial.print(np_hwm); 
     Serial.print("\ntask_statemach\t\t"); Serial.print(statemach_hwm);
     Serial.print("\ntask_sys\t\t"); Serial.print(sys_hwm);
     Serial.print("\ntask_valvectrl\t\t"); Serial.print(valvectrl_hwm);

@@ -2,7 +2,7 @@
 
 void start_task_neopixel(void) {
 
-    xTaskCreate(task_neopixel_code, "tasknp", 30000, NULL, 6, &task_np);
+    xTaskCreate(task_neopixel_code, "tasknp", 35000, NULL, 6, &task_np);
 
 }
 
