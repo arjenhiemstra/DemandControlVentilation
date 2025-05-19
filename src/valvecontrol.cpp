@@ -169,8 +169,8 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
     int cycles = 24;        //the number if cycles to complete one rotation of the shaft
 
     //switching pattern for steppermotor in 8 bits.
-    int pattern1[4] = { B00000101, B00001001, B00001010, B00000110 };
-    int pattern2[4] = { B01010000, B10010000, B10100000, B01100000 };
+    int pattern1[4] = { 0b00000101, 0b00001001, 0b00001010, 0b00000110 };
+    int pattern2[4] = { 0b01010000, 0b10010000, 0b10100000, 0b01100000 };
 
     // Disable valve moving when valves are already moving
     if (lock_valve_move_mutex != NULL) {

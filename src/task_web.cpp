@@ -1,7 +1,5 @@
 #include "task_web.h"
 
-TaskHandle_t h_Task_web;
-
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
 

@@ -7,12 +7,7 @@ String sensor_config_processor(const String& var) {
     const char* status;
     bool sensor_config_file1_present;
     bool sensor_config_file2_present;
-
-    /*if (var == "WIRE_SENSOR_CONFIG")
-        return (wire_sensor_config_string);
-    if (var == "WIRE1_SENSOR_CONFIG")
-        return (wire1_sensor_config_string);*/
-    
+   
     sensor_config_file1_present = check_file_exists(path1);
 
     if(sensor_config_file1_present == 1) {

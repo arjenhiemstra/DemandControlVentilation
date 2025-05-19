@@ -1,7 +1,5 @@
 #include "task_influxdb.h"
 
-TaskHandle_t task_influxdb;
-
 void start_task_influxdb(void) {
 
     xTaskCreate(task_influxdb_code, "task_influxdb", 10000, NULL, 3, &task_influxdb);
@@ -29,6 +27,7 @@ void task_influxdb_code(void * pvParameters)
             write_system_uptime();
             write_state_info();
             write_fanspeed();
+            write_heap_info();
         }
     } 
 }

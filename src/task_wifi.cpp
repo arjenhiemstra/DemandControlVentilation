@@ -1,7 +1,5 @@
 #include "task_wifi.h"
 
-TaskHandle_t task_wifi;
-
 void start_task_wifi(void) {
 
     xTaskCreate(task_wifi_code, "taskWifi", 10000, NULL, 1, &task_wifi);
