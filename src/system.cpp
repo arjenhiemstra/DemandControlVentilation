@@ -33,7 +33,7 @@ void task_list(void) {
 
     size_t free_heap_size;
     size_t minimum_ever_free_heap_size;
-    size_t available_heap_space_bytes
+    size_t available_heap_space_bytes;
     
     influxdb_hwm = uxTaskGetStackHighWaterMark(task_influxdb);
     i2c_hwm = uxTaskGetStackHighWaterMark(task_i2c);
@@ -57,9 +57,9 @@ void task_list(void) {
     Serial.print("\ntask_wifi\t\t"); Serial.print(wifi_hwm);
     Serial.print("\n");
 
-    available_heap_space_bytes = xAvailableHeapSpaceInBytes();
-    Serial.print("\nAvailble heap space (bytes): ");
-    Serial.print(available_heap_space_bytes);
+    //available_heap_space_bytes = xAvailableHeapSpaceInBytes();
+    //Serial.print("\nAvailble heap space (bytes): ");
+    //Serial.print(available_heap_space_bytes);
 
     free_heap_size = xPortGetFreeHeapSize();
     Serial.print("\nFree heap size: ");
