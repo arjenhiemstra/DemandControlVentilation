@@ -1,6 +1,14 @@
 #include "globals.h"
 
 TaskHandle_t task_influxdb;
+TaskHandle_t task_i2c;
+TaskHandle_t task_mqtt;
+TaskHandle_t task_np;
+TaskHandle_t task_statemach;
+TaskHandle_t task_sys;
+TaskHandle_t task_valvectrl;
+TaskHandle_t h_Task_web;
+TaskHandle_t task_wifi;
 
 SemaphoreHandle_t sensor_config_file_mutex = NULL;              // Sensor configuration files
 SemaphoreHandle_t valve_position_file_mutex = NULL;             // Valve position file

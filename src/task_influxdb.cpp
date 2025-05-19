@@ -1,7 +1,5 @@
 #include "task_influxdb.h"
 
-
-
 void start_task_influxdb(void) {
 
     xTaskCreate(task_influxdb_code, "task_influxdb", 10000, NULL, 3, &task_influxdb);
