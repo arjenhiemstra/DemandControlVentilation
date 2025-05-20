@@ -105,10 +105,21 @@ In these settings the LCD can be enabled and the address can be filled in. If en
 
 ### Valve Control
 
-Valve control - Calibration and control of the valves.
+From this page the valves can be calibrated and controlled. The valves have no means of giving feedback on their position. If the valves are operated beyond their full closed position the connection between the shaft and the rubber will run off the shaft and the valve can't be controlled anymore. If the valve is fully open and operated further open, the device which connects the shaft with the rubber will be pulled out of the rubber and control of the valve is no longer possible. I have not experienced it will damage the valves. The operating range is defined between 0 (fully closed) and 24 (fully open). The valves can only move in steps of 1. This is a design choice and I think there is no necessity for a finer control but it can be done and requires changes to the code.
+
+To keep the valves within their operating range, the position is recorded on the flash storage as a JSON file. The structure is:
+
+{<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"valve0":0,<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"valve11":0<br>
+}
+
+When the default configuration file is generated all valve position will be zero. If in reality the valve are not in the zero position, one can either remove the rubber and adjust he valves but also this webpage can be used to move the valves to the zero position without storing the positions in the microcontroller. In this way the position of the valves can be calibrated in line with the default file. If, for some reason, the valves need to be moved without losing the calibration, one can als tick the checkbox to store the position in flash. When normal operation then resumes, the valves are also moved back to the position according to the operating mode, see also section "statemachine". This page also has a checkbox to check if the valve operates within in limits when manually moved. The valve will still move but not beyond their limits.
+
+See also commissioning section. When the controller is delivered there is no configuration file yet for the valves. With the button on the page this config file can be created. The settings 
 
 <img src="images/valvecontrol1.png" width="50%" height="50%">
-
 <img src="images/valvecontrol2.png" width="50%" height="50%">
 
 ### Sensors
@@ -116,7 +127,6 @@ Valve control - Calibration and control of the valves.
 Sensor settings.
 
 <img src="images/sensors1.png" width="50%" height="50%">
-
 <img src="images/sensors2.png" width="50%" height="50%">
 
 ### Statemachine
@@ -124,7 +134,6 @@ Sensor settings.
 Settings for the statemachine.
 
 <img src="images/statemachine1.png" width="50%" height="50%">
-
 <img src="images/statemachine2.png" width="50%" height="50%">
 
 ## InfluxDB Data Structure
