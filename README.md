@@ -28,6 +28,9 @@ The hardware design is based on common electronic parts. The basis of the design
 * Operation of sensors on 5V or 3.3V. Data communication always on 3.3V
 * MOSFET output drivers for low on state resistance. Alternatively ULN2803 could used as well (pin compatible)
 
+### Valve control design
+Steppermotor, pattern etc etc
+
 ## Software design
 The software is written in PlatformIO with the standard Arduino framework for ESP32 and ESP32-S3. Few additional libraries are required for web interface, MQTT, InfluxDB, sensors, RGB LEDS, displays and RTC.
 
