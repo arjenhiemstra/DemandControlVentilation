@@ -70,14 +70,14 @@ The library LiquidChristal_I2C is fixed to Wire interface. The display is connec
 
 This is the root page providing an overview of the sensor readings.
 
-![](images/status.png)
+<img src="images/status.png" width="50%" height="50%">
 
 ### Settings
 
-General settings for the system.
+Overview of the settings page. Each section of the settings page is detailed below.
 
-![](images/settings1.png)
-![](images/settings2.png)
+<img src="images/settings1.png" width="50%" height="50%">
+<img src="images/settings2.png" width="50%" height="50%">
 
 #### Network settings
 With empty settings the controller will start as an access point. With a mobile phone or tablet a WIFI connection can be made to "OSVENTILATION-WIFI". Once connected the webinterface can be reached on http://192.168.4.1
@@ -106,22 +106,22 @@ In these settings the LCD can be enabled and the address can be filled in. If en
 
 Valve control - Calibration and control of the valves.
 
-![](images/valvecontrol1.png)
-![](images/valvecontrol2.png)
+<img src="images/valvecontrol1.png" width="50%" height="50%">
+<img src="images/valvecontrol2.png" width="50%" height="50%">
 
 ### Sensors
 
 Sensor settings.
 
-![](images/sensors1.png)
-![](images/sensors2.png)
+<img src="images/sensors1.png" width="50%" height="50%">
+<img src="images/sensors2.png" width="50%" height="50%">
 
 ### Statemachine
 
 Settings for the statemachine.
 
-![](images/statemachine1.png)
-![](images/statemachine2.png)
+<img src="images/statemachine1.png" width="50%" height="50%">
+<img src="images/statemachine2.png" width="50%" height="50%">
 
 ## InfluxDB Data Structure
 
