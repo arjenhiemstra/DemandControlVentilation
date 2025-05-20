@@ -120,6 +120,9 @@ Sensor settings.
 
 Settings for the statemachine.
 
+![](images/statemachine1.png)
+![](images/statemachine2.png)
+
 ## InfluxDB Data Structure
 
 In the settings file the bucket can be configure. In this bucket the following structure wiull be used:
