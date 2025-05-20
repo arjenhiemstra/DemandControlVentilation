@@ -77,6 +77,7 @@ This is the root page providing an overview of the sensor readings.
 Overview of the settings page. Each section of the settings page is detailed below.
 
 <img src="images/settings1.png" width="50%" height="50%">
+
 <img src="images/settings2.png" width="50%" height="50%">
 
 #### Network settings
@@ -107,6 +108,7 @@ In these settings the LCD can be enabled and the address can be filled in. If en
 Valve control - Calibration and control of the valves.
 
 <img src="images/valvecontrol1.png" width="50%" height="50%">
+
 <img src="images/valvecontrol2.png" width="50%" height="50%">
 
 ### Sensors
@@ -114,6 +116,7 @@ Valve control - Calibration and control of the valves.
 Sensor settings.
 
 <img src="images/sensors1.png" width="50%" height="50%">
+
 <img src="images/sensors2.png" width="50%" height="50%">
 
 ### Statemachine
@@ -121,6 +124,7 @@ Sensor settings.
 Settings for the statemachine.
 
 <img src="images/statemachine1.png" width="50%" height="50%">
+
 <img src="images/statemachine2.png" width="50%" height="50%">
 
 ## InfluxDB Data Structure
@@ -170,8 +174,6 @@ Measurement and fields:
         * valve0
         * ...
         * valve11
-
-
 
 ## Comissioning and initial startup
 
