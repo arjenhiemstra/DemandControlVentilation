@@ -70,9 +70,14 @@ The library LiquidChristal_I2C is fixed to Wire interface. The display is connec
 
 This is the root page providing an overview of the sensor readings.
 
+![](images/status.png)
+
 ### Settings
 
 General settings for the system.
+
+![](images/settings1.png)
+![](images/settings2.png)
 
 #### Network settings
 With empty settings the controller will start as an access point. With a mobile phone or tablet a WIFI connection can be made to "OSVENTILATION-WIFI". Once connected the webinterface can be reached on http://192.168.4.1
@@ -101,17 +106,19 @@ In these settings the LCD can be enabled and the address can be filled in. If en
 
 Valve control - Calibration and control of the valves.
 
+![](images/valvecontrol1.png)
+![](images/valvecontrol2.png)
+
 ### Sensors
 
 Sensor settings.
 
+![](images/sensors1.png)
+![](images/sensors2.png)
+
 ### Statemachine
 
 Settings for the statemachine.
-
-
-
-
 
 ## InfluxDB Data Structure
 
