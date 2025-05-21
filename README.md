@@ -31,6 +31,8 @@ The hardware design is based on common electronic parts. The basis of the design
 ### Valve control design
 Steppermotor, pattern etc etc
 
+<img src="images/status.png" width="50%" height="50%">
+
 ## Software design
 The software is written in PlatformIO with the standard Arduino framework for ESP32 and ESP32-S3. Few additional libraries are required for web interface, MQTT, InfluxDB, sensors, RGB LEDS, displays and RTC.
 
