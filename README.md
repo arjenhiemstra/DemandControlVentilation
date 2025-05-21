@@ -29,9 +29,21 @@ The hardware design is based on common electronic parts. The basis of the design
 * MOSFET output drivers for low on state resistance. Alternatively ULN2803 could used as well (pin compatible)
 
 ### Valve control design
-Steppermotor, pattern etc etc
+The valves are steppermotors with 4 windings and two windings have a common connection. The common connection is connected to +15V and the 4 other winding connections are connected with a MOSFET. By turning on the MOSFET, the windings can be individually energised. The winding voltage is 12V and taking a voltage drop over de MOSFET into account, 15V is an appropriate voltage. The circuit of one valve is outlined below. 
 
-<img src="images/status.png" width="50%" height="50%">
+<center><img src="images/valve_control_circuit.png" width="50%" height="50%"></center>
+
+Pin 1 of the winding is connected to Q0 of the 74595, pin 2 of the winding is connected to Q1, pin5 to Q2 and pin 6 to Q3. The corresponding pattern to close the valve is  0101, 1001, 1010, 0110. Because the 74595 controls two motors, the pattern for controlling the first motor is  00000101, 00001001, 00001010, 00000110 assuming sending MSB first.
+
+The ESP32 has two circuits to control 2 sets of 3 74595 IC's. Three 74595 can control 6 valves. To control all 6 valves at once, the Shiftout (availble in the Arduino framework, https://docs.arduino.cc/language-reference/en/functions/advanced-io/shiftOut/) should be called three time with MSB first for each step of the motor. To reverse the motor the same pattern is used but then in reverse order.
+
+### I2C Design
+
+The controller used both default I2C busses (Wire, Wire1) on custom pins on the EP32(-S3). On controller bus0 is connected to Wire and bus1 is connected to Wire1. Because most sensors have fixed I2C addresses, an multiplexer is required to connect more than one sensor to the same I2C bus. The multiplexer is a TCA9548A, a very common I2C multiplexer. The RTC is connected to bus 0 (Wire) and the LCD to bus1 (Wire1). The multiplexer, LCD and RTC have an adjustable I2C address so this configuration should never lead to an address conflict for devices on the I2C bus.
+
+To set the I2C address of the multiplexers, 6 resistor pad (R./R./R./R./R/R. for bus 0 and R./R./R./R./R/R. for bus 1) are available to solder 0Ohm 0805 size resistors on (or a wire). Refer to the datasheet of the multiplexer: https://www.ti.com/lit/ds/symlink/tca9548a.pdf. Default is is that the A0,A1,A2 are connected to GND which gives the I2C address of 0x70. This is at the moment hardcoded in the software (globals.h).
+
+Most sensors and other I2C devices have internal pull-up resistors but if this is not the case, the controller has the option to install the pull-up resistors to SDA and SCL. The multiplexer allow also the use of sensors on +5V and 3.3V. The selection is done with a jumper on the controller. There are 4 voltage selection jumpers on the controller and each jumper control the voltage 4 sensors, e.g. bus0, sensors 0,1,2,3.
 
 ## Software design
 The software is written in PlatformIO with the standard Arduino framework for ESP32 and ESP32-S3. Few additional libraries are required for web interface, MQTT, InfluxDB, sensors, RGB LEDS, displays and RTC.
