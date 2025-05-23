@@ -9,8 +9,8 @@ void publish_sensor_data(void) {
     char topic[200];
     char sensor_value[8];
     float queue_sensor_data[2][8][3];
-    int bus;
-    int slot;
+    //int bus;
+    //int slot;
 
     Serial.print("\nPublish sensor data.");
     if (xQueuePeek(sensor_queue, &queue_sensor_data, 0 ) == pdTRUE) {  

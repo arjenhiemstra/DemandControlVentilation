@@ -6,8 +6,8 @@ void sensor_config_data_read() {
     const char* path1 = "/json/sensor_config1.json";
     const char* path2 = "/json/sensor_config2.json";
     
-    String sensor_config1_string;
-    String sensor_config2_string;
+    String sensor_config1_string = "";
+    String sensor_config2_string = "";
 
     bool sensor_config1_file_present = 0;
     bool sensor_config2_file_present = 0;
@@ -15,7 +15,7 @@ void sensor_config_data_read() {
     if (sensor_config_file_mutex != NULL) {
         if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             sensor_config1_file_present = check_file_exists(path1);
-            if (sensor_config1_file_present = 1) {
+            if (sensor_config1_file_present == 1) {
                 File file = LittleFS.open(path1, "r");
                 while(file.available()) {
                     sensor_config1_string = file.readString();
@@ -30,7 +30,7 @@ void sensor_config_data_read() {
     if (sensor_config_file_mutex != NULL) {
         if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             sensor_config2_file_present = check_file_exists(path2);
-            if (sensor_config2_file_present = 1) {
+            if (sensor_config2_file_present == 1) {
                 File file = LittleFS.open(path2, "r");
                 while(file.available()) {
                     sensor_config2_string = file.readString();
@@ -283,7 +283,7 @@ String read_config_file(const char* path) {
 
     File file = LittleFS.open(path, "r");
     String valve_positions;
-    int i;
+    //int i;
 
     while(file.available()) {
         valve_positions = file.readString();

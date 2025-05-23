@@ -233,7 +233,7 @@ String status_processor(const String& var) {
 
     /*Valve positions part of processor*/
     const char* path = "/json/valvepositions.json";
-    const char* status;
+    //const char* status;
     bool status_file_present;
     
     String json;
@@ -420,19 +420,19 @@ String settings_processor(const String& var) {
     const char* settings_i2c_path = "/json/settings_i2c.json";
     const char* settings_fan_path = "/json/settings_fan.json";
     const char* settings_statemachine_path = "/json/settings_statemachine.json";
-    const char* status;
+    const char* status = "";
     
-    bool settings_network_file_present;
-    bool settings_mqtt_file_present;
-    bool settings_i2c_file_present;
-    bool settings_fan_file_present;
-    bool settings_statemachine_file_present;
+    bool settings_network_file_present = 0;
+    bool settings_mqtt_file_present = 0;
+    bool settings_i2c_file_present = 0;
+    bool settings_fan_file_present = 0;
+    bool settings_statemachine_file_present = 0;
 
-    String settings_network_json;
-    String settings_mqtt_json;
-    String settings_i2c_json;
-    String settings_fan_json;
-    String settings_statemachine_json;
+    String settings_network_json = "";
+    String settings_mqtt_json = "";
+    String settings_i2c_json = "";
+    String settings_fan_json = "";
+    String settings_statemachine_json = "";
     
     JsonDocument settings_network_doc;
     JsonDocument settings_mqtt_doc;
@@ -634,7 +634,7 @@ String settings_valve_state(const String& var) {
   
     /*Day state*/
     settings_state_day_present = check_file_exists(settings_state_day_path);
-    if (settings_state_night_present = 1) {
+    if (settings_state_day_present == 1) {
         status = "<font color=\"green\">Settings ok.</font>";
         if (var == "STATUS_STATE_DAY_CONFIG") 
             return F(status);
@@ -676,7 +676,7 @@ String settings_valve_state(const String& var) {
 
     /*Night state*/
     settings_state_night_present = check_file_exists(settings_state_night_path);
-    if (settings_state_night_present = 1) {
+    if (settings_state_night_present == 1) {
         status = "<font color=\"green\">Settings Ok.</font>";
         if (var == "STATUS_STATE_NIGHT_CONFIG") 
             return F(status);
@@ -718,7 +718,7 @@ String settings_valve_state(const String& var) {
 
     /*High CO2 day state*/
     settings_state_highco2day_present = check_file_exists(settings_state_highco2day_path);
-    if (settings_state_highco2day_present = 1) {
+    if (settings_state_highco2day_present == 1) {
         status = "<font color=\"green\">Settings Ok.</font>";
         if (var == "STATUS_STATE_HIGHCO2DAY_CONFIG") 
             return F(status);
@@ -760,7 +760,7 @@ String settings_valve_state(const String& var) {
 
     /*High CO2 night state*/
     settings_state_highco2night_present = check_file_exists(settings_state_highco2night_path);
-    if (settings_state_highco2night_present = 1) {
+    if (settings_state_highco2night_present == 1) {
         status = "<font color=\"green\">Settings ok.</font>";
         if (var == "STATUS_STATE_HIGHCO2NIGHT_CONFIG") 
             return F(status);
@@ -802,7 +802,7 @@ String settings_valve_state(const String& var) {
 
     /*High RH day state*/
     settings_state_highrhday_present = check_file_exists(settings_state_highrhday_path);
-    if (settings_state_highrhday_present = 1) {
+    if (settings_state_highrhday_present == 1) {
         status = "<font color=\"green\">Settings ok.</font>";
         if (var == "STATUS_STATE_HIGHRHDAY_CONFIG") 
             return F(status);
@@ -844,7 +844,7 @@ String settings_valve_state(const String& var) {
 
     /*High RH night state*/
     settings_state_highrhnight_present = check_file_exists(settings_state_highrhnight_path);
-    if (settings_state_highrhnight_present = 1) {
+    if (settings_state_highrhnight_present == 1) {
         status = "<font color=\"green\">Settings ok.</font>";
         if (var == "STATUS_STATE_HIGHRHNIGHT_CONFIG") 
             return F(status);
@@ -886,7 +886,7 @@ String settings_valve_state(const String& var) {
 
     /*Cooking state*/
     settings_state_cooking_present = check_file_exists(settings_state_cooking_path);
-    if (settings_state_cooking_present = 1) {
+    if (settings_state_cooking_present == 1) {
         status = "<font color=\"green\">Settings ok.</font>";
         if (var == "STATUS_STATE_COOKING_CONFIG") 
             return F(status);
@@ -928,7 +928,7 @@ String settings_valve_state(const String& var) {
 
     /*Valve cycling day state*/
     settings_state_cyclingday_present = check_file_exists(settings_state_cyclingday_path);
-    if (settings_state_cyclingday_present = 1) {
+    if (settings_state_cyclingday_present == 1) {
         status = "<font color=\"green\">Settings ok.</font>";
         if (var == "STATUS_STATE_CYCLINGDAY_CONFIG") 
             return F(status);
@@ -970,7 +970,7 @@ String settings_valve_state(const String& var) {
 
     /*Valve cycling night state*/
     settings_state_cyclingnight_present = check_file_exists(settings_state_cyclingnight_path);
-    if (settings_state_cyclingnight_present = 1) {
+    if (settings_state_cyclingnight_present == 1) {
         status = "<font color=\"green\">Settings ok.</font>";
         if (var == "STATUS_STATE_CYCLINGNIGHT_CONFIG") 
             return F(status);

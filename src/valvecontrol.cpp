@@ -4,25 +4,25 @@
 void move_valve(void) {
 
     //Temporary variables used after selection of I/O
-    int clockPin;
-    int latchPin;
-    int dataPin;
+    int clockPin = 0;
+    int latchPin = 0;
+    int dataPin = 0;
 
     const char* path = "/json/valvepositions.json";
     
-    bool status_file_present;
+    bool status_file_present = 0;
     
-    int valve_number;
-    int direction;
-    int valve_pos;
-    int valve_position_change;
-    int new_valve_position_change;
-    int new_valve_position;
-    int store_valve_position;
-    int check_valve_position;
+    int valve_number = 0;
+    int direction = 0;
+    int valve_pos = 0;
+    int valve_position_change = 0;
+    int new_valve_position_change = 0;
+    int new_valve_position = 0;
+    int store_valve_position = 0;
+    int check_valve_position = 0;
     
-    String json;
-    String new_valve_positions;
+    String json = "";
+    String new_valve_positions = "";
 
     JsonDocument doc;
     
@@ -329,7 +329,7 @@ Data structure for each JSON valve_control_data Structure
     if (settings_state_day_mutex != NULL) {
         if(xSemaphoreTake(settings_state_day_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             state_valve_pos_file_present = check_file_exists(state_valve_pos_path.c_str());
-            if (state_valve_pos_file_present = 1) {
+            if (state_valve_pos_file_present == 1) {
         
                 File file = LittleFS.open(state_valve_pos_path, "r");
         
@@ -347,7 +347,7 @@ Data structure for each JSON valve_control_data Structure
 
     if (valve_position_file_mutex != NULL) {
         if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
-            if (status_file_present = 1) {
+            if (status_file_present == 1) {
                 actual_valve_pos_json = read_config_file(actual_valve_pos_path);
             }
             xSemaphoreGive(valve_position_file_mutex);

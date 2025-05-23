@@ -91,9 +91,9 @@ void run_statemachine(void) {
 
 void init_transitions(void) {
 
-    String temp_day_of_week;
-    String temp_fanspeed;
-    int temp_hour;
+    String temp_day_of_week = "";
+    String temp_fanspeed = "";
+    int temp_hour = 0;
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
@@ -139,10 +139,10 @@ void init_transitions(void) {
 
 void day_transitions(void) {
 
-    String temp_fanspeed;
+    String temp_fanspeed = "";
     String statemachine_state = "day";
-    int temp_hour;
-    bool valve_move_locked;
+    int temp_hour = 0;
+    bool valve_move_locked = 0;
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
@@ -218,10 +218,10 @@ void day_transitions(void) {
 void night_transitions(void) {
 
     String statemachine_state = "night";
-    String temp_fanspeed;
-    String temp_day_of_week;
-    int temp_hour;
-    bool valve_move_locked;
+    String temp_fanspeed = "";
+    String temp_day_of_week = "";
+    int temp_hour = 0;
+    bool valve_move_locked = 0;
     
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
@@ -297,9 +297,9 @@ void night_transitions(void) {
 void high_co2_day_transitions(void) {
 
     String statemachine_state = "highco2day";
-    String temp_fanspeed;
-    int temp_hour;
-    bool valve_move_locked;
+    String temp_fanspeed = "";
+    int temp_hour = 0;
+    bool valve_move_locked = 0;
 
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
@@ -360,10 +360,10 @@ void high_co2_day_transitions(void) {
 void high_co2_night_transitions(void) {
 
     String statemachine_state = "highco2night";
-    String temp_fanspeed;
-    String temp_day_of_week;
-    int temp_hour;
-    bool valve_move_locked;
+    String temp_fanspeed = "";
+    String temp_day_of_week = "";
+    int temp_hour = 0;
+    bool valve_move_locked = 0;
     
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
@@ -430,8 +430,8 @@ void high_rh_day_transitions(void) {
 
     String statemachine_state = "highrhday";
     String temp_fanspeed = "high";
-    int temp_hour;
-    bool valve_move_locked;
+    int temp_hour = 0;
+    bool valve_move_locked = 0;
 
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
@@ -492,10 +492,10 @@ void high_rh_day_transitions(void) {
 void high_rh_night_transitions(void) {
 
     String statemachine_state = "highrhnight";
-    String temp_fanspeed;
-    String temp_day_of_week;
-    int temp_hour;
-    bool valve_move_locked;
+    String temp_fanspeed = "";
+    String temp_day_of_week = "";
+    int temp_hour = 0;
+    bool valve_move_locked = 0;
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
@@ -561,8 +561,8 @@ void high_rh_night_transitions(void) {
 void cooking_transitions(void) {
 
     String statemachine_state = "cooking";
-    String temp_fanspeed;
-    bool valve_move_locked;
+    String temp_fanspeed = "";
+    bool valve_move_locked = 0;
 
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
@@ -612,8 +612,8 @@ void cooking_transitions(void) {
 void valve_cycle_day_transitions(void) {
 
     String statemachine_state = "cyclingday";
-    String temp_fanspeed;
-    bool valve_move_locked;
+    String temp_fanspeed = "";
+    bool valve_move_locked = 0;
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
@@ -671,8 +671,8 @@ void valve_cycle_day_transitions(void) {
 void valve_cycle_night_transitions(void) {
 
     String statemachine_state = "cyclingnight";
-    String temp_fanspeed;
-    bool valve_move_locked;
+    String temp_fanspeed = "";
+    bool valve_move_locked = 0;
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
@@ -732,7 +732,7 @@ void manual_high_speed_transitions(void) {
 
     String statemachine_state = "manual_high_speed";
     String fanspeed = "high";
-    bool valve_move_locked;
+    bool valve_move_locked = 0;
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
