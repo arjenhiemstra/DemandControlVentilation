@@ -56,8 +56,8 @@ void publish_avg_sensor_data(void) {
     char topic[200];
     char sensor_avg_value[8];
     float queue_sensor_avg_data[2][8][3];
-    int bus;
-    int slot;
+    //int bus;
+    //int slot;
 
     Serial.print("\nPublish sensor data.");
     if (xQueuePeek(sensor_avg_queue, &queue_sensor_avg_data, 0 ) == pdTRUE) {  
