@@ -21,6 +21,7 @@ void task_mqtt_code(void * pvParameters) {
         
         if (WiFi.waitForConnectResult() == WL_CONNECTED && ap_active_temp == 0) {
             Serial.print("\nUpdate MQTT....");
+            read_mqtt_config();
             publish_sensor_data();
             publish_avg_sensor_data();
             publish_valve_positions();

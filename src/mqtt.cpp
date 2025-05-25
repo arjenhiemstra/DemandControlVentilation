@@ -1,23 +1,51 @@
 #include "mqtt.h"
 
-WiFiClient ESP32Client;
-PubSubClient client(ESP32Client);
-    
+WiFiClient OSventilation;
+PubSubClient client(OSventilation);
+   
+void read_mqtt_config(void) {
+
+    const char* path = "/json/settings_mqtt.json";
+    String settings_mqtt_string = "";
+    bool settings_mqtt_file_present = 0;
+    JsonDocument settings_mqtt_doc;
+
+    if (settings_mqtt_mutex != NULL) {
+        if(xSemaphoreTake(settings_mqtt_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            settings_mqtt_file_present = check_file_exists(path);
+            if (settings_mqtt_file_present == 1) {
+                File file = LittleFS.open(path, "r");
+                while(file.available()) {
+                    settings_mqtt_string = file.readString();
+                }
+                file.close();
+                deserializeJson(settings_mqtt_doc, settings_mqtt_string);
+                
+                //Assign to global variable
+                enable_mqtt = settings_mqtt_doc[String("enable_mqtt")];
+                mqtt_server = settings_mqtt_doc[String("mqtt_server")];
+                mqtt_port = settings_mqtt_doc[String("mqtt_port")];
+                mqtt_base_topic = settings_mqtt_doc[String("mqtt_base_topic")];
+            }
+            xSemaphoreGive(settings_mqtt_mutex);
+        }
+    }
+}
+
+
 void publish_sensor_data(void) {
 
     String measurement;
     char topic[200];
     char sensor_value[8];
     float queue_sensor_data[2][8][3];
-    //int bus;
-    //int slot;
 
     Serial.print("\nPublish sensor data.");
     if (xQueuePeek(sensor_queue, &queue_sensor_data, 0 ) == pdTRUE) {  
        
         client.setServer(mqtt_server, mqtt_port);
 
-        if (client.connect("ESP32Client")) {
+        if (client.connect("OSventilation")) {
             for (int bus=0;bus<2;bus++) {
                 for (int slot=0;slot<8;slot++) {
                             
@@ -56,15 +84,13 @@ void publish_avg_sensor_data(void) {
     char topic[200];
     char sensor_avg_value[8];
     float queue_sensor_avg_data[2][8][3];
-    //int bus;
-    //int slot;
 
     Serial.print("\nPublish sensor data.");
     if (xQueuePeek(sensor_avg_queue, &queue_sensor_avg_data, 0 ) == pdTRUE) {  
        
         client.setServer(mqtt_server, mqtt_port);
 
-        if (client.connect("ESP32Client")) {
+        if (client.connect("OSventilation")) {
             for (int bus=0;bus<2;bus++) {
                 for (int slot=0;slot<8;slot++) {
                             
@@ -103,13 +129,33 @@ void publish_valve_positions(void) {
     char valve_pos[4];
     char valve_nr[10];
     char topic[100];
+    const char* mqtt_server_local;
+    int mqtt_port_local = 0;
+    
     bool status_file_present;
 
+    String mqtt_enable_local;
+    String mqtt_base_topic_local;
     String json;
     JsonDocument doc;
 
+    if (settings_mqtt_mutex != NULL) {
+        if(xSemaphoreTake(settings_mqtt_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            mqtt_enable_local = String(enable_mqtt);
+            mqtt_server_local = mqtt_server;
+            mqtt_port_local = mqtt_port;
+            mqtt_base_topic_local = String(mqtt_base_topic); 
+            xSemaphoreGive(settings_mqtt_mutex);
+        }
+    }
+
+    Serial.print(mqtt_enable_local);
+    Serial.print(mqtt_server_local);
+    Serial.print(mqtt_port_local);
+    Serial.print(mqtt_base_topic_local);
+
     Serial.print("\nPublish valve positions.");
-    client.setServer(mqtt_server, 1883); 
+    client.setServer(mqtt_server, mqtt_port); 
 
     if (valve_position_file_mutex != NULL) {
         if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
@@ -126,7 +172,7 @@ void publish_valve_positions(void) {
         }
     }
 
-    if (client.connect("ESP32Client")) {
+    if (client.connect("OSventilation")) {
         for (int i=0;i<12;i++){
             String valve_nr_str = "valve" + String(i);
             String valve_pos_str = doc[String(valve_nr_str)];
@@ -149,7 +195,7 @@ void publish_uptime(void) {
     Serial.print("\nPublish uptime.");
     client.setServer(mqtt_server, 1883);
     
-    if (client.connect("ESP32Client")) {
+    if (client.connect("OSventilation")) {
         topic="OSVentilation/system/uptime";
         (uptime_formatter::getUptime()).toCharArray(uptime,200);
         client.publish(topic,uptime);
@@ -175,7 +221,7 @@ void publish_fanspeed(void) {
         }
     }
 
-    if (client.connect("ESP32Client")) {
+    if (client.connect("OSventilation")) {
         temp_fanspeed.toCharArray(fan,20);
         topic="OSVentilation/status/fanspeed";
         client.publish(topic,fan);
@@ -200,7 +246,7 @@ void publish_state(void) {
     Serial.print("\nPublish statemachine state.");
     client.setServer(mqtt_server, 1883);
 
-    if (client.connect("ESP32Client")) {
+    if (client.connect("OSventilation")) {
         topic="OSVentilation/status/state";
         client.publish(topic,temp_state);
     }
