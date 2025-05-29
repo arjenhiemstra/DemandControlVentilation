@@ -57,6 +57,7 @@ void setup() {
 
   //setup_wifi();
   start_task_wifi();
+  read_mqtt_config(); 
   sensor_config_data_read();
   valve_settings_config_read();
   startTaskwebcode();

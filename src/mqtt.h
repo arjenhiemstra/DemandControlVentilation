@@ -20,7 +20,5 @@ void publish_valve_positions(void);
 void publish_uptime(void);
 void publish_fanspeed(void);
 void publish_state(void);
-/*void publish_queues(void);*/
-/*void subscribe(void);*/
 
 #endif

@@ -59,10 +59,10 @@ String wire_sensor_config_string = {};
 String wire1_sensor_config_string = {};
 
 //Settings for MQTT
-const char* enable_mqtt;
-const char* mqtt_server;
+String enable_mqtt;
+String mqtt_server;
 int mqtt_port = 0;
-const char* mqtt_base_topic;
+String mqtt_base_topic;
 
 //Settings for RTC
 RTC_DS3231 rtc;

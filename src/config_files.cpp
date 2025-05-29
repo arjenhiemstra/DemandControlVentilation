@@ -1,5 +1,46 @@
 #include "config_files.h"
 
+//Read mqtt config file and update global variables
+void read_mqtt_config(void) {
+
+    const char* path = "/json/settings_mqtt.json";
+    String settings_mqtt_string = "";
+    bool settings_mqtt_file_present = 0;
+    JsonDocument settings_mqtt_doc;
+
+    if (settings_mqtt_mutex != NULL) {
+        if(xSemaphoreTake(settings_mqtt_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            settings_mqtt_file_present = check_file_exists(path);
+            if (settings_mqtt_file_present == 1) {
+                File file = LittleFS.open(path, "r");
+                while(file.available()) {
+                    settings_mqtt_string = file.readString();
+                }
+                file.close();
+                deserializeJson(settings_mqtt_doc, settings_mqtt_string);
+            }
+            xSemaphoreGive(settings_mqtt_mutex);
+        }
+    }
+
+    String enable_mqtt_tmp = settings_mqtt_doc[String("enable_mqtt")];
+    String mqtt_server_tmp = settings_mqtt_doc[String("mqtt_server")];
+    String mqtt_port_tmp = settings_mqtt_doc[String("mqtt_port")];
+    String mqtt_base_topic_tmp = settings_mqtt_doc[String("mqtt_base_topic")];
+
+    if (settings_mqtt_mutex != NULL) {
+        if(xSemaphoreTake(settings_mqtt_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+                          
+            //Assign to global variable
+            enable_mqtt = enable_mqtt_tmp;
+            mqtt_server = mqtt_server_tmp;
+            mqtt_port = mqtt_port_tmp.toInt();
+            mqtt_base_topic = mqtt_base_topic_tmp;
+            xSemaphoreGive(settings_mqtt_mutex);
+        }
+    }
+}
+
 //Read both sensor config files an place contents in global variable
 void sensor_config_data_read() {
  

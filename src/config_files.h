@@ -8,6 +8,7 @@
 #include "globals.h"
 
 //Function definitions
+void read_mqtt_config(void);
 void valve_status_file_create(void);
 void delete_file(const char*);
 bool check_file_exists(const char*);
