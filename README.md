@@ -10,6 +10,8 @@ The basis for this design is:
 * The software must be open source
 * The hardware must be open source
 
+<center><img src="images/IMG_2136.JPG" width="100%" height="100%"></center>
+
 ## Hardware design
 The hardware design is based on common electronic parts. The basis of the design:
 * Microcontroller ESP32-S3 or ESP32. The design is with the ESP32-S3 soldered on the board but one could also choose to install an ESP32 microcontroller through the 30-pin interface
@@ -44,6 +46,20 @@ The controller used both default I2C busses (Wire, Wire1) on custom pins on the 
 To set the I2C address of the multiplexers, 6 resistor pad (R./R./R./R./R/R. for bus 0 and R./R./R./R./R/R. for bus 1) are available to solder 0Ohm 0805 size resistors on (or a wire). Refer to the datasheet of the multiplexer: https://www.ti.com/lit/ds/symlink/tca9548a.pdf. Default is is that the A0,A1,A2 are connected to GND which gives the I2C address of 0x70. This is at the moment hardcoded in the software (globals.h).
 
 Most sensors and other I2C devices have internal pull-up resistors but if this is not the case, the controller has the option to install the pull-up resistors to SDA and SCL. The multiplexer allow also the use of sensors on +5V and 3.3V. The selection is done with a jumper on the controller. There are 4 voltage selection jumpers on the controller and each jumper control the voltage 4 sensors, e.g. bus0, sensors 0,1,2,3.
+
+### Hardware options
+
+The controller has the following hardware options:
+* Either ESP32-S3-WROOM-1-16R8N CPU or 30 pins ESP32 module CPU
+* LCD display
+* External I2C RTC
+* Rechargeable 1220 size battery (charging circuit)
+* 2 Programmable RGB LEDs
+* 2 Programmable pushbuttons
+
+### Hardware overview
+
+<center><img src="images/ventilation.jpg" width="100%" height="100%"></center>
 
 ## Software design
 The software is written in PlatformIO with the standard Arduino framework for ESP32 and ESP32-S3. Few additional libraries are required for web interface, MQTT, InfluxDB, sensors, RGB LEDS, displays and RTC.
@@ -155,7 +171,7 @@ Settings for the statemachine.
 
 ## InfluxDB Data Structure
 
-In the settings file the bucket can be configure. In this bucket the following structure wiull be used:
+In the settings file the bucket can be configure. In this bucket the following structure will be used:
 
 Measurement and fields:
 * Sensors
@@ -193,17 +209,14 @@ Measurement and fields:
     * state
 * System
     * Uptime
-* System_stats
-    *
-* Valves
-    * position
-        * valve0
-        * ...
-        * valve11
+* position
+    * valve0
+    * ...
+    * valve11
 
 ## Comissioning and initial startup
 
-
+To be addded...
 
 
 
