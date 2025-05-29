@@ -2,8 +2,8 @@
 
 bool cooking_times(void) {
 
-    int temp_hour;
-    int temp_minute;
+    int temp_hour = 0;
+    int temp_minute = 0;
 
     if (date_time_mutex != NULL) {
         if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
@@ -23,8 +23,8 @@ bool cooking_times(void) {
 
 bool valve_cycle_times_day(void) {
 
-    int temp_hour;
-    int temp_minute;
+    int temp_hour = 0;
+    int temp_minute = 0;
 
     if (date_time_mutex != NULL) {
         if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
@@ -64,8 +64,8 @@ bool valve_cycle_times_day(void) {
 
 bool valve_cycle_times_night(void) {
 
-    int temp_hour;
-    int temp_minute;
+    int temp_hour = 0;
+    int temp_minute = 0;
 
     if (date_time_mutex != NULL) {
         if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {

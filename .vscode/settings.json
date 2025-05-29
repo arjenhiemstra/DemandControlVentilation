@@ -3,7 +3,7 @@
     "idf.openOcdConfigs": [
         "board/esp32s3-builtin.cfg"
     ],
-    "idf.port": "/dev/tty.usbmodemD83BDA4E0E901",
+    "idf.port": "/dev/ttyACM0",
     "idf.flashType": "JTAG",
     "C_Cpp.errorSquiggles": "disabled",
     "files.associations": {
@@ -17,5 +17,6 @@
         "initializer_list": "cpp",
         "regex": "cpp"
     },
-    "platformio-ide.pioHomeServerHttpHost": "0.0.0.0"
+    "platformio-ide.pioHomeServerHttpHost": "0.0.0.0",
+    "idf.pythonInstallPath": "/usr/bin/python3"
 }

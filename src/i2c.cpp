@@ -4,28 +4,28 @@ LiquidCrystal_I2C lcd(LCDADDR, LCD_COLUMNS, LCD_ROWS);
 
 void read_sensors(void) {
  
-    bool sensor_config_file_present;
+    bool sensor_config_file_present = 0;
 
-    const char* path;
+    //const char* path;
     float temp_sensor_data[2][8][3]= {0};
-    int bus=0;
+    int bus = 0;
 
-    String sensor_tmp;
-    String sensor_type_temp;
-    String sensor_address_temp;
+    String sensor_tmp = "";
+    String sensor_type_temp = "";
+    String sensor_address_temp = "";
         
     for(bus=0;bus<2;bus++) {
         
         if (bus==0) {
             Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
-            path = "/json/sensor_config1.json";
+            const char* path1 = "/json/sensor_config1.json";
+            sensor_config_file_present = check_file_exists(path1);
         }
         if (bus==1) {
             Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
-            path = "/json/sensor_config2.json";
+            const char* path2 = "/json/sensor_config2.json";
+            sensor_config_file_present = check_file_exists(path2);
         }
-        
-        sensor_config_file_present = check_file_exists(path);
         
         if(sensor_config_file_present == 1) {
             for (int slot=0;slot<8;slot++) {
@@ -58,7 +58,8 @@ void read_sensors(void) {
                     if (bus==0) {
                         DHT20 DHT1(&Wire);
                         DHT1.begin();
-                        int status = DHT1.read();                   
+                        //int status = DHT1.read(); 
+                        DHT1.read();                  
 
                         temp_sensor_data[bus][slot][0] = DHT1.getTemperature();
                         temp_sensor_data[bus][slot][1] = DHT1.getHumidity();
@@ -67,7 +68,8 @@ void read_sensors(void) {
                     if (bus==1) {
                         DHT20 DHT2(&Wire1);
                         DHT2.begin();
-                        int status = DHT2.read();                   
+                        //int status = DHT2.read();
+                        DHT2.read();
 
                         temp_sensor_data[bus][slot][0] = DHT2.getTemperature();
                         temp_sensor_data[bus][slot][1] = DHT2.getHumidity();
@@ -128,7 +130,7 @@ void read_sensors(void) {
                         uint16_t co2 = 0;
                         float temperature = 0.0f;
                         float humidity = 0.0f;
-                        bool isDataReady = false;
+                        //bool isDataReady = false;
         
                         error = SCD4X_1.readMeasurement(co2, temperature, humidity);
                         if (error) {
@@ -153,7 +155,7 @@ void read_sensors(void) {
                         uint16_t co2 = 0;
                         float temperature = 0.0f;
                         float humidity = 0.0f;
-                        bool isDataReady = false;
+                        //bool isDataReady = false;
         
                         error = SCD4X_2.readMeasurement(co2, temperature, humidity);
                         if (error) {
@@ -217,8 +219,8 @@ void display_sensors(void) {
     */
 
     float queue_sensor_data[2][8][3];        //local variable to store sensor data from queue
-    int slot = 0;
-    int bus = 0;
+    //int slot = 0;
+    //int bus = 0;
 
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
 
@@ -489,7 +491,7 @@ void sync_rtc_ntp(void) {
     Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
     rtc.begin(&Wire);
     
-    DateTime now = rtc.now();
+    //DateTime now = rtc.now();
 
     //configTime(gmt_offset_sec, daylight_offset_sec, ntp_server);  // Configure time with NTP server
     configTzTime("CET-1CEST,M3.5.0,M10.5.0/3", "pool.ntp.org");

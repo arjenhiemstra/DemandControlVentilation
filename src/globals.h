@@ -74,8 +74,10 @@ extern JsonDocument settings_state_cyclingnight;
 extern String wire_sensor_config_string;
 extern String wire1_sensor_config_string;
 
-extern const char* mqtt_server;
-extern const int mqtt_port;
+extern String enable_mqtt;
+extern String mqtt_server;
+extern int mqtt_port;
+extern String mqtt_base_topic;
 
 extern RTC_DS3231 rtc;
 extern const char* ntp_server;

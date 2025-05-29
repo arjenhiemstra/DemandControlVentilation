@@ -232,7 +232,6 @@ void write_state_info(void) {
         Serial.print("\nInfluxDB write failed: ");
         Serial.print(client.getLastErrorMessage());
     }
-
 }
 
 void write_fanspeed(void) {
@@ -249,7 +248,6 @@ void write_fanspeed(void) {
             xSemaphoreGive(fanspeed_mutex);
         }
     }
-
 
     //Need to translate fanspeed to number for easy processing in Grafana
     if (temp_fanspeed == "low") {
@@ -273,63 +271,12 @@ void write_fanspeed(void) {
         Serial.print("\nInfluxDB write failed: ");
         Serial.print(client.getLastErrorMessage());
     }
-
 }
 
 void write_heap_info(void) {
 
-    int influxdb_hwm;
-    int i2c_hwm;
-    int mqtt_hwm;
-    int np_hwm;
-    int statemach_hwm;
-    int sys_hwm;
-    int valvectrl_hwm;
-    int web_hwm;
-    int wifi_hwm;
-
     int free_heap_size;
     int minimum_ever_free_heap_size;
-    int available_heap_space_bytes;
-    
-    if (task_influxdb != NULL) {
-        influxdb_hwm = uxTaskGetStackHighWaterMark(task_influxdb);
-    }
-    if (task_i2c != NULL) {
-        i2c_hwm = uxTaskGetStackHighWaterMark(task_i2c);
-    }
-    if (task_mqtt != NULL) {
-        mqtt_hwm = uxTaskGetStackHighWaterMark(task_mqtt);
-    }
-    if (task_np != NULL) {
-        np_hwm = uxTaskGetStackHighWaterMark(task_np);
-    }
-    if (task_statemach != NULL) {
-        statemach_hwm = uxTaskGetStackHighWaterMark(task_statemach);
-    }
-    if (task_sys != NULL) {
-        sys_hwm = uxTaskGetStackHighWaterMark(task_sys);
-    }
-    if (task_valvectrl != NULL) {
-        valvectrl_hwm = uxTaskGetStackHighWaterMark(task_valvectrl);
-    }
-    if (h_Task_web != NULL) {
-        web_hwm = uxTaskGetStackHighWaterMark(h_Task_web);
-    }
-    if (task_wifi != NULL) {
-        wifi_hwm = uxTaskGetStackHighWaterMark(task_wifi);
-    }
-
-    Serial.print("\nTask\t\t\tHigh water mark");
-    Serial.print("\ntask_influxdb\t\t"); Serial.print(influxdb_hwm);    
-    Serial.print("\ntask_i2c\t\t"); Serial.print(i2c_hwm);
-    Serial.print("\ntask_mqtt\t\t"); Serial.print(mqtt_hwm);
-    Serial.print("\ntask_np\t\t\t"); Serial.print(np_hwm); 
-    Serial.print("\ntask_statemach\t\t"); Serial.print(statemach_hwm);
-    Serial.print("\ntask_sys\t\t"); Serial.print(sys_hwm);
-    Serial.print("\ntask_valvectrl\t\t"); Serial.print(valvectrl_hwm);
-    Serial.print("\ntask_web\t\t"); Serial.print(web_hwm);
-    Serial.print("\ntask_wifi\t\t"); Serial.print(wifi_hwm);
 
     free_heap_size = xPortGetFreeHeapSize();
     Serial.print("\nFree heap size: ");
@@ -343,15 +290,7 @@ void write_heap_info(void) {
     Point sensor("System_stats");
     sensor.clearFields();
     sensor.clearTags();
-    sensor.addField("task_influxdb_hwm", influxdb_hwm);
-    sensor.addField("task_i2c_hwm", i2c_hwm);
-    sensor.addField("task_mqtt_hwm", mqtt_hwm);
-    sensor.addField("task_np_hwm", np_hwm);
-    sensor.addField("task_statemach_hwm", statemach_hwm);
-    sensor.addField("task_sys_hwm", sys_hwm);
-    sensor.addField("task_valvectrl_hwm", valvectrl_hwm);
-    sensor.addField("task_web_hwm", web_hwm);
-    sensor.addField("task_wifi_hwm", wifi_hwm);
+
     sensor.addField("min_free_heap_size_ever", minimum_ever_free_heap_size);
     sensor.addField("free_heap_size", free_heap_size);
     

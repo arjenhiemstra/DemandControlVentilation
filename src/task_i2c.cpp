@@ -9,7 +9,7 @@ void task_i2c_code(void * pvParameters)
 {  
     int read_sensors_multiplier = 0;
     int current_time_multiplier = 0;
-    int display_time_multiplier = 0;
+    //int display_time_multiplier = 0;
     int rtc_time_multiplier = 0;
     int sync_time_multiplier = 0;
     const TickType_t timedelay = 10;                     // main time delay im ms
