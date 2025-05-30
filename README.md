@@ -1,4 +1,4 @@
-# Open source demand controlled ventilation system #
+# Open source demand control ventilation system #
 ## Introduction
 This project is intended as a replacement of the Itho demandflow controller. The reason that this project was started because my controller at home was behaving strange, the transformer and fuse failed and it is expensive to replace. With modern microcontrollers it should be relatively easy to make a controller for such a system. This project is inspired by the orignal Itho controller but not intended to be an exact copy of the Itho controller. 
 
