@@ -31,7 +31,7 @@ The hardware design is based on common electronic parts. The basis of the design
 * MOSFET output drivers for low on state resistance. Alternatively ULN2803 could used as well (pin compatible)
 
 ### Valve control design
-The valves are steppermotors with 4 windings and two windings have a common connection. The common connection is connected to +15V and the 4 other winding connections are connected with a MOSFET. By turning on the MOSFET, the windings can be individually energised. The winding voltage is 12V and taking a voltage drop over de MOSFET into account, 15V is an appropriate voltage. The circuit of one valve is outlined below. 
+The valves are steppermotors with 4 windings and two windings have a common connection. The stepper motor made by Saia of type UCD2EZ7. The common connection is connected to +15V and the 4 other winding connections are connected with a MOSFET. By turning on the MOSFET, the windings can be individually energised. The winding voltage is 12V and taking a voltage drop over de MOSFET into account, 15V is an appropriate voltage. The circuit of one valve is outlined below. 
 
 <center><img src="images/valve_control_circuit.png" width="50%" height="50%"></center>
 
