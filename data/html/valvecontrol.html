@@ -48,13 +48,11 @@
             </p>
             <p>
                 <form method ="POST" action="/create_config_file">
-                    <!-- <input type="hidden" value="1" name="create_config_file" id="create_config_file" /> -->
                     <input type="submit" value="Create new config file">
                 </form>
             </p>
             <p>
                 <form method ="POST" action="/delete_config_file">
-                   <!--  <input type="hidden" value="1" name="delete_config_file" id="delete_config_file" /> -->
                     <input type="submit" value="Delete config file">
                 </form>
             </p>
@@ -63,7 +61,17 @@
             <p>
                 The second step of calibration is to manually move the valves to a position which corresponds with what is stored in the file created above <b>without</b> registering this change in de settings file. For other reasons this is may still be required and therefore checkbox is added at the end of the form. This can be used to calibrate the valve positions, e.g. set the valves to the fully closed position (0) and then store these positions in the valve position status file JSON. You can move multiple valves at the same time and empty values are ignored (i.e. move 0 positions Open)
             </p>
-
+            <p>
+                <form method ="POST" action="/stop_statemachine">
+                    <input type="submit" value="Stop statemachine">
+                </form>
+            </p>
+            <p>
+                <form method ="POST" action="/start_statemachine">
+                    <input type="submit" value="Start statemachine">
+                </form>
+            </p>
+            <p>State statemachine: <font color="green"> %STATEMACHINE_STATE% </font></p>
             <p>
                 <form class="pure-form pure-form-stacked" method="POST" action="/valvecontrol">
                     <fieldset>

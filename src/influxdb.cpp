@@ -220,8 +220,11 @@ void write_state_info(void) {
     else if (temp_state == "highrhday") {
         temp_state_nr = 11;
     }
-    else {
+    else if (temp_state == "stopped") {
         temp_state_nr = 12;
+    }
+    else {
+        temp_state_nr = 13;
     }
 
     sensor.clearFields();

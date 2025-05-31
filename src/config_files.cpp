@@ -1,5 +1,35 @@
 #include "config_files.h"
 
+//Read I2C hardware settings
+void read_i2c_config(void) {
+
+    const char* path = "/json/settings_i2c.json";
+    String settings_i2c_string = "";
+    bool settings_i2c_file_present = 0;
+    JsonDocument settings_i2c_doc;
+
+    if (settings_i2c_mutex != NULL) {
+        if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            settings_i2c_file_present = check_file_exists(path);
+            if (settings_i2c_file_present == 1) {
+                File file = LittleFS.open(path, "r");
+                while(file.available()) {
+                    settings_i2c_string = file.readString();
+                }
+                file.close();
+                deserializeJson(settings_i2c_doc, settings_i2c_string);
+            }
+            xSemaphoreGive(settings_i2c_mutex);
+        }
+    }
+
+    String bus0_multiplexer_addr_str = settings_i2c_doc[String("bus0_multiplexer_address")];
+    String bus1_multiplexer_addr_str = settings_i2c_doc[String("bus0_multiplexer_address")];
+    String enable_lcd_str = settings_i2c_doc[String("enable_lcd")];
+    String display_i2c_addr_str = settings_i2c_doc[String("display_i2c_address")];
+}
+
+
 //Read mqtt config file and update global variables
 void read_mqtt_config(void) {
 

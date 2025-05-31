@@ -81,6 +81,10 @@ void task_neopixel_code(void * pvParameters) {
             pixel = 0;
             led_white_blink(pixel, brightness);
         }
+        else if (temp_state == "stopped") {
+            pixel = 0;
+            led_purple_blink(pixel, brightness);
+        }
         else {
             pixel = 0;
             led_red_on(pixel, brightness);

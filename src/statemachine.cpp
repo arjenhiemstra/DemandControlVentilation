@@ -53,6 +53,9 @@ void run_statemachine(void) {
     if (state == "init") {
         init_transitions();
     }
+    else if (state == "stopped") {
+        stopped_transitions();
+    }
     else if (state == "day") {
         day_transitions();
     }
@@ -87,6 +90,21 @@ void run_statemachine(void) {
          //This state should normally never be entered. Back to init of statemachine to keep it running
          init_transitions();
     }
+}
+
+void stopped_transitions(void) {
+
+    // Actions for this state
+    if (statemachine_state_mutex != NULL) {
+        if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            state = "stopped";
+            xSemaphoreGive(statemachine_state_mutex);
+        }
+    }
+
+    //No further logic required because when start statemachine button is pushed the statemachine will go back to init state
+    Serial.print("\nStatemachin in stopped state. Push start statemachine button on the Valve Control web page.");
+
 }
 
 void init_transitions(void) {

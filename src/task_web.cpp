@@ -126,7 +126,7 @@ const char* MQTT_BASE_TOPIC = "mqtt_base_topic";
 
 const char* STATUS_I2C_CONFIG = "status_i2c_config";
 const char* BUS0_MULTIPLEXER_ADDRESS = "bus0_multiplexer_address";
-const char* BUS1_MULTIPLEXER_ADDRESS = "bus0_multiplexer_address";
+const char* BUS1_MULTIPLEXER_ADDRESS = "bus1_multiplexer_address";
 const char* ENABLE_LCD = "enable_lcd";
 const char* DISPLAY_I2C_ADDRESS = "display_i2c_address";
 
@@ -742,6 +742,28 @@ void Taskwebcode(void *pvParameters) {
   server.on("/delete_config_file", HTTP_POST, [](AsyncWebServerRequest *request) {
     const char* path = "/json/valvepositions.json";
     delete_file(path);
+    request->send(LittleFS, "/html/valvecontrol.html", String(), false, valvecontrol_processor);
+  });
+
+  //Stop statemachine 
+  server.on("/stop_statemachine", HTTP_POST, [](AsyncWebServerRequest *request) {
+    if (statemachine_state_mutex != NULL) {
+        if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            state = "stopped";
+            xSemaphoreGive(statemachine_state_mutex);
+        }
+    }
+    request->send(LittleFS, "/html/valvecontrol.html", String(), false, valvecontrol_processor);
+  });
+  
+  //Start statemachine, back to init state
+  server.on("/start_statemachine", HTTP_POST, [](AsyncWebServerRequest *request) {
+    if (statemachine_state_mutex != NULL) {
+        if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            state = "init";
+            xSemaphoreGive(statemachine_state_mutex);
+        }
+    }
     request->send(LittleFS, "/html/valvecontrol.html", String(), false, valvecontrol_processor);
   });
 

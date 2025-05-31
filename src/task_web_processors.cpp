@@ -392,25 +392,37 @@ String valvecontrol_processor(const String& var) {
   const char* status;
   bool status_file_present;
   
+  String temp_state;
   String json;
   JsonDocument doc;
   
   status_file_present = check_file_exists(path);
 
-  if (status_file_present == 1) {
-    status = "<font color=\"green\">Valve status file found.</font>";
-    if (var == "STATUS_VALVE_POSITION_FILE") {
-      return F(status);
+    if (status_file_present == 1) {
+        status = "<font color=\"green\">Valve status file found.</font>";
+        if (var == "STATUS_VALVE_POSITION_FILE") {
+            return F(status);
+        }
     }
-  }
-  else {
-    status = "<font color=\"red\">Valve status file not found. Create a file with button below.</font>";
-    if (var == "STATUS_VALVE_POSITION_FILE") {
-      return F(status);
+    else {
+        status = "<font color=\"red\">Valve status file not found. Create a file with button below.</font>";
+        if (var == "STATUS_VALVE_POSITION_FILE") {
+            return F(status);
+        }
     }
-  }
 
-  return String();
+    if (statemachine_state_mutex != NULL) {
+            if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+                temp_state = state;
+                xSemaphoreGive(statemachine_state_mutex);
+            }
+    }
+
+    if(var == "STATEMACHINE_STATE") {
+        return temp_state;
+    }
+
+    return String();
 }
 
 String settings_processor(const String& var) {
