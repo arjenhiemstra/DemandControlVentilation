@@ -233,11 +233,24 @@ String status_processor(const String& var) {
 
     /*Valve positions part of processor*/
     const char* path = "/json/valvepositions.json";
-    //const char* status;
     bool status_file_present;
+
+    uint64_t uptime;
     
+    String state_tmp;
+    String fanspeed_tmp;
+
     String json;
     JsonDocument doc;
+
+    String yearStr_tmp;
+    String monthStr_tmp;
+    String dayStr_tmp;
+    String hourStr_tmp;
+    String minuteStr_tmp;
+    String secondStr_tmp;
+    String dayOfWeek_tmp;
+    String formattedTime;
     
     if (valve_position_file_mutex != NULL) {
         if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
@@ -253,30 +266,91 @@ String status_processor(const String& var) {
         }
     }
 
+    if (fanspeed_mutex != NULL) {
+        if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            fanspeed_tmp = fanspeed;
+            xSemaphoreGive(fanspeed_mutex);
+        }
+    }
+
+    if (statemachine_state_mutex != NULL) {
+        if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            state_tmp = state;
+            xSemaphoreGive(statemachine_state_mutex);
+        }
+    }
+
+    if (date_time_mutex != NULL) {
+        if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            dayOfWeek_tmp = dayOfWeek;
+            yearStr_tmp = yearStr;
+            monthStr_tmp = monthStr;
+            dayStr_tmp = dayStr;
+            hourStr_tmp = hourStr;
+            minuteStr_tmp = minuteStr;
+            secondStr_tmp = secondStr;
+            dayOfWeek_tmp = dayOfWeek;
+            xSemaphoreGive(date_time_mutex);       
+        }
+    }
+
+    formattedTime = dayOfWeek_tmp + ", " + yearStr_tmp + "-" + monthStr_tmp + "-" + dayStr_tmp + " " + hourStr_tmp + ":" + minuteStr_tmp + ":" + secondStr_tmp;
+
+
+    uptime = (esp_timer_get_time())/1000000/60;        //in min
+    
+    if (var == "STATEMACHINE_STATE")
+        return(state_tmp);
+    if (var == "FANSPEED")
+        return(fanspeed_tmp);
+    if (var == "UPTIME")
+        return(String(uptime));
+    if (var == "STATEMACHINE_STATE")
+        return(state_tmp);
+    if (var == "FORMATTEDTIME")
+        return(formattedTime);
+    /*if (var == "DAYOFWEEK")
+        return(dayOfWeek_tmp);
+    if (var == "YEAR")
+        return(yearStr_tmp);
+    if (var == "MONTH")
+        return(monthStr_tmp);
+    if (var == "DAY")
+        return(dayStr_tmp);
+    if (var == "HOUR")
+        return(hourStr_tmp);
+    if (var == "MINUTE")
+        return(minuteStr_tmp);
+    if (var == "SECOND")
+        return(secondStr_tmp);
+    if (var == "DAYOFWEEK")
+        return(dayOfWeek_tmp);*/
+
+
     if(var == "VALVE0_POS")
-    return (doc[String("valve0")]);
+        return (doc[String("valve0")]);
     if(var == "VALVE1_POS")
-    return (doc[String("valve1")]);
+        return (doc[String("valve1")]);
     if(var == "VALVE2_POS")
-    return (doc[String("valve2")]);
+        return (doc[String("valve2")]);
     if(var == "VALVE3_POS")
-    return (doc[String("valve3")]);
+        return (doc[String("valve3")]);
     if(var == "VALVE4_POS")
-    return (doc[String("valve4")]);
+        return (doc[String("valve4")]);
     if(var == "VALVE5_POS")
-    return (doc[String("valve5")]);
+        return (doc[String("valve5")]);
     if(var == "VALVE6_POS")
-    return (doc[String("valve6")]);
+        return (doc[String("valve6")]);
     if(var == "VALVE7_POS")
-    return (doc[String("valve7")]);
+        return (doc[String("valve7")]);
     if(var == "VALVE8_POS")
-    return (doc[String("valve8")]);
+        return (doc[String("valve8")]);
     if(var == "VALVE9_POS")
-    return (doc[String("valve9")]);
+        return (doc[String("valve9")]);
     if(var == "VALVE10_POS")
-    return (doc[String("valve10")]);
+        return (doc[String("valve10")]);
     if(var == "VALVE11_POS")
-    return (doc[String("valve11")]);
+        return (doc[String("valve11")]);
 
     //Copy data from queue in local variable
     float temp_sensor_data[2][8][3];
