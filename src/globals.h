@@ -35,6 +35,7 @@ extern SemaphoreHandle_t settings_mqtt_mutex;
 extern SemaphoreHandle_t settings_i2c_mutex;
 extern SemaphoreHandle_t settings_fan_mutex;
 extern SemaphoreHandle_t settings_statemachine_mutex;
+extern SemaphoreHandle_t settings_influxdb_mutex;
 extern SemaphoreHandle_t statemachine_state_mutex;
 extern SemaphoreHandle_t fanspeed_mutex;
 extern SemaphoreHandle_t lock_valve_move_mutex;
@@ -61,6 +62,8 @@ extern JsonDocument settings_mqtt_data;
 extern JsonDocument settings_i2c_data;
 extern JsonDocument settings_fan_data;
 extern JsonDocument settings_statemachine_data;
+extern JsonDocument settings_influxdb_data;
+
 extern JsonDocument settings_state_day;
 extern JsonDocument settings_state_night;
 extern JsonDocument settings_state_highco2day;
@@ -74,10 +77,18 @@ extern JsonDocument settings_state_cyclingnight;
 extern String wire_sensor_config_string;
 extern String wire1_sensor_config_string;
 
+//MQTT settings
 extern String enable_mqtt;
 extern String mqtt_server;
 extern int mqtt_port;
 extern String mqtt_base_topic;
+
+//InfluxDB settings
+extern String enable_influxdb;
+extern String influxdb_url;
+extern String influxdb_org;
+extern String influxdb_bucket;
+extern String influxdb_token;
 
 extern RTC_DS3231 rtc;
 extern const char* ntp_server;

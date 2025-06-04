@@ -8,6 +8,7 @@
 #include "globals.h"
 
 //Function definitions
+void read_influxdb_config(void);
 void read_i2c_config(void);
 void read_mqtt_config(void);
 void valve_status_file_create(void);

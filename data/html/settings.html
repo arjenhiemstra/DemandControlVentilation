@@ -243,6 +243,42 @@
                     </fieldset>
                 </form>
             </p>
+            <h4 class="content-subhead">InfluxDB configuration - %STATUS_INFLUXDB_CONFIG%</h4>
+            <p>
+                <form class="pure-form pure-form-stacked" method="POST" action="/settings_influxdb">
+                    <fieldset>
+                        <div class="pure-g">
+                            <div class="pure-u-1 pure-u-md-1-1">
+                                <label for="enable_influxdb">Enable InfluxDB:</label>
+                                <select id="enable_influxdb" name="enable_influxdb" id="enable_influxdb" class="pure-input-1-1">
+                                    <option selected>%ENABLE_INFLUXDB%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="influxdb_url">InfluxDB URL:</label>
+                                <input type="text" placeholder="http://ip-address:8086" value="%INFLUXDB_URL%" name="influxdb_url" id="influxdb_url" class="pure-input-3-4" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="influxdb_org">InfluxDB org:</label>
+                                <input type="text" placeholder="Fill in InfluxDB organisation" value="%INFLUXDB_ORG%" name="influxdb_org" id="influxdb_org" class="pure-input-3-4" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="influxdb_bucket">InfluxDB bucket:</label>
+                                <input type="text" placeholder="Fill in InfluxDB bucket name" value="%INFLUXDB_BUCKET%" name="influxdb_bucket" id="influxdb_bucket" class="pure-input-3-4" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="influxdb_token">InfluxDB token:</label>
+                                <input type="text" placeholder="Fill in InfluxDB token" value="%INFLUXDB_TOKEN%" name="influxdb_token" id="influxdb_token" class="pure-input-3-4" />
+                            </div>
+                        </div>
+                        <br>
+                        <input type="submit" value="Save InfluxDB settings" class="pure-button-primary button-ssmall pure-button">
+                        <br>
+                    </fieldset>
+                </form>
+            </p>
         </div>
     </div>
 

@@ -141,6 +141,13 @@ const char* STATUS_STATEMACHINE_CONFIG = "status_statemachine_config";
 const char* STATEMACHINE_RH_SENSOR = "statemachine_rh_sensor";
 const char* STATEMACHINE_CO2_SENSOR = "statemachine_co2_sensor";
 
+const char* STATUS_INFLUXDB_CONFIG = "status_influxdb_config";
+const char* ENABLE_INFLUXDB = "enable_influxdb";
+const char* INFLUXDB_URL = "influxdb_url";
+const char* INFLUXDB_ORG = "influxdb_org";
+const char* INFLUXDB_BUCKET = "influxdb_bucket";
+const char* INFLUXDB_TOKEN = "influxdb_token";
+
 const char* STATUS_STATE_DAY_CONFIG = "status_state_day_config";
 const char* ENABLE_STATE_DAY = "enable_state_day";
 const char* NAME_STATE_DAY = "name_state_day";
@@ -516,6 +523,47 @@ void Taskwebcode(void *pvParameters) {
     }
   });
 
+  //Save settings from InfluxDB settings
+  server.on("/settings_influxdb", HTTP_POST, [](AsyncWebServerRequest *request) {
+    
+    if (settings_influxdb_mutex != NULL) {
+      if(xSemaphoreTake(settings_influxdb_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        int params = request->params();
+        for(int i=0;i<params;i++){
+          const AsyncWebParameter* p = request->getParam(i);
+          if(p->isPost()){
+            if (p->name() == STATUS_INFLUXDB_CONFIG) {
+              settings_influxdb_data["status_influxdb_config"] = p->value().c_str();;
+            }
+            if (p->name() == ENABLE_INFLUXDB) {
+              settings_influxdb_data["enable_influxdb"] = p->value().c_str();;
+            }
+            if (p->name() == INFLUXDB_URL) {
+              settings_influxdb_data["influxdb_url"] = p->value().c_str();;
+            }
+            if (p->name() == INFLUXDB_ORG) {
+              settings_influxdb_data["influxdb_org"] = p->value().c_str();;
+            }
+            if (p->name() == INFLUXDB_BUCKET) {
+              settings_influxdb_data["influxdb_bucket"] = p->value().c_str();;
+            }
+            if (p->name() == INFLUXDB_TOKEN) {
+              settings_influxdb_data["influxdb_token"] = p->value().c_str();;
+            }
+          }
+        }
+        const char* path = "/json/settings_influxdb.json";
+        String settings_influxdb_str;
+
+        serializeJson(settings_influxdb_data, settings_influxdb_str);
+        write_config_file(path, settings_influxdb_str);
+             
+        request->send(LittleFS, "/html/settings.html", String(), false, settings_processor);
+        xSemaphoreGive(settings_influxdb_mutex);
+      }
+    }
+  });
+
   //Valve control web pages processing
   server.on("/valvecontrol", HTTP_GET, [](AsyncWebServerRequest *request) {
     //request->send(LittleFS, "/html/valvecontrol.html", "text/html");
@@ -739,6 +787,7 @@ void Taskwebcode(void *pvParameters) {
     request->send(LittleFS, "/html/valvecontrol.html", String(), false, valvecontrol_processor);
   });
     
+  //POST on button delete config file - name must match with action of the form submit
   server.on("/delete_config_file", HTTP_POST, [](AsyncWebServerRequest *request) {
     const char* path = "/json/valvepositions.json";
     delete_file(path);

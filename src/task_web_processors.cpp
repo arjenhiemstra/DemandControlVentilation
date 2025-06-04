@@ -506,6 +506,7 @@ String settings_processor(const String& var) {
     const char* settings_i2c_path = "/json/settings_i2c.json";
     const char* settings_fan_path = "/json/settings_fan.json";
     const char* settings_statemachine_path = "/json/settings_statemachine.json";
+    const char* settings_influxdb_path = "/json/settings_influxdb.json";
     const char* status = "";
     
     bool settings_network_file_present = 0;
@@ -513,18 +514,21 @@ String settings_processor(const String& var) {
     bool settings_i2c_file_present = 0;
     bool settings_fan_file_present = 0;
     bool settings_statemachine_file_present = 0;
+    bool settings_influxdb_file_present = 0;
 
     String settings_network_json = "";
     String settings_mqtt_json = "";
     String settings_i2c_json = "";
     String settings_fan_json = "";
     String settings_statemachine_json = "";
+    String settings_influxdb_json = "";
     
     JsonDocument settings_network_doc;
     JsonDocument settings_mqtt_doc;
     JsonDocument settings_i2c_doc;
     JsonDocument settings_fan_doc;
     JsonDocument settings_statemachine_doc;
+    JsonDocument settings_influxdb_doc;
   
     /*Network settings processor*/
     if (settings_network_mutex != NULL) {
@@ -688,6 +692,40 @@ String settings_processor(const String& var) {
     else {
         status = "<font color=\"red\">Statemachine settings file not found.</font>";
         if (var == "STATUS_STATEMACHINE_CONFIG") {
+            return F(status);
+        }
+    }
+
+    /*InfluxDB Settings processor*/
+    if (settings_influxdb_mutex != NULL) {
+        if(xSemaphoreTake(settings_influxdb_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            settings_influxdb_file_present = check_file_exists(settings_influxdb_path);
+            if (settings_influxdb_file_present == 1) {
+                settings_influxdb_json = read_config_file(settings_influxdb_path);
+                deserializeJson(settings_influxdb_doc, settings_influxdb_json);
+            }
+            xSemaphoreGive(settings_influxdb_mutex);
+        }
+    }
+
+    if (settings_influxdb_file_present == 1) {
+        status = "<font color=\"green\">InfluxDB settings file found.</font>";
+        if (var == "STATUS_INFLUXDB_CONFIG") 
+            return F(status);
+        if(var == "ENABLE_INFLUXDB")
+            return (settings_influxdb_doc[String("enable_influxdb")]);
+        if(var == "INFLUXDB_URL")
+            return (settings_influxdb_doc[String("influxdb_url")]);
+        if(var == "INFLUXDB_ORG")
+            return (settings_influxdb_doc[String("influxdb_org")]);
+        if(var == "INFLUXDB_BUCKET")
+            return (settings_influxdb_doc[String("influxdb_bucket")]);
+        if(var == "INFLUXDB_TOKEN")
+            return (settings_influxdb_doc[String("influxdb_token")]);
+    }
+    else {
+        status = "<font color=\"red\">InfluxDB settings file not found.</font>";
+        if (var == "STATUS_INFLUXDB_CONFIG") {
             return F(status);
         }
     }

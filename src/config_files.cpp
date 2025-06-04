@@ -1,5 +1,48 @@
 #include "config_files.h"
 
+//Read mqtt config file and update global variables
+void read_influxdb_config(void) {
+
+    const char* path = "/json/settings_influxdb.json";
+    String settings_influxdb_string = "";
+    bool settings_influxdb_file_present = 0;
+    JsonDocument settings_influxdb_doc;
+
+    if (settings_influxdb_mutex != NULL) {
+        if(xSemaphoreTake(settings_influxdb_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            settings_influxdb_file_present = check_file_exists(path);
+            if (settings_influxdb_file_present == 1) {
+                File file = LittleFS.open(path, "r");
+                while(file.available()) {
+                    settings_influxdb_string = file.readString();
+                }
+                file.close();
+                deserializeJson(settings_influxdb_doc, settings_influxdb_string);
+            }
+            xSemaphoreGive(settings_influxdb_mutex);
+        }
+    }
+
+    String enable_influxdb_tmp = settings_influxdb_doc[String("enable_influxdb")];
+    String influxdb_url_tmp = settings_influxdb_doc[String("influxdb_url")];
+    String influxdb_org_tmp = settings_influxdb_doc[String("influxdb_org")];
+    String influxdb_bucket_tmp = settings_influxdb_doc[String("influxdb_bucket")];
+    String influxdb_token_tmp = settings_influxdb_doc[String("influxdb_token")];
+
+    if (settings_influxdb_mutex != NULL) {
+        if(xSemaphoreTake(settings_influxdb_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+                          
+            //Assign to global variable
+            enable_influxdb = enable_influxdb_tmp;
+            influxdb_url = influxdb_url_tmp;
+            influxdb_org = influxdb_org_tmp;
+            influxdb_bucket = influxdb_bucket_tmp;
+            influxdb_token = influxdb_token_tmp;
+            xSemaphoreGive(settings_influxdb_mutex);
+        }
+    }
+}
+
 //Read I2C hardware settings
 void read_i2c_config(void) {
 

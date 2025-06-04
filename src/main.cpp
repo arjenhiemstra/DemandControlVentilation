@@ -24,6 +24,8 @@ void setup() {
   settings_i2c_mutex = xSemaphoreCreateMutex();
   settings_fan_mutex = xSemaphoreCreateMutex();
   settings_statemachine_mutex = xSemaphoreCreateMutex();
+  settings_influxdb_mutex = xSemaphoreCreateMutex();
+
   statemachine_state_mutex = xSemaphoreCreateMutex();
   valve_control_data_mutex = xSemaphoreCreateMutex();
   fanspeed_mutex = xSemaphoreCreateMutex();
@@ -57,7 +59,8 @@ void setup() {
 
   //setup_wifi();
   start_task_wifi();
-  read_mqtt_config(); 
+  read_mqtt_config();
+  read_influxdb_config();
   sensor_config_data_read();
   valve_settings_config_read();
   startTaskwebcode();
@@ -74,7 +77,7 @@ void setup() {
 
 void loop() { }
 
-
+/*
 void setup_wifi() {
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
@@ -88,7 +91,7 @@ void setup_wifi() {
   vTaskDelay(1000);
   sync_rtc_ntp();
   vTaskDelay(1000);
-}
+}*/
 
 void init_registers(void) {
   

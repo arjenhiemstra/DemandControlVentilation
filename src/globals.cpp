@@ -19,6 +19,7 @@ SemaphoreHandle_t settings_mqtt_mutex = NULL;                   // MQTT settings
 SemaphoreHandle_t settings_i2c_mutex = NULL;                    // I2C settings
 SemaphoreHandle_t settings_fan_mutex = NULL;                    // Fan control settings
 SemaphoreHandle_t settings_statemachine_mutex = NULL;           // Statemachine settings
+SemaphoreHandle_t settings_influxdb_mutex = NULL;               // InfluxDB settings
 SemaphoreHandle_t statemachine_state_mutex = NULL;              // for state of statemechine
 SemaphoreHandle_t fanspeed_mutex = NULL;                        // for state of fan
 SemaphoreHandle_t lock_valve_move_mutex = NULL;                 // for valve lock
@@ -45,6 +46,8 @@ JsonDocument settings_mqtt_data;                                // Define global
 JsonDocument settings_i2c_data;                                 // Define global i2c settings
 JsonDocument settings_fan_data;                                 // Define global fanspeed settings
 JsonDocument settings_statemachine_data;                        // Define global statemachine settings
+JsonDocument settings_influxdb_data;                                // Define global mqtt settings
+
 JsonDocument settings_state_day;                                // Settings for state day
 JsonDocument settings_state_night;                              // Settings for state night
 JsonDocument settings_state_highco2day;                         // Settings for state highco2day
@@ -63,6 +66,13 @@ String enable_mqtt;
 String mqtt_server;
 int mqtt_port = 0;
 String mqtt_base_topic;
+
+//InfluxDB settings
+String enable_influxdb;
+String influxdb_url;
+String influxdb_org;
+String influxdb_bucket;
+String influxdb_token;
 
 //Settings for RTC
 RTC_DS3231 rtc;
