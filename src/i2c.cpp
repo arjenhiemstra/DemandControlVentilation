@@ -13,7 +13,7 @@ void read_sensors(void) {
     String sensor_tmp = "";
     String sensor_type_temp = "";
     String sensor_address_temp = "";
-        
+
     for(bus=0;bus<2;bus++) {
         
         if (bus==0) {
@@ -29,7 +29,6 @@ void read_sensors(void) {
         
         if(sensor_config_file_present == 1) {
             for (int slot=0;slot<8;slot++) {
-                                
                 if (bus==0) {
                     String sensor = "wire_sensor" + String(slot);
                     String sensor_type = wire_sensor_data[sensor]["type"];
@@ -374,7 +373,7 @@ void display_time_and_date(void) {
     0 |	W   e   d   n   e   s   d   a   y       3   1   -   1   2   -   2   0   2   5
     1 |	2   3   :   5   9   :   0   0				
     2 |	U   p   t   i   m   e   :       9   9   9   9   9   9       m   i   n			
-    3 |	S   t   a   t   e   :       f   a   n   h   i   g   h   s   p   e   e   d
+    3 |	I   P   :   x   x   x   .   x   x   x   .   x   x   x   .   x   x   x
 */
 
     int64_t uptime;

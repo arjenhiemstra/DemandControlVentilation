@@ -50,7 +50,6 @@ void task_mqtt_code(void * pvParameters) {
         Serial.print("\t");
         Serial.print(mqtt_base_topic_str);
 
-
         //Check if MQTT functions can run
         if (WiFi.waitForConnectResult() == WL_CONNECTED && ap_active_temp == 0 && mqtt_enable_str == "On" && mqtt_server_str != "" && mqtt_port_tmp != 0) {
             Serial.print("\nUpdate MQTT....");

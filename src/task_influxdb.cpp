@@ -8,7 +8,10 @@ void start_task_influxdb(void) {
 void task_influxdb_code(void * pvParameters)
 {
     for(;;) {
+        
         bool ap_active_temp=0;
+        
+        String enable_influxdb_tmp;
         
         vTaskDelay(30000);
         
@@ -18,9 +21,15 @@ void task_influxdb_code(void * pvParameters)
                 xSemaphoreGive(ap_active_mutex);
             }
         }
+
+        if (settings_influxdb_mutex != NULL) {
+            if(xSemaphoreTake(settings_influxdb_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+                enable_influxdb_tmp = enable_influxdb;
+                xSemaphoreGive(settings_influxdb_mutex);
+            }
+        }
         
-        if (WiFi.waitForConnectResult() == WL_CONNECTED && ap_active_temp == 0) {
-            //vTaskDelay(30000);
+        if (WiFi.waitForConnectResult() == WL_CONNECTED && ap_active_temp == 0 && enable_influxdb_tmp == "On") {
             write_sensor_data();
             write_avg_sensor_data();
             write_valve_position_data();
