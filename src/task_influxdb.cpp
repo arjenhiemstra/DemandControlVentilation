@@ -29,6 +29,9 @@ void task_influxdb_code(void * pvParameters)
             }
         }
         
+        Serial.print("\nEnable Influxdb: ");
+        Serial.print(enable_influxdb_tmp);
+
         if (WiFi.waitForConnectResult() == WL_CONNECTED && ap_active_temp == 0 && enable_influxdb_tmp == "On") {
             write_sensor_data();
             write_avg_sensor_data();
