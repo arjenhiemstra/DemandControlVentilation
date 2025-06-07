@@ -103,17 +103,17 @@ void read_i2c_config(void) {
         }
     }
 
-    String bus0_multiplexer_addr_str = settings_i2c_doc[String("bus0_multiplexer_address")];
-    String bus1_multiplexer_addr_str = settings_i2c_doc[String("bus1_multiplexer_address")];
+    int bus0_multiplexer_addr_tmp = settings_i2c_doc["bus0_multiplexer_address"];
+    int bus1_multiplexer_addr_tmp = settings_i2c_doc["bus1_multiplexer_address"];
     String enable_lcd_str = settings_i2c_doc[String("enable_lcd")];
-    String display_i2c_addr_str = settings_i2c_doc[String("display_i2c_address")];
+    int display_i2c_addr_tmp = settings_i2c_doc["display_i2c_address"];
 
     if (settings_i2c_mutex != NULL) {
         if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
-            bus0_multiplexer_addr = bus0_multiplexer_addr_str;
-            bus1_multiplexer_addr = bus1_multiplexer_addr_str;
+            bus0_multiplexer_addr = bus0_multiplexer_addr_tmp;
+            bus1_multiplexer_addr = bus1_multiplexer_addr_tmp;
             enable_lcd = enable_lcd_str;
-            display_i2c_addr = display_i2c_addr_str;
+            display_i2c_addr = display_i2c_addr_tmp;
             xSemaphoreGive(settings_i2c_mutex);
         }
     }

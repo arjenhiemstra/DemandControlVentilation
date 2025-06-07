@@ -3,7 +3,7 @@
 //LiquidCrystal_I2C lcd(LCDADDR, LCD_COLUMNS, LCD_ROWS);
 
 //This declaration uses a global variable without mutex. Only at boot this variable is written
-LiquidCrystal_I2C lcd(display_i2c_addr.toInt(), LCD_COLUMNS, LCD_ROWS);
+//LiquidCrystal_I2C lcd(39, LCD_COLUMNS, LCD_ROWS);
 RTC_DS3231 rtc;
 
 void read_sensors(void) {
@@ -18,19 +18,25 @@ void read_sensors(void) {
     String sensor_type_temp = "";
     String sensor_address_temp = "";
 
-    int bus0_multiplexer_addr_tmp = 0;
-    int bus1_multiplexer_addr_tmp = 0;
+    int bus0_multiplexer_addr_tmp;
+    int bus1_multiplexer_addr_tmp;
 
     //Read address for TCA9548. I2C for TCA9548 may be differently configured with resistors on the board.
     //Set to 0x70 when left empty in settings
+    
     if (settings_i2c_mutex != NULL) {
         if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
-            bus0_multiplexer_addr_tmp = bus0_multiplexer_addr.toInt();
-            bus1_multiplexer_addr_tmp = bus1_multiplexer_addr.toInt();
+            bus0_multiplexer_addr_tmp = bus0_multiplexer_addr;
+            bus1_multiplexer_addr_tmp = bus1_multiplexer_addr;
             xSemaphoreGive(settings_i2c_mutex);
         }
     }
 
+    Serial.print("\nbus0_multiplexer_addr: ");
+    Serial.print(bus0_multiplexer_addr_tmp);
+    Serial.print("\t\tbus1_multiplexer_addr: ");
+    Serial.print(bus1_multiplexer_addr_tmp);
+    
     //Set to 0x70 when left empty in settings
     /*
     if (bus0_multiplexer_addr_tmp == 0) {
@@ -245,11 +251,18 @@ void display_sensors(void) {
     */
 
     float queue_sensor_data[2][8][3];        //local variable to store sensor data from queue
-    //int slot = 0;
-    //int bus = 0;
+    int display_i2c_addr_tmp;
 
+    if (settings_i2c_mutex != NULL) {
+        if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+            display_i2c_addr_tmp = display_i2c_addr;
+            xSemaphoreGive(settings_i2c_mutex);
+        }
+    }
+
+    LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS);
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
-
+    lcd.backlight();
     lcd.init();
     lcd.noAutoscroll();
     lcd.noCursor();   
@@ -316,12 +329,21 @@ void display_valve_positions(void) {
       
     const char* path = "/json/valvepositions.json";
     bool status_file_present;
+    int display_i2c_addr_tmp;
     String json;
     JsonDocument doc;
 
+    if (settings_i2c_mutex != NULL) {
+        if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+            display_i2c_addr_tmp = display_i2c_addr;
+            xSemaphoreGive(settings_i2c_mutex);
+        }
+    }
+
+    LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS);
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
     lcd.init();
-   
+    lcd.backlight();
     status_file_present = check_file_exists(path);
 
     if (valve_position_file_mutex != NULL) {
@@ -404,10 +426,19 @@ void display_time_and_date(void) {
 */
 
     int64_t uptime;
+    int display_i2c_addr_tmp;
     
+    if (settings_i2c_mutex != NULL) {
+        if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+            display_i2c_addr_tmp = display_i2c_addr;
+            xSemaphoreGive(settings_i2c_mutex);
+        }
+    }
+
+    LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS);
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
     lcd.init();
-    
+    lcd.backlight();
     if (date_time_mutex != NULL) {
         if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             lcd.setCursor(0,0);
@@ -436,8 +467,6 @@ void display_time_and_date(void) {
         lcd.print("Uptime: ");
         lcd.print(uptime/1000000/60);         // in minutes
         lcd.print(" min");
-        
-        
 
         vTaskDelay(5000);
         lcd.clear();
@@ -455,12 +484,22 @@ void display_state_fan(void) {
        2 |			
        3 |	
    */
-        
+    int display_i2c_addr_tmp;
+    
+    if (settings_i2c_mutex != NULL) {
+        if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+            display_i2c_addr_tmp = display_i2c_addr;
+            xSemaphoreGive(settings_i2c_mutex);
+        }
+    }
+
+    LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS); 
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
     lcd.init();
-
+    lcd.backlight();
     lcd.setCursor(0,0);
     lcd.print("State: ");
+    
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             lcd.print(state);
@@ -561,26 +600,32 @@ void pb_start_display(void) {
 
     pb_toggle = false;
     String enable_lcd_tmp = "";
-    
+    int display_i2c_addr_tmp;
+
+    LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS);
+      
     //Only start display when enabled. Configured with global variable
     if (settings_i2c_mutex != NULL) {
         if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
             enable_lcd_tmp = enable_lcd;
+            display_i2c_addr_tmp = display_i2c_addr;
             xSemaphoreGive(settings_i2c_mutex);
         }
     }
     
     if (enable_lcd_tmp == "On") {
     
-        Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
-        lcd.init();
-        lcd.backlight();
-        Wire1.endTransmission();
+        //LiquidCrystal_I2C lcd(39, LCD_COLUMNS, LCD_ROWS);
+        //Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
+        //lcd.init();
+        //lcd.backlight();
+        //Wire1.endTransmission();
         
         display_time_and_date();
         display_state_fan();
         display_sensors();
         display_valve_positions();
+        
         
         Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
         lcd.noBacklight();
@@ -592,18 +637,23 @@ void pb_start_display(void) {
 }
 
 void init_display_off(void) {
-    
+
+    int display_i2c_addr_tmp;
     String enable_lcd_tmp = "";
+
+    LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS);
     
     //Only start display when enabled. Configured with global variable
     if (settings_i2c_mutex != NULL) {
         if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
             enable_lcd_tmp = enable_lcd;
+            display_i2c_addr_tmp = display_i2c_addr;
             xSemaphoreGive(settings_i2c_mutex);
         }
     }
 
     if (enable_lcd_tmp == "On") {
+        //LiquidCrystal_I2C lcd(39, LCD_COLUMNS, LCD_ROWS);
         Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
         lcd.init();
         lcd.clear();

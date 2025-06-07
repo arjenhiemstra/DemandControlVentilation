@@ -22,7 +22,7 @@ void task_i2c_code(void * pvParameters)
 
     if (settings_i2c_mutex != NULL) {
         if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
-            lcd_address_tmp = display_i2c_addr.toInt();
+            lcd_address_tmp = display_i2c_addr;
             xSemaphoreGive(settings_i2c_mutex);
         }
     }

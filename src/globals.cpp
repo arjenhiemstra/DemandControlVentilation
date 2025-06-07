@@ -78,10 +78,10 @@ String influxdb_bucket;
 String influxdb_token;
 
 //Settings i2C
-String bus0_multiplexer_addr;
-String bus1_multiplexer_addr;
+int bus0_multiplexer_addr;
+int bus1_multiplexer_addr;
 String enable_lcd;
-String display_i2c_addr;
+int display_i2c_addr;
 
 //Settings RTC
 String ntp_server;

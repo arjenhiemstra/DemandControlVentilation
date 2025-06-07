@@ -94,10 +94,10 @@ extern String influxdb_bucket;
 extern String influxdb_token;
 
 //Settings i2C
-extern String bus0_multiplexer_addr;
-extern String bus1_multiplexer_addr;
+extern int bus0_multiplexer_addr;
+extern int bus1_multiplexer_addr;
 extern String enable_lcd;
-extern String display_i2c_addr;
+extern int display_i2c_addr;
 
 //Settings RTC
 extern String ntp_server;
