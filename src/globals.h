@@ -91,15 +91,17 @@ extern String influxdb_org;
 extern String influxdb_bucket;
 extern String influxdb_token;
 
-extern RTC_DS3231 rtc;
-extern const char* ntp_server;
-extern const long gmt_offset_sec;
-extern const int daylight_offset_sec;
+//Settings i2C
+extern String bus0_multiplexer_addr;
+extern String bus1_multiplexer_addr;
+extern String enable_lcd;
+extern String display_i2c_addr;
 
-extern bool lock_valve_move;
-extern bool pb_toggle;
-extern bool ap_active;
+//Settings RTC
+extern String ntp_server;
+extern String timezone;
 
+//Date time data from RTC
 extern String yearStr;
 extern String monthStr;
 extern String dayStr;
@@ -110,6 +112,10 @@ extern String dayOfWeek;
 
 extern String state;
 extern String fanspeed;
+
+extern bool lock_valve_move;
+extern bool pb_toggle;
+extern bool ap_active;
 
 //Data pins for 74HC595
 extern int clockPin1; 

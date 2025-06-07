@@ -8,6 +8,7 @@
 #include "globals.h"
 
 //Function definitions
+void read_time_settings(void);
 void read_influxdb_config(void);
 void read_i2c_config(void);
 void read_mqtt_config(void);

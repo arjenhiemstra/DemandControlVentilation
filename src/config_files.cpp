@@ -1,6 +1,31 @@
 #include "config_files.h"
 
-//Read mqtt config file and update global variables
+//Read time settings
+void read_time_settings(void) {
+    
+    const char* path = "/json/settings_rtc.json";
+    String settings_rtc_string = "";
+    bool settings_rtc_file_present = 0;
+    JsonDocument settings_rtc_doc;
+
+    if (settings_rtc_mutex != NULL) {
+        if(xSemaphoreTake(settings_rtc_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            settings_rtc_file_present = check_file_exists(path);
+            if (settings_rtc_file_present == 1) {
+                File file = LittleFS.open(path, "r");
+                while(file.available()) {
+                    settings_rtc_string = file.readString();
+                }
+                file.close();
+                deserializeJson(settings_rtc_doc, settings_rtc_string);
+            }
+            xSemaphoreGive(settings_rtc_mutex);
+        }
+    }
+} 
+
+
+//Read Influxdb config file and update global variables
 void read_influxdb_config(void) {
 
     const char* path = "/json/settings_influxdb.json";
@@ -67,11 +92,20 @@ void read_i2c_config(void) {
     }
 
     String bus0_multiplexer_addr_str = settings_i2c_doc[String("bus0_multiplexer_address")];
-    String bus1_multiplexer_addr_str = settings_i2c_doc[String("bus0_multiplexer_address")];
+    String bus1_multiplexer_addr_str = settings_i2c_doc[String("bus1_multiplexer_address")];
     String enable_lcd_str = settings_i2c_doc[String("enable_lcd")];
     String display_i2c_addr_str = settings_i2c_doc[String("display_i2c_address")];
-}
 
+    if (settings_i2c_mutex != NULL) {
+        if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+            bus0_multiplexer_addr = bus0_multiplexer_addr_str;
+            bus1_multiplexer_addr = bus1_multiplexer_addr_str;
+            enable_lcd = enable_lcd_str;
+            display_i2c_addr = display_i2c_addr_str;
+            xSemaphoreGive(settings_i2c_mutex);
+        }
+    }
+}
 
 //Read mqtt config file and update global variables
 void read_mqtt_config(void) {

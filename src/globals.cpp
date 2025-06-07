@@ -21,6 +21,7 @@ SemaphoreHandle_t settings_i2c_mutex = NULL;                    // I2C settings
 SemaphoreHandle_t settings_fan_mutex = NULL;                    // Fan control settings
 SemaphoreHandle_t settings_statemachine_mutex = NULL;           // Statemachine settings
 SemaphoreHandle_t settings_influxdb_mutex = NULL;               // InfluxDB settings
+SemaphoreHandle_t settings_rtc_mutex = NULL;                    // InfluxDB settings
 SemaphoreHandle_t statemachine_state_mutex = NULL;              // for state of statemechine
 SemaphoreHandle_t fanspeed_mutex = NULL;                        // for state of fan
 SemaphoreHandle_t lock_valve_move_mutex = NULL;                 // for valve lock
@@ -47,7 +48,8 @@ JsonDocument settings_mqtt_data;                                // Define global
 JsonDocument settings_i2c_data;                                 // Define global i2c settings
 JsonDocument settings_fan_data;                                 // Define global fanspeed settings
 JsonDocument settings_statemachine_data;                        // Define global statemachine settings
-JsonDocument settings_influxdb_data;                                // Define global mqtt settings
+JsonDocument settings_influxdb_data;                            // Define global mqtt settings
+JsonDocument settings_rtc_data;                                 // Define global mqtt settings
 
 JsonDocument settings_state_day;                                // Settings for state day
 JsonDocument settings_state_night;                              // Settings for state night
@@ -75,15 +77,15 @@ String influxdb_org;
 String influxdb_bucket;
 String influxdb_token;
 
-//Settings for RTC
-RTC_DS3231 rtc;
-const char* ntp_server = "pool.ntp.org";
-const long gmt_offset_sec = 3600;                // Offset for GMT in seconds, 3600 for Europe/Amsterdam
-const int daylight_offset_sec = 3600;            // Daylight savings time in seconds, 3600 for Europe/Amsterdam
+//Settings i2C
+String bus0_multiplexer_addr;
+String bus1_multiplexer_addr;
+String enable_lcd;
+String display_i2c_addr;
 
-bool lock_valve_move = 0;                       // Variable for skipping valve move when already moving
-bool pb_toggle = false;
-bool ap_active = 0;
+//Settings RTC
+String ntp_server;
+String timezone;
 
 //Date time data from RTC
 String yearStr = "";
@@ -97,6 +99,10 @@ String dayOfWeek = "";
 //Statemachine globals
 String state = "";
 String fanspeed = "";
+
+bool lock_valve_move = 0;                       // Variable for skipping valve move when already moving
+bool pb_toggle = false;
+bool ap_active = 0;
 
 //Data pins for 74HC595
 int clockPin1 = 11; // IO11 on ESP32-S3 and D13 on ESP32, connected to SH_CP (11) of 74HC595

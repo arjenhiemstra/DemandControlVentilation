@@ -20,19 +20,14 @@ void write_sensor_data(void) {
     }
     
     InfluxDBClient client(influxdb_url_tmp, influxdb_org_tmp, influxdb_bucket_tmp, influxdb_token_tmp);
-    //InfluxDBClient client(INFLUXDB_URL, INFLUXDB_ORG, INFLUXDB_BUCKET, INFLUXDB_TOKEN);
     Point sensor("Sensors");
 
-    //Copy array to local array with active mutex an then run slow display function without mutex
     float queue_sensor_data[2][8][3];
 
     if (xQueuePeek(sensor_queue, &queue_sensor_data, 0) == pdTRUE) {     
     
         // Check server connection. Only write data when connected.
-        if (client.validateConnection()) {
-            //Serial.print("\nConnected to InfluxDB: ");
-            //Serial.print(client.getServerUrl());
-    
+        if (client.validateConnection()) {   
             Serial.print("\nWriting sensor data to influxDB.");
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 8; j++) {           
@@ -81,8 +76,6 @@ void write_avg_sensor_data(void) {
     
     if (settings_influxdb_mutex != NULL) {
         if(xSemaphoreTake(settings_influxdb_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-                          
-            //Assign to global variable
             enable_influxdb_tmp = enable_influxdb;
             influxdb_url_tmp = influxdb_url;
             influxdb_org_tmp = influxdb_org;
@@ -93,18 +86,12 @@ void write_avg_sensor_data(void) {
     }
     
     InfluxDBClient client(influxdb_url_tmp, influxdb_org_tmp, influxdb_bucket_tmp, influxdb_token_tmp);
-    //InfluxDBClient client(INFLUXDB_URL, INFLUXDB_ORG, INFLUXDB_BUCKET, INFLUXDB_TOKEN);
     Point sensor("Sensors_avg");   
 
-    //Copy array to local array with active mutex an then run slow display function without mutex
     float queue_avg_sensor_data[2][8][3];
 
     if (xQueuePeek(sensor_avg_queue, &queue_avg_sensor_data, 0) == pdTRUE) {     
-        // Check server connection. Only write data when connected.
-        if (client.validateConnection()) {
-            //Serial.print("\nConnected to InfluxDB: ");
-            //Serial.print(client.getServerUrl());
-    
+        if (client.validateConnection()) {    
             Serial.print("\nWriting average sensor data to influxDB.");
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 8; j++) {           
@@ -115,15 +102,9 @@ void write_avg_sensor_data(void) {
                         String bus = "bus" + String(i);
                         sensor.addTag("device",tag);
                         sensor.addTag("bus",bus);
-                        //if (queue_avg_sensor_data[i][j][0] > 3) {
-                            sensor.addField("temperature", queue_avg_sensor_data[i][j][0]);
-                        //}
-                        //if (queue_avg_sensor_data[i][j][1] > 5) {
-                            sensor.addField("humidity", queue_avg_sensor_data[i][j][1]);
-                        //}
-                        //if (queue_avg_sensor_data[i][j][2] > 5) {
-                            sensor.addField("CO2", queue_avg_sensor_data[i][j][2]); 
-                        //}
+                        sensor.addField("temperature", queue_avg_sensor_data[i][j][0]);
+                        sensor.addField("humidity", queue_avg_sensor_data[i][j][1]);
+                        sensor.addField("CO2", queue_avg_sensor_data[i][j][2]); 
                         
                         client.pointToLineProtocol(sensor);
                 
@@ -173,7 +154,6 @@ void write_valve_position_data(void) {
     }
 
     InfluxDBClient client(influxdb_url_tmp, influxdb_org_tmp, influxdb_bucket_tmp, influxdb_token_tmp);
-    //InfluxDBClient client(INFLUXDB_URL, INFLUXDB_ORG, INFLUXDB_BUCKET, INFLUXDB_TOKEN);
     Point sensor("Valves");
     
     status_file_present = check_file_exists(path);
@@ -224,8 +204,6 @@ void write_system_uptime(void) {
     
     if (settings_influxdb_mutex != NULL) {
         if(xSemaphoreTake(settings_influxdb_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-                          
-            //Assign to global variable
             enable_influxdb_tmp = enable_influxdb;
             influxdb_url_tmp = influxdb_url;
             influxdb_org_tmp = influxdb_org;
@@ -262,8 +240,6 @@ void write_state_info(void) {
     
     if (settings_influxdb_mutex != NULL) {
         if(xSemaphoreTake(settings_influxdb_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-                          
-            //Assign to global variable
             enable_influxdb_tmp = enable_influxdb;
             influxdb_url_tmp = influxdb_url;
             influxdb_org_tmp = influxdb_org;
@@ -274,7 +250,6 @@ void write_state_info(void) {
     }
 
     InfluxDBClient client(influxdb_url_tmp, influxdb_org_tmp, influxdb_bucket_tmp, influxdb_token_tmp);
-    //InfluxDBClient client(INFLUXDB_URL, INFLUXDB_ORG, INFLUXDB_BUCKET, INFLUXDB_TOKEN);
     Point sensor("Status");
 
     if (statemachine_state_mutex != NULL) {
@@ -345,8 +320,6 @@ void write_fanspeed(void) {
     
     if (settings_influxdb_mutex != NULL) {
         if(xSemaphoreTake(settings_influxdb_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-                          
-            //Assign to global variable
             enable_influxdb_tmp = enable_influxdb;
             influxdb_url_tmp = influxdb_url;
             influxdb_org_tmp = influxdb_org;
@@ -357,7 +330,6 @@ void write_fanspeed(void) {
     }
 
     InfluxDBClient client(influxdb_url_tmp, influxdb_org_tmp, influxdb_bucket_tmp, influxdb_token_tmp);
-    //InfluxDBClient client(INFLUXDB_URL, INFLUXDB_ORG, INFLUXDB_BUCKET, INFLUXDB_TOKEN);
     Point sensor("Status");
 
     String temp_fanspeed;
@@ -407,8 +379,6 @@ void write_heap_info(void) {
     
     if (settings_influxdb_mutex != NULL) {
         if(xSemaphoreTake(settings_influxdb_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-                          
-            //Assign to global variable
             enable_influxdb_tmp = enable_influxdb;
             influxdb_url_tmp = influxdb_url;
             influxdb_org_tmp = influxdb_org;
@@ -427,7 +397,6 @@ void write_heap_info(void) {
     Serial.print(minimum_ever_free_heap_size);
 
     InfluxDBClient client(influxdb_url_tmp, influxdb_org_tmp, influxdb_bucket_tmp, influxdb_token_tmp);
-    //InfluxDBClient client(INFLUXDB_URL, INFLUXDB_ORG, INFLUXDB_BUCKET, INFLUXDB_TOKEN);
     Point sensor("System_stats");
     sensor.clearFields();
     sensor.clearTags();

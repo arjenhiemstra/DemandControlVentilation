@@ -1,6 +1,7 @@
 #include "i2c.h"
 
 LiquidCrystal_I2C lcd(LCDADDR, LCD_COLUMNS, LCD_ROWS);
+RTC_DS3231 rtc;
 
 void read_sensors(void) {
  
