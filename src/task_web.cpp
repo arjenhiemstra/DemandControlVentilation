@@ -40,68 +40,52 @@ bool valve_move_locked;
 
 //Variables for sensor config page
 const char* WIRE_SENSOR0_TYPE = "wire_sensor0_type";
-const char* WIRE_SENSOR0_ADDRESS = "wire_sensor0_address";
 const char* WIRE_SENSOR0_VALVE = "wire_sensor0_valve";
 const char* WIRE_SENSOR0_LOCATION = "wire_sensor0_location";
 const char* WIRE_SENSOR1_TYPE = "wire_sensor1_type";
-const char* WIRE_SENSOR1_ADDRESS = "wire_sensor1_address";
 const char* WIRE_SENSOR1_VALVE = "wire_sensor1_valve";
 const char* WIRE_SENSOR1_LOCATION = "wire_sensor1_location";
 const char* WIRE_SENSOR2_TYPE = "wire_sensor2_type";
-const char* WIRE_SENSOR2_ADDRESS = "wire_sensor2_address";
 const char* WIRE_SENSOR2_VALVE = "wire_sensor2_valve";
 const char* WIRE_SENSOR2_LOCATION = "wire_sensor2_location";
 const char* WIRE_SENSOR3_TYPE = "wire_sensor3_type";
-const char* WIRE_SENSOR3_ADDRESS = "wire_sensor3_address";
 const char* WIRE_SENSOR3_VALVE = "wire_sensor3_valve";
 const char* WIRE_SENSOR3_LOCATION = "wire_sensor3_location";
 const char* WIRE_SENSOR4_TYPE = "wire_sensor4_type";
-const char* WIRE_SENSOR4_ADDRESS = "wire_sensor4_address";
 const char* WIRE_SENSOR4_VALVE = "wire_sensor4_valve";
 const char* WIRE_SENSOR4_LOCATION = "wire_sensor4_location";
 const char* WIRE_SENSOR5_TYPE = "wire_sensor5_type";
-const char* WIRE_SENSOR5_ADDRESS = "wire_sensor5_address";
 const char* WIRE_SENSOR5_VALVE = "wire_sensor5_valve";
 const char* WIRE_SENSOR5_LOCATION = "wire_sensor5_location";
 const char* WIRE_SENSOR6_TYPE = "wire_sensor6_type";
-const char* WIRE_SENSOR6_ADDRESS = "wire_sensor6_address";
 const char* WIRE_SENSOR6_VALVE = "wire_sensor6_valve";
 const char* WIRE_SENSOR6_LOCATION = "wire_sensor6_location";
 const char* WIRE_SENSOR7_TYPE = "wire_sensor7_type";
-const char* WIRE_SENSOR7_ADDRESS = "wire_sensor7_address";
 const char* WIRE_SENSOR7_VALVE = "wire_sensor7_valve";
 const char* WIRE_SENSOR7_LOCATION = "wire_sensor7_location";
 
 const char* WIRE1_SENSOR0_TYPE = "wire1_sensor0_type";
-const char* WIRE1_SENSOR0_ADDRESS = "wire1_sensor0_address";
 const char* WIRE1_SENSOR0_VALVE = "wire1_sensor0_valve";
 const char* WIRE1_SENSOR0_LOCATION = "wire1_sensor0_location";
 const char* WIRE1_SENSOR1_TYPE = "wire1_sensor1_type";
-const char* WIRE1_SENSOR1_ADDRESS = "wire1_sensor1_address";
 const char* WIRE1_SENSOR1_VALVE = "wire1_sensor1_valve";
 const char* WIRE1_SENSOR1_LOCATION = "wire1_sensor1_location";
 const char* WIRE1_SENSOR2_TYPE = "wire1_sensor2_type";
-const char* WIRE1_SENSOR2_ADDRESS = "wire1_sensor2_address";
 const char* WIRE1_SENSOR2_VALVE = "wire1_sensor2_valve";
 const char* WIRE1_SENSOR2_LOCATION = "wire1_sensor2_location";
 const char* WIRE1_SENSOR3_TYPE = "wire1_sensor3_type";
-const char* WIRE1_SENSOR3_ADDRESS = "wire1_sensor3_address";
 const char* WIRE1_SENSOR3_VALVE = "wire1_sensor3_valve";
 const char* WIRE1_SENSOR3_LOCATION = "wire1_sensor3_location";
 const char* WIRE1_SENSOR4_TYPE = "wire1_sensor4_type";
-const char* WIRE1_SENSOR4_ADDRESS = "wire1_sensor4_address";
 const char* WIRE1_SENSOR4_VALVE = "wire1_sensor4_valve";
 const char* WIRE1_SENSOR4_LOCATION = "wire1_sensor4_location";
 const char* WIRE1_SENSOR5_TYPE = "wire1_sensor5_type";
-const char* WIRE1_SENSOR5_ADDRESS = "wire1_sensor5_address";
 const char* WIRE1_SENSOR5_VALVE = "wire1_sensor5_valve";
 const char* WIRE1_SENSOR5_LOCATION = "wire1_sensor5_location";
 const char* WIRE1_SENSOR6_TYPE = "wire1_sensor6_type";
-const char* WIRE1_SENSOR6_ADDRESS = "wire1_sensor6_address";
 const char* WIRE1_SENSOR6_VALVE = "wire1_sensor6_valve";
 const char* WIRE1_SENSOR6_LOCATION = "wire1_sensor6_location";
 const char* WIRE1_SENSOR7_TYPE = "wire1_sensor7_type";
-const char* WIRE1_SENSOR7_ADDRESS = "wire1_sensor7_address";
 const char* WIRE1_SENSOR7_VALVE = "wire1_sensor7_valve";
 const char* WIRE1_SENSOR7_LOCATION = "wire1_sensor7_location";
 
@@ -877,10 +861,7 @@ void Taskwebcode(void *pvParameters) {
       if(p->isPost()){
         if (p->name() == WIRE_SENSOR0_TYPE) {
           wire_sensor_data["wire_sensor0"]["type"] = p->value().c_str();;
-        }
-        if (p->name() == WIRE_SENSOR0_ADDRESS) {
-          wire_sensor_data["wire_sensor0"]["address"] = p->value().c_str();
-        }     
+        }    
         if (p->name() == WIRE_SENSOR0_VALVE) {
           wire_sensor_data["wire_sensor0"]["valve"] = p->value().c_str();
         }
@@ -889,10 +870,7 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == WIRE_SENSOR1_TYPE) {
           wire_sensor_data["wire_sensor1"]["type"] = p->value().c_str();
-        }
-        if (p->name() == WIRE_SENSOR1_ADDRESS) {
-          wire_sensor_data["wire_sensor1"]["address"] = p->value().c_str();
-        }     
+        }    
         if (p->name() == WIRE_SENSOR1_VALVE) {
           wire_sensor_data["wire_sensor1"]["valve"] = p->value().c_str();
         }
@@ -901,10 +879,7 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == WIRE_SENSOR2_TYPE) {
           wire_sensor_data["wire_sensor2"]["type"] = p->value().c_str();
-        }
-        if (p->name() == WIRE_SENSOR2_ADDRESS) {
-          wire_sensor_data["wire_sensor2"]["address"] = p->value().c_str();
-        }     
+        }    
         if (p->name() == WIRE_SENSOR2_VALVE) {
           wire_sensor_data["wire_sensor2"]["valve"] = p->value().c_str();
         }
@@ -913,10 +888,7 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == WIRE_SENSOR3_TYPE) {
           wire_sensor_data["wire_sensor3"]["type"] = p->value().c_str();
-        }
-        if (p->name() == WIRE_SENSOR3_ADDRESS) {
-          wire_sensor_data["wire_sensor3"]["address"] = p->value().c_str();
-        }     
+        }    
         if (p->name() == WIRE_SENSOR3_VALVE) {
           wire_sensor_data["wire_sensor3"]["valve"] = p->value().c_str();
         }
@@ -925,10 +897,7 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == WIRE_SENSOR4_TYPE) {
           wire_sensor_data["wire_sensor4"]["type"] = p->value().c_str();
-        }
-        if (p->name() == WIRE_SENSOR4_ADDRESS) {
-          wire_sensor_data["wire_sensor4"]["address"] = p->value().c_str();
-        }     
+        }    
         if (p->name() == WIRE_SENSOR4_VALVE) {
           wire_sensor_data["wire_sensor4"]["valve"] = p->value().c_str();
         }
@@ -937,9 +906,6 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == WIRE_SENSOR5_TYPE) {
           wire_sensor_data["wire_sensor5"]["type"] = p->value().c_str();
-        }
-        if (p->name() == WIRE_SENSOR5_ADDRESS) {
-          wire_sensor_data["wire_sensor5"]["address"] = p->value().c_str();
         }     
         if (p->name() == WIRE_SENSOR5_VALVE) {
           wire_sensor_data["wire_sensor5"]["valve"] = p->value().c_str();
@@ -949,10 +915,7 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == WIRE_SENSOR6_TYPE) {
           wire_sensor_data["wire_sensor6"]["type"] = p->value().c_str();
-        }
-        if (p->name() == WIRE_SENSOR6_ADDRESS) {
-          wire_sensor_data["wire_sensor6"]["address"] = p->value().c_str();
-        }     
+        }    
         if (p->name() == WIRE_SENSOR6_VALVE) {
           wire_sensor_data["wire_sensor6"]["valve"] = p->value().c_str();
         }
@@ -961,9 +924,6 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == WIRE_SENSOR7_TYPE) {
           wire_sensor_data["wire_sensor7"]["type"] = p->value().c_str();
-        }
-        if (p->name() == WIRE_SENSOR7_ADDRESS) {
-          wire_sensor_data["wire_sensor7"]["address"] = p->value().c_str();
         }     
         if (p->name() == WIRE_SENSOR7_VALVE) {
           wire_sensor_data["wire_sensor7"]["valve"] = p->value().c_str();
@@ -988,10 +948,7 @@ void Taskwebcode(void *pvParameters) {
       if(p->isPost()){
         if (p->name() == WIRE1_SENSOR0_TYPE) {
           wire1_sensor_data["wire1_sensor0"]["type"] = p->value().c_str();;
-        }
-        if (p->name() == WIRE1_SENSOR0_ADDRESS) {
-          wire1_sensor_data["wire1_sensor0"]["address"] = p->value().c_str();
-        }     
+        }    
         if (p->name() == WIRE1_SENSOR0_VALVE) {
           wire1_sensor_data["wire1_sensor0"]["valve"] = p->value().c_str();
         }
@@ -1000,9 +957,6 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == WIRE1_SENSOR1_TYPE) {
           wire1_sensor_data["wire1_sensor1"]["type"] = p->value().c_str();
-        }
-        if (p->name() == WIRE1_SENSOR1_ADDRESS) {
-          wire1_sensor_data["wire1_sensor1"]["address"] = p->value().c_str();
         }     
         if (p->name() == WIRE1_SENSOR1_VALVE) {
           wire1_sensor_data["wire1_sensor1"]["valve"] = p->value().c_str();
@@ -1012,9 +966,6 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == WIRE1_SENSOR2_TYPE) {
           wire1_sensor_data["wire1_sensor2"]["type"] = p->value().c_str();
-        }
-        if (p->name() == WIRE1_SENSOR2_ADDRESS) {
-          wire1_sensor_data["wire1_sensor2"]["address"] = p->value().c_str();
         }     
         if (p->name() == WIRE1_SENSOR2_VALVE) {
           wire1_sensor_data["wire1_sensor2"]["valve"] = p->value().c_str();
@@ -1024,10 +975,7 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == WIRE1_SENSOR3_TYPE) {
           wire1_sensor_data["wire1_sensor3"]["type"] = p->value().c_str();
-        }
-        if (p->name() == WIRE1_SENSOR3_ADDRESS) {
-          wire1_sensor_data["wire1_sensor3"]["address"] = p->value().c_str();
-        }     
+        }    
         if (p->name() == WIRE1_SENSOR3_VALVE) {
           wire1_sensor_data["wire1_sensor3"]["valve"] = p->value().c_str();
         }
@@ -1036,10 +984,7 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == WIRE1_SENSOR4_TYPE) {
           wire1_sensor_data["wire1_sensor4"]["type"] = p->value().c_str();
-        }
-        if (p->name() == WIRE1_SENSOR4_ADDRESS) {
-          wire1_sensor_data["wire1_sensor4"]["address"] = p->value().c_str();
-        }     
+        }    
         if (p->name() == WIRE1_SENSOR4_VALVE) {
           wire1_sensor_data["wire1_sensor4"]["valve"] = p->value().c_str();
         }
@@ -1048,10 +993,7 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == WIRE1_SENSOR5_TYPE) {
           wire1_sensor_data["wire1_sensor5"]["type"] = p->value().c_str();
-        }
-        if (p->name() == WIRE1_SENSOR5_ADDRESS) {
-          wire1_sensor_data["wire1_sensor5"]["address"] = p->value().c_str();
-        }     
+        }    
         if (p->name() == WIRE1_SENSOR5_VALVE) {
           wire1_sensor_data["wire1_sensor5"]["valve"] = p->value().c_str();
         }
@@ -1060,10 +1002,7 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == WIRE1_SENSOR6_TYPE) {
           wire1_sensor_data["wire1_sensor6"]["type"] = p->value().c_str();
-        }
-        if (p->name() == WIRE1_SENSOR6_ADDRESS) {
-          wire1_sensor_data["wire1_sensor6"]["address"] = p->value().c_str();
-        }     
+        }   
         if (p->name() == WIRE1_SENSOR6_VALVE) {
           wire1_sensor_data["wire1_sensor6"]["valve"] = p->value().c_str();
         }
@@ -1072,10 +1011,7 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == WIRE1_SENSOR7_TYPE) {
           wire1_sensor_data["wire1_sensor7"]["type"] = p->value().c_str();
-        }
-        if (p->name() == WIRE1_SENSOR7_ADDRESS) {
-          wire1_sensor_data["wire1_sensor7"]["address"] = p->value().c_str();
-        }     
+        }    
         if (p->name() == WIRE1_SENSOR7_VALVE) {
           wire1_sensor_data["wire1_sensor7"]["valve"] = p->value().c_str();
         }

@@ -16,8 +16,6 @@ String sensor_config_processor(const String& var) {
             return (status);
         if (var == "WIRE_SENSOR0_TYPE")
             return (wire_sensor_data["wire_sensor0"]["type"]);
-        if (var == "WIRE_SENSOR0_ADDRESS")
-            return (wire_sensor_data["wire_sensor0"]["address"]);
         if (var == "WIRE_SENSOR0_VALVE")
             return (wire_sensor_data["wire_sensor0"]["valve"]);
         if (var == "WIRE_SENSOR0_LOCATION")
@@ -28,8 +26,6 @@ String sensor_config_processor(const String& var) {
             return (wire_sensor_data["wire_sensor0"]["co2"]);
         if (var == "WIRE_SENSOR1_TYPE")
             return (wire_sensor_data["wire_sensor1"]["type"]);
-        if (var == "WIRE_SENSOR1_ADDRESS")
-            return (wire_sensor_data["wire_sensor1"]["address"]);
         if (var == "WIRE_SENSOR1_VALVE")
             return (wire_sensor_data["wire_sensor1"]["valve"]);
         if (var == "WIRE_SENSOR0_LOCATION")
@@ -40,8 +36,6 @@ String sensor_config_processor(const String& var) {
             return (wire_sensor_data["wire_sensor1"]["co2"]);
         if (var == "WIRE_SENSOR2_TYPE")
             return (wire_sensor_data["wire_sensor2"]["type"]);
-        if (var == "WIRE_SENSOR2_ADDRESS")
-            return (wire_sensor_data["wire_sensor2"]["address"]);
         if (var == "WIRE_SENSOR2_VALVE")
             return (wire_sensor_data["wire_sensor2"]["valve"]);
         if (var == "WIRE_SENSOR2_LOCATION")
@@ -52,8 +46,6 @@ String sensor_config_processor(const String& var) {
             return (wire_sensor_data["wire_sensor2"]["co2"]);
         if (var == "WIRE_SENSOR3_TYPE")
             return (wire_sensor_data["wire_sensor3"]["type"]);
-        if (var == "WIRE_SENSOR3_ADDRESS")
-            return (wire_sensor_data["wire_sensor3"]["address"]);
         if (var == "WIRE_SENSOR3_VALVE")
             return (wire_sensor_data["wire_sensor3"]["valve"]);
         if (var == "WIRE_SENSOR3_LOCATION")
@@ -64,8 +56,6 @@ String sensor_config_processor(const String& var) {
             return (wire_sensor_data["wire_sensor3"]["co2"]);
         if (var == "WIRE_SENSOR4_TYPE")
             return (wire_sensor_data["wire_sensor4"]["type"]);
-        if (var == "WIRE_SENSOR4_ADDRESS")
-            return (wire_sensor_data["wire_sensor4"]["address"]);
         if (var == "WIRE_SENSOR4_VALVE")
             return (wire_sensor_data["wire_sensor4"]["valve"]);
         if (var == "WIRE_SENSOR4_LOCATION")
@@ -76,8 +66,6 @@ String sensor_config_processor(const String& var) {
             return (wire_sensor_data["wire_sensor4"]["co2"]);
         if (var == "WIRE_SENSOR5_TYPE")
             return (wire_sensor_data["wire_sensor5"]["type"]);
-        if (var == "WIRE_SENSOR5_ADDRESS")
-            return (wire_sensor_data["wire_sensor5"]["address"]);
         if (var == "WIRE_SENSOR5_VALVE")
             return (wire_sensor_data["wire_sensor5"]["valve"]);
         if (var == "WIRE_SENSOR5_LOCATION")
@@ -88,8 +76,6 @@ String sensor_config_processor(const String& var) {
             return (wire_sensor_data["wire_sensor5"]["co2"]);
         if (var == "WIRE_SENSOR6_TYPE")
             return (wire_sensor_data["wire_sensor6"]["type"]);
-        if (var == "WIRE_SENSOR6_ADDRESS")
-            return (wire_sensor_data["wire_sensor6"]["address"]);
         if (var == "WIRE_SENSOR6_VALVE")
             return (wire_sensor_data["wire_sensor6"]["valve"]);
         if (var == "WIRE_SENSOR6_LOCATION")
@@ -100,8 +86,6 @@ String sensor_config_processor(const String& var) {
             return (wire_sensor_data["wire_sensor6"]["co2"]);
         if (var == "WIRE_SENSOR7_TYPE")
             return (wire_sensor_data["wire_sensor7"]["type"]);
-        if (var == "WIRE_SENSOR7_ADDRESS")
-            return (wire_sensor_data["wire_sensor7"]["address"]);
         if (var == "WIRE_SENSOR7_VALVE")
             return (wire_sensor_data["wire_sensor7"]["valve"]);
         if (var == "WIRE_SENSOR7_LOCATION")
@@ -125,8 +109,6 @@ String sensor_config_processor(const String& var) {
             return F(status);
         if (var == "WIRE1_SENSOR0_TYPE")
             return (wire1_sensor_data["wire1_sensor0"]["type"]);
-        if (var == "WIRE1_SENSOR0_ADDRESS")
-            return (wire1_sensor_data["wire1_sensor0"]["address"]);
         if (var == "WIRE1_SENSOR0_VALVE")
             return (wire1_sensor_data["wire1_sensor0"]["valve"]);
         if (var == "WIRE1_SENSOR0_LOCATION")
@@ -137,8 +119,6 @@ String sensor_config_processor(const String& var) {
             return (wire1_sensor_data["wire1_sensor0"]["co2"]);
         if (var == "WIRE1_SENSOR1_TYPE")
             return (wire1_sensor_data["wire1_sensor1"]["type"]);
-        if (var == "WIRE1_SENSOR1_ADDRESS")
-            return (wire1_sensor_data["wire1_sensor1"]["address"]);
         if (var == "WIRE1_SENSOR1_VALVE")
             return (wire1_sensor_data["wire1_sensor1"]["valve"]);
         if (var == "WIRE1_SENSOR0_LOCATION")
@@ -149,8 +129,6 @@ String sensor_config_processor(const String& var) {
             return (wire1_sensor_data["wire1_sensor1"]["co2"]);
         if (var == "WIRE1_SENSOR2_TYPE")
             return (wire1_sensor_data["wire1_sensor2"]["type"]);
-        if (var == "WIRE1_SENSOR2_ADDRESS")
-            return (wire1_sensor_data["wire1_sensor2"]["address"]);
         if (var == "WIRE1_SENSOR2_VALVE")
             return (wire1_sensor_data["wire1_sensor2"]["valve"]);
         if (var == "WIRE1_SENSOR2_LOCATION")
@@ -161,8 +139,6 @@ String sensor_config_processor(const String& var) {
             return (wire1_sensor_data["wire1_sensor2"]["co2"]);
         if (var == "WIRE1_SENSOR3_TYPE")
             return (wire1_sensor_data["wire1_sensor3"]["type"]);
-        if (var == "WIRE1_SENSOR3_ADDRESS")
-            return (wire1_sensor_data["wire1_sensor3"]["address"]);
         if (var == "WIRE1_SENSOR3_VALVE")
             return (wire1_sensor_data["wire1_sensor3"]["valve"]);
         if (var == "WIRE1_SENSOR3_LOCATION")
@@ -173,8 +149,6 @@ String sensor_config_processor(const String& var) {
             return (wire1_sensor_data["wire1_sensor3"]["co2"]);
         if (var == "WIRE1_SENSOR4_TYPE")
             return (wire1_sensor_data["wire1_sensor4"]["type"]);
-        if (var == "WIRE1_SENSOR4_ADDRESS")
-            return (wire1_sensor_data["wire1_sensor4"]["address"]);
         if (var == "WIRE1_SENSOR4_VALVE")
             return (wire1_sensor_data["wire1_sensor4"]["valve"]);
         if (var == "WIRE1_SENSOR4_LOCATION")
@@ -185,8 +159,6 @@ String sensor_config_processor(const String& var) {
             return (wire1_sensor_data["wire1_sensor4"]["co2"]);
         if (var == "WIRE1_SENSOR5_TYPE")
             return (wire1_sensor_data["wire1_sensor5"]["type"]);
-        if (var == "WIRE1_SENSOR5_ADDRESS")
-            return (wire1_sensor_data["wire1_sensor5"]["address"]);
         if (var == "WIRE1_SENSOR5_VALVE")
             return (wire1_sensor_data["wire1_sensor5"]["valve"]);
         if (var == "WIRE1_SENSOR5_LOCATION")
@@ -197,8 +169,6 @@ String sensor_config_processor(const String& var) {
             return (wire1_sensor_data["wire1_sensor5"]["co2"]);
         if (var == "WIRE1_SENSOR6_TYPE")
             return (wire1_sensor_data["wire1_sensor6"]["type"]);
-        if (var == "WIRE1_SENSOR6_ADDRESS")
-            return (wire1_sensor_data["wire1_sensor6"]["address"]);
         if (var == "WIRE1_SENSOR6_VALVE")
             return (wire1_sensor_data["wire1_sensor6"]["valve"]);
         if (var == "WIRE1_SENSOR6_LOCATION")
@@ -209,8 +179,6 @@ String sensor_config_processor(const String& var) {
             return (wire1_sensor_data["wire1_sensor6"]["co2"]);
         if (var == "WIRE1_SENSOR7_TYPE")
             return (wire1_sensor_data["wire1_sensor7"]["type"]);
-        if (var == "WIRE1_SENSOR7_ADDRESS")
-            return (wire1_sensor_data["wire1_sensor7"]["address"]);
         if (var == "WIRE1_SENSOR7_VALVE")
             return (wire1_sensor_data["wire1_sensor7"]["valve"]);
         if (var == "WIRE1_SENSOR7_LOCATION")
