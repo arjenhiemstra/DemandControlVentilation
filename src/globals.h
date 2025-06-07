@@ -14,7 +14,7 @@
 #define LCD_COLUMNS 20                                              // LCD display columns
 #define LCDADDR 0x27                                                // LCD I2C address
 
-#define TCAADDR 0x70                                                //TCA9548 address
+//#define TCAADDR 0x70                                                //TCA9548 address
 
 extern TaskHandle_t task_influxdb;
 extern TaskHandle_t task_i2c;
@@ -62,6 +62,7 @@ extern JsonDocument wire1_sensor_data;
 extern JsonDocument settings_network_data;
 extern JsonDocument settings_mqtt_data;
 extern JsonDocument settings_i2c_data;
+extern JsonDocument settings_rtc_data;
 extern JsonDocument settings_fan_data;
 extern JsonDocument settings_statemachine_data;
 extern JsonDocument settings_influxdb_data;

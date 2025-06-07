@@ -43,12 +43,12 @@ void setup() {
   settings_state_cyclingday_mutex = xSemaphoreCreateMutex();
   settings_state_cyclingnight_mutex = xSemaphoreCreateMutex();
 
+  //Init queues for sensors
   float temp[2][8][3];
-
   sensor_queue = xQueueCreate(1, sizeof(temp));
   sensor_avg_queue = xQueueCreate(1, sizeof(temp));
 
-  // First switch off all outputs which randomly come up at power on
+  // First switch off all outputs which may have come randomly at power on
   init_registers();
 
   // Begin LittleFS
@@ -62,8 +62,15 @@ void setup() {
   start_task_wifi();
   read_mqtt_config();
   read_influxdb_config();
+  read_i2c_config();
+  read_time_settings();
   sensor_config_data_read();
   valve_settings_config_read();
+  
+  //Wait a little after reading config
+  vTaskDelay(100);
+  
+  //Start tasks
   startTaskwebcode();
   start_task_valvecontrol();
   start_task_i2c();
@@ -71,8 +78,8 @@ void setup() {
   start_task_mqtt();
   start_task_neopixel();
   start_task_system();
-  //Only write to influxDB when all tasks are running
-  vTaskDelay(60000);
+  
+  vTaskDelay(60000);                //Only write to influxDB when all tasks are running
   start_task_influxdb();
 }
 

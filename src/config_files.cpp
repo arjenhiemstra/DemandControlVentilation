@@ -3,9 +3,11 @@
 //Read time settings
 void read_time_settings(void) {
     
-    const char* path = "/json/settings_rtc.json";
-    String settings_rtc_string = "";
     bool settings_rtc_file_present = 0;
+    const char* path = "/json/settings_rtc.json";
+
+    String settings_rtc_string = "";
+    
     JsonDocument settings_rtc_doc;
 
     if (settings_rtc_mutex != NULL) {
@@ -22,8 +24,18 @@ void read_time_settings(void) {
             xSemaphoreGive(settings_rtc_mutex);
         }
     }
-} 
+    
+    String ntp_server_tmp = settings_rtc_doc[String("ntp_server")];
+    String timezone_tmp = settings_rtc_doc[String("timezone")];
 
+    if (settings_rtc_mutex != NULL) {
+        if(xSemaphoreTake(settings_rtc_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            ntp_server = ntp_server_tmp;
+            timezone = timezone_tmp;
+            xSemaphoreGive(settings_rtc_mutex);
+        }
+    }
+} 
 
 //Read Influxdb config file and update global variables
 void read_influxdb_config(void) {

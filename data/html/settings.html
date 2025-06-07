@@ -38,12 +38,12 @@
         </div>
 
         <div class="content">
-            <h4 class="content-subhead">Network configuration - %STATUS_NETWORK_CONFIG%</h4>
             <p>
                 <form method ="POST" action="/restart_esp32">
                     <input type="submit" value="Restart ESP32">
                 </form>
             </p>
+            <h4 class="content-subhead">Network configuration - %STATUS_NETWORK_CONFIG% (requires ESP32 restart)</h4>
             <p>
                 <form class="pure-form pure-form-stacked" method="POST" action="/settings_network">
                     <fieldset>
@@ -123,7 +123,7 @@
                     </fieldset>
                 </form>
             </p> 
-            <h4 class="content-subhead">Hardware I2C configuration - %STATUS_I2C_HARDWARE_CONFIG%</h4>   
+            <h4 class="content-subhead">Hardware I2C configuration - %STATUS_I2C_HARDWARE_CONFIG% (requires ESP32 restart)</h4>   
             <p>
                 <form class="pure-form pure-form-stacked" method="POST" action="/settings_i2c">
                     <fieldset>
@@ -133,7 +133,7 @@
                                 <input type="text" placeholder="default 0x70" value="%BUS0_MULTIPLEXER_ADDRESS%" name="bus0_multiplexer_address" id="bus0_multiplexer_address" class="pure-input-3-4" />
                             </div>
                             <div class="pure-u-1 pure-u-md-1-2">
-                                <label for="bus1_multiplexer_address:">Bus1 (Wire1) I2C Multiplexer address:</label>
+                                <label for="bus1_multiplexer_address">Bus1 (Wire1) I2C Multiplexer address:</label>
                                 <input type="text" placeholder="default 0x70" value="%BUS1_MULTIPLEXER_ADDRESS%" name="bus1_multiplexer_address" id="bus1_multiplexer_address" class="pure-input-3-4" />
                             </div>
                             <div class="pure-u-1 pure-u-md-1-2">
@@ -243,7 +243,7 @@
                     </fieldset>
                 </form>
             </p>
-            <h4 class="content-subhead">InfluxDB configuration - %STATUS_INFLUXDB_CONFIG%</h4>
+            <h4 class="content-subhead">InfluxDB configuration - %STATUS_INFLUXDB_CONFIG% (requires ESP32 restart)</h4>
             <p>
                 <form class="pure-form pure-form-stacked" method="POST" action="/settings_influxdb">
                     <fieldset>
@@ -279,6 +279,28 @@
                     </fieldset>
                 </form>
             </p>
+            <h4 class="content-subhead">Hardware I2C configuration - %STATUS_RTC_CONFIG% (requires ESP32 restart)</h4>   
+            <p>
+                <form class="pure-form pure-form-stacked" method="POST" action="/settings_rtc">
+                    <fieldset>
+                        <div class="pure-g">
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="timezone">Timezone:</label>
+                                <input type="text" placeholder="CET-1CEST,M3.5.0,M10.5.0/3" value="%TIMEZONE%" name="timezone" id="timezone" class="pure-input-3-4" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="ntp_server">NTP server address:</label>
+                                <input type="text" placeholder="e.g. pool.ntp.org" value="%NTP_SERVER%" name="ntp_server" id="ntp_server" class="pure-input-3-4" />
+                            </div>
+
+                        </div>
+                        <br>
+                        <input type="submit" value="Save RTC settings" class="pure-button-primary button-xsmall pure-button">
+                        <br>
+                    </fieldset>
+                </form>
+            </p>
+            <p>Refer to <a href="https://www.gnu.org/software/libc/manual/html_node/TZ-Variable.html">GNU documentation on TZ-Variable</a> for more detail on format. For Europe/Amsterdam use: CET-1CEST,M3.5.0,M10.5.0/3</p>
         </div>
     </div>
 

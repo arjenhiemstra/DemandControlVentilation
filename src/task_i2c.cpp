@@ -9,9 +9,9 @@ void task_i2c_code(void * pvParameters)
 {  
     int read_sensors_multiplier = 0;
     int current_time_multiplier = 0;
-    //int display_time_multiplier = 0;
     int rtc_time_multiplier = 0;
     int sync_time_multiplier = 0;
+    int lcd_address_tmp = 0;
     const TickType_t timedelay = 10;                     // main time delay im ms
 
     pinMode(pushButton_pin, INPUT);
@@ -19,6 +19,15 @@ void task_i2c_code(void * pvParameters)
 
     //start with display clear and no backlight
     init_display_off();
+
+    if (settings_i2c_mutex != NULL) {
+        if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+            lcd_address_tmp = display_i2c_addr.toInt();
+            xSemaphoreGive(settings_i2c_mutex);
+        }
+    }
+    
+    //LiquidCrystal_I2C lcd(lcd_address_tmp, LCD_COLUMNS, LCD_ROWS);
 
     for(;;) {
         read_sensors_multiplier++;

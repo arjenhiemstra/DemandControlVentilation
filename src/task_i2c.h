@@ -8,6 +8,7 @@
 #include "i2c.h"
 #include "globals.h"
 #include "signalprocessor.h"
+#include "LiquidCrystal_I2C.h" 
 
 // function declarations
 void start_task_i2c(void);

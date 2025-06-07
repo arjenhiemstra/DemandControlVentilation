@@ -1,6 +1,9 @@
 #include "i2c.h"
 
-LiquidCrystal_I2C lcd(LCDADDR, LCD_COLUMNS, LCD_ROWS);
+//LiquidCrystal_I2C lcd(LCDADDR, LCD_COLUMNS, LCD_ROWS);
+
+//This declaration uses a global variable without mutex. Only at boot this variable is written
+LiquidCrystal_I2C lcd(display_i2c_addr.toInt(), LCD_COLUMNS, LCD_ROWS);
 RTC_DS3231 rtc;
 
 void read_sensors(void) {
@@ -15,8 +18,8 @@ void read_sensors(void) {
     String sensor_type_temp = "";
     String sensor_address_temp = "";
 
-    int bus0_multiplexer_addr_tmp;
-    int bus1_multiplexer_addr_tmp;
+    int bus0_multiplexer_addr_tmp = 0;
+    int bus1_multiplexer_addr_tmp = 0;
 
     //Read address for TCA9548. I2C for TCA9548 may be differently configured with resistors on the board.
     //Set to 0x70 when left empty in settings
@@ -27,6 +30,16 @@ void read_sensors(void) {
             xSemaphoreGive(settings_i2c_mutex);
         }
     }
+
+    //Set to 0x70 when left empty in settings
+    /*
+    if (bus0_multiplexer_addr_tmp == 0) {
+        bus0_multiplexer_addr_tmp = 0x70;
+    }
+
+    if (bus1_multiplexer_addr_tmp == 0) {
+        bus1_multiplexer_addr_tmp = 0x70;
+    }*/
 
     for(bus=0;bus<2;bus++) {
         
@@ -50,7 +63,7 @@ void read_sensors(void) {
                     sensor_tmp = sensor;
                     sensor_type_temp= sensor_type;
                     sensor_address_temp = sensor_address;
-                    Wire.beginTransmission(TCAADDR);
+                    Wire.beginTransmission(bus0_multiplexer_addr_tmp);
                     Wire.write(1 << slot);
                     Wire.endTransmission();
                 }
@@ -62,7 +75,7 @@ void read_sensors(void) {
                     sensor_tmp = sensor;
                     sensor_type_temp= sensor_type;
                     sensor_address_temp = sensor_address;
-                    Wire1.beginTransmission(TCAADDR);
+                    Wire1.beginTransmission(bus1_multiplexer_addr_tmp);
                     Wire1.write(1 << slot);
                     Wire1.endTransmission();
                 }
@@ -500,14 +513,33 @@ String current_time(void) {
 void sync_rtc_ntp(void) {
 
     struct tm timeinfo;
+
+    char ntp_server_tmp[50];
+    char timezone_tmp[50];
+
+    String ntp_server_str;
+    String timezone_str;
         
     Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
     rtc.begin(&Wire);
+
+    //Read ntp server and timezone settings from config file
+    if (settings_rtc_mutex != NULL) {
+        if(xSemaphoreTake(settings_rtc_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            ntp_server_str = ntp_server;
+            timezone_str = timezone;
+            xSemaphoreGive(settings_rtc_mutex);
+        }
+    }
+
+    ntp_server_str.toCharArray(ntp_server_tmp,50);
+    timezone_str.toCharArray(timezone_tmp,50);
     
     //DateTime now = rtc.now();
-
     //configTime(gmt_offset_sec, daylight_offset_sec, ntp_server);  // Configure time with NTP server
-    configTzTime("CET-1CEST,M3.5.0,M10.5.0/3", "pool.ntp.org");
+
+    //configTzTime("CET-1CEST,M3.5.0,M10.5.0/3", "pool.ntp.org");
+    configTzTime(timezone_tmp, ntp_server_tmp);
     if (!getLocalTime(&timeinfo)) {
         Serial.println("Failed to obtain time");
         return;
@@ -527,27 +559,58 @@ void IRAM_ATTR lcd_baclight_pb_isr() {
 
 void pb_start_display(void) {
 
-    pb_toggle = false;      
+    pb_toggle = false;
+    String enable_lcd_tmp = "";
     
-    Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
-    lcd.init();
-    lcd.backlight();
-    Wire1.endTransmission();
+    //Only start display when enabled. Configured with global variable
+    if (settings_i2c_mutex != NULL) {
+        if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+            enable_lcd_tmp = enable_lcd;
+            xSemaphoreGive(settings_i2c_mutex);
+        }
+    }
     
-    display_time_and_date();
-    display_state_fan();
-    display_sensors();
-    display_valve_positions();
+    if (enable_lcd_tmp == "On") {
     
-    Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
-    lcd.noBacklight();
-    Wire1.endTransmission();
+        Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
+        lcd.init();
+        lcd.backlight();
+        Wire1.endTransmission();
+        
+        display_time_and_date();
+        display_state_fan();
+        display_sensors();
+        display_valve_positions();
+        
+        Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
+        lcd.noBacklight();
+        Wire1.endTransmission();
+    }
+    else {
+        Serial.print("\nDisplay is not enabled in settings.");
+    }
 }
 
 void init_display_off(void) {
-    Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
-    lcd.init();
-    lcd.clear();
-    lcd.noBacklight();
-    Wire1.endTransmission();
+    
+    String enable_lcd_tmp = "";
+    
+    //Only start display when enabled. Configured with global variable
+    if (settings_i2c_mutex != NULL) {
+        if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+            enable_lcd_tmp = enable_lcd;
+            xSemaphoreGive(settings_i2c_mutex);
+        }
+    }
+
+    if (enable_lcd_tmp == "On") {
+        Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
+        lcd.init();
+        lcd.clear();
+        lcd.noBacklight();
+        Wire1.endTransmission();
+    }
+    else {
+        Serial.print("\nDisplay is not enabled in settings.");
+    }
 }

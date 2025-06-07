@@ -507,6 +507,7 @@ String settings_processor(const String& var) {
     const char* settings_fan_path = "/json/settings_fan.json";
     const char* settings_statemachine_path = "/json/settings_statemachine.json";
     const char* settings_influxdb_path = "/json/settings_influxdb.json";
+    const char* settings_rtc_path = "/json/settings_rtc.json";
     const char* status = "";
     
     bool settings_network_file_present = 0;
@@ -515,6 +516,7 @@ String settings_processor(const String& var) {
     bool settings_fan_file_present = 0;
     bool settings_statemachine_file_present = 0;
     bool settings_influxdb_file_present = 0;
+    bool settings_rtc_file_present = 0;
 
     String settings_network_json = "";
     String settings_mqtt_json = "";
@@ -522,6 +524,7 @@ String settings_processor(const String& var) {
     String settings_fan_json = "";
     String settings_statemachine_json = "";
     String settings_influxdb_json = "";
+    String settings_rtc_json = "";
     
     JsonDocument settings_network_doc;
     JsonDocument settings_mqtt_doc;
@@ -529,6 +532,7 @@ String settings_processor(const String& var) {
     JsonDocument settings_fan_doc;
     JsonDocument settings_statemachine_doc;
     JsonDocument settings_influxdb_doc;
+    JsonDocument settings_rtc_doc;
   
     /*Network settings processor*/
     if (settings_network_mutex != NULL) {
@@ -726,6 +730,34 @@ String settings_processor(const String& var) {
     else {
         status = "<font color=\"red\">InfluxDB settings file not found.</font>";
         if (var == "STATUS_INFLUXDB_CONFIG") {
+            return F(status);
+        }
+    }
+
+    /*RTC Settings processor*/
+    if (settings_rtc_mutex != NULL) {
+        if(xSemaphoreTake(settings_rtc_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            settings_rtc_file_present = check_file_exists(settings_rtc_path);
+            if (settings_rtc_file_present == 1) {
+                settings_rtc_json = read_config_file(settings_rtc_path);
+                deserializeJson(settings_rtc_doc, settings_rtc_json);
+            }
+            xSemaphoreGive(settings_rtc_mutex);
+        }
+    }
+
+    if (settings_rtc_file_present == 1) {
+        status = "<font color=\"green\">RTC settings file found.</font>";
+        if (var == "STATUS_RTC_CONFIG")
+            return F(status);
+        if(var == "TIMEZONE")
+            return (settings_rtc_doc[String("timezone")]);
+        if(var == "NTP_SERVER")
+            return (settings_rtc_doc[String("ntp_server")]);
+    }
+    else {
+        status = "<font color=\"red\">RTC settings file not found.</font>";
+        if (var == "STATUS_RTC_CONFIG") {
             return F(status);
         }
     }

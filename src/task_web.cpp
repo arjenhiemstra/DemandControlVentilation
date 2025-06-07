@@ -148,6 +148,10 @@ const char* INFLUXDB_ORG = "influxdb_org";
 const char* INFLUXDB_BUCKET = "influxdb_bucket";
 const char* INFLUXDB_TOKEN = "influxdb_token";
 
+const char* STATUS_RTC_CONFIG = "status_rtc_config";
+const char* TIMEZONE = "timezone";
+const char* NTP_SERVER = "ntp_server";
+
 const char* STATUS_STATE_DAY_CONFIG = "status_state_day_config";
 const char* ENABLE_STATE_DAY = "enable_state_day";
 const char* NAME_STATE_DAY = "name_state_day";
@@ -560,6 +564,38 @@ void Taskwebcode(void *pvParameters) {
              
         request->send(LittleFS, "/html/settings.html", String(), false, settings_processor);
         xSemaphoreGive(settings_influxdb_mutex);
+      }
+    }
+  });
+
+  //Save settings from InfluxDB settings
+  server.on("/settings_rtc", HTTP_POST, [](AsyncWebServerRequest *request) {
+    
+    if (settings_rtc_mutex != NULL) {
+      if(xSemaphoreTake(settings_rtc_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        int params = request->params();
+        for(int i=0;i<params;i++){
+          const AsyncWebParameter* p = request->getParam(i);
+          if(p->isPost()){
+            if (p->name() == STATUS_RTC_CONFIG) {
+              settings_rtc_data["status_rtc_config"] = p->value().c_str();;
+            }
+            if (p->name() == TIMEZONE) {
+              settings_rtc_data["timezone"] = p->value().c_str();;
+            }
+            if (p->name() == NTP_SERVER) {
+              settings_rtc_data["ntp_server"] = p->value().c_str();;
+            }
+          }
+        }
+        const char* path = "/json/settings_rtc.json";
+        String settings_rtc_str;
+
+        serializeJson(settings_rtc_data, settings_rtc_str);
+        write_config_file(path, settings_rtc_str);
+             
+        request->send(LittleFS, "/html/settings.html", String(), false, settings_processor);
+        xSemaphoreGive(settings_rtc_mutex);
       }
     }
   });
