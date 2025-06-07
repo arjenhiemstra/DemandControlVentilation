@@ -37,6 +37,7 @@ extern SemaphoreHandle_t settings_i2c_mutex;
 extern SemaphoreHandle_t settings_fan_mutex;
 extern SemaphoreHandle_t settings_statemachine_mutex;
 extern SemaphoreHandle_t settings_influxdb_mutex;
+extern SemaphoreHandle_t settings_rtc_mutex; 
 extern SemaphoreHandle_t statemachine_state_mutex;
 extern SemaphoreHandle_t fanspeed_mutex;
 extern SemaphoreHandle_t lock_valve_move_mutex;

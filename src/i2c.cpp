@@ -15,6 +15,19 @@ void read_sensors(void) {
     String sensor_type_temp = "";
     String sensor_address_temp = "";
 
+    int bus0_multiplexer_addr_tmp;
+    int bus1_multiplexer_addr_tmp;
+
+    //Read address for TCA9548. I2C for TCA9548 may be differently configured with resistors on the board.
+    //Set to 0x70 when left empty in settings
+    if (settings_i2c_mutex != NULL) {
+        if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+            bus0_multiplexer_addr_tmp = bus0_multiplexer_addr.toInt();
+            bus1_multiplexer_addr_tmp = bus1_multiplexer_addr.toInt();
+            xSemaphoreGive(settings_i2c_mutex);
+        }
+    }
+
     for(bus=0;bus<2;bus++) {
         
         if (bus==0) {

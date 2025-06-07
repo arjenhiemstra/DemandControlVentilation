@@ -1,8 +1,8 @@
 #include "main.h"
 
 //Variables
-const char* ssid = "DIRK3"; //WIFI SSID
-const char* password = "095679706460482465742852"; //WIFI password
+//const char* ssid = ""; //WIFI SSID
+//const char* password = ""; //WIFI password
 
 void setup() {
 
@@ -25,6 +25,7 @@ void setup() {
   settings_fan_mutex = xSemaphoreCreateMutex();
   settings_statemachine_mutex = xSemaphoreCreateMutex();
   settings_influxdb_mutex = xSemaphoreCreateMutex();
+  settings_rtc_mutex = xSemaphoreCreateMutex();
 
   statemachine_state_mutex = xSemaphoreCreateMutex();
   valve_control_data_mutex = xSemaphoreCreateMutex();
