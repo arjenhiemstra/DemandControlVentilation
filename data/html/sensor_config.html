@@ -40,7 +40,7 @@
         <div class="content">
             <h2 class="content-subhead">Sensor config</h2>
             <p>
-                In this section the sensors can be configured and written to a config file. For the sensors there are two files, one for each I2C bus (Wire and Wire1). The values already store in the config file are prefilled in the text boxes.
+                In this section the sensors can be configured and written to a config file. For the sensors there are two files, one for each I2C bus (Wire and Wire1). The values already store in the config file are prefilled in the text boxes. The selection boxes indicate if these sensors should be included in de the statemachine sensor evaluation.
             </p>
             <div>
                 <form method ="POST" action="/delete_sensor_config_file1">
@@ -86,19 +86,25 @@
                                     <option>valve11</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-10-24">
+                            <div class="pure-u-1 pure-u-md-8-24">
                                 <label for="wire_sensor0_location">Room name:</label>
                                 <input type="text" placeholder="e.g. bathroom" value="%WIRE_SENSOR0_LOCATION%" name="wire_sensor0_location" id="wire_sensor0_location" class="pure-input-3-4"/>
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire_sensor0_rh">RH:</label>
-                                <input type="hidden" name="wire_sensor0_rh" id="wire_sensor0_rh" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire_sensor0_rh" id="wire_sensor0_rh" value="%WIRE_SENSOR0_RH%" class="pure-input-3-4"/>
+                                <select id="wire_sensor0_rh" name="wire_sensor0_rh" id="wire_sensor0_rh" class="pure-input-3-4">
+                                    <option selected>%WIRE_SENSOR0_RH%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire_sensor0_co2">CO2:</label>
-                                <input type="hidden" name="wire_sensor0_co2" id="wire_sensor0_co2" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire_sensor0_co2" id="wire_sensor0_co2" value="%WIRE_SENSOR0_CO2%"  class="pure-input-3-4"/>
+                                <select id="wire_sensor0_co2" name="wire_sensor0_co2" id="wire_sensor0_co2" class="pure-input-3-4">
+                                    <option selected>%WIRE_SENSOR0_CO2%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
                             <div class="pure-u-1 pure-u-md-5-24">
                                 <label for="wire_sensor1_type">Type:</label>
@@ -131,19 +137,25 @@
                                     <option>valve11</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-10-24">
+                            <div class="pure-u-1 pure-u-md-8-24">
                                 <label for="wire_sensor1_location">Room name:</label>
                                 <input type="text" placeholder="e.g. bathroom" value="%WIRE_SENSOR1_LOCATION%" name="wire_sensor1_location" id="wire_sensor1_location" class="pure-input-3-4" />
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire_sensor1_rh">RH:</label>
-                                <input type="hidden" name="wire_sensor1_rh" id="wire_sensor1_rh" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire_sensor1_rh" id="wire_sensor1_rh" value="%WIRE_SENSOR1_RH%" class="pure-input-3-4"/>
+                                <select id="wire_sensor1_rh" name="wire_sensor1_rh" id="wire_sensor1_rh" class="pure-input-3-4">
+                                    <option selected>%WIRE_SENSOR1_RH%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire_sensor1_co2">CO2:</label>
-                                <input type="hidden" name="wire_sensor1_co2" id="wire_sensor1_co2" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire_sensor1_co2" id="wire_sensor1_co2" value="%WIRE_SENSOR1_CO2%"  class="pure-input-3-4"/>
+                                <select id="wire_sensor1_co2" name="wire_sensor1_co2" id="wire_sensor1_co2" class="pure-input-3-4">
+                                    <option selected>%WIRE_SENSOR1_CO2%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
                             <div class="pure-u-1 pure-u-md-5-24">
                                 <label for="wire_sensor2_type">Type:</label>
@@ -176,19 +188,25 @@
                                     <option>valve11</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-10-24">
+                            <div class="pure-u-1 pure-u-md-8-24">
                                 <label for="wire_sensor2_location">Room name:</label>
                                 <input type="text" placeholder="e.g. bathroom" value="%WIRE_SENSOR2_LOCATION%" name="wire_sensor2_location" id="wire_sensor2_location" class="pure-input-3-4" />
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire_sensor2_rh">RH:</label>
-                                <input type="hidden" name="wire_sensor2_rh" id="wire_sensor2_rh" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire_sensor2_rh" id="wire_sensor2_rh" value="%WIRE_SENSOR2_RH%" class="pure-input-3-4"/>
+                                <select id="wire_sensor2_rh" name="wire_sensor2_rh" id="wire_sensor2_rh" class="pure-input-3-4">
+                                    <option selected>%WIRE_SENSOR2_RH%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
-                                <label for="wire_sensor0_co2">CO2:</label>
-                                <input type="hidden" name="wire_sensor2_co2" id="wire_sensor2_co2" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire_sensor2_co2" id="wire_sensor2_co2" value="%WIRE_SENSOR2_CO2%"  class="pure-input-3-4"/>
+                            <div class="pure-u-1 pure-u-md-3-24">
+                                <label for="wire_sensor2_co2">CO2:</label>
+                                <select id="wire_sensor2_co2" name="wire_sensor2_co2" id="wire_sensor2_co2" class="pure-input-3-4">
+                                    <option selected>%WIRE_SENSOR2_CO2%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
                             <div class="pure-u-1 pure-u-md-5-24">
                                 <label for="wire_sensor3_type">Type:</label>
@@ -221,19 +239,25 @@
                                     <option>valve11</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-10-24">
+                            <div class="pure-u-1 pure-u-md-8-24">
                                 <label for="wire_sensor3_location">Room name:</label>
                                 <input type="text" placeholder="e.g. bathroom" value="%WIRE_SENSOR3_LOCATION%" name="wire_sensor3_location" id="wire_sensor3_location" class="pure-input-3-4" />
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire_sensor3_rh">RH:</label>
-                                <input type="hidden" name="wire_sensor3_rh" id="wire_sensor3_rh" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire_sensor3_rh" id="wire_sensor3_rh" value="%WIRE_SENSOR3_RH%" class="pure-input-3-4"/>
+                                <select id="wire_sensor3_rh" name="wire_sensor3_rh" id="wire_sensor3_rh" class="pure-input-3-4">
+                                    <option selected>%WIRE_SENSOR3_RH%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire_sensor3_co2">CO2:</label>
-                                <input type="hidden" name="wire_sensor3_co2" id="wire_sensor3_co2" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire_sensor3_co2" id="wire_sensor3_co2" value="%WIRE_SENSOR3_CO2%"  class="pure-input-3-4"/>
+                                <select id="wire_sensor3_co2" name="wire_sensor3_co2" id="wire_sensor3_co2" class="pure-input-3-4">
+                                    <option selected>%WIRE_SENSOR3_CO2%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
                             <div class="pure-u-1 pure-u-md-5-24">
                                 <label for="wire_sensor4_type">Type:</label>
@@ -266,19 +290,25 @@
                                     <option>valve11</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-10-24">
+                            <div class="pure-u-1 pure-u-md-8-24">
                                 <label for="wire_sensor4_location">Room name:</label>
                                 <input type="text" placeholder="e.g. bathroom" value="%WIRE_SENSOR4_LOCATION%" name="wire_sensor4_location" id="wire_sensor4_location" class="pure-input-3-4" />
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire_sensor4_rh">RH:</label>
-                                <input type="hidden" name="wire_sensor4_rh" id="wire_sensor4_rh" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire_sensor4_rh" id="wire_sensor4_rh" value="%WIRE_SENSOR4_RH%" class="pure-input-3-4"/>
+                                <select id="wire_sensor4_rh" name="wire_sensor4_rh" id="wire_sensor4_rh" class="pure-input-3-4">
+                                    <option selected>%WIRE_SENSOR4_RH%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire_sensor4_co2">CO2:</label>
-                                <input type="hidden" name="wire_sensor4_co2" id="wire_sensor4_co2" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire_sensor4_co2" id="wire_sensor4_co2" value="%WIRE_SENSOR4_CO2%"  class="pure-input-3-4"/>
+                                <select id="wire_sensor4_co2" name="wire_sensor4_co2" id="wire_sensor4_co2" class="pure-input-3-4">
+                                    <option selected>%WIRE_SENSOR4_CO2%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
                             <div class="pure-u-1 pure-u-md-5-24">
                                 <label for="wire_sensor5_type">Type:</label>
@@ -311,19 +341,25 @@
                                     <option>valve11</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-10-24">
+                            <div class="pure-u-1 pure-u-md-8-24">
                                 <label for="wire_sensor5_location">Room name:</label>
                                 <input type="text" placeholder="e.g. bathroom" value="%WIRE_SENSOR5_LOCATION%" name="wire_sensor5_location" id="wire_sensor5_location" class="pure-input-3-4" />
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire_sensor5_rh">RH:</label>
-                                <input type="hidden" name="wire_sensor5_rh" id="wire_sensor5_rh" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire_sensor5_rh" id="wire_sensor5_rh" value="%WIRE_SENSOR5_RH%" class="pure-input-3-4"/>
+                                <select id="wire_sensor5_rh" name="wire_sensor5_rh" id="wire_sensor5_rh" class="pure-input-3-4">
+                                    <option selected>%WIRE_SENSOR5_RH%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
-                                <label for="wire_sensor0_co2">CO2:</label>
-                                <input type="hidden" name="wire_sensor5_co2" id="wire_sensor5_co2" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire_sensor5_co2" id="wire_sensor5_co2" value="%WIRE_SENSOR5_CO2%"  class="pure-input-3-4"/>
+                            <div class="pure-u-1 pure-u-md-3-24">
+                                <label for="wire_sensor5_co2">CO2:</label>
+                                <select id="wire_sensor5_co2" name="wire_sensor5_co2" id="wire_sensor5_co2" class="pure-input-3-4">
+                                    <option selected>%WIRE_SENSOR5_CO2%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
                             <div class="pure-u-1 pure-u-md-5-24">
                                 <label for="wire_sensor6_type">Type:</label>
@@ -356,19 +392,25 @@
                                     <option>valve11</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-10-24">
+                            <div class="pure-u-1 pure-u-md-8-24">
                                 <label for="wire_sensor6_location">Room name:</label>
                                 <input type="text" placeholder="e.g. bathroom" value="%WIRE_SENSOR6_LOCATION%" name="wire_sensor6_location" id="wire_sensor6_location" class="pure-input-3-4" />
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire_sensor6_rh">RH:</label>
-                                <input type="hidden" name="wire_sensor6_rh" id="wire_sensor6_rh" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire_sensor6_rh" id="wire_sensor6_rh" value="%WIRE_SENSOR6_RH%" class="pure-input-3-4"/>
+                                <select id="wire_sensor6_rh" name="wire_sensor6_rh" id="wire_sensor6_rh" class="pure-input-3-4">
+                                    <option selected>%WIRE_SENSOR6_RH%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
-                                <label for="wire_sensor0_co2">CO2:</label>
-                                <input type="hidden" name="wire_sensor6_co2" id="wire_sensor6_co2" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire_sensor6_co2" id="wire_sensor6_co2" value="%WIRE_SENSOR6_CO2%"  class="pure-input-3-4"/>
+                            <div class="pure-u-1 pure-u-md-3-24">
+                                <label for="wire_sensor6_co2">CO2:</label>
+                                <select id="wire_sensor6_co2" name="wire_sensor6_co2" id="wire_sensor6_co2" class="pure-input-3-4">
+                                    <option selected>%WIRE_SENSOR6_CO2%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
                             <div class="pure-u-1 pure-u-md-5-24">
                                 <label for="wire_sensor7_type">Type:</label>
@@ -401,19 +443,25 @@
                                     <option>valve11</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-10-24">
+                            <div class="pure-u-1 pure-u-md-8-24">
                                 <label for="wire_sensor7_location">Room name:</label>
                                 <input type="text" placeholder="e.g. bathroom" value="%WIRE_SENSOR7_LOCATION%" name="wire_sensor7_location" id="wire_sensor7_location" class="pure-input-3-4" />
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire_sensor7_rh">RH:</label>
-                                <input type="hidden" name="wire_sensor7_rh" id="wire_sensor7_rh" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire_sensor7_rh" id="wire_sensor7_rh" value="%WIRE_SENSOR7_RH%" class="pure-input-3-4"/>
+                                <select id="wire_sensor7_rh" name="wire_sensor7_rh" id="wire_sensor7_rh" class="pure-input-3-4">
+                                    <option selected>%WIRE_SENSOR7_RH%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire_sensor7_co2">CO2:</label>
-                                <input type="hidden" name="wire_sensor7_co2" id="wire_sensor7_co2" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire_sensor7_co2" id="wire_sensor7_co2" value="%WIRE_SENSOR7_CO2%"  class="pure-input-3-4"/>
+                                <select id="wire_sensor7_co2" name="wire_sensor7_co2" id="wire_sensor7_co2" class="pure-input-3-4">
+                                    <option selected>%WIRE_SENSOR7_CO2%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
                         </div>
                         <br><br>
@@ -457,19 +505,25 @@
                                     <option>valve11</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-10-24">
+                            <div class="pure-u-1 pure-u-md-8-24">
                                 <label for="wire1_sensor0_location">Room name:</label>
                                 <input type="text" placeholder="e.g. bathroom" value="%WIRE1_SENSOR0_LOCATION%" name="wire1_sensor0_location" id="wire1_sensor0_location" class="pure-input-3-4" />
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire1_sensor0_rh">RH:</label>
-                                <input type="hidden" name="wire1_sensor0_rh" id="wire1_sensor0_rh" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire1_sensor0_rh" id="wire1_sensor0_rh" value="true" class="pure-input-3-4"/>
+                                <select id="wire1_sensor0_rh" name="wire1_sensor0_rh" id="wire1_sensor0_rh" class="pure-input-3-4">
+                                    <option selected>%WIRE1_SENSOR0_RH%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire1_sensor0_co2">CO2:</label>
-                                <input type="hidden" name="wire1_sensor0_co2" id="wire1_sensor0_co2" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire1_sensor0_co2" id="wire1_sensor0_co2" value="true"  class="pure-input-3-4"/>
+                                <select id="wire1_sensor0_co2" name="wire1_sensor0_co2" id="wire1_sensor0_co2" class="pure-input-3-4">
+                                    <option selected>%WIRE1_SENSOR0_CO2%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
                             <div class="pure-u-1 pure-u-md-5-24">
                                 <label for="wire1_sensor1_type">Type:</label>
@@ -502,19 +556,25 @@
                                     <option>valve11</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-10-24">
+                            <div class="pure-u-1 pure-u-md-8-24">
                                 <label for="wire1_sensor1_location">Room name:</label>
                                 <input type="text" placeholder="e.g. bathroom" value="%WIRE1_SENSOR1_LOCATION%" name="wire1_sensor1_location" id="wire1_sensor1_location" class="pure-input-3-4" />
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire1_sensor1_rh">RH:</label>
-                                <input type="hidden" name="wire1_sensor1_rh" id="wire1_sensor1_rh" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire1_sensor1_rh" id="wire1_sensor1_rh" value="true" class="pure-input-3-4"/>
+                                <select id="wire1_sensor1_rh" name="wire1_sensor1_rh" id="wire1_sensor1_rh" class="pure-input-3-4">
+                                    <option selected>%WIRE1_SENSOR1_RH%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire1_sensor1_co2">CO2:</label>
-                                <input type="hidden" name="wire1_sensor1_co2" id="wire1_sensor1_co2" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire1_sensor1_co2" id="wire1_sensor1_co2" value="true"  class="pure-input-3-4"/>
+                                <select id="wire1_sensor1_co2" name="wire1_sensor1_co2" id="wire1_sensor1_co2" class="pure-input-3-4">
+                                    <option selected>%WIRE1_SENSOR1_CO2%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
                             <div class="pure-u-1 pure-u-md-5-24">
                                 <label for="wire1_sensor2_type">Type:</label>
@@ -547,19 +607,25 @@
                                     <option>valve11</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-10-24">
+                            <div class="pure-u-1 pure-u-md-8-24">
                                 <label for="wire1_sensor2_location">Room name:</label>
                                 <input type="text" placeholder="e.g. bathroom" value="%WIRE1_SENSOR2_LOCATION%" name="wire1_sensor2_location" id="wire1_sensor2_location" class="pure-input-3-4" />
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire1_sensor2_rh">RH:</label>
-                                <input type="hidden" name="wire2_sensor0_rh" id="wire2_sensor0_rh" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire2_sensor0_rh" id="wire2_sensor0_rh" value="true" class="pure-input-3-4"/>
+                                <select id="wire1_sensor2_rh" name="wire1_sensor2_rh" id="wire1_sensor2_rh" class="pure-input-3-4">
+                                    <option selected>%WIRE1_SENSOR2_RH%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire1_sensor2_co2">CO2:</label>
-                                <input type="hidden" name="wire1_sensor2_co2" id="wire1_sensor2_co2" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire1_sensor2_co2" id="wire1_sensor2_co2" value="true"  class="pure-input-3-4"/>
+                                <select id="wire1_sensor2_co2" name="wire1_sensor2_co2" id="wire1_sensor2_co2" class="pure-input-3-4">
+                                    <option selected>%WIRE1_SENSOR2_CO2%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
                             <div class="pure-u-1 pure-u-md-5-24">
                                 <label for="wire1_sensor3_type">Type:</label>
@@ -592,19 +658,25 @@
                                     <option>valve11</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-10-24">
+                            <div class="pure-u-1 pure-u-md-8-24">
                                 <label for="wire1_sensor3_location">Room name:</label>
                                 <input type="text" placeholder="e.g. bathroom" value="%WIRE1_SENSOR3_LOCATION%" name="wire1_sensor3_location" id="wire1_sensor3_location" class="pure-input-3-4" />
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire1_sensor3_rh">RH:</label>
-                                <input type="hidden" name="wire1_sensor3_rh" id="wire1_sensor3_rh" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire1_sensor3_rh" id="wire1_sensor3_rh" value="true" class="pure-input-3-4"/>
+                                <select id="wire1_sensor3_rh" name="wire1_sensor3_rh" id="wire1_sensor3_rh" class="pure-input-3-4">
+                                    <option selected>%WIRE1_SENSOR3_RH%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire1_sensor3_co2">CO2:</label>
-                                <input type="hidden" name="wire1_sensor3_co2" id="wire1_sensor3_co2" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire1_sensor3_co2" id="wire1_sensor3_co2" value="true"  class="pure-input-3-4"/>
+                                <select id="wire1_sensor3_co2" name="wire1_sensor3_co2" id="wire1_sensor3_co2" class="pure-input-3-4">
+                                    <option selected>%WIRE1_SENSOR3_CO2%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
                             <div class="pure-u-1 pure-u-md-5-24">
                                 <label for="wire1_sensor4_type">Type:</label>
@@ -637,19 +709,25 @@
                                     <option>valve11</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-10-24">
+                            <div class="pure-u-1 pure-u-md-8-24">
                                 <label for="wire1_sensor4_location">Room name:</label>
                                 <input type="text" placeholder="e.g. bathroom" value="%WIRE1_SENSOR4_LOCATION%" name="wire1_sensor4_location" id="wire1_sensor4_location" class="pure-input-3-4" />
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire1_sensor4_rh">RH:</label>
-                                <input type="hidden" name="wire1_sensor4_rh" id="wire1_sensor4_rh" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire1_sensor4_rh" id="wire1_sensor4_rh" value="true" class="pure-input-3-4"/>
+                                <select id="wire1_sensor4_rh" name="wire1_sensor4_rh" id="wire1_sensor4_rh" class="pure-input-3-4">
+                                    <option selected>%WIRE1_SENSOR4_RH%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire1_sensor4_co2">CO2:</label>
-                                <input type="hidden" name="wire1_sensor4_co2" id="wire1_sensor4_co2" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire1_sensor4_co2" id="wire1_sensor4_co2" value="true"  class="pure-input-3-4"/>
+                                <select id="wire1_sensor4_co2" name="wire1_sensor4_co2" id="wire1_sensor4_co2" class="pure-input-3-4">
+                                    <option selected>%WIRE1_SENSOR4_CO2%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
                             <div class="pure-u-1 pure-u-md-5-24">
                                 <label for="wire1_sensor5_type">Type:</label>
@@ -682,19 +760,25 @@
                                     <option>valve11</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-10-24">
+                            <div class="pure-u-1 pure-u-md-8-24">
                                 <label for="wire1_sensor5_location">Room name:</label>
                                 <input type="text" placeholder="e.g. bathroom" value="%WIRE1_SENSOR5_LOCATION%" name="wire1_sensor5_location" id="wire1_sensor5_location" class="pure-input-3-4" />
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire1_sensor5_rh">RH:</label>
-                                <input type="hidden" name="wire1_sensor5_rh" id="wire1_sensor5_rh" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire1_sensor5_rh" id="wire1_sensor5_rh" value="true" class="pure-input-3-4"/>
+                                <select id="wire1_sensor5_rh" name="wire1_sensor5_rh" id="wire1_sensor5_rh" class="pure-input-3-4">
+                                    <option selected>%WIRE1_SENSOR5_RH%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire1_sensor5_co2">CO2:</label>
-                                <input type="hidden" name="wire1_sensor5_co2" id="wire1_sensor5_co2" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire1_sensor5_co2" id="wire1_sensor5_co2" value="true"  class="pure-input-3-4"/>
+                                <select id="wire1_sensor5_co2" name="wire1_sensor5_co2" id="wire1_sensor5_co2" class="pure-input-3-4">
+                                    <option selected>%WIRE1_SENSOR5_CO2%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
                             <div class="pure-u-1 pure-u-md-5-24">
                                 <label for="wire1_sensor6_type">Type:</label>
@@ -727,19 +811,25 @@
                                     <option>valve11</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-10-24">
+                            <div class="pure-u-1 pure-u-md-8-24">
                                 <label for="wire1_sensor6_location">Room name:</label>
                                 <input type="text" placeholder="e.g. bathroom" value="%WIRE1_SENSOR6_LOCATION%" name="wire1_sensor6_location" id="wire1_sensor6_location" class="pure-input-3-4" />
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire1_sensor6_rh">RH:</label>
-                                <input type="hidden" name="wire1_sensor6_rh" id="wire1_sensor6_rh" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire1_sensor6_rh" id="wire1_sensor6_rh" value="true" class="pure-input-3-4"/>
+                                <select id="wire1_sensor6_rh" name="wire1_sensor6_rh" id="wire1_sensor6_rh" class="pure-input-3-4">
+                                    <option selected>%WIRE1_SENSOR6_RH%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire1_sensor6_co2">CO2:</label>
-                                <input type="hidden" name="wire1_sensor6_co2" id="wire1_sensor6_co2" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire1_sensor6_co2" id="wire1_sensor6_co2" value="true"  class="pure-input-3-4"/>
+                                <select id="wire1_sensor6_co2" name="wire1_sensor6_co2" id="wire1_sensor6_co2" class="pure-input-3-4">
+                                    <option selected>%WIRE1_SENSOR6_CO2%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
                             <div class="pure-u-1 pure-u-md-5-24">
                                 <label for="wire1_sensor7_type">Type:</label>
@@ -772,19 +862,25 @@
                                     <option>valve11</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-10-24">
+                            <div class="pure-u-1 pure-u-md-8-24">
                                 <label for="wire1_sensor7_location">Room name:</label>
                                 <input type="text" placeholder="e.g. bathroom" value="%WIRE1_SENSOR7_LOCATION%" name="wire1_sensor7_location" id="wire1_sensor7_location" class="pure-input-3-4" />
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire1_sensor7_rh">RH:</label>
-                                <input type="hidden" name="wire1_sensor7_rh" id="wire1_sensor7_rh" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire1_sensor7_rh" id="wire1_sensor7_rh" value="true" class="pure-input-3-4"/>
+                                <select id="wire1_sensor7_rh" name="wire1_sensor7_rh" id="wire1_sensor7_rh" class="pure-input-3-4">
+                                    <option selected>%WIRE1_SENSOR7_RH%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-2-24">
+                            <div class="pure-u-1 pure-u-md-3-24">
                                 <label for="wire1_sensor7_co2">CO2:</label>
-                                <input type="hidden" name="wire1_sensor7_co2" id="wire1_sensor7_co2" value="false"  class="pure-input-3-4"/>
-                                <input type="checkbox" name="wire1_sensor7_co2" id="wire1_sensor7_co2" value="true"  class="pure-input-3-4"/>
+                                <select id="wire1_sensor7_co2" name="wire1_sensor7_co2" id="wire1_sensor7_co2" class="pure-input-3-4">
+                                    <option selected>%WIRE1_SENSOR7_CO2%</option>
+                                    <option>On</option>
+                                    <option>Off</option>
+                                </select>
                             </div>
                         </div>
                         <br><br>

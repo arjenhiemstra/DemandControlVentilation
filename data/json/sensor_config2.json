@@ -2,49 +2,65 @@
     "wire1_sensor0":
         {
             "type":"None",
-            "valve":"",
-            "location":""
+            "valve":"None",
+            "location":"",
+            "rh":"Off",
+            "co2":"Off"
         },
     "wire1_sensor1":
         {
             "type":"None",
-            "valve":"",
-            "location":""
+            "valve":"None",
+            "location":"",
+            "rh":"Off",
+            "co2":"Off"
         },
     "wire1_sensor2":
             {
             "type":"None",
-            "valve":"",
-            "location":""
+            "valve":"None",
+            "location":"",
+            "rh":"Off",
+            "co2":"Off"
         },
     "wire1_sensor3":
         {
             "type":"None",
             "valve":"",
-            "location":""
+            "location":"",
+            "rh":"Off",
+            "co2":"Off"
         },
     "wire1_sensor4":
         {
             "type":"None",
             "valve":"",
-            "location":""
+            "location":"",
+            "rh":"Off",
+            "co2":"Off"
         },
     "wire1_sensor5":
         {
             "type":"None",
             "valve":"",
-            "location":""
+            "location":"",
+            "rh":"Off",
+            "co2":"Off"
         },
     "wire1_sensor6":
         {
             "type":"None",
             "valve":"",
-            "location":""
+            "location":"",
+            "rh":"Off",
+            "co2":"Off"
         },
     "wire1_sensor7":
         {
             "type":"None",
             "valve":"",
-            "location":""
+            "location":"",
+            "rh":"Off",
+            "co2":"Off"
         }   
     }

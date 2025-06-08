@@ -47,51 +47,79 @@ const char* WIRE_SENSOR0_CO2 = "wire_sensor0_co2";
 const char* WIRE_SENSOR1_TYPE = "wire_sensor1_type";
 const char* WIRE_SENSOR1_VALVE = "wire_sensor1_valve";
 const char* WIRE_SENSOR1_LOCATION = "wire_sensor1_location";
+const char* WIRE_SENSOR1_RH = "wire_sensor1_rh";
+const char* WIRE_SENSOR1_CO2 = "wire_sensor1_co2";
 const char* WIRE_SENSOR2_TYPE = "wire_sensor2_type";
 const char* WIRE_SENSOR2_VALVE = "wire_sensor2_valve";
 const char* WIRE_SENSOR2_LOCATION = "wire_sensor2_location";
+const char* WIRE_SENSOR2_RH = "wire_sensor2_rh";
+const char* WIRE_SENSOR2_CO2 = "wire_sensor2_co2";
 const char* WIRE_SENSOR3_TYPE = "wire_sensor3_type";
 const char* WIRE_SENSOR3_VALVE = "wire_sensor3_valve";
 const char* WIRE_SENSOR3_LOCATION = "wire_sensor3_location";
+const char* WIRE_SENSOR3_RH = "wire_sensor3_rh";
+const char* WIRE_SENSOR3_CO2 = "wire_sensor3_co2";
 const char* WIRE_SENSOR4_TYPE = "wire_sensor4_type";
 const char* WIRE_SENSOR4_VALVE = "wire_sensor4_valve";
 const char* WIRE_SENSOR4_LOCATION = "wire_sensor4_location";
+const char* WIRE_SENSOR4_RH = "wire_sensor4_rh";
+const char* WIRE_SENSOR4_CO2 = "wire_sensor4_co2";
 const char* WIRE_SENSOR5_TYPE = "wire_sensor5_type";
 const char* WIRE_SENSOR5_VALVE = "wire_sensor5_valve";
 const char* WIRE_SENSOR5_LOCATION = "wire_sensor5_location";
+const char* WIRE_SENSOR5_RH = "wire_sensor5_rh";
+const char* WIRE_SENSOR5_CO2 = "wire_sensor5_co2";
 const char* WIRE_SENSOR6_TYPE = "wire_sensor6_type";
 const char* WIRE_SENSOR6_VALVE = "wire_sensor6_valve";
 const char* WIRE_SENSOR6_LOCATION = "wire_sensor6_location";
+const char* WIRE_SENSOR6_RH = "wire_sensor6_rh";
+const char* WIRE_SENSOR6_CO2 = "wire_sensor6_co2";
 const char* WIRE_SENSOR7_TYPE = "wire_sensor7_type";
 const char* WIRE_SENSOR7_VALVE = "wire_sensor7_valve";
 const char* WIRE_SENSOR7_LOCATION = "wire_sensor7_location";
-
-String wire_sensor0_rh,wire_sensor0_co2;
+const char* WIRE_SENSOR7_RH = "wire_sensor7_rh";
+const char* WIRE_SENSOR7_CO2 = "wire_sensor7_co2";
 
 const char* WIRE1_SENSOR0_TYPE = "wire1_sensor0_type";
 const char* WIRE1_SENSOR0_VALVE = "wire1_sensor0_valve";
 const char* WIRE1_SENSOR0_LOCATION = "wire1_sensor0_location";
+const char* WIRE1_SENSOR0_RH = "wire1_sensor0_rh";
+const char* WIRE1_SENSOR0_CO2 = "wire1_sensor0_co2";
 const char* WIRE1_SENSOR1_TYPE = "wire1_sensor1_type";
 const char* WIRE1_SENSOR1_VALVE = "wire1_sensor1_valve";
 const char* WIRE1_SENSOR1_LOCATION = "wire1_sensor1_location";
+const char* WIRE1_SENSOR1_RH = "wire1_sensor1_rh";
+const char* WIRE1_SENSOR1_CO2 = "wire1_sensor1_co2";
 const char* WIRE1_SENSOR2_TYPE = "wire1_sensor2_type";
 const char* WIRE1_SENSOR2_VALVE = "wire1_sensor2_valve";
 const char* WIRE1_SENSOR2_LOCATION = "wire1_sensor2_location";
+const char* WIRE1_SENSOR2_RH = "wire1_sensor2_rh";
+const char* WIRE1_SENSOR2_CO2 = "wire1_sensor2_co2";
 const char* WIRE1_SENSOR3_TYPE = "wire1_sensor3_type";
 const char* WIRE1_SENSOR3_VALVE = "wire1_sensor3_valve";
 const char* WIRE1_SENSOR3_LOCATION = "wire1_sensor3_location";
+const char* WIRE1_SENSOR3_RH = "wire1_sensor3_rh";
+const char* WIRE1_SENSOR3_CO2 = "wire1_sensor3_co2";
 const char* WIRE1_SENSOR4_TYPE = "wire1_sensor4_type";
 const char* WIRE1_SENSOR4_VALVE = "wire1_sensor4_valve";
 const char* WIRE1_SENSOR4_LOCATION = "wire1_sensor4_location";
+const char* WIRE1_SENSOR4_RH = "wire1_sensor4_rh";
+const char* WIRE1_SENSOR4_CO2 = "wire1_sensor4_co2";
 const char* WIRE1_SENSOR5_TYPE = "wire1_sensor5_type";
 const char* WIRE1_SENSOR5_VALVE = "wire1_sensor5_valve";
 const char* WIRE1_SENSOR5_LOCATION = "wire1_sensor5_location";
+const char* WIRE1_SENSOR5_RH = "wire1_sensor5_rh";
+const char* WIRE1_SENSOR5_CO2 = "wire1_sensor5_co2";
 const char* WIRE1_SENSOR6_TYPE = "wire1_sensor6_type";
 const char* WIRE1_SENSOR6_VALVE = "wire1_sensor6_valve";
 const char* WIRE1_SENSOR6_LOCATION = "wire1_sensor6_location";
+const char* WIRE1_SENSOR6_RH = "wire1_sensor6_rh";
+const char* WIRE1_SENSOR6_CO2 = "wire1_sensor6_co2";
 const char* WIRE1_SENSOR7_TYPE = "wire1_sensor7_type";
 const char* WIRE1_SENSOR7_VALVE = "wire1_sensor7_valve";
 const char* WIRE1_SENSOR7_LOCATION = "wire1_sensor7_location";
+const char* WIRE1_SENSOR7_RH = "wire1_sensor7_rh";
+const char* WIRE1_SENSOR7_CO2 = "wire1_sensor7_co2";
 
 const char* WIRE_SENSOR_CONFIG = "wire_sensor_config";
 const char* WIRE1_SENSOR_CONFIG = "wire1_sensor_config";
@@ -870,25 +898,13 @@ void Taskwebcode(void *pvParameters) {
           wire_sensor_data["wire_sensor0"]["valve"] = p->value().c_str();
         }
         if (p->name() == WIRE_SENSOR0_LOCATION) {
-          wire_sensor_data["wire_sensor0"]["location"] = p->value().c_str();;
+          wire_sensor_data["wire_sensor0"]["location"] = p->value().c_str();
         }
         if (p->name() == WIRE_SENSOR0_RH) {
-          wire_sensor0_rh = p->value().c_str();
-          if (wire_sensor0_rh == "true") {
-            wire_sensor_data["wire_sensor0"][3] = 1;
-          }
-          else {
-            wire_sensor_data["wire_sensor0"][3] = 0;
-          }
+          wire_sensor_data["wire_sensor0"]["rh"] = p->value().c_str();
         }
         if (p->name() == WIRE_SENSOR0_CO2) {
-          wire_sensor0_co2 = p->value().c_str();
-          if (wire_sensor0_co2 == "true") {
-            wire_sensor_data["wire_sensor0"][4] = 1;
-          }
-          else {
-            wire_sensor_data["wire_sensor0"][4] = 0;
-          }
+          wire_sensor_data["wire_sensor0"]["co2"] = p->value().c_str();
         }
         if (p->name() == WIRE_SENSOR1_TYPE) {
           wire_sensor_data["wire_sensor1"]["type"] = p->value().c_str();
@@ -899,6 +915,12 @@ void Taskwebcode(void *pvParameters) {
         if (p->name() == WIRE_SENSOR1_LOCATION) {
           wire_sensor_data["wire_sensor1"]["location"] = p->value().c_str();
         }
+        if (p->name() == WIRE_SENSOR1_RH) {
+          wire_sensor_data["wire_sensor1"]["rh"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR1_CO2) {
+          wire_sensor_data["wire_sensor1"]["co2"] = p->value().c_str();
+        }
         if (p->name() == WIRE_SENSOR2_TYPE) {
           wire_sensor_data["wire_sensor2"]["type"] = p->value().c_str();
         }    
@@ -907,6 +929,12 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == WIRE_SENSOR2_LOCATION) {
           wire_sensor_data["wire_sensor2"]["location"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR2_RH) {
+          wire_sensor_data["wire_sensor2"]["rh"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR2_CO2) {
+          wire_sensor_data["wire_sensor2"]["co2"] = p->value().c_str();
         }
         if (p->name() == WIRE_SENSOR3_TYPE) {
           wire_sensor_data["wire_sensor3"]["type"] = p->value().c_str();
@@ -917,6 +945,12 @@ void Taskwebcode(void *pvParameters) {
         if (p->name() == WIRE_SENSOR3_LOCATION) {
           wire_sensor_data["wire_sensor3"]["location"] = p->value().c_str();
         }
+        if (p->name() == WIRE_SENSOR3_RH) {
+          wire_sensor_data["wire_sensor3"]["rh"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR3_CO2) {
+          wire_sensor_data["wire_sensor3"]["co2"] = p->value().c_str();
+        }
         if (p->name() == WIRE_SENSOR4_TYPE) {
           wire_sensor_data["wire_sensor4"]["type"] = p->value().c_str();
         }    
@@ -925,6 +959,12 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == WIRE_SENSOR4_LOCATION) {
           wire_sensor_data["wire_sensor4"]["location"] = p->value().c_str(); 
+        }
+        if (p->name() == WIRE_SENSOR4_RH) {
+          wire_sensor_data["wire_sensor4"]["rh"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR4_CO2) {
+          wire_sensor_data["wire_sensor4"]["co2"] = p->value().c_str();
         }
         if (p->name() == WIRE_SENSOR5_TYPE) {
           wire_sensor_data["wire_sensor5"]["type"] = p->value().c_str();
@@ -935,6 +975,12 @@ void Taskwebcode(void *pvParameters) {
         if (p->name() == WIRE_SENSOR5_LOCATION) {
           wire_sensor_data["wire_sensor5"]["location"] = p->value().c_str();
         }
+        if (p->name() == WIRE_SENSOR5_RH) {
+          wire_sensor_data["wire_sensor6"]["rh"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR5_CO2) {
+          wire_sensor_data["wire_sensor6"]["co2"] = p->value().c_str();
+        }
         if (p->name() == WIRE_SENSOR6_TYPE) {
           wire_sensor_data["wire_sensor6"]["type"] = p->value().c_str();
         }    
@@ -944,6 +990,12 @@ void Taskwebcode(void *pvParameters) {
         if (p->name() == WIRE_SENSOR6_LOCATION) {
           wire_sensor_data["wire_sensor6"]["location"] = p->value().c_str();
         }
+        if (p->name() == WIRE_SENSOR6_RH) {
+          wire_sensor_data["wire_sensor6"]["rh"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR6_CO2) {
+          wire_sensor_data["wire_sensor6"]["co2"] = p->value().c_str();
+        }
         if (p->name() == WIRE_SENSOR7_TYPE) {
           wire_sensor_data["wire_sensor7"]["type"] = p->value().c_str();
         }     
@@ -952,6 +1004,12 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == WIRE_SENSOR7_LOCATION) {
           wire_sensor_data["wire_sensor7"]["location"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR7_RH) {
+          wire_sensor_data["wire_sensor7"]["rh"] = p->value().c_str();
+        }
+        if (p->name() == WIRE_SENSOR7_CO2) {
+          wire_sensor_data["wire_sensor7"]["co2"] = p->value().c_str();
         }
       }
     }
@@ -977,6 +1035,12 @@ void Taskwebcode(void *pvParameters) {
         if (p->name() == WIRE1_SENSOR0_LOCATION) {
           wire1_sensor_data["wire1_sensor0"]["location"] = p->value().c_str();;
         }
+        if (p->name() == WIRE1_SENSOR0_RH) {
+          wire1_sensor_data["wire1_sensor0"]["rh"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR0_CO2) {
+          wire1_sensor_data["wire1_sensor0"]["co2"] = p->value().c_str();
+        }
         if (p->name() == WIRE1_SENSOR1_TYPE) {
           wire1_sensor_data["wire1_sensor1"]["type"] = p->value().c_str();
         }     
@@ -985,6 +1049,12 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == WIRE1_SENSOR1_LOCATION) {
           wire1_sensor_data["wire1_sensor1"]["location"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR1_RH) {
+          wire1_sensor_data["wire1_sensor1"]["rh"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR1_CO2) {
+          wire1_sensor_data["wire1_sensor1"]["co2"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR2_TYPE) {
           wire1_sensor_data["wire1_sensor2"]["type"] = p->value().c_str();
@@ -995,6 +1065,12 @@ void Taskwebcode(void *pvParameters) {
         if (p->name() == WIRE1_SENSOR2_LOCATION) {
           wire1_sensor_data["wire1_sensor2"]["location"] = p->value().c_str();
         }
+        if (p->name() == WIRE1_SENSOR2_RH) {
+          wire1_sensor_data["wire1_sensor2"]["rh"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR2_CO2) {
+          wire1_sensor_data["wire1_sensor2"]["co2"] = p->value().c_str();
+        }
         if (p->name() == WIRE1_SENSOR3_TYPE) {
           wire1_sensor_data["wire1_sensor3"]["type"] = p->value().c_str();
         }    
@@ -1003,6 +1079,12 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == WIRE1_SENSOR3_LOCATION) {
           wire1_sensor_data["wire1_sensor3"]["location"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR3_RH) {
+          wire1_sensor_data["wire1_sensor3"]["rh"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR3_CO2) {
+          wire1_sensor_data["wire1_sensor3"]["co2"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR4_TYPE) {
           wire1_sensor_data["wire1_sensor4"]["type"] = p->value().c_str();
@@ -1013,6 +1095,12 @@ void Taskwebcode(void *pvParameters) {
         if (p->name() == WIRE1_SENSOR4_LOCATION) {
           wire1_sensor_data["wire1_sensor4"]["location"] = p->value().c_str(); 
         }
+        if (p->name() == WIRE1_SENSOR4_RH) {
+          wire1_sensor_data["wire1_sensor4"]["rh"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR4_CO2) {
+          wire1_sensor_data["wire1_sensor4"]["co2"] = p->value().c_str();
+        }
         if (p->name() == WIRE1_SENSOR5_TYPE) {
           wire1_sensor_data["wire1_sensor5"]["type"] = p->value().c_str();
         }    
@@ -1021,6 +1109,12 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == WIRE1_SENSOR5_LOCATION) {
           wire1_sensor_data["wire1_sensor5"]["location"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR5_RH) {
+          wire1_sensor_data["wire1_sensor5"]["rh"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR5_CO2) {
+          wire1_sensor_data["wire1_sensor5"]["co2"] = p->value().c_str();
         }
         if (p->name() == WIRE1_SENSOR6_TYPE) {
           wire1_sensor_data["wire1_sensor6"]["type"] = p->value().c_str();
@@ -1031,6 +1125,12 @@ void Taskwebcode(void *pvParameters) {
         if (p->name() == WIRE1_SENSOR6_LOCATION) {
           wire1_sensor_data["wire1_sensor6"]["location"] = p->value().c_str();
         }
+        if (p->name() == WIRE1_SENSOR6_RH) {
+          wire1_sensor_data["wire1_sensor6"]["rh"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR6_CO2) {
+          wire1_sensor_data["wire1_sensor6"]["co2"] = p->value().c_str();
+        }
         if (p->name() == WIRE1_SENSOR7_TYPE) {
           wire1_sensor_data["wire1_sensor7"]["type"] = p->value().c_str();
         }    
@@ -1039,6 +1139,12 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == WIRE1_SENSOR7_LOCATION) {
           wire1_sensor_data["wire1_sensor7"]["location"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR7_RH) {
+          wire1_sensor_data["wire1_sensor7"]["rh"] = p->value().c_str();
+        }
+        if (p->name() == WIRE1_SENSOR7_CO2) {
+          wire1_sensor_data["wire1_sensor7"]["co2"] = p->value().c_str();
         }
       }
     }

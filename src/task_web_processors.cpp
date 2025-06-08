@@ -28,11 +28,11 @@ String sensor_config_processor(const String& var) {
             return (wire_sensor_data["wire_sensor1"]["type"]);
         if (var == "WIRE_SENSOR1_VALVE")
             return (wire_sensor_data["wire_sensor1"]["valve"]);
-        if (var == "WIRE_SENSOR0_LOCATION")
+        if (var == "WIRE_SENSOR1_LOCATION")
             return (wire_sensor_data["wire_sensor1"]["location"]);
         if (var == "WIRE_SENSOR1_RH")
             return (wire_sensor_data["wire_sensor1"]["rh"]);
-        if (var == "WIRE_SENSOR0_CO2")
+        if (var == "WIRE_SENSOR1_CO2")
             return (wire_sensor_data["wire_sensor1"]["co2"]);
         if (var == "WIRE_SENSOR2_TYPE")
             return (wire_sensor_data["wire_sensor2"]["type"]);
@@ -93,7 +93,7 @@ String sensor_config_processor(const String& var) {
         if (var == "WIRE_SENSOR7_RH")
             return (wire_sensor_data["wire_sensor7"]["rh"]);
         if (var == "WIRE_SENSOR7_CO2")
-            return (wire_sensor_data["wire_sensor0"]["co2"]);
+            return (wire_sensor_data["wire_sensor7"]["co2"]);
     }
     else {
         status = "<font color=\"red\">Sensor config file not found. Create a file with button below.</font>";
@@ -121,11 +121,11 @@ String sensor_config_processor(const String& var) {
             return (wire1_sensor_data["wire1_sensor1"]["type"]);
         if (var == "WIRE1_SENSOR1_VALVE")
             return (wire1_sensor_data["wire1_sensor1"]["valve"]);
-        if (var == "WIRE1_SENSOR0_LOCATION")
+        if (var == "WIRE1_SENSOR1_LOCATION")
             return (wire1_sensor_data["wire1_sensor1"]["location"]);
         if (var == "WIRE1_SENSOR1_RH")
             return (wire1_sensor_data["wire1_sensor1"]["rh"]);
-        if (var == "WIRE1_SENSOR0_CO2")
+        if (var == "WIRE1_SENSOR1_CO2")
             return (wire1_sensor_data["wire1_sensor1"]["co2"]);
         if (var == "WIRE1_SENSOR2_TYPE")
             return (wire1_sensor_data["wire1_sensor2"]["type"]);
