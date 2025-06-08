@@ -1,49 +1,51 @@
 {
     "wire_sensor0":
         {
-            "type":"SCD41",
+            "type":"DHT20",
             "valve":"Fan inlet",
-            "location":"Fan"
+            "location":"Fan",
+            "rh":"true",
+            "co2":"true"
         },
     "wire_sensor1":
         {
-            "type":"SCD41",
+            "type":"None",
             "valve":"None",
             "location":""
         },
     "wire_sensor2":
             {
-            "type":"DHT20",
+            "type":"None",
             "valve":"",
             "location":"None"
         },
     "wire_sensor3":
         {
-            "type":"DHT20",
+            "type":"None",
             "valve":"None",
             "location":""
         },
     "wire_sensor4":
         {
-            "type":"DHT20",
+            "type":"None",
             "valve":"None",
             "location":""
         },
     "wire_sensor5":
         {
-            "type":"DHT20",
+            "type":"None",
             "valve":"None",
             "location":""
         },
     "wire_sensor6":
         {
-            "type":"DHT20",
+            "type":"None",
             "valve":"None",
             "location":""
         },
     "wire_sensor7":
         {
-            "type":"AHT20",
+            "type":"None",
             "valve":"None",
             "location":""
         }   

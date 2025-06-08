@@ -42,6 +42,8 @@ bool valve_move_locked;
 const char* WIRE_SENSOR0_TYPE = "wire_sensor0_type";
 const char* WIRE_SENSOR0_VALVE = "wire_sensor0_valve";
 const char* WIRE_SENSOR0_LOCATION = "wire_sensor0_location";
+const char* WIRE_SENSOR0_RH = "wire_sensor0_rh";
+const char* WIRE_SENSOR0_CO2 = "wire_sensor0_co2";
 const char* WIRE_SENSOR1_TYPE = "wire_sensor1_type";
 const char* WIRE_SENSOR1_VALVE = "wire_sensor1_valve";
 const char* WIRE_SENSOR1_LOCATION = "wire_sensor1_location";
@@ -63,6 +65,8 @@ const char* WIRE_SENSOR6_LOCATION = "wire_sensor6_location";
 const char* WIRE_SENSOR7_TYPE = "wire_sensor7_type";
 const char* WIRE_SENSOR7_VALVE = "wire_sensor7_valve";
 const char* WIRE_SENSOR7_LOCATION = "wire_sensor7_location";
+
+String wire_sensor0_rh,wire_sensor0_co2;
 
 const char* WIRE1_SENSOR0_TYPE = "wire1_sensor0_type";
 const char* WIRE1_SENSOR0_VALVE = "wire1_sensor0_valve";
@@ -867,6 +871,24 @@ void Taskwebcode(void *pvParameters) {
         }
         if (p->name() == WIRE_SENSOR0_LOCATION) {
           wire_sensor_data["wire_sensor0"]["location"] = p->value().c_str();;
+        }
+        if (p->name() == WIRE_SENSOR0_RH) {
+          wire_sensor0_rh = p->value().c_str();
+          if (wire_sensor0_rh == "true") {
+            wire_sensor_data["wire_sensor0"][3] = 1;
+          }
+          else {
+            wire_sensor_data["wire_sensor0"][3] = 0;
+          }
+        }
+        if (p->name() == WIRE_SENSOR0_CO2) {
+          wire_sensor0_co2 = p->value().c_str();
+          if (wire_sensor0_co2 == "true") {
+            wire_sensor_data["wire_sensor0"][4] = 1;
+          }
+          else {
+            wire_sensor_data["wire_sensor0"][4] = 0;
+          }
         }
         if (p->name() == WIRE_SENSOR1_TYPE) {
           wire_sensor_data["wire_sensor1"]["type"] = p->value().c_str();

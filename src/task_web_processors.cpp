@@ -277,23 +277,6 @@ String status_processor(const String& var) {
         return(state_tmp);
     if (var == "FORMATTEDTIME")
         return(formattedTime);
-    /*if (var == "DAYOFWEEK")
-        return(dayOfWeek_tmp);
-    if (var == "YEAR")
-        return(yearStr_tmp);
-    if (var == "MONTH")
-        return(monthStr_tmp);
-    if (var == "DAY")
-        return(dayStr_tmp);
-    if (var == "HOUR")
-        return(hourStr_tmp);
-    if (var == "MINUTE")
-        return(minuteStr_tmp);
-    if (var == "SECOND")
-        return(secondStr_tmp);
-    if (var == "DAYOFWEEK")
-        return(dayOfWeek_tmp);*/
-
 
     if(var == "VALVE0_POS")
         return (doc[String("valve0")]);

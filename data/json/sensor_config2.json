@@ -1,49 +1,49 @@
 {
     "wire1_sensor0":
         {
-            "type":"SCD40",
+            "type":"None",
             "valve":"",
             "location":""
         },
     "wire1_sensor1":
         {
-            "type":"SCD41",
+            "type":"None",
             "valve":"",
             "location":""
         },
     "wire1_sensor2":
             {
-            "type":"SCD41",
+            "type":"None",
             "valve":"",
             "location":""
         },
     "wire1_sensor3":
         {
-            "type":"DHT20",
+            "type":"None",
             "valve":"",
             "location":""
         },
     "wire1_sensor4":
         {
-            "type":"DHT20",
+            "type":"None",
             "valve":"",
             "location":""
         },
     "wire1_sensor5":
         {
-            "type":"DHT20",
+            "type":"None",
             "valve":"",
             "location":""
         },
     "wire1_sensor6":
         {
-            "type":"DHT20",
+            "type":"None",
             "valve":"",
             "location":""
         },
     "wire1_sensor7":
         {
-            "type":"AHT20",
+            "type":"None",
             "valve":"",
             "location":""
         }   
