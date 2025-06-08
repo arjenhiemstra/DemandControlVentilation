@@ -1,18 +1,9 @@
 #include "i2c.h"
 
-//LiquidCrystal_I2C lcd(LCDADDR, LCD_COLUMNS, LCD_ROWS);
-
-//This declaration uses a global variable without mutex. Only at boot this variable is written
-//LiquidCrystal_I2C lcd(39, LCD_COLUMNS, LCD_ROWS);
-RTC_DS3231 rtc;
-
 void read_sensors(void) {
  
     bool sensor_config_file_present = 0;
-
-    //const char* path;
     float temp_sensor_data[2][8][3]= {0};
-    int bus = 0;
 
     String sensor_tmp = "";
     String sensor_type_temp = "";
@@ -21,9 +12,7 @@ void read_sensors(void) {
     int bus0_multiplexer_addr_tmp;
     int bus1_multiplexer_addr_tmp;
 
-    //Read address for TCA9548. I2C for TCA9548 may be differently configured with resistors on the board.
-    //Set to 0x70 when left empty in settings
-    
+    //Read address for TCA9548. I2C for TCA9548 may be differently configured with resistors on the board.   
     if (settings_i2c_mutex != NULL) {
         if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
             bus0_multiplexer_addr_tmp = bus0_multiplexer_addr;
@@ -32,22 +21,7 @@ void read_sensors(void) {
         }
     }
 
-    Serial.print("\nbus0_multiplexer_addr: ");
-    Serial.print(bus0_multiplexer_addr_tmp);
-    Serial.print("\t\tbus1_multiplexer_addr: ");
-    Serial.print(bus1_multiplexer_addr_tmp);
-    
-    //Set to 0x70 when left empty in settings
-    /*
-    if (bus0_multiplexer_addr_tmp == 0) {
-        bus0_multiplexer_addr_tmp = 0x70;
-    }
-
-    if (bus1_multiplexer_addr_tmp == 0) {
-        bus1_multiplexer_addr_tmp = 0x70;
-    }*/
-
-    for(bus=0;bus<2;bus++) {
+    for(int bus=0;bus<2;bus++) {
         
         if (bus==0) {
             Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
@@ -263,7 +237,7 @@ void display_sensors(void) {
     LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS);
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
     lcd.init();
-    //lcd.backlight();
+    lcd.backlight();
     lcd.noAutoscroll();
     lcd.noCursor();   
 
@@ -343,7 +317,7 @@ void display_valve_positions(void) {
     LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS);
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
     lcd.init();
-    //lcd.backlight();
+    lcd.backlight();
     status_file_present = check_file_exists(path);
 
     if (valve_position_file_mutex != NULL) {
@@ -467,7 +441,6 @@ void display_time_and_date(void) {
         lcd.print("Uptime: ");
         lcd.print(uptime/1000000/60);         // in minutes
         lcd.print(" min");
-
         vTaskDelay(5000);
         lcd.clear();
         Wire1.endTransmission();
@@ -496,7 +469,7 @@ void display_state_fan(void) {
     LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS); 
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
     lcd.init();
-    //lcd.backlight();
+    lcd.backlight();
     lcd.setCursor(0,0);
     lcd.print("State: ");
     
@@ -526,6 +499,7 @@ String current_time(void) {
     char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
     String formattedTime;
 
+    RTC_DS3231 rtc;
     Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
     rtc.begin(&Wire);
 
@@ -559,6 +533,7 @@ void sync_rtc_ntp(void) {
     String ntp_server_str;
     String timezone_str;
         
+    RTC_DS3231 rtc;
     Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
     rtc.begin(&Wire);
 
@@ -573,9 +548,6 @@ void sync_rtc_ntp(void) {
 
     ntp_server_str.toCharArray(ntp_server_tmp,50);
     timezone_str.toCharArray(timezone_tmp,50);
-    
-    //DateTime now = rtc.now();
-    //configTime(gmt_offset_sec, daylight_offset_sec, ntp_server);  // Configure time with NTP server
 
     //configTzTime("CET-1CEST,M3.5.0,M10.5.0/3", "pool.ntp.org");
     configTzTime(timezone_tmp, ntp_server_tmp);

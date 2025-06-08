@@ -26,8 +26,6 @@ void task_i2c_code(void * pvParameters)
             xSemaphoreGive(settings_i2c_mutex);
         }
     }
-    
-    //LiquidCrystal_I2C lcd(lcd_address_tmp, LCD_COLUMNS, LCD_ROWS);
 
     for(;;) {
         read_sensors_multiplier++;
