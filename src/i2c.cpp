@@ -262,8 +262,8 @@ void display_sensors(void) {
 
     LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS);
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
-    lcd.backlight();
     lcd.init();
+    //lcd.backlight();
     lcd.noAutoscroll();
     lcd.noCursor();   
 
@@ -343,7 +343,7 @@ void display_valve_positions(void) {
     LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS);
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
     lcd.init();
-    lcd.backlight();
+    //lcd.backlight();
     status_file_present = check_file_exists(path);
 
     if (valve_position_file_mutex != NULL) {
@@ -496,7 +496,7 @@ void display_state_fan(void) {
     LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS); 
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
     lcd.init();
-    lcd.backlight();
+    //lcd.backlight();
     lcd.setCursor(0,0);
     lcd.print("State: ");
     
@@ -601,9 +601,7 @@ void pb_start_display(void) {
     pb_toggle = false;
     String enable_lcd_tmp = "";
     int display_i2c_addr_tmp;
-
-    LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS);
-      
+     
     //Only start display when enabled. Configured with global variable
     if (settings_i2c_mutex != NULL) {
         if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
@@ -612,7 +610,7 @@ void pb_start_display(void) {
             xSemaphoreGive(settings_i2c_mutex);
         }
     }
-    
+
     if (enable_lcd_tmp == "On") {
     
         //LiquidCrystal_I2C lcd(39, LCD_COLUMNS, LCD_ROWS);
@@ -626,7 +624,7 @@ void pb_start_display(void) {
         display_sensors();
         display_valve_positions();
         
-        
+        LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS);
         Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
         lcd.noBacklight();
         Wire1.endTransmission();
@@ -640,9 +638,7 @@ void init_display_off(void) {
 
     int display_i2c_addr_tmp;
     String enable_lcd_tmp = "";
-
-    LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS);
-    
+   
     //Only start display when enabled. Configured with global variable
     if (settings_i2c_mutex != NULL) {
         if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
@@ -654,6 +650,7 @@ void init_display_off(void) {
 
     if (enable_lcd_tmp == "On") {
         //LiquidCrystal_I2C lcd(39, LCD_COLUMNS, LCD_ROWS);
+        LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS);
         Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
         lcd.init();
         lcd.clear();

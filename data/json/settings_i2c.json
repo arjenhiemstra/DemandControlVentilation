@@ -1,6 +1,6 @@
 {
-    "bus0_multiplexer_address":"0x70",
-    "bus1_multiplexer_address":"0x70",
+    "bus0_multiplexer_address":"112",
+    "bus1_multiplexer_address":"112",
     "enable_lcd":"On",
-    "display_i2c_address":"0x27"
+    "display_i2c_address":"39"
 }
