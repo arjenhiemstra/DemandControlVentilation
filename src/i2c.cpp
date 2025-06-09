@@ -219,13 +219,17 @@ void display_sensors(void) {
         0 	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15  16  17  18  19
        -------------------------------------------------------------------------------
     0 |	B	u	s	:	0		S	e	n	s	o	r	:	1	1	
-    1 |	T	e	m	p	:	2	2	,	8	7	°	C				
-    2 |	H	u	m	i	d	i	t	y	:	4	7	%				
-    3 |	C	O	2	:	1	2	0	0	p	p	m					
+    1 |	V   :	1   1       N   :   B   e   d   r   o   o   m   1	
+    2 |	T	:	2	2	,	8	7	°	C		H	:	4	7   .   9   9	%			
+    3 |	C	O	2	:	1	2	0	0   .   0   0	p	p	m					
     */
 
     float queue_sensor_data[2][8][3];        //local variable to store sensor data from queue
-    int display_i2c_addr_tmp;
+    int display_i2c_addr_tmp = 0;
+    String valve;
+    String location;
+    String rh;
+    String co2;
 
     if (settings_i2c_mutex != NULL) {
         if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
@@ -244,30 +248,70 @@ void display_sensors(void) {
     if (xQueuePeek(sensor_queue, &queue_sensor_data, 0 ) == pdTRUE) {
         for (int bus=0;bus<2;bus++) {
             for (int slot=0;slot<8;slot++) {
-                        
-                lcd.setCursor(0, 0);
-                lcd.print("Bus:");
-                lcd.print(bus);
-                lcd.print(" Sensor:");
-                lcd.print(slot);
                 
                 //Only display measurements if sensor is present, i.e. if temperature measurement is not zero
                 if (queue_sensor_data[bus][slot][0] != 0) {
-                    lcd.setCursor(0, 1);
-                    lcd.print("Temperature: ");
+
+                    if (sensor_config_file_mutex != NULL) {
+                        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+                            if (bus == 0) {
+                                String valve_tmp = wire_sensor_data["wire_sensor" + String(slot)]["valve"];
+                                valve = valve_tmp;
+                                String location_tmp = wire_sensor_data["wire_sensor" + String(slot)]["location"];
+                                location = location_tmp;
+                                String rh_tmp = wire_sensor_data["wire_sensor" + String(slot)]["rh"];
+                                rh = rh_tmp;
+                                String co2_tmp = wire_sensor_data["wire_sensor" + String(slot)]["co2"];
+                                co2 = co2_tmp;
+                            }
+                            if (bus == 1) {
+                                String valve_tmp = wire1_sensor_data["wire1_sensor" + String(slot)]["valve"];
+                                valve = valve_tmp;
+                                String location_tmp = wire1_sensor_data["wire1_sensor" + String(slot)]["location"];
+                                location = location_tmp;
+                                String rh_tmp = wire_sensor_data["wire_sensor" + String(slot)]["rh"];
+                                rh = rh_tmp;
+                                String co2_tmp = wire_sensor_data["wire_sensor" + String(slot)]["co2"];
+                                co2 = co2_tmp;
+                            }
+                            xSemaphoreGive(sensor_config_file_mutex);
+                        }
+                    }
+
+                    //row0
+                    lcd.setCursor(0, 0);
+                    lcd.print("B:");
+                    lcd.print(bus);
+                    lcd.print(" ");
+                    lcd.print("S:");
+                    lcd.print(slot);
+                    lcd.print(" ");
+                    lcd.print(rh);
+                    lcd.print(" ");
+                    lcd.print(co2);
+
+                    //row1
+                    lcd.setCursor(0,1);
+                    lcd.print(valve);
+                    lcd.print(" ");
+                    lcd.print(location);
+
+                    //row2
+                    lcd.setCursor(0, 2);
+                    lcd.print("T:");
                     lcd.print(queue_sensor_data[bus][slot][0]);
                     lcd.print((char)223);
                     lcd.print("C");
 
-                    lcd.setCursor(0, 2);
-                    lcd.print("Humidity: ");
+                    lcd.setCursor(10, 2);
+                    lcd.print("H:");
                     lcd.print(queue_sensor_data[bus][slot][1]);
                     lcd.print("%");
 
-                    //Only displat CO2 is sensor has this measurement
+                    //row3 - Only display CO2 is sensor has this measurement
                     if (queue_sensor_data[bus][slot][2] != 0) {
                         lcd.setCursor(0, 3);
-                        lcd.print("CO2: ");
+                        lcd.print("CO2:");
                         lcd.print(queue_sensor_data[bus][slot][2]);
                         lcd.print("ppm");
                     }
@@ -276,12 +320,12 @@ void display_sensors(void) {
                     lcd.clear();
                 }
                 //No sensor connected to port
-                else {
+                /*else {
                     lcd.setCursor(0, 2);
                     lcd.print("No sensor");
                     vTaskDelay(5000);
                     lcd.clear();
-                }
+                }*/
             }
         }
     }

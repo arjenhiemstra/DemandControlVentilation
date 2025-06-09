@@ -199,27 +199,16 @@ String sensor_config_processor(const String& var) {
 
 String status_processor(const String& var) {
 
-    /*Valve positions part of processor*/
-    const char* path1 = "/json/valvepositions.json";
-    //const char* path2 = "/json/sensor_config1.json";
-    //const char* path3 = "/json/sensor_config2.json";
-    
+    const char* path1 = "/json/valvepositions.json";    
     bool status_valve_file_present;
-    bool status_sensor1_file_present;
-    bool status_sensor2_file_present;
 
     uint64_t uptime;
     
     String state_tmp;
     String fanspeed_tmp;
-
     String json1;
-    //String json2;
-    //String json3;
 
     JsonDocument doc1;
-    //JsonDocument doc2;
-    //JsonDocument doc3;
 
     String yearStr_tmp;
     String monthStr_tmp;
@@ -240,22 +229,6 @@ String status_processor(const String& var) {
             xSemaphoreGive(valve_position_file_mutex);
         }
     }
-
-    /*if (sensor_config_file_mutex != NULL) {
-        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            status_sensor1_file_present = check_file_exists(path2);
-            if (status_sensor1_file_present == 1) {
-                json2 = read_config_file(path2);
-                deserializeJson(doc2, json2);
-            }
-            status_sensor2_file_present = check_file_exists(path3);
-            if (status_sensor2_file_present == 1) {
-                json3 = read_config_file(path3);
-                deserializeJson(doc3, json3);
-            }
-            xSemaphoreGive(sensor_config_file_mutex);
-        }
-    } */
 
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
@@ -381,6 +354,7 @@ String status_processor(const String& var) {
     if(var == "BUS0_SENSOR7_CO2")
         return (String(temp_sensor_data[0][7][2]));
 
+    //Sensor config information
     if (var == "BUS0_SENSOR0_TYPE")
         return (wire_sensor_data["wire_sensor0"]["type"]);
     if (var == "BUS0_SENSOR0_VALVE")
@@ -461,6 +435,7 @@ String status_processor(const String& var) {
         return (wire_sensor_data["wire_sensor7"]["rh"]);
     if (var == "BUS0_SENSOR7_CO2S")
         return (wire_sensor_data["wire_sensor7"]["co2"]);
+
 
     if(var == "BUS1_SENSOR0_TEMP")
         return (String(temp_sensor_data[1][0][0]));
