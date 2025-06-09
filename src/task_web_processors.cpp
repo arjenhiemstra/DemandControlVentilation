@@ -200,16 +200,26 @@ String sensor_config_processor(const String& var) {
 String status_processor(const String& var) {
 
     /*Valve positions part of processor*/
-    const char* path = "/json/valvepositions.json";
-    bool status_file_present;
+    const char* path1 = "/json/valvepositions.json";
+    //const char* path2 = "/json/sensor_config1.json";
+    //const char* path3 = "/json/sensor_config2.json";
+    
+    bool status_valve_file_present;
+    bool status_sensor1_file_present;
+    bool status_sensor2_file_present;
 
     uint64_t uptime;
     
     String state_tmp;
     String fanspeed_tmp;
 
-    String json;
-    JsonDocument doc;
+    String json1;
+    //String json2;
+    //String json3;
+
+    JsonDocument doc1;
+    //JsonDocument doc2;
+    //JsonDocument doc3;
 
     String yearStr_tmp;
     String monthStr_tmp;
@@ -222,17 +232,30 @@ String status_processor(const String& var) {
     
     if (valve_position_file_mutex != NULL) {
         if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            //Serial.print("mutex taken");
-            status_file_present = check_file_exists(path);
-
-            if (status_file_present == 1) {
-
-                json = read_config_file(path);
-                deserializeJson(doc, json);
+            status_valve_file_present = check_file_exists(path1);
+            if (status_valve_file_present == 1) {
+                json1 = read_config_file(path1);
+                deserializeJson(doc1, json1);
             }
             xSemaphoreGive(valve_position_file_mutex);
         }
     }
+
+    /*if (sensor_config_file_mutex != NULL) {
+        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            status_sensor1_file_present = check_file_exists(path2);
+            if (status_sensor1_file_present == 1) {
+                json2 = read_config_file(path2);
+                deserializeJson(doc2, json2);
+            }
+            status_sensor2_file_present = check_file_exists(path3);
+            if (status_sensor2_file_present == 1) {
+                json3 = read_config_file(path3);
+                deserializeJson(doc3, json3);
+            }
+            xSemaphoreGive(sensor_config_file_mutex);
+        }
+    } */
 
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
@@ -264,7 +287,6 @@ String status_processor(const String& var) {
 
     formattedTime = dayOfWeek_tmp + ", " + yearStr_tmp + "-" + monthStr_tmp + "-" + dayStr_tmp + " " + hourStr_tmp + ":" + minuteStr_tmp + ":" + secondStr_tmp;
 
-
     uptime = (esp_timer_get_time())/1000000/60;        //in min
     
     if (var == "STATEMACHINE_STATE")
@@ -279,29 +301,29 @@ String status_processor(const String& var) {
         return(formattedTime);
 
     if(var == "VALVE0_POS")
-        return (doc[String("valve0")]);
+        return (doc1[String("valve0")]);
     if(var == "VALVE1_POS")
-        return (doc[String("valve1")]);
+        return (doc1[String("valve1")]);
     if(var == "VALVE2_POS")
-        return (doc[String("valve2")]);
+        return (doc1[String("valve2")]);
     if(var == "VALVE3_POS")
-        return (doc[String("valve3")]);
+        return (doc1[String("valve3")]);
     if(var == "VALVE4_POS")
-        return (doc[String("valve4")]);
+        return (doc1[String("valve4")]);
     if(var == "VALVE5_POS")
-        return (doc[String("valve5")]);
+        return (doc1[String("valve5")]);
     if(var == "VALVE6_POS")
-        return (doc[String("valve6")]);
+        return (doc1[String("valve6")]);
     if(var == "VALVE7_POS")
-        return (doc[String("valve7")]);
+        return (doc1[String("valve7")]);
     if(var == "VALVE8_POS")
-        return (doc[String("valve8")]);
+        return (doc1[String("valve8")]);
     if(var == "VALVE9_POS")
-        return (doc[String("valve9")]);
+        return (doc1[String("valve9")]);
     if(var == "VALVE10_POS")
-        return (doc[String("valve10")]);
+        return (doc1[String("valve10")]);
     if(var == "VALVE11_POS")
-        return (doc[String("valve11")]);
+        return (doc1[String("valve11")]);
 
     //Copy data from queue in local variable
     float temp_sensor_data[2][8][3];
@@ -359,6 +381,87 @@ String status_processor(const String& var) {
     if(var == "BUS0_SENSOR7_CO2")
         return (String(temp_sensor_data[0][7][2]));
 
+    if (var == "BUS0_SENSOR0_TYPE")
+        return (wire_sensor_data["wire_sensor0"]["type"]);
+    if (var == "BUS0_SENSOR0_VALVE")
+        return (wire_sensor_data["wire_sensor0"]["valve"]);
+    if (var == "BUS0_SENSOR0_LOCATION")
+        return (wire_sensor_data["wire_sensor0"]["location"]);
+    if (var == "BUS0_SENSOR0_RHS")
+        return (wire_sensor_data["wire_sensor0"]["rh"]);
+    if (var == "BUS0_SENSOR0_CO2S")
+        return (wire_sensor_data["wire_sensor0"]["co2"]);
+    if (var == "BUS0_SENSOR1_TYPE")
+        return (wire_sensor_data["wire_sensor1"]["type"]);
+    if (var == "BUS0_SENSOR1_VALVE")
+        return (wire_sensor_data["wire_sensor1"]["valve"]);
+    if (var == "BUS0_SENSOR1_LOCATION")
+        return (wire_sensor_data["wire_sensor1"]["location"]);
+    if (var == "BUS0_SENSOR1_RHS")
+        return (wire_sensor_data["wire_sensor1"]["rh"]);
+    if (var == "BUS0_SENSOR1_CO2S")
+        return (wire_sensor_data["wire_sensor1"]["co2"]);
+    if (var == "BUS0_SENSOR2_TYPE")
+        return (wire_sensor_data["wire_sensor2"]["type"]);
+    if (var == "BUS0_SENSOR2_VALVE")
+        return (wire_sensor_data["wire_sensor2"]["valve"]);
+    if (var == "BUS0_SENSOR2_LOCATION")
+        return (wire_sensor_data["wire_sensor2"]["location"]);
+    if (var == "BUS0_SENSOR2_RHS")
+        return (wire_sensor_data["wire_sensor2"]["rh"]);
+    if (var == "BUS0_SENSOR2_CO2S")
+        return (wire_sensor_data["wire_sensor2"]["co2"]);
+    if (var == "BUS0_SENSOR3_TYPE")
+        return (wire_sensor_data["wire_sensor3"]["type"]);
+    if (var == "BUS0_SENSOR3_VALVE")
+        return (wire_sensor_data["wire_sensor3"]["valve"]);
+    if (var == "BUS0_SENSOR3_LOCATION")
+        return (wire_sensor_data["wire_sensor3"]["location"]);
+    if (var == "BUS0_SENSOR3_RHS")
+        return (wire_sensor_data["wire_sensor3"]["rh"]);
+    if (var == "BUS0_SENSOR3_CO2S")
+        return (wire_sensor_data["wire_sensor3"]["co2"]);
+    if (var == "BUS0_SENSOR4_TYPE")
+        return (wire_sensor_data["wire_sensor4"]["type"]);
+    if (var == "BUS0_SENSOR4_VALVE")
+        return (wire_sensor_data["wire_sensor4"]["valve"]);
+    if (var == "BUS0_SENSOR4_LOCATION")
+        return (wire_sensor_data["wire_sensor4"]["location"]);
+    if (var == "BUS0_SENSOR4_RHS")
+        return (wire_sensor_data["wire_sensor4"]["rh"]);
+    if (var == "BUS0_SENSOR4_CO2S")
+        return (wire_sensor_data["wire_sensor4"]["co2"]);
+    if (var == "BUS0_SENSOR5_TYPE")
+        return (wire_sensor_data["wire_sensor5"]["type"]);
+    if (var == "BUS0_SENSOR5_VALVE")
+        return (wire_sensor_data["wire_sensor5"]["valve"]);
+    if (var == "BUS0_SENSOR5_LOCATION")
+        return (wire_sensor_data["wire_sensor5"]["location"]);
+    if (var == "BUS0_SENSOR5_RHS")
+        return (wire_sensor_data["wire_sensor5"]["rh"]);
+    if (var == "BUS0_SENSOR5_CO2S")
+        return (wire_sensor_data["wire_sensor5"]["co2"]);
+    if (var == "BUS0_SENSOR6_TYPE")
+        return (wire_sensor_data["wire_sensor6"]["type"]);
+    if (var == "BUS0_SENSOR6_VALVE")
+        return (wire_sensor_data["wire_sensor6"]["valve"]);
+    if (var == "BUS0_SENSOR6_LOCATION")
+        return (wire_sensor_data["wire_sensor6"]["location"]);
+    if (var == "BUS0_SENSOR6_RHS")
+        return (wire_sensor_data["wire_sensor6"]["rh"]);
+    if (var == "BUS0_SENSOR6_CO2S")
+        return (wire_sensor_data["wire_sensor6"]["co2"]);
+    if (var == "BUS0_SENSOR7_TYPE")
+        return (wire_sensor_data["wire_sensor7"]["type"]);
+    if (var == "BUS0_SENSOR7_VALVE")
+        return (wire_sensor_data["wire_sensor7"]["valve"]);
+    if (var == "BUS0_SENSOR7_LOCATION")
+        return (wire_sensor_data["wire_sensor7"]["location"]);
+    if (var == "BUS0_SENSOR7_RHS")
+        return (wire_sensor_data["wire_sensor7"]["rh"]);
+    if (var == "BUS0_SENSOR7_CO2S")
+        return (wire_sensor_data["wire_sensor7"]["co2"]);
+
     if(var == "BUS1_SENSOR0_TEMP")
         return (String(temp_sensor_data[1][0][0]));
     if(var == "BUS1_SENSOR0_HUM")
@@ -407,6 +510,87 @@ String status_processor(const String& var) {
         return (String(temp_sensor_data[1][7][1]));
     if(var == "BUS1_SENSOR7_CO2")
         return (String(temp_sensor_data[1][7][2]));
+
+    if (var == "BUS1_SENSOR0_TYPE")
+        return (wire1_sensor_data["wire1_sensor0"]["type"]);
+    if (var == "BUS1_SENSOR0_VALVE")
+        return (wire1_sensor_data["wire1_sensor0"]["valve"]);
+    if (var == "BUS1_SENSOR0_LOCATION")
+        return (wire1_sensor_data["wire1_sensor0"]["location"]);
+    if (var == "BUS1_SENSOR0_RHS")
+        return (wire1_sensor_data["wire1_sensor0"]["rh"]);
+    if (var == "BUS1_SENSOR0_CO2S")
+        return (wire1_sensor_data["wire1_sensor0"]["co2"]);
+    if (var == "BUS1_SENSOR1_TYPE")
+        return (wire1_sensor_data["wire1_sensor1"]["type"]);
+    if (var == "BUS1_SENSOR1_VALVE")
+        return (wire1_sensor_data["wire1_sensor1"]["valve"]);
+    if (var == "BUS1_SENSOR1_LOCATION")
+        return (wire1_sensor_data["wire1_sensor1"]["location"]);
+    if (var == "BUS1_SENSOR1_RHS")
+        return (wire1_sensor_data["wire1_sensor1"]["rh"]);
+    if (var == "BUS1_SENSOR1_CO2S")
+        return (wire1_sensor_data["wire1_sensor1"]["co2"]);
+    if (var == "BUS1_SENSOR2_TYPE")
+        return (wire1_sensor_data["wire1_sensor2"]["type"]);
+    if (var == "BUS1_SENSOR2_VALVE")
+        return (wire1_sensor_data["wire1_sensor2"]["valve"]);
+    if (var == "BUS1_SENSOR2_LOCATION")
+        return (wire1_sensor_data["wire1_sensor2"]["location"]);
+    if (var == "BUS1_SENSOR2_RHS")
+        return (wire1_sensor_data["wire1_sensor2"]["rh"]);
+    if (var == "BUS1_SENSOR2_CO2S")
+        return (wire1_sensor_data["wire1_sensor2"]["co2"]);
+    if (var == "BUS1_SENSOR3_TYPE")
+        return (wire1_sensor_data["wire1_sensor3"]["type"]);
+    if (var == "BUS1_SENSOR3_VALVE")
+        return (wire1_sensor_data["wire1_sensor3"]["valve"]);
+    if (var == "BUS1_SENSOR3_LOCATION")
+        return (wire1_sensor_data["wire1_sensor3"]["location"]);
+    if (var == "BUS1_SENSOR3_RHS")
+        return (wire1_sensor_data["wire1_sensor3"]["rh"]);
+    if (var == "BUS1_SENSOR3_CO2S")
+        return (wire1_sensor_data["wire1_sensor3"]["co2"]);
+    if (var == "BUS1_SENSOR4_TYPE")
+        return (wire1_sensor_data["wire1_sensor4"]["type"]);
+    if (var == "BUS1_SENSOR4_VALVE")
+        return (wire1_sensor_data["wire1_sensor4"]["valve"]);
+    if (var == "BUS1_SENSOR4_LOCATION")
+        return (wire1_sensor_data["wire1_sensor4"]["location"]);
+    if (var == "BUS1_SENSOR4_RHS")
+        return (wire1_sensor_data["wire1_sensor4"]["rh"]);
+    if (var == "BUS1_SENSOR4_CO2S")
+        return (wire1_sensor_data["wire1_sensor4"]["co2"]);
+    if (var == "BUS1_SENSOR5_TYPE")
+        return (wire1_sensor_data["wire1_sensor5"]["type"]);
+    if (var == "BUS1_SENSOR5_VALVE")
+        return (wire1_sensor_data["wire1_sensor5"]["valve"]);
+    if (var == "BUS1_SENSOR5_LOCATION")
+        return (wire1_sensor_data["wire1_sensor5"]["location"]);
+    if (var == "BUS1_SENSOR5_RHS")
+        return (wire1_sensor_data["wire1_sensor5"]["rh"]);
+    if (var == "BUS1_SENSOR5_CO2S")
+        return (wire1_sensor_data["wire1_sensor5"]["co2"]);
+    if (var == "BUS1_SENSOR6_TYPE")
+        return (wire1_sensor_data["wire1_sensor6"]["type"]);
+    if (var == "BUS1_SENSOR6_VALVE")
+        return (wire1_sensor_data["wire1_sensor6"]["valve"]);
+    if (var == "BUS1_SENSOR6_LOCATION")
+        return (wire1_sensor_data["wire1_sensor6"]["location"]);
+    if (var == "BUS1_SENSOR6_RHS")
+        return (wire1_sensor_data["wire1_sensor6"]["rh"]);
+    if (var == "BUS1_SENSOR6_CO2S")
+        return (wire1_sensor_data["wire1_sensor6"]["co2"]);
+    if (var == "BUS1_SENSOR7_TYPE")
+        return (wire1_sensor_data["wire1_sensor7"]["type"]);
+    if (var == "BUS1_SENSOR7_VALVE")
+        return (wire1_sensor_data["wire1_sensor7"]["valve"]);
+    if (var == "BUS1_SENSOR7_LOCATION")
+        return (wire1_sensor_data["wire1_sensor7"]["location"]);
+    if (var == "BUS1_SENSOR7_RHS")
+        return (wire1_sensor_data["wire1_sensor7"]["rh"]);
+    if (var == "BUS1_SENSOR7_CO2S")
+        return (wire1_sensor_data["wire1_sensor7"]["co2"]);
 
     return String();
 }
