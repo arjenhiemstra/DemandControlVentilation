@@ -1,5 +1,8 @@
 #include "i2c.h"
 
+LiquidCrystal_I2C lcd(display_i2c_addr, LCD_COLUMNS, LCD_ROWS);
+RTC_DS3231 rtc;
+
 void read_sensors(void) {
  
     bool sensor_config_file_present = 0;
@@ -225,12 +228,13 @@ void display_sensors(void) {
     */
 
     float queue_sensor_data[2][8][3];        //local variable to store sensor data from queue
-    int display_i2c_addr_tmp = 0;
+    //int display_i2c_addr_tmp = 0;
     String valve;
     String location;
     String rh;
     String co2;
 
+    /*
     if (settings_i2c_mutex != NULL) {
         if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
             display_i2c_addr_tmp = display_i2c_addr;
@@ -239,6 +243,7 @@ void display_sensors(void) {
     }
 
     LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS);
+    */
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
     lcd.init();
     lcd.backlight();
@@ -347,10 +352,11 @@ void display_valve_positions(void) {
       
     const char* path = "/json/valvepositions.json";
     bool status_file_present;
-    int display_i2c_addr_tmp;
+    //int display_i2c_addr_tmp;
     String json;
     JsonDocument doc;
 
+    /*
     if (settings_i2c_mutex != NULL) {
         if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
             display_i2c_addr_tmp = display_i2c_addr;
@@ -359,6 +365,7 @@ void display_valve_positions(void) {
     }
 
     LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS);
+    */
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
     lcd.init();
     lcd.backlight();
@@ -446,6 +453,7 @@ void display_time_and_date(void) {
     int64_t uptime;
     int display_i2c_addr_tmp;
     
+    /*
     if (settings_i2c_mutex != NULL) {
         if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
             display_i2c_addr_tmp = display_i2c_addr;
@@ -454,6 +462,7 @@ void display_time_and_date(void) {
     }
 
     LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS);
+    */
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
     lcd.init();
     lcd.backlight();
@@ -501,7 +510,7 @@ void display_state_fan(void) {
        2 |			
        3 |	
    */
-    int display_i2c_addr_tmp;
+    /*int display_i2c_addr_tmp;
     
     if (settings_i2c_mutex != NULL) {
         if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
@@ -511,6 +520,7 @@ void display_state_fan(void) {
     }
 
     LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS); 
+    */
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
     lcd.init();
     lcd.backlight();
@@ -543,7 +553,7 @@ String current_time(void) {
     char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
     String formattedTime;
 
-    RTC_DS3231 rtc;
+    
     Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
     rtc.begin(&Wire);
 
@@ -652,21 +662,21 @@ void pb_start_display(void) {
 
 void init_display_off(void) {
 
-    int display_i2c_addr_tmp;
+    //int display_i2c_addr_tmp;
     String enable_lcd_tmp = "";
    
     //Only start display when enabled. Configured with global variable
     if (settings_i2c_mutex != NULL) {
         if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
             enable_lcd_tmp = enable_lcd;
-            display_i2c_addr_tmp = display_i2c_addr;
+            //display_i2c_addr_tmp = display_i2c_addr;
             xSemaphoreGive(settings_i2c_mutex);
         }
     }
 
     if (enable_lcd_tmp == "On") {
         //LiquidCrystal_I2C lcd(39, LCD_COLUMNS, LCD_ROWS);
-        LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS);
+        //LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS);
         Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
         lcd.init();
         lcd.clear();
