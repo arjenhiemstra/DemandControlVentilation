@@ -1,6 +1,6 @@
 #include "i2c.h"
 
-LiquidCrystal_I2C lcd(display_i2c_addr, LCD_COLUMNS, LCD_ROWS);
+LiquidCrystal_I2C lcd(0x27, LCD_COLUMNS, LCD_ROWS);
 RTC_DS3231 rtc;
 
 void read_sensors(void) {
@@ -15,7 +15,7 @@ void read_sensors(void) {
     int bus0_multiplexer_addr_tmp;
     int bus1_multiplexer_addr_tmp;
 
-    //Read address for TCA9548. I2C for TCA9548 may be differently configured with resistors on the board.   
+    //Read address for TCA9548. I2C address for TCA9548 may be differently configured with resistors on the board.   
     if (settings_i2c_mutex != NULL) {
         if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
             bus0_multiplexer_addr_tmp = bus0_multiplexer_addr;
@@ -436,6 +436,7 @@ void display_valve_positions(void) {
     lcd.print(valve11_pos);
     vTaskDelay(5000);
     lcd.clear();
+    //lcd.noBacklight();
     Wire1.endTransmission();
 }
 
@@ -650,7 +651,7 @@ void pb_start_display(void) {
         display_sensors();
         display_valve_positions();
         
-        LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS);
+        //LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS);
         Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
         lcd.noBacklight();
         Wire1.endTransmission();
