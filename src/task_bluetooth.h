@@ -6,6 +6,7 @@
 #include <freertos/task.h>
 
 #include "globals.h"
+#include "fan_bt.h"
 
 // function declarations
 void start_task_bluetooth(void);

@@ -10,7 +10,7 @@ void task_bluetooth_code(void * pvParameters)
 {
   for (;;) { 
     ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-    //transmit_fan_speed();
+    set_fanspeed();
   }
   
 }
