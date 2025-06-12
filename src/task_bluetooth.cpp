@@ -1,6 +1,6 @@
 #include "task_bluetooth.h"
 
-BluetoothSerial SerialBT;
+//BluetoothSerial SerialBT;
 
 void start_task_bluetooth(void) {
 
