@@ -7,6 +7,7 @@
 
 #include "globals.h"
 #include "fan_bt.h"
+#include "BluetoothSerial.h"
 
 // function declarations
 void start_task_bluetooth(void);
