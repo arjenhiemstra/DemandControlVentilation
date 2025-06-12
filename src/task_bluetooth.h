@@ -1,13 +1,12 @@
-#ifndef TASK_VALVECONTROL_H    // To make sure you don't declare the function more than once by including the header multiple times.
-#define TASK_VALVECONTROL_H
+#ifndef TASK_BLUETOOTH_H    // To make sure you don't declare the function more than once by including the header multiple times.
+#define TASK_BLUETOOTH_H
 
 #include <Arduino.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
 #include "globals.h"
-#include "fan_bt.h"
-#include "BluetoothSerial.h"
+#include <BluetoothSerial.h>
 
 // function declarations
 void start_task_bluetooth(void);
