@@ -4,9 +4,12 @@
 #include <Arduino.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
+#include <BLEDevice.h>
+#include <BLEServer.h>
+#include <BLEUtils.h>
+#include <BLE2902.h>
 
 #include "globals.h"
-#include <BluetoothSerial.h>
 
 // function declarations
 void start_task_bluetooth(void);
