@@ -25,7 +25,7 @@ extern TaskHandle_t task_sys;
 extern TaskHandle_t task_valvectrl;
 extern TaskHandle_t h_Task_web;
 extern TaskHandle_t task_wifi;
-extern TaskHandle_t task_bluetooth;
+extern TaskHandle_t task_espnow;
 
 extern SemaphoreHandle_t sensor_config_file_mutex;
 extern SemaphoreHandle_t valve_position_file_mutex;

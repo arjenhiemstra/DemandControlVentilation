@@ -78,10 +78,11 @@ void setup() {
   start_task_mqtt();
   start_task_neopixel();
   start_task_system();
-  start_task_bluetooth();
   
   vTaskDelay(60000);                //Only write to influxDB when all tasks are running
+  //start_task_bluetooth();
   start_task_influxdb();
+
 }
 
 void loop() { }

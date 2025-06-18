@@ -138,7 +138,7 @@ void init_transitions(void) {
     }
 
     set_fanspeed(temp_fanspeed);
-    xTaskNotifyGive(xTaskGetHandle("task_bluetooth"));
+    //xTaskNotifyGive(xTaskGetHandle("task_bluetooth"));
 
     // Conditions to transit to other state
     if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
