@@ -45,5 +45,6 @@ void task_espnow_code(void * pvParameters) {
 
 void onSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
 
-    Serial.println(status == ESP_NOW_SEND_SUCCESS ? "\tDelivery success" : "\tDelivery failed");
+    //Serial.println(status == ESP_NOW_SEND_SUCCESS ? "\tDelivery success" : "\tDelivery failed");
+
 }
