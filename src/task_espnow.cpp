@@ -32,6 +32,19 @@ void task_espnow_code(void * pvParameters) {
             }
         }
 
+        if (fanspeed_tmp == "low") {
+            fanspeed_tmp = 10;
+        }
+        else if (fanspeed_tmp == "medium") {
+            fanspeed_tmp = 40;
+        }
+        else if (fanspeed_tmp == "high") {
+            fanspeed_tmp = 80;
+        }
+        else {
+            fanspeed_tmp = 110;
+        }
+
         Serial.printf("\nfanspeed_tmp: %s", fanspeed_tmp);
         fanspeed_tmp.toCharArray(fanspeed_char,20);
         
