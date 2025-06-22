@@ -8,14 +8,21 @@
     - If the fan inlet has high CO2 in the night then fanspeed should remain low and all valves to bedrooms open
 */
 
-
-
-
 #include "statemachine.h"
 
 String new_state = "0";
 float statemachine_sensor_data[2][8][3];
 float statemachine_avg_sensor_data[2][8][3];
+
+struct CO2_Sensors {
+        String valve;
+        float co2_reading;
+};
+
+//struct CO2_Sensors co2_sensors;
+
+CO2_Sensors co2_sensors[8];
+int co2_sensor_counter = 0;
 
 void init_statemachine(void) {
     state = "init";
@@ -151,7 +158,7 @@ void init_transitions(void) {
 
     set_fanspeed(temp_fanspeed);
 
-    // Conditions to transit to other state
+    // Conditions to transit to other state, only evalaution based on time and day of week
     if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
         Serial.print("\nIt is after 8, before 21 and a weekday. Transit to day.");
         new_state = "day";
@@ -209,6 +216,10 @@ void day_transitions(void) {
 
     set_fanspeed(temp_fanspeed);
 
+    float temp = co2_sensors[0].co2_reading;
+    Serial.print("\nco2_sensors[0].co2_reading: ");
+    Serial.print(temp);
+
     if (valve_move_locked == 0) {
         valve_position_statemachine(statemachine_state);
     }
@@ -216,16 +227,27 @@ void day_transitions(void) {
         Serial.print("\nValves are locked for moving, will try again later");
     }
 
-    // Condition to transit to other state
+    // Conditions to transit to other state
+
+    //Iterate through CO2 sensors to see if any of them has high CO2 reading
+    for (int i = 0; i < co2_sensor_counter; i++) {
+        if (co2_sensors[i].co2_reading > 1000) {
+            Serial.print("\nSensor" + String(i) + "which is located at" + String(co2_sensors[i].valve) + " has high CO2 reading. Transit to highco2day state");
+            //Serial.print("\nIt's day and high CO2. Transit to highco2day state");
+            new_state = "highco2day";
+        }
+    }
+    
     if (temp_hour >= 21) {
         Serial.print("\nIt's night. Transit to night.");        
         new_state = "night";
     }
     //Assuming that CO2 sensor is on slot 2 of bus 1. CO2 has priority over others
-    else if (statemachine_avg_sensor_data[1][2][2] > 1000) {
-        Serial.print("\nIt's day and high CO2. Transit to highco2day state");
-        new_state = "highco2day";
-    }
+    //else if (statemachine_avg_sensor_data[1][2][2] > 1000) {
+        //Serial.print("\nIt's day and high CO2. Transit to highco2day state");
+        //new_state = "highco2day";
+    //}
+    
     //Assuming RH is on slot 0 of bus 0
     else if (statemachine_sensor_data[0][0][1] > 85) {
         Serial.print("It's day and high RH. Transit to highrhday state.");
@@ -367,7 +389,19 @@ void high_co2_day_transitions(void) {
     set_fanspeed(temp_fanspeed);
 
     if (valve_move_locked == 0) {
-        valve_position_statemachine(statemachine_state);
+
+        //Iterate through CO2 sensors to see which one has high CO2 reading to see if all valves need to move (when high reading is at fan inlet) 
+        //or only one valve needs to open (when high reading is in a room)
+        for (int i = 0; i < co2_sensor_counter; i++) {
+            if (co2_sensors[i].co2_reading > 1000 && co2_sensors[i].valve == "Fan inlet") {
+                valve_position_statemachine(statemachine_state);
+                break; //Exit loop when fan inlet has high CO2 reading
+            }
+            else {
+                //Only open valve for the room with high CO2 reading
+                //make temporary statemachine state so the same 
+            }
+        }        
     }
     else {
         Serial.print("\nValves are locked for moving, will try again later");
@@ -811,7 +845,6 @@ void select_sensors(void) {
     bool sensor_config1_file_present = 0;
     bool sensor_config2_file_present = 0;
 
-    int co2_sensor_counter = 0;
     int rh_sensor_counter = 0;
 
     float sensor_data[2][8][3];
@@ -865,6 +898,9 @@ void select_sensors(void) {
     }
 
     //Count how many CO2 sensors are enabled for CO2 control so can determine the array size
+
+    co2_sensor_counter = 0;
+
     for (int i = 0; i < 8; i++) {
         String co2_sensor_wire = wire_sensor_data["wire_sensor"+String(i)]["co2"];
         if (co2_sensor_wire == "On") {
@@ -884,43 +920,24 @@ void select_sensors(void) {
         }
     }
 
-    /*
-    //Count how many RH sensors are enabled for CO2 control so can determine the array size
-    for (int i = 0; i < 8; i++) {
-        String rh_sensor_wire = wire_sensor_data["wire_sensor"+String(i)]["rh"];
-        if (rh_sensor_wire == "On") {
-            rh_sensor_counter++;
-        }
-        String rh_sensor_wire1 = wire1_sensor_data["wire1_sensor"+String(i)]["rh"];
-        if (rh_sensor_wire1 == "On") {
-            rh_sensor_counter++;
-        }
-    }*/
-
     Serial.print("\nco2_sensor_counter: ");
     Serial.print(co2_sensor_counter);
 
     Serial.print("\nrh_sensor_counter: ");
     Serial.print(rh_sensor_counter);
-
-    //declare array
-    //What does the statemachine need to know?
-    //if the sensor is at fan intake, then valve settings are according to valve settings per valve as define din json
-    //if the sensor is high for one room, then just open one file. This requires a different approach to move the valves in the right position
-    //Structure of array is: co2sensors[valve,co2reading] (valve means location of the sensor)
     
-    struct CO2_Sensors {
-        String valve;
-        float co2_reading;
-    };
+    //struct CO2_Sensors {
+        //String valve;
+        //float co2_reading;
+    //};
 
-    CO2_Sensors co2_sensors[co2_sensor_counter];
+    //CO2_Sensors co2_sensors[co2_sensor_counter];
 
     //initialise struct empty
-    for (int i=0; i<co2_sensor_counter; i++) {
-        co2_sensors[i].valve = "";
-        co2_sensors[i].co2_reading = 0;
-    }
+    //for (int i=0; i<co2_sensor_counter; i++) {
+        //co2_sensors[i].valve = "";
+        //co2_sensors[i].co2_reading = 0;
+    //}
 
     int j=0;        //counter for struct
 
@@ -951,6 +968,7 @@ void select_sensors(void) {
         }
         
     }
+    co2_sensor_counter = j;
 
     
 
