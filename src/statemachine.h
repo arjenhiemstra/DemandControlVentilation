@@ -29,5 +29,6 @@ void cooking_transitions(void);
 void valve_cycle_day_transitions(void);
 void valve_cycle_night_transitions(void);
 void manual_high_speed_transitions(void);
+void select_sensors(void);
 
 #endif

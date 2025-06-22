@@ -45,16 +45,6 @@ void config_wifi(void) {
                 Serial.println("WiFi Failed!");
                 return;
             }
-            Serial.print("\nIP Address: ");
-            Serial.print(WiFi.localIP());
-            Serial.print(", Subnetmask: ");
-            Serial.print(WiFi.subnetMask());
-            Serial.print(", Gateway IP: ");
-            Serial.print(WiFi.gatewayIP());
-            Serial.print(", Primary DNS: ");
-            Serial.print(WiFi.dnsIP(0));
-            Serial.print(", Secondary DNS: ");
-            Serial.print(WiFi.dnsIP(1));
             if (ap_active_mutex != NULL) {
                 if(xSemaphoreTake(ap_active_mutex, ( TickType_t ) 10 ) == pdTRUE) {
                     ap_active = 0;
@@ -97,18 +87,7 @@ void config_wifi(void) {
                 if (WiFi.waitForConnectResult() != WL_CONNECTED) {
                     Serial.println("WiFi Failed!");
                     return;
-                }
-                Serial.print("\nIP Address: ");
-                Serial.print(WiFi.localIP());
-                Serial.print(", Subnetmask: ");
-                Serial.print(WiFi.subnetMask());
-                Serial.print(", Gateway IP: ");
-                Serial.print(WiFi.gatewayIP());
-                Serial.print(", Primary DNS: ");
-                Serial.print(WiFi.dnsIP(0));
-                Serial.print(", Secondary DNS: ");
-                Serial.print(WiFi.dnsIP(1));
-                
+                }               
                 if (ap_active_mutex != NULL) {
                     if(xSemaphoreTake(ap_active_mutex, ( TickType_t ) 10 ) == pdTRUE) {
                         ap_active = 0;
@@ -173,3 +152,4 @@ int** splitStringsToInts(String input[]) {
 
     return output; // Return the dynamically allocated array
 }
+

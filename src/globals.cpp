@@ -9,7 +9,7 @@ TaskHandle_t task_sys;
 TaskHandle_t task_valvectrl;
 TaskHandle_t h_Task_web;
 TaskHandle_t task_wifi;
-TaskHandle_t task_bluetooth;
+TaskHandle_t task_espnow;
 
 SemaphoreHandle_t sensor_config_file_mutex = NULL;              // Sensor configuration files
 SemaphoreHandle_t valve_position_file_mutex = NULL;             // Valve position file

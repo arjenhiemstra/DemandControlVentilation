@@ -1,3 +1,16 @@
+/*
+- Multiple sensors can be used to determine the CO2 value. This is set in the sensor config files
+- Temperature is not used
+- RH can only be used in bathroom(s) since in general RH cannot be influenced by ventilation, only when there is a big change such as showering
+- CO2 can be measured for serveral rooms
+    - If one room has high CO2 then it should be sufficinet to open a valve
+    - If the fan inlet has high CO2 in daytime then fanspeed should go to high in day time
+    - If the fan inlet has high CO2 in the night then fanspeed should remain low and all valves to bedrooms open
+*/
+
+
+
+
 #include "statemachine.h"
 
 String new_state = "0";
@@ -12,7 +25,7 @@ void run_statemachine(void) {
 
     Serial.print("\nRead sensor data from queue for statemachine.");
     if (xQueuePeek(sensor_queue, &statemachine_sensor_data, 0 ) == pdTRUE) {
-        Serial.print("\n\nBus\tSensor\tTemperature (°C)\tHumidity (%)\tCO2 (ppm)");
+        /*Serial.print("\n\nBus\tSensor\tTemperature (°C)\tHumidity (%)\tCO2 (ppm)");
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 8; j++) {
                 Serial.print("\n");
@@ -25,9 +38,9 @@ void run_statemachine(void) {
                     Serial.print("\t\t");
                 }
             }
-        }
+        }*/
     }
-    Serial.print("\n");
+    //Serial.print("\n");
     
     
     Serial.print("\nRead average sensor data from queue for statemachine.");
@@ -48,7 +61,6 @@ void run_statemachine(void) {
         }
     }
     Serial.print("\n");
-    
     
     if (state == "init") {
         init_transitions();
@@ -138,7 +150,6 @@ void init_transitions(void) {
     }
 
     set_fanspeed(temp_fanspeed);
-    xTaskNotifyGive(xTaskGetHandle("task_bluetooth"));
 
     // Conditions to transit to other state
     if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
@@ -193,6 +204,8 @@ void day_transitions(void) {
             xSemaphoreGive(lock_valve_move_mutex);
         }
     }
+
+    select_sensors();
 
     set_fanspeed(temp_fanspeed);
 
@@ -779,3 +792,173 @@ void manual_high_speed_transitions(void) {
     }
 }
 
+void select_sensors(void) {
+    //Read config files
+    //Make new array with sensors which are active for statemachine
+    //Need to read config file at every iteration of statemachine, otherwise changes will not happen until reboot
+    //Then statemachine needs to re-iterate through small array
+
+    const char* path1 = "/json/sensor_config1.json";
+    const char* path2 = "/json/sensor_config2.json";
+    
+    String sensor_config1_string = "";
+    String sensor_config2_string = "";
+    //String co2_sensor_wire;
+    //String co2_sensor_wire1;
+    //String rh_sensor_wire;
+    //String rh_sensor_wire1;
+
+    bool sensor_config1_file_present = 0;
+    bool sensor_config2_file_present = 0;
+
+    int co2_sensor_counter = 0;
+    int rh_sensor_counter = 0;
+
+    float sensor_data[2][8][3];
+    
+    if (sensor_config_file_mutex != NULL) {
+        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            sensor_config1_file_present = check_file_exists(path1);
+            if (sensor_config1_file_present == 1) {
+                File file = LittleFS.open(path1, "r");
+                while(file.available()) {
+                    sensor_config1_string = file.readString();
+                }
+                file.close();
+                deserializeJson(wire_sensor_data, sensor_config1_string);
+            }
+            xSemaphoreGive(sensor_config_file_mutex);
+        }
+    }
+
+    if (sensor_config_file_mutex != NULL) {
+        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            sensor_config2_file_present = check_file_exists(path2);
+            if (sensor_config2_file_present == 1) {
+                File file = LittleFS.open(path2, "r");
+                while(file.available()) {
+                    sensor_config2_string = file.readString();
+                }
+                file.close();
+                deserializeJson(wire1_sensor_data, sensor_config2_string);
+            }
+            xSemaphoreGive(sensor_config_file_mutex);
+        }
+    }
+
+    //Copy sensor readings from global
+    if (xQueuePeek(sensor_queue, &sensor_data, 0 ) == pdTRUE) {
+        Serial.print("\n\nBus\tSensor\tTemperature (°C)\tHumidity (%)\tCO2 (ppm)");
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 8; j++) {
+                Serial.print("\n");
+                Serial.print(i);
+                Serial.print("\t\t");
+                Serial.print(j);
+                Serial.print("\t");
+                for (int k = 0; k < 3; k++) {
+                    Serial.print(statemachine_avg_sensor_data[i][j][k]);
+                    Serial.print("\t\t");
+                }
+            }
+        }
+    }
+
+    //Count how many CO2 sensors are enabled for CO2 control so can determine the array size
+    for (int i = 0; i < 8; i++) {
+        String co2_sensor_wire = wire_sensor_data["wire_sensor"+String(i)]["co2"];
+        if (co2_sensor_wire == "On") {
+            co2_sensor_counter++;
+        }
+        String co2_sensor_wire1 = wire1_sensor_data["wire1_sensor"+String(i)]["co2"];
+        if (co2_sensor_wire1 == "On") {
+            co2_sensor_counter++;
+        }
+        String rh_sensor_wire = wire_sensor_data["wire_sensor"+String(i)]["rh"];
+        if (rh_sensor_wire == "On") {
+            rh_sensor_counter++;
+        }
+        String rh_sensor_wire1 = wire1_sensor_data["wire1_sensor"+String(i)]["rh"];
+        if (rh_sensor_wire1 == "On") {
+            rh_sensor_counter++;
+        }
+    }
+
+    /*
+    //Count how many RH sensors are enabled for CO2 control so can determine the array size
+    for (int i = 0; i < 8; i++) {
+        String rh_sensor_wire = wire_sensor_data["wire_sensor"+String(i)]["rh"];
+        if (rh_sensor_wire == "On") {
+            rh_sensor_counter++;
+        }
+        String rh_sensor_wire1 = wire1_sensor_data["wire1_sensor"+String(i)]["rh"];
+        if (rh_sensor_wire1 == "On") {
+            rh_sensor_counter++;
+        }
+    }*/
+
+    Serial.print("\nco2_sensor_counter: ");
+    Serial.print(co2_sensor_counter);
+
+    Serial.print("\nrh_sensor_counter: ");
+    Serial.print(rh_sensor_counter);
+
+    //declare array
+    //What does the statemachine need to know?
+    //if the sensor is at fan intake, then valve settings are according to valve settings per valve as define din json
+    //if the sensor is high for one room, then just open one file. This requires a different approach to move the valves in the right position
+    //Structure of array is: co2sensors[valve,co2reading] (valve means location of the sensor)
+    
+    struct CO2_Sensors {
+        String valve;
+        float co2_reading;
+    };
+
+    CO2_Sensors co2_sensors[co2_sensor_counter];
+
+    //initialise struct empty
+    for (int i=0; i<co2_sensor_counter; i++) {
+        co2_sensors[i].valve = "";
+        co2_sensors[i].co2_reading = 0;
+    }
+
+    int j=0;        //counter for struct
+
+    for (int i = 0; i < 8; i++) {
+        String co2_sensor_wire = wire_sensor_data["wire_sensor"+String(i)]["co2"];
+        if (co2_sensor_wire == "On") {
+            String valve_temp = wire_sensor_data["wire_sensor"+String(i)]["valve"];
+            co2_sensors[j].valve = valve_temp;
+            co2_sensors[j].co2_reading = sensor_data[0][i][2];
+            
+            Serial.print("\nvalve: ");
+            Serial.print(co2_sensors[j].valve);
+            Serial.print("\t\tCO2 reading: ");
+            Serial.print(co2_sensors[j].co2_reading);
+            j++;
+        }
+        String co2_sensor_wire1 = wire1_sensor_data["wire1_sensor"+String(i)]["co2"];
+        if (co2_sensor_wire1 == "On") {
+            String valve_temp = wire1_sensor_data["wire1_sensor"+String(i)]["valve"];
+            co2_sensors[j].valve = valve_temp;
+            co2_sensors[j].co2_reading = sensor_data[1][i][2];
+            
+            Serial.print("\nvalve: ");
+            Serial.print(co2_sensors[j].valve);
+            Serial.print("\t\tCO2 reading: ");
+            Serial.print(co2_sensors[j].co2_reading);
+            j++;
+        }
+        
+    }
+
+    
+
+
+
+
+
+
+
+
+}
