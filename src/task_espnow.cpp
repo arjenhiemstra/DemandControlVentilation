@@ -45,13 +45,12 @@ void task_espnow_code(void * pvParameters) {
             fanspeed_tmp = 110;
         }
 
-        Serial.printf("\nfanspeed_tmp: %s", fanspeed_tmp);
         fanspeed_tmp.toCharArray(fanspeed_char,20);
         
         esp_now_send(receiverMAC, (uint8_t *)fanspeed_char, sizeof(fanspeed_char));
         Serial.printf("\nSent Fanspeed: %s", fanspeed_char);
 
-        vTaskDelay(10000);
+        vTaskDelay(20000);
     }
 	
 }
