@@ -11,7 +11,7 @@ void task_statemachine_code(void * pvParameters) {
     init_statemachine();
     
     for (;;) {
-        vTaskDelay(60000);
+        vTaskDelay(30000);
         if (ap_active == 0) {
             run_statemachine();
         }

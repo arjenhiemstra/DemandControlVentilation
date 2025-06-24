@@ -235,35 +235,40 @@ void day_transitions(void) {
 
     //Iterate through CO2 sensors to see if any of them has high CO2 reading
     select_sensors();
+    int co2_sensor_high = 0;
     
     for (int i = 0; i < co2_sensor_counter; i++) {
         if (co2_sensors[i].co2_reading > 1000) {
-            Serial.print("\nSensor" + String(i) + "which is located at" + String(co2_sensors[i].valve) + " has high CO2 reading. Transit to highco2day state");
+            Serial.print("\nSensor" + String(i) + " which is located at " + String(co2_sensors[i].valve) + " has high CO2 reading. Transit to highco2day state");
             //Serial.print("\nIt's day and high CO2. Transit to highco2day state");
-            new_state = "highco2day";
+            co2_sensor_high++;
         }
-        else if (temp_hour >= 21) {
-            Serial.print("\nIt's night. Transit to night.");        
-            new_state = "night";
-        }
-        else if (statemachine_sensor_data[0][0][1] > 85) {    //Assuming RH is on slot 0 of bus 0          
-            Serial.print("It's day and high RH. Transit to highrhday state.");
-            new_state = "highrhday";
-        }
-        else if (cooking_times() == true) {
-            Serial.print("It's day and cooking time. Transit to cooking state.");
-            new_state = "cooking";
-        }
-        else if (valve_cycle_times_day() == true) {
-            Serial.print("It's day and valve_cycle_time_day. Transit to valvecycleday state");
-            new_state = "cyclingday";
-        }
-        //Manual high speed mode is ignored for now
-        else {
-            Serial.print("\nConditions have not changed, it's still day");
-            new_state = "day";
-        }
+    }
+
+    if (co2_sensor_high > 0) {
+        new_state = "highco2day";
     } 
+    else if (temp_hour >= 21) {
+        Serial.print("\nIt's night. Transit to night.");        
+        new_state = "night";
+    }
+    else if (statemachine_sensor_data[0][0][1] > 85) {                      //Assuming RH is on slot 0 of bus 0          
+        Serial.print("It's day and high RH. Transit to highrhday state.");
+        new_state = "highrhday";
+    }
+    else if (cooking_times() == true) {
+        Serial.print("It's day and cooking time. Transit to cooking state.");
+        new_state = "cooking";
+    }
+    else if (valve_cycle_times_day() == true) {
+        Serial.print("It's day and valve_cycle_time_day. Transit to valvecycleday state");
+        new_state = "cyclingday";
+    }
+    //Manual high speed mode is ignored for now
+    else {
+        Serial.print("\nConditions have not changed, it's still day");
+        new_state = "day";
+    }
     
     //Assuming that CO2 sensor is on slot 2 of bus 1. CO2 has priority over others
     //else if (statemachine_avg_sensor_data[1][2][2] > 1000) {
