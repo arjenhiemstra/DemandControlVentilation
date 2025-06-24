@@ -36,6 +36,7 @@ SemaphoreHandle_t settings_state_highrhnight_mutex = NULL;      // High RH night
 SemaphoreHandle_t settings_state_cooking_mutex = NULL;          // Cooking state settings 
 SemaphoreHandle_t settings_state_cyclingday_mutex = NULL;       // Valve cycle day state settings
 SemaphoreHandle_t settings_state_cyclingnight_mutex = NULL;     // Valve cycle night state settings
+SemaphoreHandle_t settings_state_temp_mutex = NULL;             // Temp state settings
 
 QueueHandle_t sensor_queue;                                     // Handle for sensor queue data
 QueueHandle_t sensor_avg_queue;                                 // Handle for sensor queue data
@@ -60,6 +61,7 @@ JsonDocument settings_state_highrhnight;                        // Settings for 
 JsonDocument settings_state_cooking;                            // Settings for state cooking
 JsonDocument settings_state_cyclingday;                         // Settings for state valve cycling day
 JsonDocument settings_state_cyclingnight;                       // Settings for state valve cycling night
+JsonDocument settings_state_temp;                             // Settings for dynamic valve control            
 
 String wire_sensor_config_string = {};
 String wire1_sensor_config_string = {};

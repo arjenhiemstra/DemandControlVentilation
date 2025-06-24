@@ -171,7 +171,13 @@ void init_transitions(void) {
         Serial.print("\nIt's night. Transit to night.");
         new_state = "night";
     }
-    state = new_state;
+    
+    if (statemachine_state_mutex != NULL) {
+        if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            state = new_state;
+            xSemaphoreGive(statemachine_state_mutex);
+        }
+    } 
 }
 
 void day_transitions(void) {
@@ -212,8 +218,6 @@ void day_transitions(void) {
         }
     }
 
-    select_sensors();
-
     set_fanspeed(temp_fanspeed);
 
     float temp = co2_sensors[0].co2_reading;
@@ -230,6 +234,8 @@ void day_transitions(void) {
     // Conditions to transit to other state
 
     //Iterate through CO2 sensors to see if any of them has high CO2 reading
+    select_sensors();
+    
     for (int i = 0; i < co2_sensor_counter; i++) {
         if (co2_sensors[i].co2_reading > 1000) {
             Serial.print("\nSensor" + String(i) + "which is located at" + String(co2_sensors[i].valve) + " has high CO2 reading. Transit to highco2day state");
@@ -266,7 +272,13 @@ void day_transitions(void) {
         Serial.print("\nConditions have not changed, it's still day");
         new_state = "day";
     }
-    state = new_state;
+    
+    if (statemachine_state_mutex != NULL) {
+        if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            state = new_state;
+            xSemaphoreGive(statemachine_state_mutex);
+        }
+    } 
 }
 
 void night_transitions(void) {
@@ -345,7 +357,13 @@ void night_transitions(void) {
         Serial.print("\nConditions have not changed, it's still night.");
         new_state = "night";
     }
-    state = new_state;
+    
+    if (statemachine_state_mutex != NULL) {
+        if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            state = new_state;
+            xSemaphoreGive(statemachine_state_mutex);
+        }
+    }
 }
 
 void high_co2_day_transitions(void) {
@@ -390,37 +408,79 @@ void high_co2_day_transitions(void) {
 
     if (valve_move_locked == 0) {
 
-        //Iterate through CO2 sensors to see which one has high CO2 reading to see if all valves need to move (when high reading is at fan inlet) 
-        //or only one valve needs to open (when high reading is in a room)
+        //Default settings for this state
+        if (settings_state_temp_mutex != NULL) {
+            if(xSemaphoreTake(settings_state_temp_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+                settings_state_temp["enable_state_temp"] = "On";
+                settings_state_temp["name_state_temp"] = "temp";
+                settings_state_temp["valve0_position_temp_state"] = 4;
+                settings_state_temp["valve1_position_temp_state"] = 4;
+                settings_state_temp["valve2_position_temp_state"] = 4;
+                settings_state_temp["valve3_position_temp_state"] = 0;
+                settings_state_temp["valve4_position_temp_state"] = 0;
+                settings_state_temp["valve5_position_temp_state"] = 4;
+                settings_state_temp["valve6_position_temp_state"] = 24;
+                settings_state_temp["valve7_position_temp_state"] = 0;
+                settings_state_temp["valve8_position_temp_state"] = 4;
+                settings_state_temp["valve9_position_temp_state"] = 4;
+                settings_state_temp["valve10_position_temp_state"] = 4;
+                settings_state_temp["valve11_position_temp_state"] = 4;
+                xSemaphoreGive(settings_state_temp_mutex);
+            }
+        }
+        
+        // Iterate through CO2 sensors to see which one has high CO2 reading to see if all valves need to move (when high reading is at fan inlet) 
+        // or only one valve needs to open (when high reading is in a room)
         for (int i = 0; i < co2_sensor_counter; i++) {
             if (co2_sensors[i].co2_reading > 1000 && co2_sensors[i].valve == "Fan inlet") {
                 valve_position_statemachine(statemachine_state);
                 break; //Exit loop when fan inlet has high CO2 reading
             }
             else {
-                //Only open valve for the room with high CO2 reading
-                //make temporary statemachine state so the same 
+                // Only open valve for the room with high CO2 reading by customizing the settings_state_highco2day JSON object. All other valves 
+                // will remain in the same position
+                settings_state_temp["valve" + String(i) + "_position_temp_state"] = 20;
+                valve_position_statemachine("temp_state");
             }
-        }        
+        }
     }
     else {
         Serial.print("\nValves are locked for moving, will try again later");
     }
 
-    // Conditions for transition
-    if (statemachine_sensor_data[0][0][2] < 800) {
-        Serial.print("\nIt is day and CO2 level is low enough. Transit to day.");
-        new_state = "day";
+    // Conditions for transition. 
+    // If fan inlet is lower than 800 ppm then it is day, otherwise it is high CO2 day
+    // Iterate through CO2 sensors to see if any of them has CO2 reading below 800 ppm and if so close that valve to default psoition
+    for (int i = 0; i < co2_sensor_counter; i++) {
+        if (co2_sensors[i].co2_reading < 800 && co2_sensors[i].valve == "Fan inlet") {
+            new_state = "day";
+        }
+        else {
+            // Only close valve for the room with high CO2 reading by customizing the settings_state_temp JSON object. All other valves 
+            // will remain in the same position
+            settings_state_temp["valve" + String(i) + "_position_temp_state"] = 4;
+            valve_position_statemachine("temp_state");
+        }
     }
-    else if (temp_hour >= 21) {
+    //if (statemachine_sensor_data[0][0][2] < 800) {
+        //Serial.print("\nIt is day and CO2 level is low enough. Transit to day.");
+        //new_state = "day";
+    //}
+    if (temp_hour >= 21) {
         Serial.print("\nIt's night but CO2 levels are still high. Transit to high_co2_night");        
         new_state = "highco2night";
     }
     else {
         Serial.print("\nConditions have not changed, CO2 is still high, so remain in high_co2_day state");
-        new_state = "highco2day";
+        //new_state = "highco2day";
     }
-    state = new_state;
+    
+    if (statemachine_state_mutex != NULL) {
+        if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            state = new_state;
+            xSemaphoreGive(statemachine_state_mutex);
+        }
+    }    
 }
 
 void high_co2_night_transitions(void) {
@@ -489,7 +549,13 @@ void high_co2_night_transitions(void) {
         Serial.print("\nConditions have not changed, CO2 is still high, so remain in high_co2_night state");
         new_state = "highco2night";
     }
-    state = new_state;
+    
+    if (statemachine_state_mutex != NULL) {
+        if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            state = new_state;
+            xSemaphoreGive(statemachine_state_mutex);
+        }
+    } 
 }
 
 void high_rh_day_transitions(void) {
@@ -552,7 +618,13 @@ void high_rh_day_transitions(void) {
         Serial.print("\nConditions have not changed, RH is still high, so remain in high_rh_day state");
         new_state = "highrhday";
     }
-    state = new_state;
+    
+    if (statemachine_state_mutex != NULL) {
+        if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            state = new_state;
+            xSemaphoreGive(statemachine_state_mutex);
+        }
+    } 
 }
 
 void high_rh_night_transitions(void) {
@@ -621,7 +693,13 @@ void high_rh_night_transitions(void) {
         Serial.print("\nConditions have not changed, RH is still high, so remain in high_rh_night state");
         new_state = "highrhnight";
     }
-    state = new_state;
+    
+    if (statemachine_state_mutex != NULL) {
+        if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            state = new_state;
+            xSemaphoreGive(statemachine_state_mutex);
+        }
+    } 
 }
 
 void cooking_transitions(void) {
@@ -672,7 +750,13 @@ void cooking_transitions(void) {
         Serial.print("\nConditions have not changed, cooking time is not over so remain in cooking state");
         new_state = "cooking";
     }
-    state = new_state;
+    
+    if (statemachine_state_mutex != NULL) {
+        if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            state = new_state;
+            xSemaphoreGive(statemachine_state_mutex);
+        }
+    } 
 }
 
 void valve_cycle_day_transitions(void) {
@@ -731,7 +815,13 @@ void valve_cycle_day_transitions(void) {
         Serial.print("\nConditions have not changed, valve_cycle_day is still active, so remain in valve_cycle_day state");
         new_state = "cyclingday";
     }
-    state = new_state;
+    
+    if (statemachine_state_mutex != NULL) {
+        if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            state = new_state;
+            xSemaphoreGive(statemachine_state_mutex);
+        }
+    } 
 }
 
 void valve_cycle_night_transitions(void) {
@@ -790,7 +880,13 @@ void valve_cycle_night_transitions(void) {
         Serial.print("\nConditions have not changed, valve_cycle_day is still active, so remain in valve_cycle_night state");
         new_state = "cyclingnight";
     }
-    state = new_state;
+    
+    if (statemachine_state_mutex != NULL) {
+        if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            state = new_state;
+            xSemaphoreGive(statemachine_state_mutex);
+        }
+    }
 }
 
 //This state is for later

@@ -52,6 +52,7 @@ extern SemaphoreHandle_t settings_state_highrhnight_mutex;
 extern SemaphoreHandle_t settings_state_cooking_mutex;
 extern SemaphoreHandle_t settings_state_cyclingday_mutex;
 extern SemaphoreHandle_t settings_state_cyclingnight_mutex;
+extern SemaphoreHandle_t settings_state_temp_mutex;
 
 extern QueueHandle_t sensor_queue;
 extern QueueHandle_t sensor_avg_queue;
@@ -76,6 +77,7 @@ extern JsonDocument settings_state_highrhnight;
 extern JsonDocument settings_state_cooking;
 extern JsonDocument settings_state_cyclingday;
 extern JsonDocument settings_state_cyclingnight;
+extern JsonDocument settings_state_temp;
 
 extern String wire_sensor_config_string;
 extern String wire1_sensor_config_string;
