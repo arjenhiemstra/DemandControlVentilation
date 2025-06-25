@@ -329,24 +329,18 @@ Data structure for each JSON valve_control_data Structure
     }
     else {
         state_valve_pos_path = ("/json/settings_state_" + statemachine_state + ".json");
-        if (settings_state_day_mutex != NULL) {
-            if(xSemaphoreTake(settings_state_day_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-                state_valve_pos_file_present = check_file_exists(state_valve_pos_path.c_str());
-                if (state_valve_pos_file_present == 1) {
+        state_valve_pos_file_present = check_file_exists(state_valve_pos_path.c_str());
+        if (state_valve_pos_file_present == 1) {
             
-                    File file = LittleFS.open(state_valve_pos_path, "r");
-            
-                    while(file.available()) {
-                        state_valve_pos_str = file.readString();
-                    }
-                    file.close();
-                }        
-                xSemaphoreGive(settings_state_day_mutex);
+            File file = LittleFS.open(state_valve_pos_path, "r");
+            while(file.available()) {
+                state_valve_pos_str = file.readString();
             }
+            file.close();    
         }
+        deserializeJson(state_valve_pos_doc, state_valve_pos_str);
     }
-    deserializeJson(state_valve_pos_doc, state_valve_pos_str);   
-    
+       
     status_file_present = check_file_exists(actual_valve_pos_path);
 
     if (valve_position_file_mutex != NULL) {
