@@ -13,7 +13,7 @@ void task_influxdb_code(void * pvParameters)
         
         String enable_influxdb_tmp;
         
-        vTaskDelay(30000);
+        vTaskDelay(10000);
         
         if (ap_active_mutex != NULL) {
             if(xSemaphoreTake(ap_active_mutex, ( TickType_t ) 10 ) == pdTRUE) {
