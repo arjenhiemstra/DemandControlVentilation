@@ -437,7 +437,6 @@ void high_co2_day_transitions(void) {
         for (int i = 0; i < co2_sensor_counter; i++) {
             if (co2_sensors[i].co2_reading > 1000 && co2_sensors[i].valve == "Fan inlet") {
                 valve_position_statemachine(statemachine_state);
-                break; //Exit loop when fan inlet has high CO2 reading
             }
             else {
                 // Only open valve for the room with high CO2 reading by customizing the settings_state_highco2day JSON object. All other valves 
@@ -476,7 +475,7 @@ void high_co2_day_transitions(void) {
     
     //Other transition conditions 
     if (co2_sensors_low > 0) {
-        new_state = "dayhighco2day";
+        new_state = "highco2day";
         Serial.print("\nConditions have not changed, CO2 is still high, so remain in high_co2_day state");
     }
     else if (temp_hour >= 21 && co2_sensors_low > 0) {
