@@ -375,6 +375,7 @@ void high_co2_day_transitions(void) {
     String temp_fanspeed = "";
     int temp_hour = 0;
     bool valve_move_locked = 0;
+    bool is_fan_inlet = 0;
 
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
@@ -411,7 +412,8 @@ void high_co2_day_transitions(void) {
 
     if (valve_move_locked == 0) {
 
-        //Default settings for this state
+        //Temp valve settings for individual valves starting with default settings for this state
+        //Should read these from file and not hardcode them
         if (settings_state_temp_mutex != NULL) {
             if(xSemaphoreTake(settings_state_temp_mutex, ( TickType_t ) 10 ) == pdTRUE) {
                 settings_state_temp["enable_state_temp"] = "On";
@@ -435,15 +437,22 @@ void high_co2_day_transitions(void) {
         // Iterate through CO2 sensors to see which one has high CO2 reading to see if all valves need to move (when high reading is at fan inlet) 
         // or only one valve needs to open (when high reading is in a room)
         for (int i = 0; i < co2_sensor_counter; i++) {
-            if (co2_sensors[i].co2_reading > 1000 && co2_sensors[i].valve == "Fan inlet") {
-                valve_position_statemachine(statemachine_state);
+            if (co2_sensors[i].co2_reading >1000 && co2_sensors[i].valve != "Fan inlet") {
+                //Set new valve settings for the room with high CO2 reading
+                settings_state_temp["valve" + String(i) + "_position_temp_state"] = 20;
             }
             else {
-                // Only open valve for the room with high CO2 reading by customizing the settings_state_highco2day JSON object. All other valves 
-                // will remain in the same position
-                settings_state_temp["valve" + String(i) + "_position_temp_state"] = 20;
-                valve_position_statemachine("temp_state");
+                //State is high CO2 day and sensor is at fan inlet, so set to default valve settings
+                is_fan_inlet = 1;
             }
+        }
+        
+        if (is_fan_inlet == 1) {
+            valve_position_statemachine(statemachine_state);
+        }
+        else {
+            // If not fan inlet sensor than use temp state valve settings
+            valve_position_statemachine("temp_state");
         }
     }
     else {
