@@ -19,7 +19,7 @@ void task_espnow_code(void * pvParameters) {
 
     esp_now_peer_info_t peerInfo;
     memcpy(peerInfo.peer_addr, receiverMAC, 6);
-    peerInfo.channel = 0;
+    peerInfo.channel = 8;
     peerInfo.encrypt = false;
     esp_now_add_peer(&peerInfo);
 
