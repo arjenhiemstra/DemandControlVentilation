@@ -476,7 +476,7 @@ void high_co2_day_transitions(void) {
     //Other transition conditions 
     if (co2_sensors_low > 0) {
         new_state = "highco2day";
-        Serial.print("\nConditions have not changed, CO2 is still high, so remain in high_co2_day state");
+        Serial.print("\nConditions have not changed, CO2 in one of the sensors is still high, so remain in high_co2_day state");
     }
     else if (temp_hour >= 21 && co2_sensors_low > 0) {
         new_state = "highco2night";
