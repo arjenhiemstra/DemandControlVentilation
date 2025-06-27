@@ -416,51 +416,49 @@ void high_co2_day_transitions(void) {
 
     set_fanspeed(temp_fanspeed);
 
-    if (valve_move_locked == 0) {
-
-        //Temp valve settings for individual valves starting with default settings for this state
-        //Should read these from file and not hardcode them
-        /*
-        if (settings_state_temp_mutex != NULL) {
-            if(xSemaphoreTake(settings_state_temp_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-                settings_state_temp["enable_state_temp"] = "On";
-                settings_state_temp["name_state_temp"] = "temp";
-                settings_state_temp["valve0_position_temp_state"] = 4;
-                settings_state_temp["valve1_position_temp_state"] = 4;
-                settings_state_temp["valve2_position_temp_state"] = 4;
-                settings_state_temp["valve3_position_temp_state"] = 0;
-                settings_state_temp["valve4_position_temp_state"] = 0;
-                settings_state_temp["valve5_position_temp_state"] = 4;
-                settings_state_temp["valve6_position_temp_state"] = 24;
-                settings_state_temp["valve7_position_temp_state"] = 0;
-                settings_state_temp["valve8_position_temp_state"] = 4;
-                settings_state_temp["valve9_position_temp_state"] = 4;
-                settings_state_temp["valve10_position_temp_state"] = 4;
-                settings_state_temp["valve11_position_temp_state"] = 4;
-                xSemaphoreGive(settings_state_temp_mutex);
-            }
-        }*/
-        
-        // Iterate through CO2 sensors to see which one has high CO2 reading to see if all valves need to move (when high reading is at fan inlet) 
-        // or only one valve needs to open (when high reading is in a room)
-        for (int i = 0; i < co2_sensor_counter; i++) {
-            if (co2_sensors[i].co2_reading >1000 && co2_sensors[i].valve != "Fan inlet") {
-                //Set new valve settings for the room with high CO2 reading
-                settings_state_temp["valve" + String(i) + "_position_temp_state"] = 20;
-            }
-            else {
-                //State is high CO2 day and sensor is at fan inlet, so set to default valve settings
-                is_fan_inlet = 1;
-            }
+    //Temp valve settings for individual valves starting with default settings for this state. Should read these from file and not hardcode them
+    if (settings_state_temp_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_temp_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            settings_state_temp["enable_state_temp"] = "On";
+            settings_state_temp["name_state_temp"] = "temp";
+            settings_state_temp["valve0_position_temp_state"] = 4;
+            settings_state_temp["valve1_position_temp_state"] = 4;
+            settings_state_temp["valve2_position_temp_state"] = 4;
+            settings_state_temp["valve3_position_temp_state"] = 0;
+            settings_state_temp["valve4_position_temp_state"] = 0;
+            settings_state_temp["valve5_position_temp_state"] = 4;
+            settings_state_temp["valve6_position_temp_state"] = 24;
+            settings_state_temp["valve7_position_temp_state"] = 0;
+            settings_state_temp["valve8_position_temp_state"] = 4;
+            settings_state_temp["valve9_position_temp_state"] = 4;
+            settings_state_temp["valve10_position_temp_state"] = 4;
+            settings_state_temp["valve11_position_temp_state"] = 4;
+            xSemaphoreGive(settings_state_temp_mutex);
         }
-        
+    }
+
+    // Iterate through CO2 sensors to see which one has high CO2 reading to see if default settings apply when high reading is at fan inlet
+    // or only one valve needs to open (when high reading is in a room)
+    for (int i = 0; i < co2_sensor_counter; i++) {
+        if (co2_sensors[i].co2_reading > 1000 && co2_sensors[i].valve != "Fan inlet") {
+            //Set new valve settings for the room with high CO2 reading
+            settings_state_temp["valve" + String(i) + "_position_temp_state"] = 20;
+        }
+        if (co2_sensors[i].co2_reading > 1000 && co2_sensors[i].valve == "Fan inlet") {
+            //State is high CO2 day and sensor is at fan inlet, so set to default valve settings
+            is_fan_inlet = 1;
+        }
+    }
+
+    if (valve_move_locked == 0) {
         if (is_fan_inlet == 1) {
             //valve_position_statemachine(statemachine_state);
             Serial.print("\nFan inlet sensor high. Move valves to default positions for this state");
         }
         else {
-            // If not fan inlet sensor than use temp state valve settings
+            // If not fan inlet sensor than use temp state valve settings 
             //valve_position_statemachine("temp_state");
+            Serial.Print("\ntemp_state settings: ");
             serializeJsonPretty(settings_state_temp, Serial);
         }
     }
@@ -468,8 +466,7 @@ void high_co2_day_transitions(void) {
         Serial.print("\nValves are locked for moving, will try again later");
     }
 
-    // Conditions for transition. 
-    // If fan inlet is lower than 800 ppm then it is day, otherwise it is high CO2 day
+    // Conditions for transition. If fan inlet is lower than 800 ppm then it is day, otherwise it is high CO2 day
     // Iterate through CO2 sensors to see if any of them has CO2 reading below 800 ppm and if so close that valve to default psoition
     //co2_sensors_high = 0;
     
@@ -482,14 +479,16 @@ void high_co2_day_transitions(void) {
             // Only close valve for the room with high CO2 reading by customizing the settings_state_temp JSON object. All other valves 
             // will remain in the same position
             settings_state_temp["valve" + String(i) + "_position_temp_state"] = 4;
-            valve_position_statemachine("temp_state");
+            //valve_position_statemachine("temp_state");
         }
         else {
             //Sensor is not below 800ppm
             co2_sensors_high++;
         }
-        Serial.print("\nNumber of sensors measure high CO2: " + String(co2_sensors_high) ); 
+        //Serial.print("\nNumber of sensors measure high CO2: " + String(co2_sensors_high) );
     }
+    
+    Serial.print("\nNumber of sensors measure high CO2: " + String(co2_sensors_high) );
     
     //Other transition conditions 
     if (co2_sensors_high > 0) {
