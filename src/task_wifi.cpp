@@ -10,8 +10,7 @@ void task_wifi_code(void * pvParameters) {
     
     for(;;) {
         
-        Serial.print("\nAccess point mode active: ");
-        Serial.print(ap_active);
+        //Serial.print("\nAccess point mode active: " + ap_active);
         
         if (WiFi.status() != WL_CONNECTED && ap_active == 0) {
             Serial.print("\nNo Wifi connection. Trying to connect to Wifi.");
@@ -40,10 +39,10 @@ void task_wifi_code(void * pvParameters) {
         
         if (ret == ESP_OK) {
             Serial.print(", MAC: ");
-            Serial.printf("%02x:%02x:%02x:%02x:%02x:%02x\n", baseMac[0], baseMac[1], baseMac[2], baseMac[3], baseMac[4], baseMac[5]);
+            Serial.printf("%02x:%02x:%02x:%02x:%02x:%02x", baseMac[0], baseMac[1], baseMac[2], baseMac[3], baseMac[4], baseMac[5]);
         } 
         else {
-            Serial.println("Failed to read MAC address");
+            Serial.println("\nFailed to read MAC address");
         }
                 
         vTaskDelay(30000);

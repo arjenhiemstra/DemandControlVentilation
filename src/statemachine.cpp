@@ -258,15 +258,15 @@ void day_transitions(void) {
         new_state = "night";
     }
     else if (statemachine_sensor_data[0][0][1] > 85) {                      //Assuming RH is on slot 0 of bus 0          
-        Serial.print("It's day and high RH. Transit to highrhday state.");
+        Serial.print("\nIt's day and high RH. Transit to highrhday state.");
         new_state = "highrhday";
     }
     else if (cooking_times() == true) {
-        Serial.print("It's day and cooking time. Transit to cooking state.");
+        Serial.print("\nIt's day and cooking time. Transit to cooking state.");
         new_state = "cooking";
     }
     else if (valve_cycle_times_day() == true) {
-        Serial.print("It's day and valve_cycle_time_day. Transit to valvecycleday state");
+        Serial.print("\nIt's day and valve_cycle_time_day. Transit to valvecycleday state");
         new_state = "cyclingday";
     }
     //Manual high speed mode is ignored for now
@@ -353,11 +353,11 @@ void night_transitions(void) {
     }
     //Assuming RH sensor is on slot 0 of bus 0
     else if (statemachine_sensor_data[0][0][1] > 85) {
-        Serial.print("It's night and high RH. Transit to high high_rh_night.");
+        Serial.print("\nIt's night and high RH. Transit to high high_rh_night.");
         new_state = "highrhday";
     }
     else if (valve_cycle_times_night() == true) {
-        Serial.print("It's night and valve_cycle time. Transit to valve_cycle_night.");
+        Serial.print("\nIt's night and valve_cycle time. Transit to valve_cycle_night.");
         new_state = "cyclingnight";
     }
     //Manual high speed mode is ignored for now
@@ -381,6 +381,7 @@ void high_co2_day_transitions(void) {
     int temp_hour = 0;
     bool valve_move_locked = 0;
     bool is_fan_inlet = 0;
+    int co2_sensors_high = 0;
 
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
@@ -419,6 +420,7 @@ void high_co2_day_transitions(void) {
 
         //Temp valve settings for individual valves starting with default settings for this state
         //Should read these from file and not hardcode them
+        /*
         if (settings_state_temp_mutex != NULL) {
             if(xSemaphoreTake(settings_state_temp_mutex, ( TickType_t ) 10 ) == pdTRUE) {
                 settings_state_temp["enable_state_temp"] = "On";
@@ -437,7 +439,7 @@ void high_co2_day_transitions(void) {
                 settings_state_temp["valve11_position_temp_state"] = 4;
                 xSemaphoreGive(settings_state_temp_mutex);
             }
-        }
+        }*/
         
         // Iterate through CO2 sensors to see which one has high CO2 reading to see if all valves need to move (when high reading is at fan inlet) 
         // or only one valve needs to open (when high reading is in a room)
@@ -453,11 +455,13 @@ void high_co2_day_transitions(void) {
         }
         
         if (is_fan_inlet == 1) {
-            valve_position_statemachine(statemachine_state);
+            //valve_position_statemachine(statemachine_state);
+            Serial.print("\nFan inlet sensor high. Move valves to default positions for this state");
         }
         else {
             // If not fan inlet sensor than use temp state valve settings
-            valve_position_statemachine("temp_state");
+            //valve_position_statemachine("temp_state");
+            serializeJsonPretty(settings_state_temp, Serial);
         }
     }
     else {
@@ -467,7 +471,7 @@ void high_co2_day_transitions(void) {
     // Conditions for transition. 
     // If fan inlet is lower than 800 ppm then it is day, otherwise it is high CO2 day
     // Iterate through CO2 sensors to see if any of them has CO2 reading below 800 ppm and if so close that valve to default psoition
-    int co2_sensors_high = 0;
+    //co2_sensors_high = 0;
     
     for (int i = 0; i < co2_sensor_counter; i++) {
         
@@ -484,7 +488,7 @@ void high_co2_day_transitions(void) {
             //Sensor is not below 800ppm
             co2_sensors_high++;
         }
-        Serial.print("\nNumber of sensors measure high CO2: " + co2_sensors_high ); 
+        Serial.print("\nNumber of sensors measure high CO2: " + String(co2_sensors_high) ); 
     }
     
     //Other transition conditions 

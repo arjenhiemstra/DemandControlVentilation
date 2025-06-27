@@ -17,6 +17,6 @@ void set_fanspeed(String speed) {
         Serial.print("HTTP Response code: ");
         Serial.println(httpResponseCode);
         String payload = http.getString();
-        Serial.println(payload);
+        Serial.print("\t\t" + payload);
     }
 }

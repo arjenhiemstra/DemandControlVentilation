@@ -81,11 +81,11 @@ void config_wifi(void) {
             if (ip_address != "" && subnet_mask != "" && gateway != "" && (primary_dns != "" || secondary_dns != "")) {
                 WiFi.mode(WIFI_STA);
                 if (!WiFi.config(local_IP, gateway_IP, subnet_mask_IP, primary_dns_IP, secondary_dns_IP)) {
-                    Serial.println("STA Failed to configure");
+                    Serial.print("\nSTA Failed to configure");
                 }
                 WiFi.begin(ssid, wifi_password);
                 if (WiFi.waitForConnectResult() != WL_CONNECTED) {
-                    Serial.println("WiFi Failed!");
+                    Serial.print("\nWiFi Failed!");
                     return;
                 }               
                 if (ap_active_mutex != NULL) {
@@ -109,7 +109,7 @@ void config_wifi(void) {
         WiFi.softAP("OSVENTILATION-WIFI", NULL);
         IPAddress IP = WiFi.softAPIP();
         Serial.print("\nAP IP address: ");
-        Serial.println(IP);
+        Serial.print(IP);
         
         if (ap_active_mutex != NULL) {
             if(xSemaphoreTake(ap_active_mutex, ( TickType_t ) 10 ) == pdTRUE) {
