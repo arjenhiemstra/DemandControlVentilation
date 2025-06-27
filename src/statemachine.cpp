@@ -458,7 +458,7 @@ void high_co2_day_transitions(void) {
         else {
             // If not fan inlet sensor than use temp state valve settings 
             //valve_position_statemachine("temp_state");
-            Serial.Print("\ntemp_state settings: ");
+            Serial.print("\ntemp_state settings: ");
             serializeJsonPretty(settings_state_temp, Serial);
         }
     }
