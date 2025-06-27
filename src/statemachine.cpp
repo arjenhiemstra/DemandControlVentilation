@@ -19,10 +19,16 @@ struct CO2_Sensors {
         float co2_reading;
 };
 
-//struct CO2_Sensors co2_sensors;
+struct RH_Sensors {
+    String valve;
+    float rh_reading;
+};
 
 CO2_Sensors co2_sensors[8];
+RH_Sensors rh_sensors[8];
 int co2_sensor_counter = 0;
+int rh_sensors_counter = 0;
+
 
 void init_statemachine(void) {
     state = "init";
@@ -240,7 +246,6 @@ void day_transitions(void) {
     for (int i = 0; i < co2_sensor_counter; i++) {
         if (co2_sensors[i].co2_reading > 1000) {
             Serial.print("\nSensor" + String(i) + " which is located at " + String(co2_sensors[i].valve) + " has high CO2 reading. Transit to highco2day state");
-            //Serial.print("\nIt's day and high CO2. Transit to highco2day state");
             co2_sensor_high++;
         }
     }
@@ -462,15 +467,14 @@ void high_co2_day_transitions(void) {
     // Conditions for transition. 
     // If fan inlet is lower than 800 ppm then it is day, otherwise it is high CO2 day
     // Iterate through CO2 sensors to see if any of them has CO2 reading below 800 ppm and if so close that valve to default psoition
-    int co2_sensors_low = 0;
+    int co2_sensors_high = 0;
     
     for (int i = 0; i < co2_sensor_counter; i++) {
         
-        if (co2_sensors[i].co2_reading > 800 && co2_sensors[i].valve == "Fan inlet") {                 //No need to move valve
-            co2_sensors_low++;
+        if (co2_sensors[i].co2_reading > 800 && co2_sensors[i].valve == "Fan inlet") {
+            co2_sensors_high++;              //No need to move valve but remains in highco2day
         }
-        
-        if (co2_sensors[i].co2_reading < 800 && co2_sensors[i].valve != "Fan inlet") {
+        else if (co2_sensors[i].co2_reading < 800 && co2_sensors[i].valve != "Fan inlet") {
             // Only close valve for the room with high CO2 reading by customizing the settings_state_temp JSON object. All other valves 
             // will remain in the same position
             settings_state_temp["valve" + String(i) + "_position_temp_state"] = 4;
@@ -478,16 +482,17 @@ void high_co2_day_transitions(void) {
         }
         else {
             //Sensor is not below 800ppm
-            co2_sensors_low++;
-        }    
+            co2_sensors_high++;
+        }
+        Serial.print("\nNumber of sensors measure high CO2: " + co2_sensors_high ); 
     }
     
     //Other transition conditions 
-    if (co2_sensors_low > 0) {
+    if (co2_sensors_high > 0) {
         new_state = "highco2day";
         Serial.print("\nConditions have not changed, CO2 in one of the sensors is still high, so remain in high_co2_day state");
     }
-    else if (temp_hour >= 21 && co2_sensors_low > 0) {
+    else if (temp_hour >= 21 && co2_sensors_high > 0) {
         new_state = "highco2night";
         Serial.print("\nIt's night but CO2 levels are still high. Transit to high_co2_night");        
     }
@@ -1040,22 +1045,9 @@ void select_sensors(void) {
     Serial.print("\nco2_sensor_counter: ");
     Serial.print(co2_sensor_counter);
 
-    Serial.print("\nrh_sensor_counter: ");
+    Serial.print("\t\t\trh_sensor_counter: ");
     Serial.print(rh_sensor_counter);
     
-    //struct CO2_Sensors {
-        //String valve;
-        //float co2_reading;
-    //};
-
-    //CO2_Sensors co2_sensors[co2_sensor_counter];
-
-    //initialise struct empty
-    //for (int i=0; i<co2_sensor_counter; i++) {
-        //co2_sensors[i].valve = "";
-        //co2_sensors[i].co2_reading = 0;
-    //}
-
     int j=0;        //counter for struct
 
     for (int i = 0; i < 8; i++) {

@@ -10,8 +10,8 @@ void set_fanspeed(String speed) {
 
     http.begin(server_path.c_str());
 
-    int httpResponseCode = 0;
-    //int httpResponseCode = http.GET();
+    //int httpResponseCode = 0;
+    int httpResponseCode = http.GET();
       
     if (httpResponseCode>0) {
         Serial.print("HTTP Response code: ");
