@@ -324,7 +324,7 @@ Data structure for each JSON valve_control_data Structure
     int sum_move = 0;          //temp variable for decision on writing config file (sum>0) or not (sum=0)
 
     //Requested valve positions based on valve position settings files
-    if (statemachine_state == "temp_state") {
+    if (statemachine_state == "state_temp") {
         serializeJson(settings_state_temp,state_valve_pos_str);
     }
     else {

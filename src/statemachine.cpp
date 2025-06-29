@@ -418,32 +418,39 @@ void high_co2_day_transitions(void) {
     select_sensors();
 
     //Temp valve settings for individual valves starting with default settings for this state. Should read these from file and not hardcode them
-    if (settings_state_temp_mutex != NULL) {
-        if(xSemaphoreTake(settings_state_temp_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+    //if (settings_state_temp_mutex != NULL) {
+        //if(xSemaphoreTake(settings_state_temp_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             settings_state_temp["enable_state_temp"] = "On";
             settings_state_temp["name_state_temp"] = "temp";
-            settings_state_temp["valve0_position_temp_state"] = 4;
-            settings_state_temp["valve1_position_temp_state"] = 4;
-            settings_state_temp["valve2_position_temp_state"] = 4;
-            settings_state_temp["valve3_position_temp_state"] = 0;
-            settings_state_temp["valve4_position_temp_state"] = 0;
-            settings_state_temp["valve5_position_temp_state"] = 4;
-            settings_state_temp["valve6_position_temp_state"] = 24;
-            settings_state_temp["valve7_position_temp_state"] = 0;
-            settings_state_temp["valve8_position_temp_state"] = 4;
-            settings_state_temp["valve9_position_temp_state"] = 4;
-            settings_state_temp["valve10_position_temp_state"] = 4;
-            settings_state_temp["valve11_position_temp_state"] = 4;
-            xSemaphoreGive(settings_state_temp_mutex);
-        }
-    }
+            settings_state_temp["valve0_position_state_temp"] = 4;
+            settings_state_temp["valve1_position_state_temp"] = 4;
+            settings_state_temp["valve2_position_state_temp"] = 4;
+            settings_state_temp["valve3_position_state_temp"] = 0;
+            settings_state_temp["valve4_position_state_temp"] = 0;
+            settings_state_temp["valve5_position_state_temp"] = 4;
+            settings_state_temp["valve6_position_state_temp"] = 24;
+            settings_state_temp["valve7_position_state_temp"] = 0;
+            settings_state_temp["valve8_position_state_temp"] = 4;
+            settings_state_temp["valve9_position_state_temp"] = 4;
+            settings_state_temp["valve10_position_state_temp"] = 4;
+            settings_state_temp["valve11_position_state_temp"] = 4;
+            //xSemaphoreGive(settings_state_temp_mutex);
+        //}
+    //}
+    Serial.print("\ntemp_state settings: ");
+    serializeJsonPretty(settings_state_temp, Serial);
 
     // Iterate through CO2 sensors to see which one has high CO2 reading to see if default settings apply when high reading is at fan inlet
     // or only one valve needs to open (when high reading is in a room)
     for (int i = 0; i < co2_sensor_counter; i++) {
         if (co2_sensors[i].co2_reading > 1000 && co2_sensors[i].valve != "Fan inlet") {
             //Set new valve settings for the room with high CO2 reading
-            settings_state_temp[co2_sensors[i].valve + "_position_temp_state"] = 20;
+            //if (settings_state_temp_mutex != NULL) {
+                //if (xSemaphoreTake(settings_state_temp_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+                    settings_state_temp[co2_sensors[i].valve + "_position_state_temp"] = 20;
+                    //xSemaphoreGive(settings_state_temp_mutex);
+                //}
+            //}
         }
         if (co2_sensors[i].co2_reading > 1000 && co2_sensors[i].valve == "Fan inlet") {
             //State is high CO2 day and sensor is at fan inlet, so set to default valve settings
@@ -483,8 +490,15 @@ void high_co2_day_transitions(void) {
         else if (co2_sensors[i].co2_reading < 800 && co2_sensors[i].valve != "Fan inlet") {
             // Only close valve for the room with high CO2 reading by customizing the settings_state_temp JSON object. All other valves 
             // will remain in the same position
-            settings_state_temp[co2_sensors[i].valve + "_position_temp_state"] = 4;
-            //valve_position_statemachine("temp_state");
+            //if (settings_state_temp_mutex != NULL) {
+                //if (xSemaphoreTake(settings_state_temp_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+                    settings_state_temp[co2_sensors[i].valve + "_position_state_temp"] = 4;
+                    //xSemaphoreGive(settings_state_temp_mutex);
+                //}
+            //}
+            Serial.print("\ntemp_state settings: ");
+            serializeJsonPretty(settings_state_temp, Serial);
+            valve_position_statemachine("state_temp");
         }
     }
     
