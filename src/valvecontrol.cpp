@@ -302,6 +302,7 @@ Data structure for each JSON valve_control_data Structure
     "valve0_data": [valve_vumber,valve move,valvemove_direction],
     "valve1_data": [valve_vumber,valve move,valvemove_direction],
     ......
+    ......
     "valve11_data": [valve_vumber,valve move,valvemove_direction]
 }
 */
@@ -340,8 +341,10 @@ Data structure for each JSON valve_control_data Structure
             }
             file.close();    
         }
-        deserializeJson(state_valve_pos_doc, state_valve_pos_str);
+        //deserializeJson(state_valve_pos_doc, state_valve_pos_str);
     }
+    
+    deserializeJson(state_valve_pos_doc, state_valve_pos_str);
        
     status_file_present = check_file_exists(actual_valve_pos_path);
 
