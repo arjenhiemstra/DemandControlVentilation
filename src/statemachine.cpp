@@ -380,10 +380,10 @@ void high_co2_day_transitions(void) {
     String temp_fanspeed = "";
     int temp_hour = 0;
     bool valve_move_locked = 0;
-    bool is_fan_inlet = 0;
+    //bool is_fan_inlet = 0;
     int co2_sensors_high = 0;
 
-    // Actions for this sate
+    // Actions for this state
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             state = statemachine_state;
@@ -418,8 +418,8 @@ void high_co2_day_transitions(void) {
     select_sensors();
 
     //Temp valve settings for individual valves starting with default settings for this state. Should read these from file and not hardcode them
-    //if (settings_state_temp_mutex != NULL) {
-        //if(xSemaphoreTake(settings_state_temp_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+    if (settings_state_temp_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_temp_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             settings_state_temp["enable_state_temp"] = "On";
             settings_state_temp["name_state_temp"] = "temp";
             settings_state_temp["valve0_position_state_temp"] = 4;
@@ -434,41 +434,37 @@ void high_co2_day_transitions(void) {
             settings_state_temp["valve9_position_state_temp"] = 4;
             settings_state_temp["valve10_position_state_temp"] = 4;
             settings_state_temp["valve11_position_state_temp"] = 4;
-            //xSemaphoreGive(settings_state_temp_mutex);
-        //}
-    //}
-    Serial.print("\n1. state_temp settings: ");
-    serializeJsonPretty(settings_state_temp, Serial);
+            xSemaphoreGive(settings_state_temp_mutex);
+        }
+    }
 
     // Iterate through CO2 sensors to see which one has high CO2 reading to see if default settings apply when high reading is at fan inlet
     // or only one valve needs to open (when high reading is in a room)
     for (int i = 0; i < co2_sensor_counter; i++) {
         if (co2_sensors[i].co2_reading > 1000 && co2_sensors[i].valve != "Fan inlet") {
             //Set new valve settings for the room with high CO2 reading
-            //if (settings_state_temp_mutex != NULL) {
-                //if (xSemaphoreTake(settings_state_temp_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            if (settings_state_temp_mutex != NULL) {
+                if (xSemaphoreTake(settings_state_temp_mutex, ( TickType_t ) 10 ) == pdTRUE) {
                     settings_state_temp[co2_sensors[i].valve + "_position_state_temp"] = 20;
-                    //xSemaphoreGive(settings_state_temp_mutex);
-                //}
-            //}
+                    xSemaphoreGive(settings_state_temp_mutex);
+                }
+            }
         }
-        if (co2_sensors[i].co2_reading > 1000 && co2_sensors[i].valve == "Fan inlet") {
+        //if (co2_sensors[i].co2_reading > 1000 && co2_sensors[i].valve == "Fan inlet") {
             //State is high CO2 day and sensor is at fan inlet, so set to default valve settings
-            is_fan_inlet = 1;
-        }
+            //is_fan_inlet = 1;
+        //}
     }
 
     if (valve_move_locked == 0) {
-        if (is_fan_inlet == 1) {
-            valve_position_statemachine(statemachine_state);
-            Serial.print("\nFan inlet sensor high. Move valves to default positions for this state");
-        }
-        else {
+        //if (is_fan_inlet == 1 && ) {
+        //    valve_position_statemachine(statemachine_state);
+        //    Serial.print("\nFan inlet sensor high. Move valves to default positions for this state");
+        //}
+        //else {
             // If not fan inlet sensor than use temp state valve settings 
             valve_position_statemachine("state_temp");
-            Serial.print("\n2. state_temp settings: ");
-            serializeJsonPretty(settings_state_temp, Serial);
-        }
+        //}
     }
     else {
         Serial.print("\nValves are locked for moving, will try again later");
@@ -490,18 +486,20 @@ void high_co2_day_transitions(void) {
         else if (co2_sensors[i].co2_reading < 800 && co2_sensors[i].valve != "Fan inlet") {
             // Only close valve for the room with high CO2 reading by customizing the settings_state_temp JSON object. All other valves 
             // will remain in the same position
-            //if (settings_state_temp_mutex != NULL) {
-                //if (xSemaphoreTake(settings_state_temp_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            if (settings_state_temp_mutex != NULL) {
+                if (xSemaphoreTake(settings_state_temp_mutex, ( TickType_t ) 10 ) == pdTRUE) {
                     settings_state_temp[co2_sensors[i].valve + "_position_state_temp"] = 4;
-                    //xSemaphoreGive(settings_state_temp_mutex);
-                //}
-            //}
-            Serial.print("\n3. temp_state settings: ");
-            serializeJsonPretty(settings_state_temp, Serial);
-            valve_position_statemachine("state_temp");
+                    xSemaphoreGive(settings_state_temp_mutex);
+                }
+            }
+            if (valve_move_locked == 0) {
+                valve_position_statemachine("state_temp");
+            }
         }
     }
     
+    Serial.print("\ntemp_state settings: ");
+    serializeJsonPretty(settings_state_temp, Serial);
     Serial.print("\nNumber of sensors measure high CO2: " + String(co2_sensors_high) );
     
     //Other transition conditions 

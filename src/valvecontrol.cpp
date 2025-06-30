@@ -326,6 +326,8 @@ Data structure for each JSON valve_control_data Structure
     //Requested valve positions based on valve position settings files
     if (statemachine_state == "state_temp") {
         serializeJson(settings_state_temp,state_valve_pos_str);
+        Serial.print("\ntemp_state settings in valvecontrol: ");
+        serializeJsonPretty(settings_state_temp, Serial);
     }
     else {
         state_valve_pos_path = ("/json/settings_state_" + statemachine_state + ".json");
@@ -395,8 +397,8 @@ Data structure for each JSON valve_control_data Structure
                 valve_control_data["checks"][0] = 1;        //store required
                 valve_control_data["checks"][1] = 1;        //check required
             }
-            Serial.print("\nValve control data: ");
-            serializeJson(valve_control_data, Serial);
+            //Serial.print("\nValve control data: ");
+            //serializeJson(valve_control_data, Serial);
             xSemaphoreGive(valve_control_data_mutex);
         }
     }
