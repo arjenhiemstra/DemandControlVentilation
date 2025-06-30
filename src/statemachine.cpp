@@ -437,7 +437,7 @@ void high_co2_day_transitions(void) {
             //xSemaphoreGive(settings_state_temp_mutex);
         //}
     //}
-    Serial.print("\ntemp_state settings: ");
+    Serial.print("\n1. state_temp settings: ");
     serializeJsonPretty(settings_state_temp, Serial);
 
     // Iterate through CO2 sensors to see which one has high CO2 reading to see if default settings apply when high reading is at fan inlet
@@ -465,8 +465,8 @@ void high_co2_day_transitions(void) {
         }
         else {
             // If not fan inlet sensor than use temp state valve settings 
-            valve_position_statemachine("temp_state");
-            Serial.print("\ntemp_state settings: ");
+            valve_position_statemachine("state_temp");
+            Serial.print("\n2. state_temp settings: ");
             serializeJsonPretty(settings_state_temp, Serial);
         }
     }
@@ -496,7 +496,7 @@ void high_co2_day_transitions(void) {
                     //xSemaphoreGive(settings_state_temp_mutex);
                 //}
             //}
-            Serial.print("\ntemp_state settings: ");
+            Serial.print("\n3. temp_state settings: ");
             serializeJsonPretty(settings_state_temp, Serial);
             valve_position_statemachine("state_temp");
         }
