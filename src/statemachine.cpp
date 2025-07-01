@@ -378,10 +378,15 @@ void high_co2_day_transitions(void) {
 
     String statemachine_state = "highco2day";
     String temp_fanspeed = "";
+    String state_valve_pos_path = "";
+    String state_valve_pos_str = "";
     int temp_hour = 0;
-    bool valve_move_locked = 0;
-    //bool is_fan_inlet = 0;
     int co2_sensors_high = 0;
+    bool valve_move_locked = 0;
+    bool state_valve_pos_file_present = 0;
+
+    //Local JSON object to hold the state settings
+    JsonDocument state_valve_pos_doc;
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
@@ -418,21 +423,31 @@ void high_co2_day_transitions(void) {
     select_sensors();
 
     //Temp valve settings for individual valves starting with default settings for this state. Should read these from file and not hardcode them
-    settings_state_temp["enable_state_temp"] = "On";
-    settings_state_temp["name_state_temp"] = "temp";
-    settings_state_temp["valve0_position_state_temp"] = 4;
-    settings_state_temp["valve1_position_state_temp"] = 4;
-    settings_state_temp["valve2_position_state_temp"] = 4;
-    settings_state_temp["valve3_position_state_temp"] = 0;
-    settings_state_temp["valve4_position_state_temp"] = 0;
-    settings_state_temp["valve5_position_state_temp"] = 4;
-    settings_state_temp["valve6_position_state_temp"] = 24;
-    settings_state_temp["valve7_position_state_temp"] = 0;
-    settings_state_temp["valve8_position_state_temp"] = 4;
-    settings_state_temp["valve9_position_state_temp"] = 4;
-    settings_state_temp["valve10_position_state_temp"] = 4;
-    settings_state_temp["valve11_position_state_temp"] = 4;
+    state_valve_pos_path = ("/json/settings_state_" + statemachine_state + ".json");
+    state_valve_pos_file_present = check_file_exists(state_valve_pos_path.c_str());
+    if (state_valve_pos_file_present == 1) {
+        
+        File file = LittleFS.open(state_valve_pos_path, "r");
+        while(file.available()) {
+            state_valve_pos_str = file.readString();
+        }
+        file.close();    
+    }
 
+    deserializeJson(state_valve_pos_doc, state_valve_pos_str);
+
+    settings_state_temp["valve0_position_state_temp"] = state_valve_pos_doc["valve0_position_highco2day"].as<int>();
+    settings_state_temp["valve1_position_state_temp"] = state_valve_pos_doc["valve1_position_highco2day"].as<int>();
+    settings_state_temp["valve2_position_state_temp"] = state_valve_pos_doc["valve2_position_highco2day"].as<int>();
+    settings_state_temp["valve3_position_state_temp"] = state_valve_pos_doc["valve3_position_highco2day"].as<int>();
+    settings_state_temp["valve4_position_state_temp"] = state_valve_pos_doc["valve4_position_highco2day"].as<int>();
+    settings_state_temp["valve5_position_state_temp"] = state_valve_pos_doc["valve5_position_highco2day"].as<int>();
+    settings_state_temp["valve6_position_state_temp"] = state_valve_pos_doc["valve6_position_highco2day"].as<int>();
+    settings_state_temp["valve7_position_state_temp"] = state_valve_pos_doc["valve7_position_highco2day"].as<int>();
+    settings_state_temp["valve8_position_state_temp"] = state_valve_pos_doc["valve8_position_highco2day"].as<int>();
+    settings_state_temp["valve9_position_state_temp"] = state_valve_pos_doc["valve9_position_highco2day"].as<int>();
+    settings_state_temp["valve10_position_state_temp"] = state_valve_pos_doc["valve10_position_highco2day"].as<int>();
+    settings_state_temp["valve11_position_state_temp"] = state_valve_pos_doc["valve11_position_highco2day"].as<int>();
 
     // Iterate through CO2 sensors to see which one has high CO2 reading to see if default settings apply when high reading is at fan inlet
     // or only one valve needs to open (when high reading is in a room)
@@ -441,24 +456,10 @@ void high_co2_day_transitions(void) {
             //Set new valve settings for the room with high CO2 reading
             settings_state_temp[co2_sensors[i].valve + "_position_state_temp"] = 20;
         }
-        //if (co2_sensors[i].co2_reading > 1000 && co2_sensors[i].valve == "Fan inlet") {
-            //State is high CO2 day and sensor is at fan inlet, so set to default valve settings
-            //is_fan_inlet = 1;
-        //}
     }
 
-    if (valve_move_locked == 0) {
-        //if (is_fan_inlet == 1 && ) {
-        //    valve_position_statemachine(statemachine_state);
-        //    Serial.print("\nFan inlet sensor high. Move valves to default positions for this state");
-        //}
-        //else {
-            // If not fan inlet sensor than use temp state valve settings 
-            
-        Serial.print("\n0. temp_state settings selected in valvecontrol.");
-        serializeJsonPretty(settings_state_temp, Serial);    
+    if (valve_move_locked == 0) {    
         valve_position_statemachine("state_temp");
-        //}
     }
     else {
         Serial.print("\nValves are locked for moving, will try again later");
@@ -467,9 +468,7 @@ void high_co2_day_transitions(void) {
     // Conditions for transition. If fan inlet is lower than 800 ppm then it is day, otherwise it is high CO2 day
     // Iterate through CO2 sensors to see if any of them has CO2 reading below 800 ppm and if so close that valve to default psoition
     //co2_sensors_high = 0;
-    
     for (int i = 0; i < co2_sensor_counter; i++) {
-        
         if (co2_sensors[i].co2_reading > 800 && co2_sensors[i].valve == "Fan inlet") {
             co2_sensors_high++;              //No need to move valve but remains in highco2day
         }
@@ -478,8 +477,7 @@ void high_co2_day_transitions(void) {
             co2_sensors_high++;
         }
         else if (co2_sensors[i].co2_reading < 800 && co2_sensors[i].valve != "Fan inlet") {
-            // Only close valve for the room with high CO2 reading by customizing the settings_state_temp JSON object. All other valves 
-            // will remain in the same position
+            // Only close valve for the room with high CO2 reading by customizing the settings_state_temp JSON object. All other valves will remain in the same position
             settings_state_temp[co2_sensors[i].valve + "_position_state_temp"] = 4;
             if (valve_move_locked == 0) {
                 valve_position_statemachine("state_temp");
@@ -487,8 +485,6 @@ void high_co2_day_transitions(void) {
         }
     }
     
-    Serial.print("\ntemp_state settings: ");
-    serializeJsonPretty(settings_state_temp, Serial);
     Serial.print("\nNumber of sensors measure high CO2: " + String(co2_sensors_high) );
     
     //Other transition conditions 
