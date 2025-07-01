@@ -324,11 +324,16 @@ Data structure for each JSON valve_control_data Structure
     int i;
     int sum_move = 0;          //Variable for decision on writing config file (sum>0) or not (sum=0)
 
+    Serial.print("\n1. temp_state settings selected in valvecontrol: " + statemachine_state);
+
+    //Serial.print("\n2. temp_state settings selected in valvecontrol: ");
+    //serializeJsonPretty(settings_state_temp, Serial);
+    
     //Requested valve positions based on valve position settings files
     if (statemachine_state == "state_temp") {
         //From global JSONdoc to String
         serializeJson(settings_state_temp,state_valve_pos_str);
-        Serial.print("\ntemp_state settings selected in valvecontrol.");
+        //Serial.print("\n3. temp_state settings selected in valvecontrol.");
         //serializeJsonPretty(settings_state_temp, Serial);
     }
     else {
@@ -342,7 +347,6 @@ Data structure for each JSON valve_control_data Structure
             }
             file.close();    
         }
-        //deserializeJson(state_valve_pos_doc, state_valve_pos_str);
     }
     
     //From string to JSONdoc
