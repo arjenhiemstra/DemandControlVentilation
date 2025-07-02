@@ -24,11 +24,11 @@ struct RH_Sensors {
     float rh_reading;
 };
 
-CO2_Sensors co2_sensors[8];
-RH_Sensors rh_sensors[8];
+//Although 16 sensors can be used
+CO2_Sensors co2_sensors[16];
+RH_Sensors rh_sensors[16];
 int co2_sensor_counter = 0;
 int rh_sensors_counter = 0;
-
 
 void init_statemachine(void) {
     state = "init";
@@ -38,23 +38,8 @@ void run_statemachine(void) {
 
     Serial.print("\nRead sensor data from queue for statemachine.");
     if (xQueuePeek(sensor_queue, &statemachine_sensor_data, 0 ) == pdTRUE) {
-        /*Serial.print("\n\nBus\tSensor\tTemperature (°C)\tHumidity (%)\tCO2 (ppm)");
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 8; j++) {
-                Serial.print("\n");
-                Serial.print(i);
-                Serial.print("\t\t");
-                Serial.print(j);
-                Serial.print("\t");
-                for (int k = 0; k < 3; k++) {
-                    Serial.print(statemachine_sensor_data[i][j][k]);
-                    Serial.print("\t\t");
-                }
-            }
-        }*/
+        
     }
-    //Serial.print("\n");
-    
     
     Serial.print("\nRead average sensor data from queue for statemachine.");
     if (xQueuePeek(sensor_avg_queue, &statemachine_avg_sensor_data, 0 ) == pdTRUE) {
@@ -948,24 +933,17 @@ void manual_high_speed_transitions(void) {
 }
 
 void select_sensors(void) {
-    //Read config files
-    //Make new array with sensors which are active for statemachine
-    //Need to read config file at every iteration of statemachine, otherwise changes will not happen until reboot
-    //Then statemachine needs to re-iterate through small array
 
     const char* path1 = "/json/sensor_config1.json";
     const char* path2 = "/json/sensor_config2.json";
     
     String sensor_config1_string = "";
     String sensor_config2_string = "";
-    //String co2_sensor_wire;
-    //String co2_sensor_wire1;
-    //String rh_sensor_wire;
-    //String rh_sensor_wire1;
 
     bool sensor_config1_file_present = 0;
     bool sensor_config2_file_present = 0;
 
+    int co2_sensor_counter = 0;
     int rh_sensor_counter = 0;
 
     float sensor_data[2][8][3];
@@ -1001,27 +979,9 @@ void select_sensors(void) {
     }
 
     //Copy sensor readings from global
-    if (xQueuePeek(sensor_queue, &sensor_data, 0 ) == pdTRUE) {
-        Serial.print("\n\nBus\tSensor\tTemperature (°C)\tHumidity (%)\tCO2 (ppm)");
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 8; j++) {
-                Serial.print("\n");
-                Serial.print(i);
-                Serial.print("\t\t");
-                Serial.print(j);
-                Serial.print("\t");
-                for (int k = 0; k < 3; k++) {
-                    Serial.print(statemachine_avg_sensor_data[i][j][k]);
-                    Serial.print("\t\t");
-                }
-            }
-        }
-    }
+    xQueuePeek(sensor_queue, &sensor_data, 0 );
 
-    //Count how many CO2 sensors are enabled for CO2 control so can determine the array size
-
-    co2_sensor_counter = 0;
-
+    //Count how many CO2 and RH sensors are enabled for CO2 control
     for (int i = 0; i < 8; i++) {
         String co2_sensor_wire = wire_sensor_data["wire_sensor"+String(i)]["co2"];
         if (co2_sensor_wire == "On") {
@@ -1041,13 +1001,11 @@ void select_sensors(void) {
         }
     }
 
-    Serial.print("\nco2_sensor_counter: ");
-    Serial.print(co2_sensor_counter);
-
-    Serial.print("\t\t\trh_sensor_counter: ");
-    Serial.print(rh_sensor_counter);
+    Serial.print("\nco2_sensor_counter: " + String(co2_sensor_counter));
+    Serial.print("\t\t\trh_sensor_counter: " + String(rh_sensor_counter));
     
     int j=0;        //counter for struct
+    int k=0;        //counter for struct
 
     for (int i = 0; i < 8; i++) {
         String co2_sensor_wire = wire_sensor_data["wire_sensor"+String(i)]["co2"];
@@ -1058,7 +1016,7 @@ void select_sensors(void) {
             
             Serial.print("\nvalve: ");
             Serial.print(co2_sensors[j].valve);
-            Serial.print("\t\tCO2 reading: ");
+            Serial.print("\t\t\tCO2 reading: ");
             Serial.print(co2_sensors[j].co2_reading);
             j++;
         }
@@ -1070,21 +1028,35 @@ void select_sensors(void) {
             
             Serial.print("\nvalve: ");
             Serial.print(co2_sensors[j].valve);
-            Serial.print("\t\tCO2 reading: ");
+            Serial.print("\t\t\tCO2 reading: ");
             Serial.print(co2_sensors[j].co2_reading);
             j++;
         }
-        
+        String rh_sensor_wire = wire_sensor_data["wire_sensor"+String(i)]["rh"];
+        if (rh_sensor_wire == "On") {
+            String valve_temp = wire_sensor_data["wire_sensor"+String(i)]["valve"];
+            rh_sensors[k].valve = valve_temp;
+            rh_sensors[k].rh_reading = sensor_data[0][i][1];
+            
+            Serial.print("\nvalve: ");
+            Serial.print(rh_sensors[k].valve);
+            Serial.print("\t\t\tRH reading: ");
+            Serial.print(rh_sensors[k].rh_reading);
+            j++;
+        }
+        String rh_sensor_wire1 = wire1_sensor_data["wire1_sensor"+String(i)]["rh"];
+        if (rh_sensor_wire1 == "On") {
+            String valve_temp = wire1_sensor_data["wire1_sensor"+String(i)]["valve"];
+            rh_sensors[k].valve = valve_temp;
+            rh_sensors[k].rh_reading = sensor_data[1][i][1];
+            
+            Serial.print("\nvalve: ");
+            Serial.print(rh_sensors[k].valve);
+            Serial.print("\t\t\tRH reading: ");
+            Serial.print(rh_sensors[k].rh_reading);
+            j++;
+        }
     }
     co2_sensor_counter = j;
-
-    
-
-
-
-
-
-
-
-
+    rh_sensor_counter = k;
 }

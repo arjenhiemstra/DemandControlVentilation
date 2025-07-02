@@ -2,10 +2,10 @@
     "wire_sensor0":
         {
             "type":"DHT20",
-            "valve":"Fan inlet",
-            "location":"Fan",
+            "valve":"valve6",
+            "location":"Bathroom",
             "rh":"On",
-            "co2":"On"
+            "co2":"Off"
         },
     "wire_sensor1":
         {
@@ -17,27 +17,27 @@
         },
     "wire_sensor2":
             {
-            "type":"None",
-            "valve":"None",
-            "location":"",
+            "type":"SCD41",
+            "valve":"valve8",
+            "location":"Bedroom1",
             "rh":"Off",
-            "co2":"Off"
+            "co2":"On"
         },
     "wire_sensor3":
         {
-            "type":"None",
-            "valve":"None",
-            "location":"",
+            "type":"SCD41",
+            "valve":"valve9",
+            "location":"Bedroom2",
             "rh":"Off",
-            "co2":"Off"
+            "co2":"On"
         },
     "wire_sensor4":
         {
-            "type":"None",
-            "valve":"None",
-            "location":"",
+            "type":"SCD40",
+            "valve":"Fan inlet",
+            "location":"Fan inlet",
             "rh":"Off",
-            "co2":"Off"
+            "co2":"On"
         },
     "wire_sensor5":
         {
