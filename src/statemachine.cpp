@@ -226,10 +226,6 @@ void day_transitions(void) {
 
     set_fanspeed(temp_fanspeed);
 
-    //float temp = co2_sensors[0].co2_reading;
-    //Serial.print("\nco2_sensors[0].co2_reading: ");
-    //Serial.print(temp);
-
     if (valve_move_locked == 0) {
         valve_position_statemachine(statemachine_state);
     }
@@ -467,7 +463,6 @@ void high_co2_day_transitions(void) {
 
     // Conditions for transition. If fan inlet is lower than 800 ppm then it is day, otherwise it is high CO2 day
     // Iterate through CO2 sensors to see if any of them has CO2 reading below 800 ppm and if so close that valve to default psoition
-    //co2_sensors_high = 0;
     for (int i = 0; i < co2_sensor_counter; i++) {
         if (co2_sensors[i].co2_reading > 800 && co2_sensors[i].valve == "Fan inlet") {
             co2_sensors_high++;              //No need to move valve but remains in highco2day
