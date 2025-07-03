@@ -9,6 +9,7 @@
 #include <HTTPClient.h>
 
 #include "globals.h"
+#include "config_files.h"
 
 // function declarations
 void set_fanspeed(String speed);

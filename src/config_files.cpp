@@ -443,7 +443,6 @@ String read_config_file(const char* path) {
 
     File file = LittleFS.open(path, "r");
     String valve_positions;
-    //int i;
 
     while(file.available()) {
         valve_positions = file.readString();

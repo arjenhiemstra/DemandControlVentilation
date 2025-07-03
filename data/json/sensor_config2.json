@@ -1,35 +1,35 @@
 {
     "wire1_sensor0":
         {
-            "type":"None",
-            "valve":"None",
-            "location":"",
-            "rh":"Off",
+            "type":"DHT20",
+            "valve":"valve0",
+            "location":"Kitchen1",
+            "rh":"On",
             "co2":"Off"
         },
     "wire1_sensor1":
         {
-            "type":"None",
-            "valve":"None",
-            "location":"",
-            "rh":"Off",
+            "type":"DHT20",
+            "valve":"valve1",
+            "location":"Kitchen2",
+            "rh":"On",
             "co2":"Off"
         },
     "wire1_sensor2":
             {
-            "type":"None",
-            "valve":"None",
-            "location":"",
+            "type":"SCD40",
+            "valve":"valve10",
+            "location":"Bedroom3",
             "rh":"Off",
-            "co2":"Off"
+            "co2":"On"
         },
     "wire1_sensor3":
         {
-            "type":"None",
-            "valve":"",
-            "location":"",
+            "type":"SCD41",
+            "valve":"valve11",
+            "location":"Bedroom4",
             "rh":"Off",
-            "co2":"Off"
+            "co2":"On"
         },
     "wire1_sensor4":
         {

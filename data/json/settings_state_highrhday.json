@@ -1,5 +1,6 @@
 {
     "enable_state_highrhday": "On",
+    "state_highrhday_fanspeed": "High",
     "name_state_highrhday": "highrhday",
     "valve0_position_highrhday": 4,
     "valve1_position_highrhday": 4,

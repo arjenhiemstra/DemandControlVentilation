@@ -1,5 +1,6 @@
 {
     "enable_state_highrhnight": "On",
+    "state_highrhnight_fanspeed": "Low",
     "name_state_highrhnight": "highrhnight",
     "valve0_position_highrhnight": 4,
     "valve1_position_highrhnight": 4,

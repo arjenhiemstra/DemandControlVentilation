@@ -1,5 +1,6 @@
 {
     "enable_state_cooking": "On",
+    "state_cooking_fanspeed": "High",
     "name_state_cooking": "cooking",
     "valve0_position_cooking": 20,
     "valve1_position_cooking": 20,

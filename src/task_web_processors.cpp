@@ -272,7 +272,6 @@ String status_processor(const String& var) {
         return(state_tmp);
     if (var == "FORMATTEDTIME")
         return(formattedTime);
-
     if(var == "VALVE0_POS")
         return (doc1[String("valve0")]);
     if(var == "VALVE1_POS")
@@ -754,7 +753,7 @@ String settings_processor(const String& var) {
             settings_fan_file_present = check_file_exists(settings_fan_path);
             if (settings_fan_file_present == 1) {
                 settings_fan_json = read_config_file(settings_fan_path);
-                deserializeJson(settings_i2c_doc, settings_fan_json);
+                deserializeJson(settings_fan_doc, settings_fan_json);
             }
             xSemaphoreGive(settings_fan_mutex);
         }
@@ -765,15 +764,19 @@ String settings_processor(const String& var) {
         if (var == "STATUS_FAN_CONTROL_CONFIG")
             return F(status);
         if(var == "FAN_CONTROL_MODE")
-            return (settings_i2c_doc[String("fan_control_mode")]);
+            return (settings_fan_doc[String("fan_control_mode")]);
+        if(var == "FAN_CONTROL_MQTT_SERVER")
+            return (settings_fan_doc[String("fan_control_mqtt_server")]);
+        if(var == "FAN_CONTROL_MQTT_PORT")
+            return (settings_fan_doc[String("fan_control_mqtt_port")]);
         if(var == "FAN_CONTROL_MQTT_TOPIC")
-            return (settings_i2c_doc[String("fan_control_mqtt_topic")]);
+            return (settings_fan_doc[String("fan_control_mqtt_topic")]);
         if(var == "FAN_CONTROL_URL_HIGH_SPEED")
-            return (settings_i2c_doc[String("fan_control_url_high_speed")]);
+            return (settings_fan_doc[String("fan_control_url_high_speed")]);
         if(var == "FAN_CONTROL_URL_MEDIUM_SPEED")
-            return (settings_i2c_doc[String("fan_control_url_medium_speed")]);
+            return (settings_fan_doc[String("fan_control_url_medium_speed")]);
         if(var == "FAN_CONTROL_URL_LOW_SPEED")
-            return (settings_i2c_doc[String("fan_control_url_low_speed")]);
+            return (settings_fan_doc[String("fan_control_url_low_speed")]);
     }
     else {
         status = "<font color=\"red\">Fan settings file not found.</font>";
@@ -906,6 +909,8 @@ String settings_valve_state(const String& var) {
             return F(status);
         if(var == "ENABLE_STATE_DAY")
             return (settings_state_day[String("enable_state_day")]);
+        if(var == "STATE_DAY_FANSPEED")
+            return (settings_state_day[String("state_day_fanspeed")]);
         if(var == "NAME_STATE_DAY")
             return (settings_state_day[String("name_state_day")]);
         if(var == "VALVE0_POSITION_DAY")
@@ -948,6 +953,8 @@ String settings_valve_state(const String& var) {
             return F(status);
         if(var == "ENABLE_STATE_NIGHT")
             return (settings_state_night[String("enable_state_night")]);
+        if(var == "STATE_NIGHT_FANSPEED")
+            return (settings_state_night[String("state_night_fanspeed")]);
         if(var == "NAME_STATE_NIGHT")
             return (settings_state_night[String("name_state_night")]);
         if(var == "VALVE0_POSITION_NIGHT")
@@ -990,6 +997,8 @@ String settings_valve_state(const String& var) {
             return F(status);
         if(var == "ENABLE_STATE_HIGHCO2DAY")
             return (settings_state_highco2day[String("enable_state_highco2day")]);
+        if(var == "STATE_HIGHCO2DAY_FANSPEED")
+            return (settings_state_highco2day[String("state_highco2day_fanspeed")]);
         if(var == "NAME_STATE_HIGHCO2DAY")
             return (settings_state_highco2day[String("name_state_highco2day")]);
         if(var == "VALVE0_POSITION_HIGHCO2DAY")
@@ -1032,6 +1041,8 @@ String settings_valve_state(const String& var) {
             return F(status);
         if(var == "ENABLE_STATE_HIGHCO2NIGHT")
             return (settings_state_highco2night[String("enable_state_highco2night")]);
+        if(var == "STATE_HIGHCO2NIGHT_FANSPEED")
+            return (settings_state_highco2night[String("state_highco2night_fanspeed")]);
         if(var == "NAME_STATE_HIGHCO2NIGHT")
             return (settings_state_highco2night[String("name_state_highco2night")]);
         if(var == "VALVE0_POSITION_HIGHCO2NIGHT")
@@ -1074,6 +1085,8 @@ String settings_valve_state(const String& var) {
             return F(status);
         if(var == "ENABLE_STATE_HIGHRHDAY")
             return (settings_state_highrhday[String("enable_state_highrhday")]);
+        if(var == "STATE_HIGHRHDAY_FANSPEED")
+            return (settings_state_highrhday[String("state_highrhday_fanspeed")]);
         if(var == "NAME_STATE_HIGHRHDAY")
             return (settings_state_highrhday[String("name_state_highrhday")]);
         if(var == "VALVE0_POSITION_HIGHRHDAY")
@@ -1116,6 +1129,8 @@ String settings_valve_state(const String& var) {
             return F(status);
         if(var == "ENABLE_STATE_HIGHRHNIGHT")
             return (settings_state_highrhnight[String("enable_state_highrhnight")]);
+        if(var == "STATE_HIGHRHNIGHT_FANSPEED")
+            return (settings_state_highrhnight[String("state_highrhnight_fanspeed")]);
         if(var == "NAME_STATE_HIGHRHNIGHT")
             return (settings_state_highrhnight[String("name_state_highrhnight")]);
         if(var == "VALVE0_POSITION_HIGHRHNIGHT")
@@ -1158,6 +1173,8 @@ String settings_valve_state(const String& var) {
             return F(status);
         if(var == "ENABLE_STATE_COOKING")
             return (settings_state_cooking[String("enable_state_cooking")]);
+        if(var == "STATE_COOKING_FANSPEED")
+            return (settings_state_cooking[String("state_cooking_fanspeed")]);
         if(var == "NAME_STATE_COOKING")
             return (settings_state_cooking[String("name_state_cooking")]);
         if(var == "VALVE0_POSITION_COOKING")
@@ -1200,6 +1217,8 @@ String settings_valve_state(const String& var) {
             return F(status);
         if(var == "ENABLE_STATE_CYCLINGDAY")
             return (settings_state_cyclingday[String("enable_state_cyclingday")]);
+        if(var == "STATE_CYCLINGDAY_FANSPEED")
+            return (settings_state_cyclingday[String("state_cyclingday_fanspeed")]);
         if(var == "NAME_STATE_CYCLINGDAY")
             return (settings_state_cyclingday[String("name_state_cyclingday")]);
         if(var == "VALVE0_POSITION_CYCLINGDAY")
@@ -1242,6 +1261,8 @@ String settings_valve_state(const String& var) {
             return F(status);
         if(var == "ENABLE_STATE_CYCLINGNIGHT")
             return (settings_state_cyclingnight[String("enable_state_cyclingnight")]);
+        if(var == "STATE_CYCLINGNIGHT_FANSPEED")
+            return (settings_state_cyclingnight[String("state_cyclingnight_fanspeed")]);
         if(var == "NAME_STATE_CYCLINGNIGHT")
             return (settings_state_cyclingnight[String("name_state_cyclingnight")]);
         if(var == "VALVE0_POSITION_CYCLINGNIGHT")

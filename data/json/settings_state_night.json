@@ -1,5 +1,6 @@
 {
     "enable_state_night": "On",
+    "state_night_fanspeed": "Low",
     "name_state_night": "night",
     "valve0_position_night": 4,
     "valve1_position_night": 4,

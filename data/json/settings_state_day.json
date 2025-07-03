@@ -1,5 +1,6 @@
 {
     "enable_state_day": "On",
+    "state_day_fanspeed": "Medium",
     "name_state_day": "day",
     "valve0_position_day": 4,
     "valve1_position_day": 4,

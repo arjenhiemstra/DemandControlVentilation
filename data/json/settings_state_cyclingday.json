@@ -1,5 +1,6 @@
 {
     "enable_state_cyclingday": "On",
+    "state_cyclingday_fanspeed": "Medium",
     "name_state_cyclingday": "cyclingday",
     "valve0_position_cyclingday": 4,
     "valve1_position_cyclingday": 4,

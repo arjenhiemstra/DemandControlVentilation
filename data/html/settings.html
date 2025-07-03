@@ -160,13 +160,21 @@
                 <form class="pure-form pure-form-stacked" method="POST" action="/settings_fan">
                     <fieldset>
                         <div class="pure-g">
-                            <div class="pure-u-1 pure-u-md-1-2">
+                            <div class="pure-u-1 pure-u-md-1-1">
                                 <label for="fan_control_mode">Fan control mode:</label>
-                                <select id="fan_control_mode" name="fan_control_mode" id="fan_control_mode" class="pure-input-3-4">
+                                <select id="fan_control_mode" name="fan_control_mode" id="fan_control_mode" class="pure-input-1-4">
                                     <option selected>%FAN_CONTROL_MODE%</option>
-                                    <option>MQTT publish</option>
+                                    <option>MQTT subscribe</option>
                                     <option>HTTP API</option>
                                 </select>
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="mqtt_server">Fan control MQTT Server:</label>
+                                <input type="text" placeholder="Fan control MQTT server ipdress or hostname" value="%FANCONTROL_MQTT_SERVER%" name="fancontrol_mqtt_server" id="fancontrol_mqtt_server" class="pure-input-3-4" />
+                            </div>
+                            <div class="pure-u-1 pure-u-md-1-2">
+                                <label for="mqtt_port">Fan control MQTT Server port:</label>
+                                <input type="text" placeholder="default is 1883" value="%FANCONTROL_MQTT_PORT%" name="fancontrol_mqtt_port" id="fancontrol_mqtt_port" class="pure-input-3-4" />
                             </div>
                             <div class="pure-u-1 pure-u-md-1-2">
                                 <label for="fan_control_mqqt_topic">Fan control MQTT publish topic:</label>
