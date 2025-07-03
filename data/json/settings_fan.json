@@ -1,9 +1,0 @@
-{
-    "fan_control_mode":"HTTP API",
-    "fancontrol_mqtt_server": "",
-    "fancontrol_mqtt_port": "",
-    "fan_control_mqtt_topic":"",
-    "fan_control_url_high_speed":"http://192.168.40.74/api.html?vremotecmd=high",
-    "fan_control_url_medium_speed":"http://192.168.40.74/api.html?vremotecmd=medium",
-    "fan_control_url_low_speed":"http://192.168.40.74/api.html?vremotecmd=low"
-}

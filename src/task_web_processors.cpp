@@ -753,6 +753,7 @@ String settings_processor(const String& var) {
             settings_fan_file_present = check_file_exists(settings_fan_path);
             if (settings_fan_file_present == 1) {
                 settings_fan_json = read_config_file(settings_fan_path);
+                Serial.print("\nFan control settings:" + settings_fan_json);
                 deserializeJson(settings_fan_doc, settings_fan_json);
             }
             xSemaphoreGive(settings_fan_mutex);

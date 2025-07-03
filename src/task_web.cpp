@@ -504,7 +504,7 @@ void Taskwebcode(void *pvParameters) {
 		request->send(LittleFS, "/html/settings.html", String(), false, settings_processor);
 	});
 
-  //Save settings from InfluxDB settings
+  	//Save settings from InfluxDB settings
 	server.on("/settings_influxdb", HTTP_POST, [](AsyncWebServerRequest *request) {
 		if (settings_influxdb_mutex != NULL) {
 			if(xSemaphoreTake(settings_influxdb_mutex, ( TickType_t ) 10 ) == pdTRUE) {

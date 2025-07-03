@@ -105,6 +105,15 @@ extern int display_i2c_addr;
 extern String ntp_server;
 extern String timezone;
 
+//Fan speed control settings
+extern String fan_control_mode;
+extern String fan_control_mqtt_server;
+extern String fan_control_mqtt_port;
+extern String fan_control_mqtt_topic;
+extern String fan_control_url_high_speed;
+extern String fan_control_url_medium_speed;
+extern String fan_control_url_low_speed;
+
 //Date time data from RTC
 extern String yearStr;
 extern String monthStr;

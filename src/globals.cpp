@@ -89,6 +89,15 @@ int display_i2c_addr;
 String ntp_server;
 String timezone;
 
+//Fan speed control settings
+String fan_control_mode;
+String fan_control_mqtt_server;
+String fan_control_mqtt_port;
+String fan_control_mqtt_topic;
+String fan_control_url_high_speed;
+String fan_control_url_medium_speed;
+String fan_control_url_low_speed;
+
 //Date time data from RTC
 String yearStr = "";
 String monthStr = "";
