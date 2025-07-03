@@ -324,14 +324,16 @@ const char* VALVE10_POSITION_CYCLINGNIGHT = "valve10_position_cyclingnight";
 const char* VALVE11_POSITION_CYCLINGNIGHT = "valve11_position_cyclingnight";
 
 void startTaskwebcode(void) {
-  xTaskCreate(Taskwebcode, "Task_web", 10000, NULL, 9, &h_Task_web);
+  	xTaskCreate(Taskwebcode, "Task_web", 10000, NULL, 9, &h_Task_web);
 }
 
 void Taskwebcode(void *pvParameters) {
 	server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) { request->send(LittleFS, "/html/index.html", String(), false, status_processor); });
 
+	//Request for CSS file
 	server.on("/css/styles.css", HTTP_GET, [](AsyncWebServerRequest *request) {	request->send(LittleFS, "/css/styles.css", "text/css");	});
 
+	//Request for Javascript file
 	server.on("/js/ui.js", HTTP_GET, [](AsyncWebServerRequest *request) { request->send(LittleFS, "/js/ui.js", "text/javascript");	});
 
 	//Not found handling

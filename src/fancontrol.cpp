@@ -23,7 +23,7 @@ void set_fanspeed(String speed) {
                 fan_control_settings_str = read_config_file(path);
                 deserializeJson(doc, fan_control_settings_str);
             }
-            xSemaphoreGive(valve_position_file_mutex);
+            xSemaphoreGive(settings_fan_mutex);
         }
     }
 
