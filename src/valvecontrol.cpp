@@ -324,17 +324,12 @@ Data structure for each JSON valve_control_data Structure
     int i;
     int sum_move = 0;          //Variable for decision on writing config file (sum>0) or not (sum=0)
 
-    Serial.print("\n1. temp_state settings selected in valvecontrol: " + statemachine_state);
-
-    //Serial.print("\n2. temp_state settings selected in valvecontrol: ");
-    //serializeJsonPretty(settings_state_temp, Serial);
-    
+    Serial.print("\nState settings selected in valvecontrol: " + statemachine_state);
+  
     //Requested valve positions based on valve position settings files
     if (statemachine_state == "state_temp") {
         //From global JSONdoc to String
         serializeJson(settings_state_temp,state_valve_pos_str);
-        //Serial.print("\n3. temp_state settings selected in valvecontrol.");
-        //serializeJsonPretty(settings_state_temp, Serial);
     }
     else {
         state_valve_pos_path = ("/json/settings_state_" + statemachine_state + ".json");
@@ -353,7 +348,7 @@ Data structure for each JSON valve_control_data Structure
     deserializeJson(state_valve_pos_doc, state_valve_pos_str);
 
     //Print to serial
-    Serial.print("\nValve position state in valvecontrol: ");
+    Serial.print("\nValve position state in valvecontrol: \n");
     serializeJsonPretty(state_valve_pos_doc, Serial);
        
     status_file_present = check_file_exists(actual_valve_pos_path);
@@ -410,8 +405,6 @@ Data structure for each JSON valve_control_data Structure
                 valve_control_data["checks"][0] = 1;        //store required
                 valve_control_data["checks"][1] = 1;        //check required
             }
-            //Serial.print("\nValve control data: ");
-            //serializeJson(valve_control_data, Serial);
             xSemaphoreGive(valve_control_data_mutex);
         }
     }
