@@ -92,15 +92,15 @@ void task_neopixel_code(void * pvParameters) {
         }
 
         //2nd LED for fanspeed
-        if (temp_fanspeed == "low") {
+        if (temp_fanspeed == "Low") {
             pixel = 1;
             led_green_on(pixel, brightness);
         }
-        else if (temp_fanspeed == "medium") {
+        else if (temp_fanspeed == "Medium") {
             pixel = 1;
             led_yellow_on(pixel, brightness);
         }
-        else if (temp_fanspeed == "high") {
+        else if (temp_fanspeed == "High") {
             pixel = 1;
             led_red_on(pixel, brightness);
         }

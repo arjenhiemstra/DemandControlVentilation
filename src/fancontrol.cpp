@@ -7,11 +7,11 @@ void set_fanspeed(String speed) {
     String fan_control_settings_str = "";
     String fanspeed_temp = "";
     bool settings_file_present = 0;
-    const char* path = "json/settings_fan.json";
+    const char* path = "/json/settings_fan.json";
 
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            fanspeed = fanspeed_temp;
+            fanspeed_temp = fanspeed;
             xSemaphoreGive(fanspeed_mutex);
         }
     }
@@ -28,6 +28,7 @@ void set_fanspeed(String speed) {
     }
 
     String fan_control_mode = doc[String("fan_control_mode")];
+    Serial.print("Fanspeed: " + String(fanspeed_temp));
     
     if (fan_control_mode == "MQTT publish") {
         Serial.print("\nUsing MQTT to set fan speed");
@@ -41,13 +42,13 @@ void set_fanspeed(String speed) {
         String fan_control_url_medium_speed = doc[("fan_control_url_medium_speed")];
         String fan_control_url_low_speed = doc[("fan_control_url_low_speed")];
 
-        if (fanspeed_temp = "low") {
+        if (fanspeed_temp = "Low") {
             http.begin(fan_control_url_low_speed.c_str());
         }
-        else if (fanspeed_temp == "medium") {
+        else if (fanspeed_temp == "Medium") {
             http.begin(fan_control_url_medium_speed.c_str());
         }
-        else if (fanspeed_temp == "high") {
+        else if (fanspeed_temp == "High") {
             http.begin(fan_control_url_high_speed.c_str());
         }
         

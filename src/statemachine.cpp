@@ -141,7 +141,7 @@ void init_transitions(void) {
 
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            fanspeed = "low";
+            fanspeed = "Low";
             temp_fanspeed = fanspeed;
             xSemaphoreGive(fanspeed_mutex);
         }
@@ -202,9 +202,10 @@ void day_transitions(void) {
         }
     }
 
+    //Write fanspeed to global variable
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            fanspeed_tmp = fanspeed;
+            fanspeed = fanspeed_tmp;
             xSemaphoreGive(fanspeed_mutex);
         }
     }
@@ -313,7 +314,7 @@ void night_transitions(void) {
 
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            fanspeed_tmp = fanspeed;
+            fanspeed = fanspeed_tmp;
             xSemaphoreGive(fanspeed_mutex);
         }
     }
@@ -411,7 +412,7 @@ void high_co2_day_transitions(void) {
 
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            fanspeed_tmp = fanspeed;
+            fanspeed = fanspeed_tmp;
             xSemaphoreGive(fanspeed_mutex);
         }
     }
@@ -552,7 +553,7 @@ void high_co2_night_transitions(void) {
 
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            fanspeed_tmp = fanspeed;
+            fanspeed = fanspeed_tmp;
             xSemaphoreGive(fanspeed_mutex);
         }
     }
@@ -633,7 +634,7 @@ void high_rh_day_transitions(void) {
 
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            fanspeed_tmp = fanspeed;
+            fanspeed = fanspeed_tmp;
             xSemaphoreGive(fanspeed_mutex);
         }
     }
@@ -712,7 +713,7 @@ void high_rh_night_transitions(void) {
 
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            fanspeed_tmp = fanspeed;
+            fanspeed = fanspeed_tmp;
             xSemaphoreGive(fanspeed_mutex);
         }
     }
@@ -785,7 +786,7 @@ void cooking_transitions(void) {
 
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            fanspeed_tmp = fanspeed;
+            fanspeed = fanspeed_tmp;
             xSemaphoreGive(fanspeed_mutex);
         }
     }
@@ -850,7 +851,7 @@ void valve_cycle_day_transitions(void) {
 
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            fanspeed_tmp = fanspeed;
+            fanspeed = fanspeed_tmp;
             xSemaphoreGive(fanspeed_mutex);
         }
     }
@@ -923,7 +924,7 @@ void valve_cycle_night_transitions(void) {
 
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            fanspeed_tmp = fanspeed;
+            fanspeed = fanspeed_tmp;
             xSemaphoreGive(fanspeed_mutex);
         }
     }
