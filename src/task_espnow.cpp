@@ -32,13 +32,13 @@ void task_espnow_code(void * pvParameters) {
             }
         }
 
-        if (fanspeed_tmp == "low") {
+        if (fanspeed_tmp == "Low") {
             fanspeed_tmp = 10;
         }
-        else if (fanspeed_tmp == "medium") {
+        else if (fanspeed_tmp == "Medium") {
             fanspeed_tmp = 40;
         }
-        else if (fanspeed_tmp == "high") {
+        else if (fanspeed_tmp == "High") {
             fanspeed_tmp = 80;
         }
         else {
