@@ -173,7 +173,7 @@ void init_transitions(void) {
 
 void day_transitions(void) {
 
-    String temp_fanspeed = "";
+    String fanspeed_tmp = "";
     String statemachine_state = "day";
     int temp_hour = 0;
     bool valve_move_locked = 0;
@@ -193,10 +193,18 @@ void day_transitions(void) {
         }
     }
 
+    //read fanspeed from config of this state
+    if (settings_state_day_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_day_mutex, ( TickType_t ) 100 ) == pdTRUE) {
+            String temp_fanspeed = settings_state_day[String("state_day_fanspeed")];
+            fanspeed_tmp = temp_fanspeed;
+            xSemaphoreGive(settings_state_day_mutex);
+        }
+    }
+
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            fanspeed = "medium";
-            temp_fanspeed = fanspeed;
+            fanspeed_tmp = fanspeed;
             xSemaphoreGive(fanspeed_mutex);
         }
     }
@@ -209,7 +217,7 @@ void day_transitions(void) {
         }
     }
 
-    set_fanspeed(temp_fanspeed);
+    set_fanspeed(fanspeed_tmp);
 
     if (valve_move_locked == 0) {
         valve_position_statemachine(statemachine_state);
@@ -273,7 +281,7 @@ void day_transitions(void) {
 void night_transitions(void) {
 
     String statemachine_state = "night";
-    String temp_fanspeed = "";
+    String fanspeed_tmp = "";
     String temp_day_of_week = "";
     int temp_hour = 0;
     bool valve_move_locked = 0;
@@ -294,10 +302,18 @@ void night_transitions(void) {
         }
     }
 
+    //read fanspeed from config of this state
+    if (settings_state_night_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_night_mutex, ( TickType_t ) 100 ) == pdTRUE) {
+            String temp_fanspeed = settings_state_night[String("state_night_fanspeed")];
+            fanspeed_tmp = temp_fanspeed;
+            xSemaphoreGive(settings_state_night_mutex);
+        }
+    }
+
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            fanspeed = "low";
-            temp_fanspeed = fanspeed;
+            fanspeed_tmp = fanspeed;
             xSemaphoreGive(fanspeed_mutex);
         }
     }
@@ -310,7 +326,7 @@ void night_transitions(void) {
         }
     }
 
-    set_fanspeed(temp_fanspeed);
+    set_fanspeed(fanspeed_tmp);
 
     if (valve_move_locked == 0) {
         valve_position_statemachine(statemachine_state);
@@ -358,7 +374,7 @@ void night_transitions(void) {
 void high_co2_day_transitions(void) {
 
     String statemachine_state = "highco2day";
-    String temp_fanspeed = "";
+    String fanspeed_tmp = "";
     String state_valve_pos_path = "";
     String state_valve_pos_str = "";
     int temp_hour = 0;
@@ -384,10 +400,18 @@ void high_co2_day_transitions(void) {
         }
     }
 
+    //read fanspeed from config of this state
+    if (settings_state_highco2day_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_highco2day_mutex, ( TickType_t ) 100 ) == pdTRUE) {
+            String temp_fanspeed = settings_state_highco2day[String("state_highco2day_fanspeed")];
+            fanspeed_tmp = temp_fanspeed;
+            xSemaphoreGive(settings_state_highco2day_mutex);
+        }
+    }
+
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            fanspeed = "high";
-            temp_fanspeed = fanspeed;
+            fanspeed_tmp = fanspeed;
             xSemaphoreGive(fanspeed_mutex);
         }
     }
@@ -400,7 +424,7 @@ void high_co2_day_transitions(void) {
         }
     }
 
-    set_fanspeed(temp_fanspeed);
+    set_fanspeed(fanspeed_tmp);
     select_sensors();
 
     //Temp valve settings for individual valves starting with default settings for this state. Should read these from file and not hardcode them
@@ -496,7 +520,7 @@ void high_co2_day_transitions(void) {
 void high_co2_night_transitions(void) {
 
     String statemachine_state = "highco2night";
-    String temp_fanspeed = "";
+    String fanspeed_tmp = "";
     String temp_day_of_week = "";
     int temp_hour = 0;
     bool valve_move_locked = 0;
@@ -517,10 +541,18 @@ void high_co2_night_transitions(void) {
         }
     }
 
+    //read fanspeed from config of this state
+    if (settings_state_highco2night_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_highco2night_mutex, ( TickType_t ) 100 ) == pdTRUE) {
+            String temp_fanspeed = settings_state_highco2night[String("state_highco2night_fanspeed")];
+            fanspeed_tmp = temp_fanspeed;
+            xSemaphoreGive(settings_state_highco2night_mutex);
+        }
+    }
+
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            fanspeed = "low";
-            temp_fanspeed = fanspeed;
+            fanspeed_tmp = fanspeed;
             xSemaphoreGive(fanspeed_mutex);
         }
     }
@@ -533,7 +565,7 @@ void high_co2_night_transitions(void) {
         }
     }
 
-    set_fanspeed(temp_fanspeed);
+    set_fanspeed(fanspeed_tmp);
     
     if (valve_move_locked == 0) {
         valve_position_statemachine(statemachine_state);
@@ -571,7 +603,7 @@ void high_co2_night_transitions(void) {
 void high_rh_day_transitions(void) {
 
     String statemachine_state = "highrhday";
-    String temp_fanspeed = "high";
+    String fanspeed_tmp = "high";
     int temp_hour = 0;
     bool valve_move_locked = 0;
 
@@ -590,10 +622,18 @@ void high_rh_day_transitions(void) {
         }
     }
 
+    //read fanspeed from config of this state
+    if (settings_state_highrhday_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_highrhday_mutex, ( TickType_t ) 100 ) == pdTRUE) {
+            String temp_fanspeed = settings_state_highrhday[String("state_highrhday_fanspeed")];
+            fanspeed_tmp = temp_fanspeed;
+            xSemaphoreGive(settings_state_highrhday_mutex);
+        }
+    }
+
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            fanspeed = "high";
-            temp_fanspeed = fanspeed;
+            fanspeed_tmp = fanspeed;
             xSemaphoreGive(fanspeed_mutex);
         }
     }
@@ -606,7 +646,7 @@ void high_rh_day_transitions(void) {
         }
     }
 
-    set_fanspeed(temp_fanspeed);
+    set_fanspeed(fanspeed_tmp);
     
     if (valve_move_locked == 0) {
         valve_position_statemachine(statemachine_state);
@@ -640,7 +680,7 @@ void high_rh_day_transitions(void) {
 void high_rh_night_transitions(void) {
 
     String statemachine_state = "highrhnight";
-    String temp_fanspeed = "";
+    String fanspeed_tmp = "";
     String temp_day_of_week = "";
     int temp_hour = 0;
     bool valve_move_locked = 0;
@@ -661,10 +701,18 @@ void high_rh_night_transitions(void) {
         }
     }
 
+    //read fanspeed from config of this state
+    if (settings_state_highrhnight_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_highrhnight_mutex, ( TickType_t ) 100 ) == pdTRUE) {
+            String temp_fanspeed = settings_state_highrhnight[String("state_highrhnight_fanspeed")];
+            fanspeed_tmp = temp_fanspeed;
+            xSemaphoreGive(settings_state_highrhnight_mutex);
+        }
+    }
+
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            fanspeed = "low";
-            temp_fanspeed = fanspeed;
+            fanspeed_tmp = fanspeed;
             xSemaphoreGive(fanspeed_mutex);
         }
     }
@@ -677,7 +725,7 @@ void high_rh_night_transitions(void) {
         }
     }
 
-    set_fanspeed(temp_fanspeed);
+    set_fanspeed(fanspeed_tmp);
 
     if (valve_move_locked == 0) {
         valve_position_statemachine(statemachine_state);
@@ -715,7 +763,7 @@ void high_rh_night_transitions(void) {
 void cooking_transitions(void) {
 
     String statemachine_state = "cooking";
-    String temp_fanspeed = "";
+    String fanspeed_tmp = "";
     bool valve_move_locked = 0;
 
     // Actions for this sate
@@ -726,10 +774,18 @@ void cooking_transitions(void) {
         }
     }
 
+    //read fanspeed from config of this state
+    if (settings_state_cooking_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_cooking_mutex, ( TickType_t ) 100 ) == pdTRUE) {
+            String temp_fanspeed = settings_state_cooking[String("state_cooking_fanspeed")];
+            fanspeed_tmp = temp_fanspeed;
+            xSemaphoreGive(settings_state_cooking_mutex);
+        }
+    }
+
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            fanspeed = "high";
-            temp_fanspeed = fanspeed;
+            fanspeed_tmp = fanspeed;
             xSemaphoreGive(fanspeed_mutex);
         }
     }
@@ -742,7 +798,7 @@ void cooking_transitions(void) {
         }
     }
    
-    set_fanspeed(temp_fanspeed);
+    set_fanspeed(fanspeed_tmp);
     
     if (valve_move_locked == 0) {
         valve_position_statemachine(statemachine_state);
@@ -772,7 +828,7 @@ void cooking_transitions(void) {
 void valve_cycle_day_transitions(void) {
 
     String statemachine_state = "cyclingday";
-    String temp_fanspeed = "";
+    String fanspeed_tmp = "";
     bool valve_move_locked = 0;
 
     // Actions for this state
@@ -783,10 +839,18 @@ void valve_cycle_day_transitions(void) {
         }
     }
 
+    //read fanspeed from config of this state
+    if (settings_state_cyclingday_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_cyclingday_mutex, ( TickType_t ) 100 ) == pdTRUE) {
+            String temp_fanspeed = settings_state_cyclingday[String("state_cyclingday_fanspeed")];
+            fanspeed_tmp = temp_fanspeed;
+            xSemaphoreGive(settings_state_cyclingday_mutex);
+        }
+    }
+
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            fanspeed = "medium";
-            temp_fanspeed = fanspeed;
+            fanspeed_tmp = fanspeed;
             xSemaphoreGive(fanspeed_mutex);
         }
     }
@@ -799,7 +863,7 @@ void valve_cycle_day_transitions(void) {
         }
     }
 
-    set_fanspeed(temp_fanspeed);
+    set_fanspeed(fanspeed_tmp);
     
     if (valve_move_locked == 0) {
         valve_position_statemachine(statemachine_state);
@@ -837,7 +901,7 @@ void valve_cycle_day_transitions(void) {
 void valve_cycle_night_transitions(void) {
 
     String statemachine_state = "cyclingnight";
-    String temp_fanspeed = "";
+    String fanspeed_tmp = "";
     bool valve_move_locked = 0;
 
     // Actions for this state
@@ -848,10 +912,18 @@ void valve_cycle_night_transitions(void) {
         }
     }
 
+    //read fanspeed from config of this state
+    if (settings_state_cyclingnight_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_cyclingnight_mutex, ( TickType_t ) 100 ) == pdTRUE) {
+            String temp_fanspeed = settings_state_cyclingnight[String("state_cyclingnight_fanspeed")];
+            fanspeed_tmp = temp_fanspeed;
+            xSemaphoreGive(settings_state_cyclingnight_mutex);
+        }
+    }
+
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            fanspeed = "low";
-            temp_fanspeed = fanspeed;
+            fanspeed_tmp = fanspeed;
             xSemaphoreGive(fanspeed_mutex);
         }
     }
@@ -864,7 +936,7 @@ void valve_cycle_night_transitions(void) {
         }
     }
 
-    set_fanspeed(temp_fanspeed);
+    set_fanspeed(fanspeed_tmp);
     
     if (valve_move_locked == 0) {
         valve_position_statemachine(statemachine_state);

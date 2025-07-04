@@ -44,13 +44,14 @@ QueueHandle_t sensor_avg_queue;                                 // Handle for se
 JsonDocument valve_control_data;                                // Global for valve control data
 JsonDocument wire_sensor_data;                                  // Global for bus0 sensor configuration
 JsonDocument wire1_sensor_data;                                 // Global for bus1 sensor configuration
-JsonDocument settings_network_data;                             // Define global network settings
-JsonDocument settings_mqtt_data;                                // Define global mqtt settings
-JsonDocument settings_i2c_data;                                 // Define global i2c settings
+//JsonDocument settings_network_data;                             // Define global network settings
+//JsonDocument settings_mqtt_data;                                // Define global mqtt settings
+//JsonDocument settings_i2c_data;                                 // Define global i2c settings
+//JsonDocument settings_rtc_data;                                 // Define global mqtt settings
 JsonDocument settings_fan_data;                                 // Define global fanspeed settings
 JsonDocument settings_statemachine_data;                        // Define global statemachine settings
-JsonDocument settings_influxdb_data;                            // Define global mqtt settings
-JsonDocument settings_rtc_data;                                 // Define global mqtt settings
+//JsonDocument settings_influxdb_data;                            // Define global mqtt settings
+
 
 JsonDocument settings_state_day;                                // Settings for state day
 JsonDocument settings_state_night;                              // Settings for state night

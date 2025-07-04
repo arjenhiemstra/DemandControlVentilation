@@ -32,12 +32,6 @@ const char* STORE_VALVE_POSITION_IN_FILE = "store_valve_position_in_file";
 const char* CHECK_VALVE_POSITION = "check_valve_position";
 const char* STATUS_VALVE_POSITION_FILE;
 
-String valve0_direction,valve1_direction,valve2_direction,valve3_direction,valve4_direction,valve5_direction,valve6_direction,valve7_direction,valve8_direction,valve9_direction,valve10_direction,valve11_direction;
-String check_valve_position;            // True when check is required if valve moves within operating range
-String store_valve_position_in_file;    // True to enable storing of new position in valve position file
-
-bool valve_move_locked;
-
 //Variables for sensor config page
 const char* WIRE_SENSOR0_TYPE = "wire_sensor0_type";
 const char* WIRE_SENSOR0_VALVE = "wire_sensor0_valve";
@@ -323,11 +317,24 @@ const char* VALVE9_POSITION_CYCLINGNIGHT = "valve9_position_cyclingnight";
 const char* VALVE10_POSITION_CYCLINGNIGHT = "valve10_position_cyclingnight";
 const char* VALVE11_POSITION_CYCLINGNIGHT = "valve11_position_cyclingnight";
 
+bool valve_move_locked;
+
+String valve0_direction,valve1_direction,valve2_direction,valve3_direction,valve4_direction,valve5_direction,valve6_direction,valve7_direction,valve8_direction,valve9_direction,valve10_direction,valve11_direction;
+String check_valve_position;            // True when check is required if valve moves within operating range
+String store_valve_position_in_file;    // True to enable storing of new position in valve position file
+
+JsonDocument settings_network_data;
+JsonDocument settings_mqtt_data;
+JsonDocument settings_i2c_data;
+JsonDocument settings_rtc_data;
+JsonDocument settings_influxdb_data;
+
 void startTaskwebcode(void) {
   	xTaskCreate(Taskwebcode, "Task_web", 10000, NULL, 9, &h_Task_web);
 }
 
 void Taskwebcode(void *pvParameters) {
+
 	server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) { request->send(LittleFS, "/html/index.html", String(), false, status_processor); });
 
 	//Request for CSS file
