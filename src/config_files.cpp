@@ -180,30 +180,6 @@ void read_fan_config() {
             xSemaphoreGive(settings_fan_mutex);
         }
     }
-
-    /*
-    String fan_control_mode_tmp = settings_fan_doc[String("fan_control_mode")];
-    String fan_control_mqtt_server_tmp = settings_fan_doc[String("fan_control_mqtt_server")];
-    String fan_control_mqtt_port_tmp = settings_fan_doc[String("fan_control_mqtt_port")];
-    String fan_control_mqtt_topic_tmp = settings_fan_doc[String("fan_control_mqtt_topic")];
-    String fan_control_url_high_speed_tmp = settings_fan_doc[String("fan_control_url_high_speed")];
-    String fan_control_url_medium_speed_tmp = settings_fan_doc[String("fan_control_url_medium_speed")];
-    String fan_control_url_low_speed_tmp = settings_fan_doc[String("fan_control_url_low_speed")];
-
-    if (settings_fan_mutex != NULL) {
-        if(xSemaphoreTake(settings_fan_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-                          
-            //Assign to global variable
-            fan_control_mode = fan_control_mode_tmp;
-            fan_control_mqtt_server = fan_control_mqtt_server_tmp;
-            fan_control_mqtt_port = fan_control_mqtt_port_tmp;
-            fan_control_mqtt_topic = fan_control_mqtt_topic_tmp;
-            fan_control_url_high_speed = fan_control_url_high_speed_tmp;
-            fan_control_url_medium_speed = fan_control_url_medium_speed_tmp;
-            fan_control_url_low_speed = fan_control_url_low_speed_tmp;
-            xSemaphoreGive(settings_fan_mutex);
-        }
-    }*/
 }
 
 //Read both sensor config files an place contents in global variable

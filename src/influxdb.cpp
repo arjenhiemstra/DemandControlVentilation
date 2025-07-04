@@ -343,13 +343,13 @@ void write_fanspeed(void) {
     }
 
     //Need to translate fanspeed to number for easy processing in Grafana
-    if (temp_fanspeed == "low") {
+    if (temp_fanspeed == "Low") {
         temp_fanspeed_nr = 1;
     }
-    else if (temp_fanspeed == "medium") {
+    else if (temp_fanspeed == "Medium") {
         temp_fanspeed_nr = 2;
     }
-    else if (temp_fanspeed == "high") {
+    else if (temp_fanspeed == "High") {
         temp_fanspeed_nr = 3;
     }
     else {
