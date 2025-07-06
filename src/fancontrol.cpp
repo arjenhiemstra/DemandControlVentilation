@@ -8,6 +8,7 @@ void set_fanspeed(String speed) {
     String fanspeed_temp = "";
     bool settings_file_present = 0;
     const char* path = "/json/settings_fan.json";
+    int httpResponseCode = 0;
 
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
@@ -29,7 +30,7 @@ void set_fanspeed(String speed) {
 
     String fan_control_mode = doc[String("fan_control_mode")];
     Serial.print("Fanspeed: " + String(fanspeed_temp));
-    
+        
     if (fan_control_mode == "MQTT publish") {
         Serial.print("\nUsing MQTT to set fan speed");
         String fan_control_mqtt_topic = doc[String("fan_control_mqtt_topic")];
@@ -42,23 +43,45 @@ void set_fanspeed(String speed) {
         String fan_control_url_medium_speed = doc[("fan_control_url_medium_speed")];
         String fan_control_url_low_speed = doc[("fan_control_url_low_speed")];
 
-        if (fanspeed_temp = "Low") {
+        if (fanspeed_temp == "Low") {
+            Serial.print("\nLow speed selected");
             http.begin(fan_control_url_low_speed.c_str());
+            
+            httpResponseCode = http.GET();
+      
+            if (httpResponseCode>0) {
+                Serial.print("\nHTTP Response code: ");
+                Serial.println(httpResponseCode);
+                String payload = http.getString();
+                Serial.print("\t\t" + payload);
+            }
+
         }
         else if (fanspeed_temp == "Medium") {
+            Serial.print("\nMedium speed selected");
             http.begin(fan_control_url_medium_speed.c_str());
+            
+            httpResponseCode = http.GET();
+      
+            if (httpResponseCode>0) {
+                Serial.print("\nHTTP Response code: ");
+                Serial.println(httpResponseCode);
+                String payload = http.getString();
+                Serial.print("\t\t" + payload);
+            }
         }
         else if (fanspeed_temp == "High") {
+            Serial.print("\nHigh speed selected");
             http.begin(fan_control_url_high_speed.c_str());
-        }
-        
-        int httpResponseCode = http.GET();
+            
+            httpResponseCode = http.GET();
       
-        if (httpResponseCode>0) {
-            Serial.print("\nHTTP Response code: ");
-            Serial.println(httpResponseCode);
-            String payload = http.getString();
-            Serial.print("\t\t" + payload);
+            if (httpResponseCode>0) {
+                Serial.print("\nHTTP Response code: ");
+                Serial.println(httpResponseCode);
+                String payload = http.getString();
+                Serial.print("\t\t" + payload);
+            }
         }
     }
     else {
