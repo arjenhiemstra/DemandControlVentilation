@@ -7,6 +7,13 @@ void write_sensor_data(void) {
     String influxdb_org_tmp;
     String influxdb_bucket_tmp;
     String influxdb_token_tmp;
+    String settings_state_day_path_str;
+    String state_tmp;
+
+    float queue_sensor_data[2][8][3];
+
+    JsonDocument wire_sensor_data_temp;
+    JsonDocument wire1_sensor_data_temp;
     
     if (settings_influxdb_mutex != NULL) {
         if(xSemaphoreTake(settings_influxdb_mutex, ( TickType_t ) 10 ) == pdTRUE) {
@@ -18,11 +25,25 @@ void write_sensor_data(void) {
             xSemaphoreGive(settings_influxdb_mutex);
         }
     }
+
+    if (statemachine_state_mutex != NULL) {
+        if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            state_tmp = state;
+            xSemaphoreGive(statemachine_state_mutex);
+        }
+    }
     
+    //Read setting for valve and valve name
+    if (sensor_config_file_mutex != NULL) {
+        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 100 ) == pdTRUE) {
+            wire_sensor_data_temp = wire1_sensor_data;
+            wire1_sensor_data_temp = wire1_sensor_data;
+        }
+        xSemaphoreGive(sensor_config_file_mutex);
+    }
+
     InfluxDBClient client(influxdb_url_tmp, influxdb_org_tmp, influxdb_bucket_tmp, influxdb_token_tmp);
     Point sensor("Sensors");
-
-    float queue_sensor_data[2][8][3];
 
     if (xQueuePeek(sensor_queue, &queue_sensor_data, 0) == pdTRUE) {     
     
@@ -30,10 +51,22 @@ void write_sensor_data(void) {
         if (client.validateConnection()) {   
             Serial.print("\nWriting sensor data to influxDB.");
             for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 8; j++) {           
+                for (int j = 0; j < 8; j++) {     
+                    sensor.clearFields();
+                    sensor.clearTags();      
+                    if (i == 0) {
+                        String sensor_valve = wire_sensor_data_temp[j][1];
+                        String sensor_location = wire_sensor_data_temp[j][2];
+                        sensor.addTag("valve", sensor_valve);
+                        sensor.addTag("location", sensor_location);
+                    }
+                    if (i == 1) {
+                        String sensor_valve = wire_sensor_data_temp[j][1];
+                        String sensor_location = wire1_sensor_data_temp[j][2];
+                        sensor.addTag("valve", sensor_valve);
+                        sensor.addTag("location", sensor_location);
+                    }
                     if (queue_sensor_data[i][j][0] > 0) {
-                        sensor.clearFields();
-                        sensor.clearTags();
                         String tag = "sensor" + String(j);
                         String bus = "bus" + String(i);
                         sensor.addTag("device",tag);
