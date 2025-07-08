@@ -61,14 +61,14 @@ void write_sensor_data(void) {
 
                             String sensor_valve = wire_sensor_data_temp["wire_sensor" + String(j)]["valve"];
                             String sensor_location = wire_sensor_data_temp["wire_sensor" + String(j)]["location"];
-                            Serial.print("Sensor data: " + sensor_location + "\t\t" + sensor_valve);
+                            //Serial.print("Sensor data: " + sensor_location + "\t\t" + sensor_valve);
                             sensor.addTag("valve", sensor_valve);
                             sensor.addTag("location", sensor_location);
                         }
                         else {
                             String sensor_valve = wire1_sensor_data_temp["wire1_sensor" + String(j)]["valve"];
                             String sensor_location = wire1_sensor_data_temp["wire1_sensor" + String(j)]["location"];
-                            Serial.print("Sensor data: " + sensor_location + "\t\t" + sensor_valve);
+                            //Serial.print("Sensor data: " + sensor_location + "\t\t" + sensor_valve);
                             sensor.addTag("valve", sensor_valve);
                             sensor.addTag("location", sensor_location);
                         }    
