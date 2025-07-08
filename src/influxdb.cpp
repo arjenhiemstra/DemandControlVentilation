@@ -42,6 +42,8 @@ void write_sensor_data(void) {
         xSemaphoreGive(sensor_config_file_mutex);
     }
 
+    //serializeJsonPretty(wire_sensor_data_temp, Serial);
+
     InfluxDBClient client(influxdb_url_tmp, influxdb_org_tmp, influxdb_bucket_tmp, influxdb_token_tmp);
     Point sensor("Sensors");
 
@@ -51,26 +53,30 @@ void write_sensor_data(void) {
         if (client.validateConnection()) {   
             Serial.print("\nWriting sensor data to influxDB.");
             for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 8; j++) {     
-                    sensor.clearFields();
-                    sensor.clearTags();      
-                    if (i == 0) {
-                        String sensor_valve = wire_sensor_data_temp[j][1];
-                        String sensor_location = wire_sensor_data_temp[j][2];
-                        sensor.addTag("valve", sensor_valve);
-                        sensor.addTag("location", sensor_location);
-                    }
-                    if (i == 1) {
-                        String sensor_valve = wire_sensor_data_temp[j][1];
-                        String sensor_location = wire1_sensor_data_temp[j][2];
-                        sensor.addTag("valve", sensor_valve);
-                        sensor.addTag("location", sensor_location);
-                    }
+                for (int j = 0; j < 8; j++) {    
                     if (queue_sensor_data[i][j][0] > 0) {
+                        sensor.clearFields();
+                        sensor.clearTags();      
+                        if (i == 0) {
+
+                            String sensor_valve = wire_sensor_data_temp["wire_sensor" + String(j)]["valve"];
+                            String sensor_location = wire_sensor_data_temp["wire_sensor" + String(j)]["location"];
+                            Serial.print("Sensor data: " + sensor_location + "\t\t" + sensor_valve);
+                            sensor.addTag("valve", sensor_valve);
+                            sensor.addTag("location", sensor_location);
+                        }
+                        else {
+                            String sensor_valve = wire1_sensor_data_temp["wire1_sensor" + String(j)]["valve"];
+                            String sensor_location = wire1_sensor_data_temp["wire1_sensor" + String(j)]["location"];
+                            Serial.print("Sensor data: " + sensor_location + "\t\t" + sensor_valve);
+                            sensor.addTag("valve", sensor_valve);
+                            sensor.addTag("location", sensor_location);
+                        }    
                         String tag = "sensor" + String(j);
                         String bus = "bus" + String(i);
                         sensor.addTag("device",tag);
                         sensor.addTag("bus",bus);
+                        
                         if (queue_sensor_data[i][j][0] > 3) {
                             sensor.addField("temperature", queue_sensor_data[i][j][0]);
                         }

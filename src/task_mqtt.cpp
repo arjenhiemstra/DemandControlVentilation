@@ -65,6 +65,6 @@ void task_mqtt_code(void * pvParameters) {
         else {
             Serial.print("\nNo WIFI connection, MQTT disabled or MQTT settings incomplete");
         }
-        vTaskDelay(20000);
+        vTaskDelay(10000);
     }
 }
