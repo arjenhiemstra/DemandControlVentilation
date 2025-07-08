@@ -42,14 +42,12 @@ void write_sensor_data(void) {
         xSemaphoreGive(sensor_config_file_mutex);
     }
 
-    //serializeJsonPretty(wire_sensor_data_temp, Serial);
-
     InfluxDBClient client(influxdb_url_tmp, influxdb_org_tmp, influxdb_bucket_tmp, influxdb_token_tmp);
     Point sensor("Sensors");
 
     if (xQueuePeek(sensor_queue, &queue_sensor_data, 0) == pdTRUE) {     
     
-        // Check server connection. Only write data when connected.
+        // Check server connection. Only write data when server is available.
         if (client.validateConnection()) {   
             Serial.print("\nWriting sensor data to influxDB.");
             for (int i = 0; i < 2; i++) {
@@ -58,24 +56,25 @@ void write_sensor_data(void) {
                         sensor.clearFields();
                         sensor.clearTags();      
                         if (i == 0) {
-
                             String sensor_valve = wire_sensor_data_temp["wire_sensor" + String(j)]["valve"];
                             String sensor_location = wire_sensor_data_temp["wire_sensor" + String(j)]["location"];
-                            //Serial.print("Sensor data: " + sensor_location + "\t\t" + sensor_valve);
-                            sensor.addTag("valve", sensor_valve);
-                            sensor.addTag("location", sensor_location);
+                            if (!sensor_valve.isEmpty()) {
+                                sensor.addTag("valve", sensor_valve);
+                            }
+                            if (!sensor_location.isEmpty()) {
+                                sensor.addTag("location", sensor_location);
+                            }
                         }
                         else {
                             String sensor_valve = wire1_sensor_data_temp["wire1_sensor" + String(j)]["valve"];
                             String sensor_location = wire1_sensor_data_temp["wire1_sensor" + String(j)]["location"];
-                            //Serial.print("Sensor data: " + sensor_location + "\t\t" + sensor_valve);
-                            if (sensor_valve != "") {
+                            if (!sensor_valve.isEmpty()) {
                                 sensor.addTag("valve", sensor_valve);
                             }
-                            if (sensor_location != "") {
+                            if (!sensor_location.isEmpty()) {
                                 sensor.addTag("location", sensor_location);
                             }
-                        }    
+                        }
                         String tag = "sensor" + String(j);
                         String bus = "bus" + String(i);
                         sensor.addTag("device",tag);
@@ -116,6 +115,9 @@ void write_avg_sensor_data(void) {
     String influxdb_org_tmp;
     String influxdb_bucket_tmp;
     String influxdb_token_tmp;
+
+    JsonDocument wire_sensor_data_temp;
+    JsonDocument wire1_sensor_data_temp;
     
     if (settings_influxdb_mutex != NULL) {
         if(xSemaphoreTake(settings_influxdb_mutex, ( TickType_t ) 10 ) == pdTRUE) {
@@ -126,6 +128,15 @@ void write_avg_sensor_data(void) {
             influxdb_token_tmp = influxdb_token;
             xSemaphoreGive(settings_influxdb_mutex);
         }
+    }
+
+    //Read setting for valve and valve name
+    if (sensor_config_file_mutex != NULL) {
+        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 100 ) == pdTRUE) {
+            wire_sensor_data_temp = wire1_sensor_data;
+            wire1_sensor_data_temp = wire1_sensor_data;
+        }
+        xSemaphoreGive(sensor_config_file_mutex);
     }
     
     InfluxDBClient client(influxdb_url_tmp, influxdb_org_tmp, influxdb_bucket_tmp, influxdb_token_tmp);
@@ -140,6 +151,28 @@ void write_avg_sensor_data(void) {
                 for (int j = 0; j < 8; j++) {           
                     if (queue_avg_sensor_data[i][j][0] > 0) {
                         sensor.clearFields();
+                        sensor.clearTags();      
+                        if (i == 0) {
+                            String sensor_valve = wire_sensor_data_temp["wire_sensor" + String(j)]["valve"];
+                            String sensor_location = wire_sensor_data_temp["wire_sensor" + String(j)]["location"];
+                            if (!sensor_valve.isEmpty()) {
+                                sensor.addTag("valve", sensor_valve);
+                            }
+                            if (!sensor_location.isEmpty()) {
+                                sensor.addTag("location", sensor_location);
+                            }
+                        }
+                        else {
+                            String sensor_valve = wire1_sensor_data_temp["wire1_sensor" + String(j)]["valve"];
+                            String sensor_location = wire1_sensor_data_temp["wire1_sensor" + String(j)]["location"];
+                            if (!sensor_valve.isEmpty()) {
+                                sensor.addTag("valve", sensor_valve);
+                            }
+                            if (!sensor_location.isEmpty()) {
+                                sensor.addTag("location", sensor_location);
+                            }
+                        }
+                        sensor.clearFields();
                         sensor.clearTags();
                         String tag = "sensor" + String(j);
                         String bus = "bus" + String(i);
@@ -148,9 +181,7 @@ void write_avg_sensor_data(void) {
                         sensor.addField("temperature", queue_avg_sensor_data[i][j][0]);
                         sensor.addField("humidity", queue_avg_sensor_data[i][j][1]);
                         sensor.addField("CO2", queue_avg_sensor_data[i][j][2]); 
-                        
                         client.pointToLineProtocol(sensor);
-                
                         if (!client.writePoint(sensor)) {
                             Serial.print("InfluxDB write failed: ");
                             Serial.println(client.getLastErrorMessage());
