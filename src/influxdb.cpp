@@ -38,8 +38,8 @@ void write_sensor_data(void) {
         if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             wire_sensor_data_temp = wire_sensor_data;
             wire1_sensor_data_temp = wire1_sensor_data;
+            
         }
-        xSemaphoreGive(sensor_config_file_mutex);
     }
 
     InfluxDBClient client(influxdb_url_tmp, influxdb_org_tmp, influxdb_bucket_tmp, influxdb_token_tmp);
