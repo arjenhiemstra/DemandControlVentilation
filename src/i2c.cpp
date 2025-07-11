@@ -8,9 +8,6 @@ void read_sensors(void) {
     bool sensor_config_file_present = 0;
     float temp_sensor_data[2][8][3]= {0};
 
-    String sensor_tmp = "";
-    String sensor_type_temp = "";
-    String sensor_address_temp = "";
     String sensor_type = "";
     String sensor_address = "";
     String sensor = "";
@@ -45,17 +42,14 @@ void read_sensors(void) {
                 if (bus==0) {
                     sensor = "wire_sensor" + String(slot);
                     if (sensor_config_file_mutex != NULL) {
-                        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 100 ) == pdTRUE) {
+                        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
                             String sensor_type_temp = wire_sensor_data[sensor]["type"];
                             String sensor_address_temp = wire_sensor_data[sensor]["address"];
                             sensor_type = sensor_type_temp;
-                            sensor_type = sensor_address_temp;
+                            sensor_address = sensor_address_temp;
                             xSemaphoreGive(sensor_config_file_mutex);
                         }
                     }
-                    sensor_tmp = sensor;
-                    sensor_type_temp= sensor_type;
-                    sensor_address_temp = sensor_address;
                     Wire.beginTransmission(bus0_multiplexer_addr_tmp);
                     Wire.write(1 << slot);
                     Wire.endTransmission();
@@ -64,27 +58,23 @@ void read_sensors(void) {
                 if (bus==1) {
                     sensor = "wire1_sensor" + String(slot);
                     if (sensor_config_file_mutex != NULL) {
-                        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 100 ) == pdTRUE) {
+                        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
                             String sensor_type_temp = wire1_sensor_data[sensor]["type"];
                             String sensor_address_temp = wire1_sensor_data[sensor]["address"];
                             sensor_type = sensor_type_temp;
-                            sensor_type = sensor_address_temp;
+                            sensor_address = sensor_address_temp;
                             xSemaphoreGive(sensor_config_file_mutex);
                         }
                     }
-                    sensor_tmp = sensor;
-                    sensor_type_temp= sensor_type;
-                    sensor_address_temp = sensor_address;
                     Wire1.beginTransmission(bus1_multiplexer_addr_tmp);
                     Wire1.write(1 << slot);
                     Wire1.endTransmission();
                 }
-                if (sensor_type_temp == "DHT20" || sensor_type_temp == "AHT20") {
+                if (sensor_type == "DHT20" || sensor_type == "AHT20") {
                     
                     if (bus==0) {
                         DHT20 DHT1(&Wire);
                         DHT1.begin();
-                        //int status = DHT1.read(); 
                         DHT1.read();                  
 
                         temp_sensor_data[bus][slot][0] = DHT1.getTemperature();
@@ -94,7 +84,6 @@ void read_sensors(void) {
                     if (bus==1) {
                         DHT20 DHT2(&Wire1);
                         DHT2.begin();
-                        //int status = DHT2.read();
                         DHT2.read();
 
                         temp_sensor_data[bus][slot][0] = DHT2.getTemperature();
@@ -145,7 +134,7 @@ void read_sensors(void) {
                     }                   
                 }*/
                 
-                else if (sensor_type_temp == "SCD40" || sensor_type_temp == "SCD41") {
+                else if (sensor_type == "SCD40" || sensor_type == "SCD41") {
                         
                     if (bus==0) {
                         SensirionI2cScd4x SCD4X_1;
