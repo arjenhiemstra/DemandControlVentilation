@@ -31,7 +31,24 @@ int co2_sensor_counter = 0;
 int rh_sensors_counter = 0;
 
 void init_statemachine(void) {
-    state = "init";
+    
+    String temp_fanspeed = "";
+
+    if (statemachine_state_mutex != NULL) {
+        if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            state = "init";
+            xSemaphoreGive(statemachine_state_mutex);
+        }
+    }
+    
+    if (fanspeed_mutex != NULL) {
+        if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            fanspeed = "Low";
+            temp_fanspeed = fanspeed;
+            xSemaphoreGive(fanspeed_mutex);
+        }
+    }
+    set_fanspeed(temp_fanspeed);
 }
 
 void run_statemachine(void) {
@@ -431,13 +448,19 @@ void high_co2_day_transitions(void) {
     //Temp valve settings for individual valves starting with default settings for this state. Should read these from file and not hardcode them
     state_valve_pos_path = ("/json/settings_state_" + statemachine_state + ".json");
     state_valve_pos_file_present = check_file_exists(state_valve_pos_path.c_str());
-    if (state_valve_pos_file_present == 1) {
-        
-        File file = LittleFS.open(state_valve_pos_path, "r");
-        while(file.available()) {
-            state_valve_pos_str = file.readString();
+    
+    if (settings_state_highco2day_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_highco2day_mutex, ( TickType_t ) 100 ) == pdTRUE) {
+            if (state_valve_pos_file_present == 1) {
+                
+                File file = LittleFS.open(state_valve_pos_path, "r");
+                while(file.available()) {
+                    state_valve_pos_str = file.readString();
+                }
+                file.close();    
+            }
+            xSemaphoreGive(settings_state_highco2day_mutex);
         }
-        file.close();    
     }
 
     deserializeJson(state_valve_pos_doc, state_valve_pos_str);
@@ -523,8 +546,15 @@ void high_co2_night_transitions(void) {
     String statemachine_state = "highco2night";
     String fanspeed_tmp = "";
     String temp_day_of_week = "";
+    String state_valve_pos_path = "";
+    String state_valve_pos_str = "";
     int temp_hour = 0;
+    int co2_sensors_high = 0;
     bool valve_move_locked = 0;
+    bool state_valve_pos_file_present = 0;
+
+    //Local JSON object to hold the state settings
+    JsonDocument state_valve_pos_doc;
     
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
@@ -566,7 +596,57 @@ void high_co2_night_transitions(void) {
         }
     }
 
-    set_fanspeed(fanspeed_tmp);
+    //set_fanspeed(fanspeed_tmp);           //Set in conditions below
+    select_sensors();
+
+    //Temp valve settings for individual valves starting with default settings for this state. Should read these from file and not hardcode them
+    state_valve_pos_path = ("/json/settings_state_" + statemachine_state + ".json");
+    state_valve_pos_file_present = check_file_exists(state_valve_pos_path.c_str());
+    
+    if (settings_state_highco2night_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_highco2night_mutex, ( TickType_t ) 100 ) == pdTRUE) {
+            if (state_valve_pos_file_present == 1) {
+                
+                File file = LittleFS.open(state_valve_pos_path, "r");
+                while(file.available()) {
+                    state_valve_pos_str = file.readString();
+                }
+                file.close();    
+            }
+            xSemaphoreGive(settings_state_highco2night_mutex);
+        }
+    }
+
+    deserializeJson(state_valve_pos_doc, state_valve_pos_str);
+
+    settings_state_temp["valve0_position_state_temp"] = state_valve_pos_doc["valve0_position_highco2night"].as<int>();
+    settings_state_temp["valve1_position_state_temp"] = state_valve_pos_doc["valve1_position_highco2night"].as<int>();
+    settings_state_temp["valve2_position_state_temp"] = state_valve_pos_doc["valve2_position_highco2night"].as<int>();
+    settings_state_temp["valve3_position_state_temp"] = state_valve_pos_doc["valve3_position_highco2night"].as<int>();
+    settings_state_temp["valve4_position_state_temp"] = state_valve_pos_doc["valve4_position_highco2night"].as<int>();
+    settings_state_temp["valve5_position_state_temp"] = state_valve_pos_doc["valve5_position_highco2night"].as<int>();
+    settings_state_temp["valve6_position_state_temp"] = state_valve_pos_doc["valve6_position_highco2night"].as<int>();
+    settings_state_temp["valve7_position_state_temp"] = state_valve_pos_doc["valve7_position_highco2night"].as<int>();
+    settings_state_temp["valve8_position_state_temp"] = state_valve_pos_doc["valve8_position_highco2night"].as<int>();
+    settings_state_temp["valve9_position_state_temp"] = state_valve_pos_doc["valve9_position_highco2night"].as<int>();
+    settings_state_temp["valve10_position_state_temp"] = state_valve_pos_doc["valve10_position_highco2night"].as<int>();
+    settings_state_temp["valve11_position_state_temp"] = state_valve_pos_doc["valve11_position_highco2night"].as<int>();
+
+    // High CO2 has been detected to come into this state. Iterate through CO2 sensors to see which sensor detects high CO2.
+    // Valves with CO2 sensors are default set to 20 for this state so every valve with a co2 value lower than 1000 ppm will be closed to 4
+    for (int i = 0; i < co2_sensor_counter; i++) {
+        if (co2_sensors[i].co2_reading < 1000 && co2_sensors[i].valve != "Fan inlet") {
+            //Set new valve settings for the room with high CO2 reading
+            settings_state_temp[co2_sensors[i].valve + "_position_state_temp"] = 4;
+        }
+    }
+
+    if (valve_move_locked == 0) {    
+        valve_position_statemachine("state_temp");
+    }
+    else {
+        Serial.print("\nValves are locked for moving, will try again later");
+    }
     
     if (valve_move_locked == 0) {
         valve_position_statemachine(statemachine_state);
@@ -575,22 +655,46 @@ void high_co2_night_transitions(void) {
         Serial.print("\nValves are locked for moving, will try again later");
     }
 
-    // Conditions for transition
-    if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
+    // Conditions for transition.
+    // Iterate through CO2 sensors to see if any of them has CO2 reading below 800 ppm and if so open that valve to default psoition
+    for (int i = 0; i < co2_sensor_counter; i++) {
+        if (co2_sensors[i].co2_reading > 800 && co2_sensors[i].valve == "Fan inlet") {
+            co2_sensors_high++;              //No need to move valve but remains in highco2night
+        }
+        else if (co2_sensors[i].co2_reading > 800 && co2_sensors[i].valve != "Fan inlet") {
+            co2_sensors_high++;             //Sensor at a valve is not below 800ppm    
+        }
+        else if (co2_sensors[i].co2_reading < 800 && co2_sensors[i].valve != "Fan inlet") {
+            // Only close valve for the room with high CO2 reading by customizing the settings_state_temp JSON object. All other valves will remain in the same position
+            settings_state_temp[co2_sensors[i].valve + "_position_state_temp"] = 20;
+            if (valve_move_locked == 0) {
+                valve_position_statemachine("state_temp");
+            }
+        }
+    }
+
+    // Other transition conditions
+    if (co2_sensors_high > 0) {
+        new_state = "highco2night";
+        fanspeed_tmp = "Medium";            //Set fanspeed to medium when in high CO2 night state
+        set_fanspeed(fanspeed_tmp);
+        Serial.print("\nConditions have not changed, one of the sensors still detects high CO2, so remain in high_co2_night state");
+    }
+    else if (co2_sensors_high > 0 && temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
         Serial.print("\nIt is after 8, before 21 and a weekday. Transit to high_co2_day.");
         new_state = "highco2day";
     }
-    else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday")) {
+    else if (co2_sensors_high > 0 && temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday")) {
         Serial.print("\nIt is after 9, before 21 and weekend. Transit to high_co2_day.");
         new_state = "highco2day";
     }
-    else if (statemachine_sensor_data[1][2][2] < 800) {
+    /*else if (statemachine_sensor_data[1][2][2] < 800) {
         Serial.print("\nIt is night and CO2 level is low enough. Transit to night.");
         new_state = "night";
-    }
+    }*/
     else {
-        Serial.print("\nConditions have not changed, CO2 is still high, so remain in high_co2_night state");
-        new_state = "highco2night";
+        Serial.print("\nNo sensor has high CO2 reading. Return to night state");
+        new_state = "night";
     }
     
     if (statemachine_state_mutex != NULL) {
