@@ -54,7 +54,6 @@ void read_sensors(void) {
                     Wire.write(1 << slot);
                     Wire.endTransmission();
                 }
-                
                 if (bus==1) {
                     sensor = "wire1_sensor" + String(slot);
                     if (sensor_config_file_mutex != NULL) {
@@ -208,7 +207,6 @@ void read_sensors(void) {
     if (wire_status == 0x00 && wire1_status == 0x00)
     {
         if(sensor_queue !=NULL) {
-            //if (xQueueSendToFront(sensor_queue, &temp_sensor_data, (TickType_t) 100) != pdPASS){
             if (xQueueOverwrite(sensor_queue, &temp_sensor_data) != pdPASS){
                 Serial.println("\nNo queue space for sending data to queue.\n");
             }
@@ -234,22 +232,11 @@ void display_sensors(void) {
     */
 
     float queue_sensor_data[2][8][3];        //local variable to store sensor data from queue
-    //int display_i2c_addr_tmp = 0;
     String valve;
     String location;
     String rh;
     String co2;
 
-    /*
-    if (settings_i2c_mutex != NULL) {
-        if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
-            display_i2c_addr_tmp = display_i2c_addr;
-            xSemaphoreGive(settings_i2c_mutex);
-        }
-    }
-
-    LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS);
-    */
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
     lcd.init();
     lcd.backlight();
@@ -357,20 +344,9 @@ void display_valve_positions(void) {
       
     const char* path = "/json/valvepositions.json";
     bool status_file_present;
-    //int display_i2c_addr_tmp;
     String json;
     JsonDocument doc;
 
-    /*
-    if (settings_i2c_mutex != NULL) {
-        if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
-            display_i2c_addr_tmp = display_i2c_addr;
-            xSemaphoreGive(settings_i2c_mutex);
-        }
-    }
-
-    LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS);
-    */
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
     lcd.init();
     lcd.backlight();
@@ -459,16 +435,6 @@ void display_time_and_date(void) {
     int64_t uptime;
     int display_i2c_addr_tmp;
     
-    /*
-    if (settings_i2c_mutex != NULL) {
-        if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
-            display_i2c_addr_tmp = display_i2c_addr;
-            xSemaphoreGive(settings_i2c_mutex);
-        }
-    }
-
-    LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS);
-    */
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
     lcd.init();
     lcd.backlight();
@@ -478,7 +444,6 @@ void display_time_and_date(void) {
             lcd.print(dayOfWeek);
             lcd.print(" ");
 
-            //lcd.setCursor(9,0);
             lcd.print(dayStr);
             lcd.print("-");
             lcd.print(monthStr);
@@ -516,17 +481,7 @@ void display_state_fan(void) {
        2 |			
        3 |	
    */
-    /*int display_i2c_addr_tmp;
-    
-    if (settings_i2c_mutex != NULL) {
-        if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
-            display_i2c_addr_tmp = display_i2c_addr;
-            xSemaphoreGive(settings_i2c_mutex);
-        }
-    }
 
-    LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS); 
-    */
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
     lcd.init();
     lcd.backlight();
