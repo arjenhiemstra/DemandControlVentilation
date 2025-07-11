@@ -595,7 +595,7 @@ void high_co2_night_transitions(void) {
         }
     }
 
-    //set_fanspeed(fanspeed_tmp);           //Set in conditions below
+    set_fanspeed(fanspeed_tmp);           //Set in conditions below
     select_sensors();
 
     //Temp valve settings for individual valves starting with default settings for this state. Should read these from file and not hardcode them
@@ -673,8 +673,8 @@ void high_co2_night_transitions(void) {
     // Other transition conditions
     if (co2_sensors_high > 0) {
         new_state = "highco2night";
-        fanspeed_tmp = "Medium";            //Set fanspeed to medium when in high CO2 night state
-        set_fanspeed(fanspeed_tmp);
+        //fanspeed_tmp = "Medium";            //Set fanspeed to medium when in high CO2 night state
+        //set_fanspeed(fanspeed_tmp);
         Serial.print("\nConditions have not changed, one of the sensors still detects high CO2, so remain in high_co2_night state");
     }
     else if (co2_sensors_high > 0 && temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
