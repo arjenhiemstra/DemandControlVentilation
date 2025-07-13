@@ -840,6 +840,7 @@ void high_rh_night_transitions(void) {
     set_fanspeed(fanspeed_tmp);
 
     //If the statemachine is till in this state after 30 mins then RH cannot be lowered with ventilation
+    //No mutex is required as only statemachine uses this variable
     new_time = (esp_timer_get_time())/1000000;
     if (new_time > old_time) {
         elapsed_time += new_time - old_time;
