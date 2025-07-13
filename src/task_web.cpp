@@ -1130,7 +1130,7 @@ void Taskwebcode(void *pvParameters) {
 				if (p->name() == ENABLE_STATE_HIGHCO2DAY) 
 					settings_state_highco2day["enable_state_highco2day"] = p->value().c_str();
 				if (p->name() == STATE_HIGHCO2DAY_FANSPEED)
-					settings_state_day["state_highco2day_fanspeed"] = p->value().c_str();
+					settings_state_highco2day["state_highco2day_fanspeed"] = p->value().c_str();
 				if (p->name() == NAME_STATE_HIGHCO2DAY) 
 					settings_state_highco2day["name_state_highco2day"] = p->value().c_str();
 				if (p->name() == VALVE0_POSITION_HIGHCO2DAY)
@@ -1179,7 +1179,7 @@ void Taskwebcode(void *pvParameters) {
 				if (p->name() == ENABLE_STATE_HIGHCO2NIGHT) 
 					settings_state_highco2night["enable_state_highco2night"] = p->value().c_str();
 				if (p->name() == STATE_HIGHCO2NIGHT_FANSPEED)
-					settings_state_day["state_highco2night_fanspeed"] = p->value().c_str();
+					settings_state_highco2night["state_highco2night_fanspeed"] = p->value().c_str();
 				if (p->name() == NAME_STATE_HIGHCO2NIGHT) 
 					settings_state_highco2night["name_state_highco2night"] = p->value().c_str();
 				if (p->name() == VALVE0_POSITION_HIGHCO2NIGHT)
@@ -1224,7 +1224,7 @@ void Taskwebcode(void *pvParameters) {
 				if (p->name() == ENABLE_STATE_HIGHRHDAY) 
 					settings_state_highrhday["enable_state_highrhday"] = p->value().c_str();
 				if (p->name() == STATE_HIGHRHDAY_FANSPEED)
-					settings_state_day["state_highrhday_fanspeed"] = p->value().c_str();
+					settings_state_highrhday["state_highrhday_fanspeed"] = p->value().c_str();
 				if (p->name() == NAME_STATE_HIGHRHDAY) 
 					settings_state_highrhday["name_state_highrhday"] = p->value().c_str();
 				if (p->name() == VALVE0_POSITION_HIGHRHDAY)
@@ -1269,7 +1269,7 @@ void Taskwebcode(void *pvParameters) {
 				if (p->name() == ENABLE_STATE_HIGHRHNIGHT) 
 					settings_state_highrhnight["enable_state_highrhnight"] = p->value().c_str();
 				if (p->name() == STATE_HIGHRHNIGHT_FANSPEED)
-					settings_state_day["state_highrhnight_fanspeed"] = p->value().c_str();
+					settings_state_highrhnight["state_highrhnight_fanspeed"] = p->value().c_str();
 				if (p->name() == NAME_STATE_HIGHRHNIGHT) 
 					settings_state_highrhnight["name_state_highrhnight"] = p->value().c_str();
 				if (p->name() == VALVE0_POSITION_HIGHRHNIGHT)
@@ -1315,7 +1315,7 @@ void Taskwebcode(void *pvParameters) {
 				if (p->name() == ENABLE_STATE_COOKING) 
 					settings_state_cooking["enable_state_cooking"] = p->value().c_str();
 				if (p->name() == STATE_COOKING_FANSPEED)
-					settings_state_day["state_cooking_fanspeed"] = p->value().c_str();
+					settings_state_cooking["state_cooking_fanspeed"] = p->value().c_str();
 				if (p->name() == NAME_STATE_COOKING) 
 					settings_state_cooking["name_state_cooking"] = p->value().c_str();
 				if (p->name() == VALVE0_POSITION_COOKING)
@@ -1361,7 +1361,7 @@ void Taskwebcode(void *pvParameters) {
 				if (p->name() == ENABLE_STATE_CYCLINGDAY) 
 					settings_state_cyclingday["enable_state_cyclingday"] = p->value().c_str();
 				if (p->name() == STATE_CYCLINGDAY_FANSPEED)
-					settings_state_day["state_cyclingday_fanspeed"] = p->value().c_str();
+					settings_state_cyclingday["state_cyclingday_fanspeed"] = p->value().c_str();
 				if (p->name() == NAME_STATE_CYCLINGDAY) 
 					settings_state_cyclingday["name_state_cyclingday"] = p->value().c_str();
 				if (p->name() == VALVE0_POSITION_CYCLINGDAY)
@@ -1406,7 +1406,7 @@ void Taskwebcode(void *pvParameters) {
 				if (p->name() == ENABLE_STATE_CYCLINGNIGHT) 
 					settings_state_cyclingnight["enable_state_cyclingnight"] = p->value().c_str();
 				if (p->name() == STATE_CYCLINGNIGHT_FANSPEED)
-					settings_state_day["state_cyclingnight_fanspeed"] = p->value().c_str();
+					settings_state_cyclingnight["state_cyclingnight_fanspeed"] = p->value().c_str();
 				if (p->name() == NAME_STATE_CYCLINGNIGHT) 
 					settings_state_cyclingnight["name_state_cyclingnight"] = p->value().c_str();
 				if (p->name() == VALVE0_POSITION_CYCLINGNIGHT)
@@ -1446,45 +1446,3 @@ void Taskwebcode(void *pvParameters) {
 	server.begin();
 	vTaskDelete(NULL);
 }
-
-/*
-JSON valve_control_data Structure
-{
-    "valve0_data": [valve_vumber,valve move,valvemove_direction],
-    "valve1_data": [valve_vumber,valve move,valvemove_direction],
-    "valve2_data": [valve_vumber,valve move,valvemove_direction],
-    ......
-    ......
-    "valve11_data": [valve_vumber,valve move,valvemove_direction]
-}
-
-JSON for sensor data. One dataset for one bus (wire,wire1)
-{
-  "sensors": [
-    {
-      "slot": 0,
-      "type": "DHT20",
-      "valve": "valve0",
-      "location": "bathroom",
-      "rh": "On",
-      "co2": "Off
-    },
-    {
-      "slot": 1,
-      "type": "DHT20",
-      "valve": "valve0",
-      "location": "bathroom",
-      "rh": "On",
-      "co2": "Off
-    },
-    {
-      "slot": 7,
-      "type": "SCD41",
-      "valve": "valve0",
-      "location": "bathroom",
-      "rh": "On",
-      "co2": "Off
-    },
-  ]
-}
-*/
