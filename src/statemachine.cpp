@@ -24,11 +24,10 @@ struct RH_Sensors {
     float rh_reading;
 };
 
-//Although 16 sensors can be used
 CO2_Sensors co2_sensors[16];
 RH_Sensors rh_sensors[16];
 int co2_sensor_counter = 0;
-int rh_sensors_counter = 0;
+int rh_sensor_counter = 0;
 
 void init_statemachine(void) {
     
@@ -245,10 +244,9 @@ void day_transitions(void) {
     }
 
     // Conditions to transit to other state
-
-    //Iterate through CO2 sensors to see if any of them has high CO2 reading
     select_sensors();
     int co2_sensor_high = 0;
+    int rh_sensor_high = 0;
     
     for (int i = 0; i < co2_sensor_counter; i++) {
         if (co2_sensors[i].co2_reading > 1000) {
@@ -257,16 +255,30 @@ void day_transitions(void) {
         }
     }
 
+    for (int i = 0; i < rh_sensor_counter; i++) {
+        if (rh_sensors[i].rh_reading > 85) {
+            Serial.print("\nSensor" + String(i) + " which is located at " + String(rh_sensors[i].valve) + " has high RH reading. Transit to highrhday state");
+            rh_sensor_high++;
+        }
+    }
+
     if (co2_sensor_high > 0) {
         new_state = "highco2day";
-    } 
+    }
+    else if (rh_sensor_high > 0) {
+        new_state = "highrhday";
+    }
+    /*else if (temp_hour >= 8 && temp_hour < 21) {
+        Serial.print("\nIt's day. Transit to day state.");
+        new_state = "day";
+    }
+    /*else if (temp_hour >= 21 && temp_hour < 24) {
+        Serial.print("\nIt's after 21. Transit to night state.");
+        new_state = "night";
+    }*/
     else if (temp_hour >= 21) {
         Serial.print("\nIt's night. Transit to night.");        
         new_state = "night";
-    }
-    else if (statemachine_sensor_data[0][0][1] > 85) {                      //Assuming RH is on slot 0 of bus 0          
-        Serial.print("\nIt's day and high RH. Transit to highrhday state.");
-        new_state = "highrhday";
     }
     else if (cooking_times() == true) {
         Serial.print("\nIt's day and cooking time. Transit to cooking state.");
@@ -352,9 +364,34 @@ void night_transitions(void) {
     else {
         Serial.print("\nValves are locked for moving, will try again later");
     }
-    
+
     // Conditions to transit to other state
-    if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
+    select_sensors();
+    int co2_sensor_high = 0;
+    int rh_sensor_high = 0;
+    
+    for (int i = 0; i < co2_sensor_counter; i++) {
+        if (co2_sensors[i].co2_reading > 1000) {
+            Serial.print("\nSensor" + String(i) + " which is located at " + String(co2_sensors[i].valve) + " has high CO2 reading. Transit to highco2day state");
+            co2_sensor_high++;
+        }
+    }
+
+    for (int i = 0; i < rh_sensor_counter; i++) {
+        if (rh_sensors[i].rh_reading > 85) {
+            Serial.print("\nSensor" + String(i) + " which is located at " + String(rh_sensors[i].valve) + " has high RH reading. Transit to highrhday state");
+            rh_sensor_high++;
+        }
+    }
+
+    // Conditions to transit to other state
+    if (co2_sensor_high > 0) {
+        new_state = "highco2night";
+    }
+    else if (rh_sensor_high > 0) {
+        new_state = "highrhnight";
+    }
+    else if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
         Serial.print("\nIt is after 8, before 21 and a weekday. Transit to day.");
         new_state = "day";
     }
@@ -362,7 +399,7 @@ void night_transitions(void) {
         Serial.print("\nIt is after 9, before 21 and weekend. Transit to day");
         new_state = "day";
     }
-    else if (statemachine_sensor_data[1][2][2] > 1000) {
+    /*else if (statemachine_sensor_data[1][2][2] > 1000) {
         Serial.print("\nIt is and CO2 level is high. Transit to high_co2_night");
         new_state = "highco2night";
     }
@@ -370,7 +407,7 @@ void night_transitions(void) {
     else if (statemachine_sensor_data[0][0][1] > 85) {
         Serial.print("\nIt's night and high RH. Transit to high high_rh_night.");
         new_state = "highrhday";
-    }
+    }*/
     else if (valve_cycle_times_night() == true) {
         Serial.print("\nIt's night and valve_cycle time. Transit to valve_cycle_night.");
         new_state = "cyclingnight";
