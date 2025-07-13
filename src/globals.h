@@ -60,13 +60,8 @@ extern QueueHandle_t sensor_avg_queue;
 extern JsonDocument valve_control_data;
 extern JsonDocument wire_sensor_data;
 extern JsonDocument wire1_sensor_data;
-//extern JsonDocument settings_network_data;
-//extern JsonDocument settings_mqtt_data;
-//extern JsonDocument settings_i2c_data;
-//extern JsonDocument settings_rtc_data;
 extern JsonDocument settings_fan_data;
 extern JsonDocument settings_statemachine_data;
-//extern JsonDocument settings_influxdb_data;
 
 extern JsonDocument settings_state_day;
 extern JsonDocument settings_state_night;
@@ -125,6 +120,9 @@ extern String dayOfWeek;
 
 extern String state;
 extern String fanspeed;
+
+extern long old_time;
+extern long elapsed_time;
 
 extern bool lock_valve_move;
 extern bool pb_toggle;

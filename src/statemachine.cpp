@@ -707,6 +707,7 @@ void high_rh_day_transitions(void) {
     String statemachine_state = "highrhday";
     String fanspeed_tmp = "high";
     int temp_hour = 0;
+    long new_time = 0;
     bool valve_move_locked = 0;
 
     // Actions for this sate
@@ -749,6 +750,13 @@ void high_rh_day_transitions(void) {
     }
 
     set_fanspeed(fanspeed_tmp);
+
+    new_time = (esp_timer_get_time())/1000000;
+    if (new_time > old_time) {          //Just a case that a reboot happened and old_time is not set
+        elapsed_time += new_time - old_time;
+        old_time = new_time;
+    }
+    Serial.print("\nElapsed time in high_rh_night state: " + String(elapsed_time) + " seconds");
     
     if (valve_move_locked == 0) {
         valve_position_statemachine(statemachine_state);
@@ -758,12 +766,13 @@ void high_rh_day_transitions(void) {
     }
 
     // Conditions for transition
-    if (statemachine_sensor_data[0][0][1] < 70) {
-        Serial.print("\nIt's night and high RH. Transit to day");
+    if (statemachine_sensor_data[0][0][1] < 75 || elapsed_time > 1800) {
+        Serial.print("\nIt's day with no high RH or time expired. Transit to day");
         new_state = "day";
+        elapsed_time = 0; // Reset elapsed time after transition
     }
     else if (temp_hour >= 21) {
-        Serial.print("\nIt's night but rh levels are still high. Transit to high_rh_night");        
+        Serial.print("\nIt's night but rh levels are still high and time not expired. Transit to high_rh_night");        
         new_state = "highrhnight";
     }
     else {
@@ -785,6 +794,7 @@ void high_rh_night_transitions(void) {
     String fanspeed_tmp = "";
     String temp_day_of_week = "";
     int temp_hour = 0;
+    long new_time = 0;
     bool valve_move_locked = 0;
 
     // Actions for this state
@@ -829,6 +839,14 @@ void high_rh_night_transitions(void) {
 
     set_fanspeed(fanspeed_tmp);
 
+    //If the statemachine is till in this state after 30 mins then RH cannot be lowered with ventilation
+    new_time = (esp_timer_get_time())/1000000;
+    if (new_time > old_time) {
+        elapsed_time += new_time - old_time;
+        old_time = new_time;
+    }
+    Serial.print("\nElapsed time in high_rh_night state: " + String(elapsed_time) + " seconds");
+
     if (valve_move_locked == 0) {
         valve_position_statemachine(statemachine_state);
     }
@@ -837,17 +855,20 @@ void high_rh_night_transitions(void) {
     }
 
     // Conditions for transition
-    if (statemachine_sensor_data[0][0][1] < 70) {
+    if (statemachine_sensor_data[0][0][1] < 75 || elapsed_time > 1800) {
         Serial.print("\nIt's night and RH is low enough. Transit to night.");
         new_state = "night";
+        elapsed_time = 0; // Reset elapsed time after transition
     }
-    else if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
+    else if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday" && elapsed_time > 1800)  {
         Serial.print("\nIt is after 8, before 21 and a weekday but RH is still high. Transit to high_rh_day.");
         new_state = "highrhday";
+        elapsed_time = 0; // Reset elapsed time after transition
     }
-    else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday")) {
+    else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday" && elapsed_time > 1800)) {
         Serial.print("\nIt is after 9, before 21 and weekend but RH is still high. Transit to high_rh_day ");
         new_state = "highrhday";
+        elapsed_time = 0; // Reset elapsed time after transition
     }
     else {
         Serial.print("\nConditions have not changed, RH is still high, so remain in high_rh_night state");
