@@ -129,7 +129,7 @@ void stopped_transitions(void) {
     }
 
     //No further logic required because when start statemachine button is pushed the statemachine will go back to init state
-    Serial.print("\nStatemachin in stopped state. Push start statemachine button on the Valve Control web page.");
+    Serial.print("\nStatemachine in stopped state. Push start statemachine button on the Valve Control web page.");
 
 }
 
@@ -193,6 +193,8 @@ void day_transitions(void) {
     String statemachine_state = "day";
     int temp_hour = 0;
     bool valve_move_locked = 0;
+    int co2_sensor_high = 0;
+    int rh_sensor_high = 0; 
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
@@ -211,7 +213,7 @@ void day_transitions(void) {
 
     //read fanspeed from config of this state
     if (settings_state_day_mutex != NULL) {
-        if(xSemaphoreTake(settings_state_day_mutex, ( TickType_t ) 100 ) == pdTRUE) {
+        if(xSemaphoreTake(settings_state_day_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             String temp_fanspeed = settings_state_day[String("state_day_fanspeed")];
             fanspeed_tmp = temp_fanspeed;
             xSemaphoreGive(settings_state_day_mutex);
@@ -245,9 +247,9 @@ void day_transitions(void) {
 
     // Conditions to transit to other state
     select_sensors();
-    int co2_sensor_high = 0;
-    int rh_sensor_high = 0;
-    
+    Serial.print("\nNumber of CO2 sensor with high reading: " + String(co2_sensor_high));
+    Serial.print("\nNumber of CO2 sensors: " + String(co2_sensor_counter));
+
     for (int i = 0; i < co2_sensor_counter; i++) {
         if (co2_sensors[i].co2_reading > 1000) {
             Serial.print("\nSensor" + String(i) + " which is located at " + String(co2_sensors[i].valve) + " has high CO2 reading. Transit to highco2day state");
@@ -262,20 +264,15 @@ void day_transitions(void) {
         }
     }
 
+    Serial.print("Number of RH sensor with high reading: " + String(rh_sensor_high));
+    Serial.print("Number of CO2 sensor with high reading: " + String(co2_sensor_high));
+
     if (co2_sensor_high > 0) {
         new_state = "highco2day";
     }
     else if (rh_sensor_high > 0) {
         new_state = "highrhday";
     }
-    /*else if (temp_hour >= 8 && temp_hour < 21) {
-        Serial.print("\nIt's day. Transit to day state.");
-        new_state = "day";
-    }
-    /*else if (temp_hour >= 21 && temp_hour < 24) {
-        Serial.print("\nIt's after 21. Transit to night state.");
-        new_state = "night";
-    }*/
     else if (temp_hour >= 21) {
         Serial.print("\nIt's night. Transit to night.");        
         new_state = "night";
@@ -294,12 +291,6 @@ void day_transitions(void) {
         new_state = "day";
     }
     
-    //Assuming that CO2 sensor is on slot 2 of bus 1. CO2 has priority over others
-    //else if (statemachine_avg_sensor_data[1][2][2] > 1000) {
-        //Serial.print("\nIt's day and high CO2. Transit to highco2day state");
-        //new_state = "highco2day";
-    //}
-
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             state = new_state;
@@ -399,15 +390,6 @@ void night_transitions(void) {
         Serial.print("\nIt is after 9, before 21 and weekend. Transit to day");
         new_state = "day";
     }
-    /*else if (statemachine_sensor_data[1][2][2] > 1000) {
-        Serial.print("\nIt is and CO2 level is high. Transit to high_co2_night");
-        new_state = "highco2night";
-    }
-    //Assuming RH sensor is on slot 0 of bus 0
-    else if (statemachine_sensor_data[0][0][1] > 85) {
-        Serial.print("\nIt's night and high RH. Transit to high high_rh_night.");
-        new_state = "highrhday";
-    }*/
     else if (valve_cycle_times_night() == true) {
         Serial.print("\nIt's night and valve_cycle time. Transit to valve_cycle_night.");
         new_state = "cyclingnight";
@@ -430,6 +412,7 @@ void high_co2_day_transitions(void) {
 
     String statemachine_state = "highco2day";
     String fanspeed_tmp = "";
+    String temp_day_of_week = "";
     String state_valve_pos_path = "";
     String state_valve_pos_str = "";
     int temp_hour = 0;
@@ -451,6 +434,7 @@ void high_co2_day_transitions(void) {
     if (date_time_mutex != NULL) {
         if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             temp_hour = hourStr.toInt();
+            temp_day_of_week = dayOfWeek.toInt();
             xSemaphoreGive(date_time_mutex);
         }
     }
@@ -522,6 +506,13 @@ void high_co2_day_transitions(void) {
             //Set new valve settings for the room with high CO2 reading
             settings_state_temp[co2_sensors[i].valve + "_position_state_temp"] = 20;
         }
+        if (co2_sensors[i].co2_reading < 700 && co2_sensors[i].valve != "Fan inlet") {
+            //Set new valve settings for the room with high CO2 reading
+            settings_state_temp[co2_sensors[i].valve + "_position_state_temp"] = 4;
+        }
+        if (co2_sensors[i].co2_reading > 1000) {
+            co2_sensors_high++; 
+        }
     }
 
     if (valve_move_locked == 0) {    
@@ -533,7 +524,7 @@ void high_co2_day_transitions(void) {
 
     // Conditions for transition. If fan inlet is lower than 800 ppm then it is day, otherwise it is high CO2 day
     // Iterate through CO2 sensors to see if any of them has CO2 reading below 800 ppm and if so close that valve to default psoition
-    for (int i = 0; i < co2_sensor_counter; i++) {
+/*    for (int i = 0; i < co2_sensor_counter; i++) {
         if (co2_sensors[i].co2_reading > 1000 && co2_sensors[i].valve == "Fan inlet") {
             co2_sensors_high++;              //No need to move valve but remains in highco2day
         }
@@ -547,28 +538,28 @@ void high_co2_day_transitions(void) {
                 valve_position_statemachine("state_temp");
             }
         }
-    }
+    }*/
     
     Serial.print("\nNumber of sensors measure high CO2: " + String(co2_sensors_high) );
     
-    //Other transition conditions 
-    if (co2_sensors_high > 0) {
-        new_state = "highco2day";
-        Serial.print("\nConditions have not changed, CO2 in one of the sensors is still high, so remain in high_co2_day state");
-    }
-    else if (temp_hour >= 21 && co2_sensors_high > 0) {
+    // Conditions for transition
+    if (co2_sensors_high > 0 && temp_hour >= 21 && temp_hour < 8 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
+        Serial.print("\nIt is before 8, after 21 and a weekday. Transit to high_co2_night.");
         new_state = "highco2night";
-        Serial.print("\nIt's night but CO2 levels are still high. Transit to high_co2_night");        
     }
-    else if (temp_hour >= 21 && co2_sensors_high == 0) {
-        new_state = "night";
-        Serial.print("\nIt's night with no sensors having hi CO2. Transit to night");        
+    else if (co2_sensors_high > 0 && temp_hour >= 21 && temp_hour < 9 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday")) {
+        Serial.print("\nIt is after 9, before 21 and weekend. Transit to high_co2_night.");
+        new_state = "highco2night";
+    }
+    else if (co2_sensors_high == 0) {
+        Serial.print("\nIt is day, no high co2 levels. Transit to day.");
+        new_state = "day";
     }
     else {
-        new_state = "day";
-        Serial.print("\nNo sensor has high CO2 reading. Return to day state");
+        Serial.print("\nIt is day with high CO2 levels. Remain in highco2day state");
+        new_state = "highco2day";
     }
-    
+   
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             state = new_state;
@@ -668,14 +659,17 @@ void high_co2_night_transitions(void) {
     settings_state_temp["valve10_position_state_temp"] = state_valve_pos_doc["valve10_position_highco2night"].as<int>();
     settings_state_temp["valve11_position_state_temp"] = state_valve_pos_doc["valve11_position_highco2night"].as<int>();
 
-    // High CO2 has been detected to come into this state. Iterate through CO2 sensors to see which sensor detects high CO2.
-    // Valves with CO2 sensors are default set to 20 for this state so every valve with a co2 value lower than 1000 ppm will be closed to 4
+    // High CO2 has been detected to come into this state. Iterate through CO2 sensors to see which sensor detects high CO2. Valves with CO2 sensors are default 
+    // set to 24 for this state. Valves with a co2 value lower than 700 ppm will be closed to 4 to direct airflow to the rooms with high CO2 reading.
     for (int i = 0; i < co2_sensor_counter; i++) {
         if (co2_sensors[i].co2_reading < 700 && co2_sensors[i].valve != "Fan inlet") {
             settings_state_temp[co2_sensors[i].valve + "_position_state_temp"] = 4;         //Set new valve settings for the room without high CO2 reading to 4
         }
         if (co2_sensors[i].co2_reading > 1000 && co2_sensors[i].valve != "Fan inlet") {
             settings_state_temp[co2_sensors[i].valve + "_position_state_temp"] = 24;         //Set new valve settings for the room with high CO2 reading to 24
+        }
+        if (co2_sensors[i].co2_reading > 1000) {
+            co2_sensors_high++;              //No need to move valve but remains in highco2night
         }
     }
 
@@ -686,34 +680,8 @@ void high_co2_night_transitions(void) {
         Serial.print("\nValves are locked for moving, will try again later");
     }
     
-    // Conditions for transition. Iterate through CO2 sensors to see if any of them has CO2 reading below 800 ppm and if so open that valve to default psoition
-    for (int i = 0; i < co2_sensor_counter; i++) {
-        if (co2_sensors[i].co2_reading > 1000) {
-            co2_sensors_high++;              //No need to move valve but remains in highco2night
-        }
-        /*if (co2_sensors[i].co2_reading > 1000 && co2_sensors[i].valve == "Fan inlet") {
-            co2_sensors_high++;              //No need to move valve but remains in highco2night
-        }
-        else if (co2_sensors[i].co2_reading > 1000 && co2_sensors[i].valve != "Fan inlet") {
-            co2_sensors_high++;             //Sensor at a valve is not below 800ppm    
-        }*/
-        /*if (co2_sensors[i].co2_reading < 700 && co2_sensors[i].valve != "Fan inlet") {
-            // Only close valve for the room with high CO2 reading by customizing the settings_state_temp JSON object. All other valves will remain in the same position
-            settings_state_temp[co2_sensors[i].valve + "_position_state_temp"] = 4;
-            if (valve_move_locked == 0) {
-                valve_position_statemachine("state_temp");
-            }
-        }*/
-    }
-
-    // Other transition conditions
-    if (co2_sensors_high > 0) {
-        new_state = "highco2night";
-        //fanspeed_tmp = "Medium";            //Set fanspeed to medium when in high CO2 night state
-        //set_fanspeed(fanspeed_tmp);
-        Serial.print("\nConditions have not changed, one of the sensors still detects high CO2, so remain in high_co2_night state");
-    }
-    else if (co2_sensors_high > 0 && temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
+    // Conditions for transition
+    if (co2_sensors_high > 0 && temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
         Serial.print("\nIt is after 8, before 21 and a weekday. Transit to high_co2_day.");
         new_state = "highco2day";
     }
@@ -721,13 +689,13 @@ void high_co2_night_transitions(void) {
         Serial.print("\nIt is after 9, before 21 and weekend. Transit to high_co2_day.");
         new_state = "highco2day";
     }
-    /*else if (statemachine_sensor_data[1][2][2] < 800) {
-        Serial.print("\nIt is night and CO2 level is low enough. Transit to night.");
-        new_state = "night";
-    }*/
     else if (co2_sensors_high == 0) {
-        Serial.print("\nNo sensor has high CO2 reading. Return to night state");
+        Serial.print("\nIt is night, no high co2 levels. Transit to night.");
         new_state = "night";
+    }
+    else {
+        Serial.print("\nIt is night with high CO2 levels. Remain in highco2night state");
+        new_state = "highco2night";
     }
     
     if (statemachine_state_mutex != NULL) {
@@ -1041,7 +1009,7 @@ void valve_cycle_day_transitions(void) {
         Serial.print("\nIt's day and high RH. Transit to high_rh_day state.");
         new_state = "highrhday";
     }
-    else if (statemachine_sensor_data[1][2][2] > 1000) {
+    else if (statemachine_sensor_data[0][7][2] > 1000) {
         Serial.print("\nIt is valve_cycle_day and CO2 level is high. Transit to high_co2_day");
         new_state = "highco2day";
     }
@@ -1180,8 +1148,8 @@ void select_sensors(void) {
     bool sensor_config1_file_present = 0;
     bool sensor_config2_file_present = 0;
 
-    int co2_sensor_counter = 0;
-    int rh_sensor_counter = 0;
+    co2_sensor_counter = 0;
+    rh_sensor_counter = 0;
 
     int j=0;        //counter for struct
     int k=0;        //counter for struct
