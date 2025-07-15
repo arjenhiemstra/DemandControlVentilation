@@ -683,6 +683,7 @@ void high_rh_day_transitions(void) {
     String statemachine_state = "highrhday";
     String fanspeed_tmp = "high";
     int temp_hour = 0;
+    int rh_sensors_high = 0;
     long new_time = 0;
     bool valve_move_locked = 0;
 
@@ -724,6 +725,7 @@ void high_rh_day_transitions(void) {
     }
 
     set_fanspeed(fanspeed_tmp);
+    select_sensors();
 
     new_time = (esp_timer_get_time())/1000000;
     if (new_time > old_time) {          //Just in case that a reboot happened and old_time is not set
@@ -739,8 +741,15 @@ void high_rh_day_transitions(void) {
         Serial.print("\nValves are locked for moving, will try again later");
     }
 
+    // High RH has been detected to come into this state. Iterate through RH sensors to see which sensor detects high RH. This state does not change valve positions
+    for (int i = 0; i < rh_sensor_counter; i++) {
+        if (rh_sensors[i].rh_reading > 85) {
+            rh_sensors_high++;
+        }
+    }
+
     // Conditions for transition
-    if (statemachine_sensor_data[0][0][1] < 75 || elapsed_time > 1800) {
+    if (rh_sensors_high == 0 || elapsed_time > 1800) {
         Serial.print("\nIt's day with no high RH or time expired. Transit to day");
         new_state = "day";
         elapsed_time = 0; // Reset elapsed time after transition
