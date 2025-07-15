@@ -247,8 +247,6 @@ void day_transitions(void) {
 
     // Conditions to transit to other state
     select_sensors();
-    Serial.print("\nNumber of CO2 sensor with high reading: " + String(co2_sensor_high));
-    Serial.print("\nNumber of CO2 sensors: " + String(co2_sensor_counter));
 
     for (int i = 0; i < co2_sensor_counter; i++) {
         if (co2_sensors[i].co2_reading > 1000) {
@@ -473,7 +471,6 @@ void high_co2_day_transitions(void) {
     if (settings_state_highco2day_mutex != NULL) {
         if(xSemaphoreTake(settings_state_highco2day_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             if (state_valve_pos_file_present == 1) {
-                
                 File file = LittleFS.open(state_valve_pos_path, "r");
                 while(file.available()) {
                     state_valve_pos_str = file.readString();
@@ -522,24 +519,6 @@ void high_co2_day_transitions(void) {
         Serial.print("\nValves are locked for moving, will try again later");
     }
 
-    // Conditions for transition. If fan inlet is lower than 800 ppm then it is day, otherwise it is high CO2 day
-    // Iterate through CO2 sensors to see if any of them has CO2 reading below 800 ppm and if so close that valve to default psoition
-/*    for (int i = 0; i < co2_sensor_counter; i++) {
-        if (co2_sensors[i].co2_reading > 1000 && co2_sensors[i].valve == "Fan inlet") {
-            co2_sensors_high++;              //No need to move valve but remains in highco2day
-        }
-        else if (co2_sensors[i].co2_reading > 1000 && co2_sensors[i].valve != "Fan inlet") {
-            co2_sensors_high++;              //Sensor is not below 800ppm
-        }
-        else if (co2_sensors[i].co2_reading < 700 && co2_sensors[i].valve != "Fan inlet") {
-            // Only close valve for the room with high CO2 reading by customizing the settings_state_temp JSON object. All other valves will remain in the same position
-            settings_state_temp[co2_sensors[i].valve + "_position_state_temp"] = 4;
-            if (valve_move_locked == 0) {
-                valve_position_statemachine("state_temp");
-            }
-        }
-    }*/
-    
     Serial.print("\nNumber of sensors measure high CO2: " + String(co2_sensors_high) );
     
     // Conditions for transition
@@ -623,7 +602,7 @@ void high_co2_night_transitions(void) {
         }
     }
 
-    set_fanspeed(fanspeed_tmp);           //Set in conditions below
+    set_fanspeed(fanspeed_tmp);
     select_sensors();
 
     //Temp valve settings for individual valves starting with default settings for this state. Should read these from file and not hardcode them
@@ -633,7 +612,6 @@ void high_co2_night_transitions(void) {
     if (settings_state_highco2night_mutex != NULL) {
         if(xSemaphoreTake(settings_state_highco2night_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             if (state_valve_pos_file_present == 1) {
-                
                 File file = LittleFS.open(state_valve_pos_path, "r");
                 while(file.available()) {
                     state_valve_pos_str = file.readString();
@@ -660,16 +638,16 @@ void high_co2_night_transitions(void) {
     settings_state_temp["valve11_position_state_temp"] = state_valve_pos_doc["valve11_position_highco2night"].as<int>();
 
     // High CO2 has been detected to come into this state. Iterate through CO2 sensors to see which sensor detects high CO2. Valves with CO2 sensors are default 
-    // set to 24 for this state. Valves with a co2 value lower than 700 ppm will be closed to 4 to direct airflow to the rooms with high CO2 reading.
+    // set to 24 for this state. Valves with a CO2 value lower than 900 ppm will be closed to 4 to direct airflow to the rooms with high CO2 reading.
     for (int i = 0; i < co2_sensor_counter; i++) {
-        if (co2_sensors[i].co2_reading < 700 && co2_sensors[i].valve != "Fan inlet") {
+        if (co2_sensors[i].co2_reading < 900 && co2_sensors[i].valve != "Fan inlet") {
             settings_state_temp[co2_sensors[i].valve + "_position_state_temp"] = 4;         //Set new valve settings for the room without high CO2 reading to 4
         }
         if (co2_sensors[i].co2_reading > 1000 && co2_sensors[i].valve != "Fan inlet") {
             settings_state_temp[co2_sensors[i].valve + "_position_state_temp"] = 24;         //Set new valve settings for the room with high CO2 reading to 24
         }
         if (co2_sensors[i].co2_reading > 1000) {
-            co2_sensors_high++;              //No need to move valve but remains in highco2night
+            co2_sensors_high++;                                                              //No need to move valve but remains in highco2night
         }
     }
 
@@ -695,6 +673,8 @@ void high_co2_night_transitions(void) {
     }
     else {
         Serial.print("\nIt is night with high CO2 levels. Remain in highco2night state");
+        fanspeed_tmp = "Medium";                                                            // Set fanspeed to medium for this state
+        set_fanspeed(fanspeed_tmp);
         new_state = "highco2night";
     }
     

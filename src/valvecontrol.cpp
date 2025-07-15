@@ -8,10 +8,6 @@ void move_valve(void) {
     int latchPin = 0;
     int dataPin = 0;
 
-    const char* path = "/json/valvepositions.json";
-    
-    bool status_file_present = 0;
-    
     int valve_number = 0;
     int direction = 0;
     int valve_pos = 0;
@@ -20,13 +16,14 @@ void move_valve(void) {
     int new_valve_position = 0;
     int store_valve_position = 0;
     int check_valve_position = 0;
+
+    const char* path = "/json/valvepositions.json";
+    
+    bool status_file_present = 0;
     
     String json = "";
     String new_valve_positions = "";
-
     JsonDocument doc;
-    
-    File file;
 
     if (valve_control_data_mutex != NULL) {
         if(xSemaphoreTake(valve_control_data_mutex, ( TickType_t ) 10 ) == pdTRUE) {
@@ -78,7 +75,6 @@ void move_valve(void) {
         }
         
         valve_pos = doc["valve"+String(i)];
-
         Serial.print("\nvalve_number: " + String(valve_number) + ", position_change: " + String(valve_position_change) + ", direction: " + direction);
 
         // Assign the correct IO based on valve number
@@ -93,11 +89,11 @@ void move_valve(void) {
             dataPin = dataPin2;
         }
       
+        //Direction 0 is close
+        //Direction 1 is open valve
+        //Position 0 is fully closed
+        //Position 24 is fully open
         if (check_valve_position == 1) {
-            //Direction 0 is close
-            //Direction 1 is open valve
-            //Position 0 is fully closed
-            //Position 24 is fully open
             if(direction == 0 && (valve_pos - valve_position_change) <= 0) {
                 new_valve_position_change = valve_pos;
                 Serial.print ("\nCondition 1. Request move is: " + String(valve_position_change) + ". Current_position is: " + String(valve_pos) + ". Valve will move: " + String(new_valve_position_change) + ". Direction: " + String(direction));
@@ -123,8 +119,11 @@ void move_valve(void) {
                 new_valve_position = valve_pos + new_valve_position_change;
             }
         }
-        else {
+        else if (check_valve_position == 0 && (valve_pos + valve_position_change) <= 24 && valve_pos - valve_position_change >= 0) {
             valvecontrol(direction, valve_position_change, valve_number, dataPin, clockPin, latchPin);
+        }
+        else {
+            Serial.print("\nError in valvecontrol. Position change outside valve range of 0 and 24");
         }
 
         //Storing new valve positions only makes sense in combination with new calculated positions
@@ -232,7 +231,7 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
     }
 
     //Direction is 0 (forwards or close)
-    if (direction == 1) {
+    if (direction == 1 && position_change <= 24) {
         //Loop to run the number of cycles to make one turn * the number of turns to make requested_position_change
         for (j=0; j < (cycles * position_change); j++) {
             //Loop to make one cycle of the four coils in the motor
@@ -250,7 +249,7 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
     }
 
     //Direction is 1 (backwards or open)
-    else {
+    else if (direction == 0 && position_change <= 24) {
         //Loop to run the number of cycles to make one turn * the number of turns to make requested_position_change
         for (j=0; j < (cycles*position_change); j++) {
             //Loop to make one cycle of the four coils in the motor
@@ -264,6 +263,9 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
             }
         }
         all_outputs_off(dataPin, clockPin, latchPin);
+    }
+    else {
+        Serial.print("\nError in valvecontrol. Requested position change is: " + String(position_change) + ". Position change should be between 0 and 24");
     }
 
     // Enable valve moving
@@ -411,20 +413,14 @@ Data structure for each JSON valve_control_data Structure
 
     //finally the valves can be moved but function move_valve() should only be called if sum_move > 0
     if (sum_move > 0 ) {
-        Serial.print("\nValve move sum is > 0 (");
-        Serial.print(sum_move);
-        Serial.print("). Call function to move valves");
+        Serial.print("\nValve move sum is > 0 (" + String(sum_move) + "). Call function to move valves.");
         move_valve();
     }
     else if (sum_move < 0) {
-        Serial.print("\nValve move sum is < 0 (");
-        Serial.print(sum_move);
-        Serial.print("). Error. Don't call function to move valves");
+        Serial.print("\nValve move sum is < 0 (" + String(sum_move) + "). This should not happen. Check your code.");
     }
     else {
-        Serial.print("\nValve move sum is ");
-        Serial.print(sum_move);
-        Serial.print(". Don't call function to move valves");
+        Serial.print("\nValve move sum is " + String(sum_move) + ". No valve movement required. Don't call function to move valves.");
     }
 }
 
