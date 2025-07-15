@@ -303,6 +303,8 @@ void night_transitions(void) {
     String fanspeed_tmp = "";
     String temp_day_of_week = "";
     int temp_hour = 0;
+    int co2_sensor_high = 0;
+    int rh_sensor_high = 0;
     bool valve_move_locked = 0;
     
     // Actions for this sate
@@ -321,7 +323,6 @@ void night_transitions(void) {
         }
     }
 
-    //read fanspeed from config of this state
     if (settings_state_night_mutex != NULL) {
         if(xSemaphoreTake(settings_state_night_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             String temp_fanspeed = settings_state_night[String("state_night_fanspeed")];
@@ -337,7 +338,6 @@ void night_transitions(void) {
         }
     }
 
-    // Disable valve moving when valves are already moving
     if (lock_valve_move_mutex != NULL) {
         if(xSemaphoreTake(lock_valve_move_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
             valve_move_locked = lock_valve_move;
@@ -356,8 +356,6 @@ void night_transitions(void) {
 
     // Conditions to transit to other state
     select_sensors();
-    int co2_sensor_high = 0;
-    int rh_sensor_high = 0;
     
     for (int i = 0; i < co2_sensor_counter; i++) {
         if (co2_sensors[i].co2_reading > 1000) {
@@ -418,10 +416,8 @@ void high_co2_day_transitions(void) {
     bool valve_move_locked = 0;
     bool state_valve_pos_file_present = 0;
 
-    //Local JSON object to hold the state settings
     JsonDocument state_valve_pos_doc;
 
-    // Actions for this state
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             state = statemachine_state;
@@ -437,7 +433,6 @@ void high_co2_day_transitions(void) {
         }
     }
 
-    //read fanspeed from config of this state
     if (settings_state_highco2day_mutex != NULL) {
         if(xSemaphoreTake(settings_state_highco2day_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             String temp_fanspeed = settings_state_highco2day[String("state_highco2day_fanspeed")];
@@ -453,7 +448,6 @@ void high_co2_day_transitions(void) {
         }
     }
 
-    // Disable valve moving when valves are already moving
     if (lock_valve_move_mutex != NULL) {
         if(xSemaphoreTake(lock_valve_move_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
             valve_move_locked = lock_valve_move;
@@ -475,7 +469,7 @@ void high_co2_day_transitions(void) {
                 while(file.available()) {
                     state_valve_pos_str = file.readString();
                 }
-                file.close();    
+                file.close();
             }
             xSemaphoreGive(settings_state_highco2day_mutex);
         }
@@ -503,7 +497,7 @@ void high_co2_day_transitions(void) {
             //Set new valve settings for the room with high CO2 reading
             settings_state_temp[co2_sensors[i].valve + "_position_state_temp"] = 20;
         }
-        if (co2_sensors[i].co2_reading < 700 && co2_sensors[i].valve != "Fan inlet") {
+        if (co2_sensors[i].co2_reading < 900 && co2_sensors[i].valve != "Fan inlet") {
             //Set new valve settings for the room with high CO2 reading
             settings_state_temp[co2_sensors[i].valve + "_position_state_temp"] = 4;
         }
@@ -559,10 +553,9 @@ void high_co2_night_transitions(void) {
     bool valve_move_locked = 0;
     bool state_valve_pos_file_present = 0;
 
-    //Local JSON object to hold the state settings
     JsonDocument state_valve_pos_doc;
     
-    // Actions for this sate
+    // Actions for this state
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             state = statemachine_state;
@@ -578,7 +571,6 @@ void high_co2_night_transitions(void) {
         }
     }
 
-    //read fanspeed from config of this state
     if (settings_state_highco2night_mutex != NULL) {
         if(xSemaphoreTake(settings_state_highco2night_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             String temp_fanspeed = settings_state_highco2night[String("state_highco2night_fanspeed")];
@@ -644,7 +636,7 @@ void high_co2_night_transitions(void) {
             settings_state_temp[co2_sensors[i].valve + "_position_state_temp"] = 4;         //Set new valve settings for the room without high CO2 reading to 4
         }
         if (co2_sensors[i].co2_reading > 1000 && co2_sensors[i].valve != "Fan inlet") {
-            settings_state_temp[co2_sensors[i].valve + "_position_state_temp"] = 24;         //Set new valve settings for the room with high CO2 reading to 24
+            settings_state_temp[co2_sensors[i].valve + "_position_state_temp"] = 20;         //Set new valve settings for the room with high CO2 reading to 24
         }
         if (co2_sensors[i].co2_reading > 1000) {
             co2_sensors_high++;                                                              //No need to move valve but remains in highco2night
@@ -709,7 +701,6 @@ void high_rh_day_transitions(void) {
         }
     }
 
-    //read fanspeed from config of this state
     if (settings_state_highrhday_mutex != NULL) {
         if(xSemaphoreTake(settings_state_highrhday_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             String temp_fanspeed = settings_state_highrhday[String("state_highrhday_fanspeed")];
@@ -725,7 +716,6 @@ void high_rh_day_transitions(void) {
         }
     }
 
-    // Disable valve moving when valves are already moving
     if (lock_valve_move_mutex != NULL) {
         if(xSemaphoreTake(lock_valve_move_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
             valve_move_locked = lock_valve_move;
@@ -736,7 +726,7 @@ void high_rh_day_transitions(void) {
     set_fanspeed(fanspeed_tmp);
 
     new_time = (esp_timer_get_time())/1000000;
-    if (new_time > old_time) {          //Just a case that a reboot happened and old_time is not set
+    if (new_time > old_time) {          //Just in case that a reboot happened and old_time is not set
         elapsed_time += new_time - old_time;
         old_time = new_time;
     }
@@ -797,7 +787,6 @@ void high_rh_night_transitions(void) {
         }
     }
 
-    //read fanspeed from config of this state
     if (settings_state_highrhnight_mutex != NULL) {
         if(xSemaphoreTake(settings_state_highrhnight_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             String temp_fanspeed = settings_state_highrhnight[String("state_highrhnight_fanspeed")];
@@ -813,7 +802,6 @@ void high_rh_night_transitions(void) {
         }
     }
 
-    // Disable valve moving when valves are already moving
     if (lock_valve_move_mutex != NULL) {
         if(xSemaphoreTake(lock_valve_move_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
             valve_move_locked = lock_valve_move;
