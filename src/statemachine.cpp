@@ -211,7 +211,6 @@ void day_transitions(void) {
         }
     }
 
-    //read fanspeed from config of this state
     if (settings_state_day_mutex != NULL) {
         if(xSemaphoreTake(settings_state_day_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             String temp_fanspeed = settings_state_day[String("state_day_fanspeed")];
@@ -220,7 +219,6 @@ void day_transitions(void) {
         }
     }
 
-    //Write fanspeed to global variable
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             fanspeed = fanspeed_tmp;
@@ -228,7 +226,6 @@ void day_transitions(void) {
         }
     }
 
-    // Disable valve moving when valves are already moving
     if (lock_valve_move_mutex != NULL) {
         if(xSemaphoreTake(lock_valve_move_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
             valve_move_locked = lock_valve_move;
@@ -237,6 +234,7 @@ void day_transitions(void) {
     }
 
     set_fanspeed(fanspeed_tmp);
+    select_sensors();
 
     if (valve_move_locked == 0) {
         valve_position_statemachine(statemachine_state);
@@ -244,9 +242,6 @@ void day_transitions(void) {
     else {
         Serial.print("\nValves are locked for moving, will try again later");
     }
-
-    // Conditions to transit to other state
-    select_sensors();
 
     for (int i = 0; i < co2_sensor_counter; i++) {
         if (co2_sensors[i].co2_reading > 1000) {
@@ -516,11 +511,11 @@ void high_co2_day_transitions(void) {
     Serial.print("\nNumber of sensors measure high CO2: " + String(co2_sensors_high) );
     
     // Conditions for transition
-    if (co2_sensors_high > 0 && temp_hour >= 21 && temp_hour < 8 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
+    if (co2_sensors_high > 0 && temp_hour >= 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
         Serial.print("\nIt is before 8, after 21 and a weekday. Transit to high_co2_night.");
         new_state = "highco2night";
     }
-    else if (co2_sensors_high > 0 && temp_hour >= 21 && temp_hour < 9 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday")) {
+    else if (co2_sensors_high > 0 && temp_hour >= 21 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday")) {
         Serial.print("\nIt is after 9, before 21 and weekend. Transit to high_co2_night.");
         new_state = "highco2night";
     }
