@@ -37,10 +37,11 @@ void task_mqtt_code(void * pvParameters) {
 
         //If MQTT connection settings are changed then re-read config file
         if(mqtt_server_str == "" || mqtt_port_tmp == 0) {
-            Serial.print("\nRead MQTT config file");
+            //Serial.print("\nRead MQTT config file");
             read_mqtt_config();
         }
        
+        /*
         Serial.print("\nMQTT connection settings:\t");
         Serial.print(mqtt_enable_str);
         Serial.print("\t");
@@ -49,6 +50,7 @@ void task_mqtt_code(void * pvParameters) {
         Serial.print(mqtt_port_tmp);
         Serial.print("\t");
         Serial.print(mqtt_base_topic_str);
+        */
 
         //Check if MQTT functions can run
         if (WiFi.waitForConnectResult() == WL_CONNECTED && ap_active_temp == 0 && mqtt_enable_str == "On" && mqtt_server_str != "" && mqtt_port_tmp != 0) {
@@ -60,7 +62,7 @@ void task_mqtt_code(void * pvParameters) {
             publish_uptime();
             publish_state();
             publish_fanspeed();
-            Serial.print("\nMQTT update done");
+            //Serial.print("\nMQTT update done");
         }
         else {
             Serial.print("\nNo WIFI connection, MQTT disabled or MQTT settings incomplete");

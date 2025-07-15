@@ -108,10 +108,6 @@ void task_neopixel_code(void * pvParameters) {
             pixel = 1;
             led_red_blink(pixel, brightness);
         }
-
-        //vTaskDelay(500);
-
-     
     }
 
 }  

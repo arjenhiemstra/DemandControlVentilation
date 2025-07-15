@@ -262,8 +262,8 @@ void day_transitions(void) {
         }
     }
 
-    Serial.print("Number of RH sensor with high reading: " + String(rh_sensor_high));
-    Serial.print("Number of CO2 sensor with high reading: " + String(co2_sensor_high));
+    Serial.print("\nNumber of RH sensor with high reading: " + String(rh_sensor_high));
+    Serial.print("\nNumber of CO2 sensor with high reading: " + String(co2_sensor_high));
 
     if (co2_sensor_high > 0) {
         new_state = "highco2day";

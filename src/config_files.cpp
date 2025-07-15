@@ -84,8 +84,8 @@ void read_influxdb_config(void) {
 void read_i2c_config(void) {
 
     const char* path = "/json/settings_i2c.json";
-    String settings_i2c_string = "";
     bool settings_i2c_file_present = 0;
+    String settings_i2c_string = "";
     JsonDocument settings_i2c_doc;
 
     if (settings_i2c_mutex != NULL) {
@@ -105,8 +105,8 @@ void read_i2c_config(void) {
 
     int bus0_multiplexer_addr_tmp = settings_i2c_doc["bus0_multiplexer_address"];
     int bus1_multiplexer_addr_tmp = settings_i2c_doc["bus1_multiplexer_address"];
-    String enable_lcd_str = settings_i2c_doc[String("enable_lcd")];
     int display_i2c_addr_tmp = settings_i2c_doc["display_i2c_address"];
+    String enable_lcd_str = settings_i2c_doc[String("enable_lcd")];
 
     if (settings_i2c_mutex != NULL) {
         if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
@@ -123,8 +123,8 @@ void read_i2c_config(void) {
 void read_mqtt_config(void) {
 
     const char* path = "/json/settings_mqtt.json";
-    String settings_mqtt_string = "";
     bool settings_mqtt_file_present = 0;
+    String settings_mqtt_string = "";
     JsonDocument settings_mqtt_doc;
 
     if (settings_mqtt_mutex != NULL) {
@@ -149,8 +149,6 @@ void read_mqtt_config(void) {
 
     if (settings_mqtt_mutex != NULL) {
         if(xSemaphoreTake(settings_mqtt_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-                          
-            //Assign to global variable
             enable_mqtt = enable_mqtt_tmp;
             mqtt_server = mqtt_server_tmp;
             mqtt_port = mqtt_port_tmp.toInt();
@@ -491,5 +489,3 @@ void write_config_file(const char* path, String file_contents) {
     }
     file.close();
 }
-
-//Read settings files and save contents in global varaibles

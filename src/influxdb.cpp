@@ -49,7 +49,7 @@ void write_sensor_data(void) {
     
         // Check server connection. Only write data when server is available.
         if (client.validateConnection()) {   
-            Serial.print("\nWriting sensor data to influxDB.");
+            //Serial.print("\nWriting sensor data to influxDB.");
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 8; j++) {    
                     if (queue_sensor_data[i][j][0] > 0) {
@@ -146,7 +146,7 @@ void write_avg_sensor_data(void) {
 
     if (xQueuePeek(sensor_avg_queue, &queue_avg_sensor_data, 0) == pdTRUE) {     
         if (client.validateConnection()) {    
-            Serial.print("\nWriting average sensor data to influxDB.");
+            //Serial.print("\nWriting average sensor data to influxDB.");
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 8; j++) {           
                     if (queue_avg_sensor_data[i][j][0] > 0) {
@@ -208,8 +208,8 @@ void write_valve_position_data(void) {
     String influxdb_org_tmp;
     String influxdb_bucket_tmp;
     String influxdb_token_tmp;
-
     String json;
+    
     JsonDocument doc;
     
     if (settings_influxdb_mutex != NULL) {
@@ -240,7 +240,7 @@ void write_valve_position_data(void) {
 
         deserializeJson(doc, json);
 
-        Serial.print("\nWriting valve position data to influxDB.");
+        //Serial.print("\nWriting valve position data to influxDB.");
         for(int i=0;i<12;i++) {
             
             valve_pos_temp = doc["valve"+String(i)];
@@ -293,7 +293,7 @@ void write_system_uptime(void) {
     sensor.clearFields();
     sensor.clearTags();
     sensor.addField("uptime", uptime);
-    Serial.print("\nWriting uptime to influxDB.");
+    //Serial.print("\nWriting uptime to influxDB.");
     if (!client.writePoint(sensor)) {
         Serial.print("\nInfluxDB write failed: ");
         Serial.print(client.getLastErrorMessage());
@@ -375,7 +375,7 @@ void write_state_info(void) {
     sensor.clearFields();
     sensor.clearTags();
     sensor.addField("state", temp_state_nr);
-    Serial.print("\nWriting statemachine state to influxDB.");
+    //Serial.print("\nWriting statemachine state to influxDB.");
     if (!client.writePoint(sensor)) {
         Serial.print("\nInfluxDB write failed: ");
         Serial.print(client.getLastErrorMessage());
@@ -389,6 +389,9 @@ void write_fanspeed(void) {
     String influxdb_org_tmp;
     String influxdb_bucket_tmp;
     String influxdb_token_tmp;
+    String temp_fanspeed;
+    
+    int temp_fanspeed_nr;
     
     if (settings_influxdb_mutex != NULL) {
         if(xSemaphoreTake(settings_influxdb_mutex, ( TickType_t ) 10 ) == pdTRUE) {
@@ -403,9 +406,6 @@ void write_fanspeed(void) {
 
     InfluxDBClient client(influxdb_url_tmp, influxdb_org_tmp, influxdb_bucket_tmp, influxdb_token_tmp);
     Point sensor("Status");
-
-    String temp_fanspeed;
-    int temp_fanspeed_nr;
 
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
@@ -431,7 +431,7 @@ void write_fanspeed(void) {
     sensor.clearFields();
     sensor.clearTags();
     sensor.addField("fanspeed", temp_fanspeed_nr);
-    Serial.print("\nWriting fanspeed state to influxDB.");
+    //Serial.print("\nWriting fanspeed state to influxDB.");
     if (!client.writePoint(sensor)) {
         Serial.print("\nInfluxDB write failed: ");
         Serial.print(client.getLastErrorMessage());
@@ -472,11 +472,10 @@ void write_heap_info(void) {
     Point sensor("System_stats");
     sensor.clearFields();
     sensor.clearTags();
-
     sensor.addField("min_free_heap_size_ever", minimum_ever_free_heap_size);
     sensor.addField("free_heap_size", free_heap_size);
     
-    Serial.print("\nWriting heap info to influxDB.");
+    //Serial.print("\nWriting heap info to influxDB.");
     if (!client.writePoint(sensor)) {
         Serial.print("\nInfluxDB write failed: ");
         Serial.print(client.getLastErrorMessage());

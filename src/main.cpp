@@ -83,10 +83,14 @@ void setup() {
   vTaskDelay(60000);                //Only write to influxDB when all tasks are running
   //start_task_espnow();
   start_task_influxdb();
-
 }
 
 void loop() { }
+
+void init_registers(void) {
+  all_outputs_off(dataPin1, clockPin1, latchPin1);
+  all_outputs_off(dataPin2, clockPin2, latchPin2);
+}
 
 /*
 void setup_wifi() {
@@ -104,9 +108,4 @@ void setup_wifi() {
   vTaskDelay(1000);
 }*/
 
-void init_registers(void) {
-  
-  all_outputs_off(dataPin1, clockPin1, latchPin1);
-  all_outputs_off(dataPin2, clockPin2, latchPin2);
 
-}

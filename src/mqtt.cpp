@@ -3,7 +3,6 @@
 WiFiClient OSventilation;
 PubSubClient client(OSventilation);
 
-
 void publish_sensor_data(void) {
 
     String measurement;
@@ -14,6 +13,7 @@ void publish_sensor_data(void) {
     //For MQTT settings
     char mqtt_server_addr[50];
     int mqtt_port_tmp;
+
     String json;
     String mqtt_enable_str;
     String mqtt_server_str;
@@ -36,7 +36,7 @@ void publish_sensor_data(void) {
 
     mqtt_server_str.toCharArray(mqtt_server_addr,100);
 
-    Serial.print("\nPublish sensor data.");
+    //Serial.print("\nPublish sensor data.");
     if (xQueuePeek(sensor_queue, &queue_sensor_data, 0 ) == pdTRUE) {  
        
         client.setServer(mqtt_server_addr, mqtt_port_tmp);
@@ -106,7 +106,7 @@ void publish_avg_sensor_data(void) {
 
     mqtt_server_str.toCharArray(mqtt_server_addr,100);
 
-    Serial.print("\nPublish average sensor data.");
+    //Serial.print("\nPublish average sensor data.");
     if (xQueuePeek(sensor_avg_queue, &queue_sensor_avg_data, 0 ) == pdTRUE) {  
        
         client.setServer(mqtt_server_addr, mqtt_port_tmp);
@@ -179,7 +179,7 @@ void publish_valve_positions(void) {
         mqtt_base_topic_str = "Change_me_in_settings";
     }
 
-    Serial.print("\nPublish valve positions.");
+    //Serial.print("\nPublish valve positions.");
     client.setServer(mqtt_server_addr, mqtt_port_tmp); 
 
     if (valve_position_file_mutex != NULL) {
@@ -243,7 +243,7 @@ void publish_uptime(void) {
 
     mqtt_server_str.toCharArray(mqtt_server_addr,100);
 
-    Serial.print("\nPublish uptime.");
+    //Serial.print("\nPublish uptime.");
     client.setServer(mqtt_server_addr, mqtt_port_tmp);
     
     if (client.connect("OSventilation")) {
@@ -287,7 +287,7 @@ void publish_fanspeed(void) {
 
     mqtt_server_str.toCharArray(mqtt_server_addr,100);
 
-    Serial.print("\nPublish fan speed.");
+    //Serial.print("\nPublish fan speed.");
     client.setServer(mqtt_server_addr, mqtt_port_tmp);
 
     if (fanspeed_mutex != NULL) {
@@ -344,7 +344,7 @@ void publish_state(void) {
         }
     }
     
-    Serial.print("\nPublish statemachine state.");
+    //Serial.print("\nPublish statemachine state.");
     client.setServer(mqtt_server_addr, mqtt_port_tmp);
 
     if (client.connect("OSventilation")) {
