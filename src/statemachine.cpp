@@ -681,7 +681,7 @@ void high_rh_day_transitions(void) {
     int rh_sensors_high = 0;
     long new_time = 0;
     bool valve_move_locked = 0;
-
+    
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
@@ -772,6 +772,7 @@ void high_rh_night_transitions(void) {
     String fanspeed_tmp = "";
     String temp_day_of_week = "";
     int temp_hour = 0;
+    int rh_sensors_high = 0;
     long new_time = 0;
     bool valve_move_locked = 0;
 
@@ -814,6 +815,7 @@ void high_rh_night_transitions(void) {
     }
 
     set_fanspeed(fanspeed_tmp);
+    select_sensors();
 
     //If the statemachine is till in this state after 30 mins then RH cannot be lowered with ventilation
     //No mutex is required as only statemachine uses this variable
@@ -831,8 +833,15 @@ void high_rh_night_transitions(void) {
         Serial.print("\nValves are locked for moving, will try again later");
     }
 
+    // High RH has been detected to come into this state. Iterate through RH sensors to see which sensor detects high RH. This state does not change valve positions
+    for (int i = 0; i < rh_sensor_counter; i++) {
+        if (rh_sensors[i].rh_reading > 85) {
+            rh_sensors_high++;
+        }
+    }
+
     // Conditions for transition
-    if (statemachine_sensor_data[0][0][1] < 75 || elapsed_time > 1800) {
+    if (rh_sensors_high == 0 || elapsed_time > 1800) {
         Serial.print("\nIt's night and RH is low enough. Transit to night.");
         new_state = "night";
         elapsed_time = 0; // Reset elapsed time after transition
