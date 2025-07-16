@@ -326,7 +326,7 @@ Data structure for each JSON valve_control_data Structure
     int i;
     int sum_move = 0;          //Variable for decision on writing config file (sum>0) or not (sum=0)
 
-    Serial.print("\nState settings selected in valvecontrol: " + statemachine_state);
+    //Serial.print("\nState settings selected in valvecontrol: " + statemachine_state);
   
     //Requested valve positions based on valve position settings files
     if (statemachine_state == "state_temp") {

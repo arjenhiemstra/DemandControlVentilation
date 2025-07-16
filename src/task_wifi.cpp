@@ -29,7 +29,7 @@ void task_wifi_code(void * pvParameters) {
         Serial.print(WiFi.subnetMask());
         Serial.print(", Gateway IP: ");
         Serial.print(WiFi.gatewayIP());
-        Serial.print(", Primary DNS: ");
+        Serial.print("\nPrimary DNS: ");
         Serial.print(WiFi.dnsIP(0));
         Serial.print(", Secondary DNS: ");
         Serial.print(WiFi.dnsIP(1));

@@ -1168,7 +1168,7 @@ void select_sensors(void) {
     }
 
     //Copy sensor readings from global
-    xQueuePeek(sensor_queue, &sensor_data, 0 );
+    xQueuePeek(sensor_avg_queue, &sensor_data, 0);
 
     //Count how many CO2 and RH sensors are enabled for CO2 control
     for (int i = 0; i < 8; i++) {
@@ -1196,7 +1196,7 @@ void select_sensors(void) {
     }
 
     Serial.print("\nco2_sensor_counter: " + String(co2_sensor_counter));
-    Serial.print("\t\t\trh_sensor_counter: " + String(rh_sensor_counter));
+    Serial.print("\nrh_sensor_counter: " + String(rh_sensor_counter));
 
     for (int i = 0; i < 8; i++) {
         if (sensor_config_file_mutex != NULL) {

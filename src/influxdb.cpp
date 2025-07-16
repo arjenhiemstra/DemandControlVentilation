@@ -461,12 +461,10 @@ void write_heap_info(void) {
     }
 
     free_heap_size = xPortGetFreeHeapSize();
-    Serial.print("\nFree heap size: ");
-    Serial.print(free_heap_size);
+    //Serial.print("\nFree heap size: " + String(free_heap_size));
 
     minimum_ever_free_heap_size = xPortGetMinimumEverFreeHeapSize();
-    Serial.print("\nMinimum ever free heap size: ");
-    Serial.print(minimum_ever_free_heap_size);
+    //Serial.print("\nMinimum ever free heap size: " + String(minimum_ever_free_heap_size));
 
     InfluxDBClient client(influxdb_url_tmp, influxdb_org_tmp, influxdb_bucket_tmp, influxdb_token_tmp);
     Point sensor("System_stats");
