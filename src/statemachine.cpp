@@ -660,8 +660,6 @@ void high_co2_night_transitions(void) {
     }
     else {
         Serial.print("\nIt is night with high CO2 levels. Remain in highco2night state");
-        fanspeed_tmp = "Medium";                                                            // Set fanspeed to medium for this state
-        set_fanspeed(fanspeed_tmp);
         new_state = "highco2night";
     }
     
@@ -738,7 +736,7 @@ void high_rh_day_transitions(void) {
 
     // High RH has been detected to come into this state. Iterate through RH sensors to see which sensor detects high RH. This state does not change valve positions
     for (int i = 0; i < rh_sensor_counter; i++) {
-        if (rh_sensors[i].rh_reading > 85) {
+        if (rh_sensors[i].rh_reading > 75) {
             rh_sensors_high++;
         }
     }
