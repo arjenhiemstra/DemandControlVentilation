@@ -34,6 +34,7 @@ void task_influxdb_code(void * pvParameters)
 
         if (WiFi.waitForConnectResult() == WL_CONNECTED && ap_active_temp == 0 && enable_influxdb_tmp == "On") {
             Serial.print("\nWriting to InfluxDB...");
+            WebSerial.print("\nWriting to InfluxDB...");
             write_sensor_data();
             write_avg_sensor_data();
             write_valve_position_data();

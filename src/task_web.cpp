@@ -1444,5 +1444,6 @@ void Taskwebcode(void *pvParameters) {
 
 	// Start server
 	server.begin();
+	WebSerial.begin(&server);
 	vTaskDelete(NULL);
 }
