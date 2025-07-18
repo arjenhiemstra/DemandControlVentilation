@@ -8,7 +8,6 @@
 #include <AsyncTCP.h>
 #include <LittleFS.h>
 #include <ArduinoJson.h>
-#include <WebSerial.h>
 
 #include "valvecontrol.h"
 #include "config_files.h"

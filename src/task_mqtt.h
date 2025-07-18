@@ -4,13 +4,11 @@
 #include <Arduino.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
-#include <WebSerial.h>
 
 #include "mqtt.h"
 
 // function declarations
 void start_task_mqtt(void);
 void task_mqtt_code(void * pvParameters);
-
 
 #endif

@@ -6,7 +6,6 @@
 #include <freertos/task.h>
 #include <InfluxDbClient.h>
 #include <ArduinoJson.h>
-#include <WebSerial.h>
 
 #include "globals.h"
 #include "config_files.h"
