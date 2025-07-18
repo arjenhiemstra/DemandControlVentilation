@@ -1,12 +1,12 @@
 # Open source demand control ventilation system #
 ## Introduction
-This project is intended as a replacement of the Itho demandflow controller. The reason that this project was started because my controller at home was behaving strange, the transformer and fuse failed and it is expensive to replace. With modern microcontrollers it should be relatively easy to make a controller for such a system. This project is inspired by the orignal Itho controller but not intended to be an exact copy of the Itho controller. 
+This project is intended as a replacement of the Itho Demandflow controller. The reason that this project was started because my controller at home was behaving strange, the transformer and fuse failed and it is expensive to replace. With modern microcontrollers it should be relatively easy to make a controller for such a system. This project is inspired by the orignal Itho controller but not an exact copy of the Itho controller. Compared to the Itho controller, this design provides full transparancy on what it exactly does. 
 
 The basis for this design is:
-* Speed of Itho fan can be controlled by either MQTT or HTTP API with settings Low, Medium and High 
-* The controller has 12 channels for 12 Itho valves of type DemandFlow Klep (545-7100). The interface is identical.
+* Speed of Itho fan can be controlled by either MQTT or HTTP API with settings Low, Medium and High. See https://www.nrgwatch.nl/
+* The controller has 12 channels for 12 Itho valves of type DemandFlow Klep (545-7100). No changes required to the default connection on the valve.
 * This controller can be a 1:1 replacement
-* The system must be modular, e.g. it is not required to add the display, a different RTC could be used, the number of sensors can be 
+* The system must be modular, e.g. it is not required to add the display, a different RTC could be used, the number of sensors can be adjusted to the application
 * The software must be open source
 * The hardware must be open source
 
@@ -23,15 +23,17 @@ The hardware design is based on common electronic parts. The basis of the design
 * Use of two I2C busses, Wire and Wire1:
     * Wire: Bus 0 sensors and LCD
     * Wire1: Bus1 sensors and RTC
+* Commonly used sensors; DHT20, SCD40/41, etc.
 * Connection to sensors through I2C multiplexer (TCA...) enabling the use of I2C sensors with fixed I2C addresses
-* Addressable RGB LEDs for status
+* 2 Addressable RGB LEDs for status and fandspeed
+* 2 Configurable pushbuttons, one is standard allocated to tuen on the LCD
 * Accurate RTC with battery backup because most actions are time based
-* Single 15V power supply with on-board 3.3V and 5V convertors (1A capacity each)
+* Single 15V power supply with on-board (non-isolating) 3.3V and 5V convertors (1A capacity each)
 * Operation of sensors on 5V or 3.3V. Data communication always on 3.3V
 * MOSFET output drivers for low on state resistance. Alternatively ULN2803 could used as well (pin compatible)
 
 ### Valve control design
-The valves are steppermotors with 4 windings and two windings have a common connection. The stepper motor made by Saia of type UCD2EZ7. The common connection is connected to +15V and the 4 other winding connections are connected with a MOSFET. By turning on the MOSFET, the windings can be individually energised. The winding voltage is 12V and taking a voltage drop over de MOSFET into account, 15V is an appropriate voltage. The circuit of one valve is outlined below. 
+The valves are stepper motors with 4 windings and two windings have a common connection. The stepper motor made by Saia of type UCD2EZ7. The common connection is connected to +15V and the 4 other winding connections are connected with a MOSFET. By turning on the MOSFET, the windings can be individually energised. The winding voltage is 12V and taking a voltage drop over de MOSFET into account, 15V is an appropriate voltage. The circuit of one valve is outlined below. 
 
 <center><img src="images/valve_control_circuit.png" width="50%" height="50%"></center>
 
@@ -43,9 +45,9 @@ The ESP32 has two circuits to control 2 sets of 3 74595 IC's. Three 74595 can co
 
 The controller used both default I2C busses (Wire, Wire1) on custom pins on the EP32(-S3). On controller bus0 is connected to Wire and bus1 is connected to Wire1. Because most sensors have fixed I2C addresses, an multiplexer is required to connect more than one sensor to the same I2C bus. The multiplexer is a TCA9548A, a very common I2C multiplexer. The RTC is connected to bus 0 (Wire) and the LCD to bus1 (Wire1). The multiplexer, LCD and RTC have an adjustable I2C address so this configuration should never lead to an address conflict for devices on the I2C bus.
 
-To set the I2C address of the multiplexers, 6 resistor pad (R./R./R./R./R/R. for bus 0 and R./R./R./R./R/R. for bus 1) are available to solder 0Ohm 0805 size resistors on (or a wire). Refer to the datasheet of the multiplexer: https://www.ti.com/lit/ds/symlink/tca9548a.pdf. Default is is that the A0,A1,A2 are connected to GND which gives the I2C address of 0x70. This is at the moment hardcoded in the software (globals.h).
+To set the I2C address of the multiplexers, 6 resistor pads (R52/R53/R54/R55/R56/R57 for bus 0 and R58/R59/R60/R61/R62/R63. for bus 1) are available to solder 0 Ohm 0805 size resistors on (or a wire). Refer to the datasheet of the multiplexer: https://www.ti.com/lit/ds/symlink/tca9548a.pdf. Default is is that the A0,A1,A2 are connected to GND which gives the I2C address of 0x70. The multiplexer address can be set in the settings page. Remember to convert the hex address to a decimal number, e.g. default 0x70 address is 112 decimal.
 
-Most sensors and other I2C devices have internal pull-up resistors but if this is not the case, the controller has the option to install the pull-up resistors to SDA and SCL. The multiplexer allow also the use of sensors on +5V and 3.3V. The selection is done with a jumper on the controller. There are 4 voltage selection jumpers on the controller and each jumper control the voltage 4 sensors, e.g. bus0, sensors 0,1,2,3.
+Most sensors and other I2C devices have internal pull-up resistors but if this is not the case, the controller PCB has the option to install  pull-up resistors to SDA and SCL for each sensor. The multiplexer allow also the use of sensors on +5V and 3.3V. The selection is done with a jumper on the controller. There are 4 voltage selection jumpers on the controller and each jumper control the voltage 4 sensors, e.g. bus0, sensors 0,1,2,3, bus0 sensors 4,5,6,7, bus1 sensors 0,1,2,3 and bus1 sensors 4,5,6,7.
 
 ### Hardware options
 
@@ -215,8 +217,38 @@ Measurement and fields:
     * valve11
 
 ## Comissioning and initial startup
+The controller will be delivered with the latest software installed. To update the software you can clone the github repo, compile the softwares (use vscode with platformIO), build and flash the filesystem image and then upload the compiled firmware. 
 
-To be addded...
+### Step 1 - Configure WIFI
+The controller will not come with WIFI credentials and therefore start as access point. Connect to this access point, SSID is OSVentilation and a password is not required. Go to the "Settings" page and fill in the SSID and password of you WIFI access point. Push the "ESP restart" button on the same page to reboot the controller.
+
+### Step 2 - Configure I2C
+Go the the settings page to the I2C configuration. The default I2C multiplexer is set to 112. If no changes are made to the resistors to set a different address no changes are required.
+
+### Step 3 - Configure sensors
+Go to the "Sensors" page and configure the sensors. The sensors page has for each sensor connected to bus 0 or bus 1 5 possible settings. Set the type of sensor, e.g. DHT20, the Sensor Location (at which valve is the sensor installed), the Room name (logical description of which room the sensor is measuring) and RH on on or off and CO2 on or off. The On/Off settings configure is a sensor participates in the statemachine to detect high RH or hih CO2. Go back to the home page to check if sensors are read properly.
+
+Note that is with the Sensor Location setting ther is the options to set a sensor at the Fan inlet. This sensor measures the overall CO2/RH levels and if only this sensor is installed there is no individual control of valves per room. Ideally every bedroom has an CO2 sensor while every "wet" room such as bathroom or kitchen has an sensor which can measure at least RH.
+
+### Step 4 - Fan control
+The fan is not controlled directly by the controller. In case of an Itho fan, external control is only with the Itho remote control. To get control over de fan an additional PCB is required, the "Itho CVE WiFi add-on" which can be bought here: https://www.nrgwatch.nl/ Other brands of fans may have a different way of setting the fan speed.
+
+The controller offer two methods of controlling the speed (based on usage of "Itho CVE WiFi add-on"):
+* HTTP API version 1
+* MQTT Publish
+
+Select in the dropdown button either the HTTP API option or the MQTT option. Fill in the other field to complete the configuration and save the configuration. If his section is not configured, the controller will work but with limited functionalty as adjusting the fan speed is required to control for example the CO2 levels or high RH levels.
+
+### Step 5 - Enable display (Optional)
+Set enable display to "On" if the unit is supplied with an display or if you have added a display later on. Note that the software assumes a 4x20 LCD display and the display address is fixed in the software. Differnt display may work but software changes may be required.
+
+### Step 6 - Configure MQTT (Optional)
+By default MQTT is not enabled. To enable MQTT, got to the settings page and set Enable MQQT to On, fill in the MQTT server IP address, MQTT server port (default 1883) and set the MQTT base topic. Save the settings
+
+### Step 7 - Configure InfluxDB (Optional)
+By default writing measurments to InfluxDB is not enabled. Writing to InfluxDB can be configured in the settings page. Fill in also 
+
+
 
 
 
