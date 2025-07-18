@@ -1295,7 +1295,7 @@ void select_sensors(void) {
             Serial.print(co2_sensors[j].co2_reading);
             j++;
         }
-        String rh_sensor_wire = wire_sensor_data["wire_sensor"+String(i)]["rh"];
+        
         if (rh_sensor_wire == "On") {
             if (sensor_config_file_mutex != NULL) {
                 if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
@@ -1313,7 +1313,7 @@ void select_sensors(void) {
             Serial.print(rh_sensors[k].rh_reading);
             j++;
         }
-        String rh_sensor_wire1 = wire1_sensor_data["wire1_sensor"+String(i)]["rh"];
+        
         if (rh_sensor_wire1 == "On") {
             if (sensor_config_file_mutex != NULL) {
                 if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
