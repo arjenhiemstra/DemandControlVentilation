@@ -1217,7 +1217,7 @@ void select_sensors(void) {
     xQueuePeek(sensor_avg_queue, &sensor_data, 0);
 
     //Count how many CO2 and RH sensors are enabled for CO2 control
-    for (int i = 0; i < 8; i++) {
+    /*for (int i = 0; i < 16; i++) {
         if (sensor_config_file_mutex != NULL) {
             if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
                 String co2_sensor_wire = wire_sensor_data["wire_sensor"+String(i)]["co2"];
@@ -1239,12 +1239,12 @@ void select_sensors(void) {
                 xSemaphoreGive(sensor_config_file_mutex);
             }
         }
-    }
+    }*/
 
     Serial.print("\nco2_sensor_counter: " + String(co2_sensor_counter));
     Serial.print("\nrh_sensor_counter: " + String(rh_sensor_counter));
 
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 16; i++) {
         if (sensor_config_file_mutex != NULL) {
             if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
                 String co2_sensor_wire_temp = wire_sensor_data["wire_sensor"+String(i)]["co2"];
@@ -1311,7 +1311,7 @@ void select_sensors(void) {
             Serial.print(rh_sensors[k].valve);
             Serial.print("\t\t\tRH reading: ");
             Serial.print(rh_sensors[k].rh_reading);
-            j++;
+            k++;
         }
         
         if (rh_sensor_wire1 == "On") {
@@ -1329,7 +1329,7 @@ void select_sensors(void) {
             Serial.print(rh_sensors[k].valve);
             Serial.print("\t\t\tRH reading: ");
             Serial.print(rh_sensors[k].rh_reading);
-            j++;
+            k++;
         }
     }
     co2_sensor_counter = j;
