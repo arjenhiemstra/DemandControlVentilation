@@ -1443,6 +1443,7 @@ void Taskwebcode(void *pvParameters) {
 	});
 
 	// Start server
+	webSerial.begin(&server);
 	server.begin();
 	vTaskDelete(NULL);
 }

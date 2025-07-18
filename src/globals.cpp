@@ -41,6 +41,8 @@ SemaphoreHandle_t settings_state_temp_mutex = NULL;             // Temp state se
 QueueHandle_t sensor_queue;                                     // Handle for sensor queue data
 QueueHandle_t sensor_avg_queue;                                 // Handle for sensor queue data
 
+WebSerial webSerial;
+
 JsonDocument valve_control_data;                                // Global for valve control data
 JsonDocument wire_sensor_data;                                  // Global for bus0 sensor configuration
 JsonDocument wire1_sensor_data;                                 // Global for bus1 sensor configuration

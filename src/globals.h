@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <RTClib.h>
+#include <MycilaWebSerial.h>
 
 #define I2C_SCL1 38                                                 // Wire I/O settings (SDA1/SCL1) and 
 #define I2C_SDA1 39
@@ -56,6 +57,8 @@ extern SemaphoreHandle_t settings_state_temp_mutex;
 
 extern QueueHandle_t sensor_queue;
 extern QueueHandle_t sensor_avg_queue;
+
+extern WebSerial webSerial;
 
 extern JsonDocument valve_control_data;
 extern JsonDocument wire_sensor_data;
