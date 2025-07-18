@@ -225,6 +225,7 @@ void publish_uptime(void) {
     String mqtt_enable_str;
     String mqtt_server_str;
     String mqtt_base_topic_str;
+    String uptime_str;
 
     if (settings_mqtt_mutex != NULL) {
         if(xSemaphoreTake(settings_mqtt_mutex, ( TickType_t ) 10 ) == pdTRUE) {
@@ -248,7 +249,9 @@ void publish_uptime(void) {
     
     if (client.connect("OSventilation")) {
         (mqtt_base_topic_str + "/system/uptime").toCharArray(topic,100);
-        (uptime_formatter::getUptime()).toCharArray(uptime,200);
+        uptime_str = String(esp_timer_get_time()/1000000/60) + " minutes";                   //in minutes
+        uptime_str.toCharArray(uptime,200);
+        //(uptime_formatter::getUptime()).toCharArray(uptime,200);
         client.publish(topic,uptime);
     }
     else {
