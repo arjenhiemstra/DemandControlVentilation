@@ -533,6 +533,7 @@ void high_co2_day_transitions(void) {
     else if (co2_sensors_high == 0 && elapsed_time > 600) {
         Serial.print("\nIt is day, no high co2 levels. Transit to day.");
         new_state = "day";
+        elapsed_time = 0;
     }
     else {
         Serial.print("\nIt is day with high CO2 levels. Remain in highco2day state");
@@ -671,6 +672,7 @@ void high_co2_night_transitions(void) {
     if (co2_sensors_high == 0 && elapsed_time > 600) {
         Serial.print("\nIt is night, no high co2 levels. Transit to night.");
         new_state = "night";
+        elapsed_time = 0;
     }
     else if (co2_sensors_high > 0 && temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
         Serial.print("\nIt is after 8, before 21 and a weekday. Transit to high_co2_day.");
