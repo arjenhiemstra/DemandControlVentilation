@@ -426,7 +426,7 @@ void high_co2_day_transitions(void) {
     if (date_time_mutex != NULL) {
         if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             temp_hour = hourStr.toInt();
-            temp_day_of_week = dayOfWeek.toInt();
+            temp_day_of_week = dayOfWeek;
             xSemaphoreGive(date_time_mutex);
         }
     }
@@ -461,8 +461,7 @@ void high_co2_day_transitions(void) {
         elapsed_time += new_time - old_time;
         old_time = new_time;
     }
-    Serial.print("\nElapsed time in high_co2_day state: " + String(elapsed_time) + " seconds");
-
+    
     //Temp valve settings for individual valves starting with default settings for this state. Should read these from file and not hardcode them
     state_valve_pos_path = ("/json/settings_state_" + statemachine_state + ".json");
     state_valve_pos_file_present = check_file_exists(state_valve_pos_path.c_str());
@@ -512,6 +511,7 @@ void high_co2_day_transitions(void) {
         }
     }
 
+    Serial.print("\nElapsed time in " + statemachine_state + "state: " + String(elapsed_time) + " seconds");
     Serial.print("\nNumber of sensors measure high CO2: " + String(co2_sensors_high) );
 
     if (valve_move_locked == 0) {    
@@ -573,7 +573,7 @@ void high_co2_night_transitions(void) {
     if (date_time_mutex != NULL) {
         if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             temp_hour = hourStr.toInt();
-            temp_day_of_week = dayOfWeek.toInt();
+            temp_day_of_week = dayOfWeek;
             xSemaphoreGive(date_time_mutex);
         }
     }
@@ -609,7 +609,6 @@ void high_co2_night_transitions(void) {
         elapsed_time += new_time - old_time;
         old_time = new_time;
     }
-    Serial.print("\nElapsed time in high_co2_night state: " + String(elapsed_time) + " seconds");
 
     //Temp valve settings for individual valves starting with default settings for this state. Should read these from file and not hardcode them
     state_valve_pos_path = ("/json/settings_state_" + statemachine_state + ".json");
@@ -658,6 +657,7 @@ void high_co2_night_transitions(void) {
         }
     }
 
+    Serial.print("\nElapsed time in " + statemachine_state + "state: " + String(elapsed_time) + " seconds");
     Serial.print("\nNumber of sensors measure high CO2: " + String(co2_sensors_high) );
 
     if (valve_move_locked == 0) {    
@@ -747,7 +747,6 @@ void high_rh_day_transitions(void) {
         elapsed_time += new_time - old_time;
         old_time = new_time;
     }
-    Serial.print("\nElapsed time in high_rh_night state: " + String(elapsed_time) + " seconds");
     
     if (valve_move_locked == 0) {
         valve_position_statemachine(statemachine_state);
@@ -763,6 +762,9 @@ void high_rh_day_transitions(void) {
             Serial.print("\nSensor" + String(i) + " which is located at " + String(rh_sensors[i].valve) + " has high RH reading.");
         }
     }
+
+    Serial.print("\nNumber of sensors measure high RH: " + String(rh_sensors_high) );
+    Serial.print("\nElapsed time in " + statemachine_state + "state: " + String(elapsed_time) + " seconds");
 
     // Conditions for transition
     if (rh_sensors_high == 0 && elapsed_time > 600 || elapsed_time > 1800) {
@@ -845,8 +847,7 @@ void high_rh_night_transitions(void) {
         elapsed_time += new_time - old_time;
         old_time = new_time;
     }
-    Serial.print("\nElapsed time in high_rh_night state: " + String(elapsed_time) + " seconds");
-
+    
     if (valve_move_locked == 0) {
         valve_position_statemachine(statemachine_state);
     }
@@ -861,6 +862,9 @@ void high_rh_night_transitions(void) {
             Serial.print("\nSensor" + String(i) + " which is located at " + String(rh_sensors[i].valve) + " has high RH reading.");
         }
     }
+
+    Serial.print("\nElapsed time in " + statemachine_state + "state: " + String(elapsed_time) + " seconds");
+    Serial.print("\nNumber of sensors measure high RH: " + String(rh_sensors_high) );
 
     // Conditions for transition
     if (rh_sensors_high == 0 && elapsed_time > 600 || elapsed_time > 1800) {
@@ -1232,34 +1236,6 @@ void select_sensors(void) {
     //Copy sensor readings from global
     xQueuePeek(sensor_avg_queue, &sensor_data, 0);
 
-    //Count how many CO2 and RH sensors are enabled for CO2 control
-    /*for (int i = 0; i < 16; i++) {
-        if (sensor_config_file_mutex != NULL) {
-            if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-                String co2_sensor_wire = wire_sensor_data["wire_sensor"+String(i)]["co2"];
-                String co2_sensor_wire1 = wire1_sensor_data["wire1_sensor"+String(i)]["co2"];
-                String rh_sensor_wire = wire_sensor_data["wire_sensor"+String(i)]["rh"];
-                String rh_sensor_wire1 = wire1_sensor_data["wire1_sensor"+String(i)]["rh"];
-                if (co2_sensor_wire == "On") {
-                    co2_sensor_counter++;
-                }
-                if (co2_sensor_wire1 == "On") {
-                    co2_sensor_counter++;
-                }
-                if (rh_sensor_wire == "On") {
-                    rh_sensor_counter++;
-                }
-                if (rh_sensor_wire1 == "On") {
-                    rh_sensor_counter++;
-                }
-                xSemaphoreGive(sensor_config_file_mutex);
-            }
-        }
-    }*/
-
-    Serial.print("\nco2_sensor_counter: " + String(co2_sensor_counter));
-    Serial.print("\nrh_sensor_counter: " + String(rh_sensor_counter));
-
     for (int i = 0; i < 16; i++) {
         if (sensor_config_file_mutex != NULL) {
             if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
@@ -1348,6 +1324,10 @@ void select_sensors(void) {
             k++;
         }
     }
+
+    Serial.print("\nco2_sensor_counter: " + String(co2_sensor_counter));
+    Serial.print("\nrh_sensor_counter: " + String(rh_sensor_counter));
+
     co2_sensor_counter = j;
     rh_sensor_counter = k;
 }

@@ -309,9 +309,9 @@ Data structure for each JSON valve_control_data Structure
 }
 */
     
-    String state_valve_pos_path;            //Must be String and not const char* because it is changed by the statemechine!!!
-    String state_valve_pos_str;
-    String actual_valve_pos_json;
+    String state_valve_pos_path = "";            //Must be String and not const char* because it is changed by the statemechine!!!
+    String state_valve_pos_str = "";
+    String actual_valve_pos_json = "";
 
     JsonDocument state_valve_pos_doc;
     JsonDocument actual_valve_pos_doc;
