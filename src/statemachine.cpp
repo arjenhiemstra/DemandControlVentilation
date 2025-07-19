@@ -410,6 +410,7 @@ void high_co2_day_transitions(void) {
     String state_valve_pos_str = "";
     int temp_hour = 0;
     int co2_sensors_high = 0;
+    long new_time = 0;
     bool valve_move_locked = 0;
     bool state_valve_pos_file_present = 0;
 
@@ -454,6 +455,13 @@ void high_co2_day_transitions(void) {
 
     set_fanspeed(fanspeed_tmp);
     select_sensors();
+
+    new_time = (esp_timer_get_time())/1000000;
+    if (new_time > old_time) {          //Just in case that a reboot happened and old_time is not set
+        elapsed_time += new_time - old_time;
+        old_time = new_time;
+    }
+    Serial.print("\nElapsed time in high_co2_day state: " + String(elapsed_time) + " seconds");
 
     //Temp valve settings for individual valves starting with default settings for this state. Should read these from file and not hardcode them
     state_valve_pos_path = ("/json/settings_state_" + statemachine_state + ".json");
@@ -522,7 +530,7 @@ void high_co2_day_transitions(void) {
         Serial.print("\nIt is after 9, before 21 and weekend. Transit to high_co2_night.");
         new_state = "highco2night";
     }
-    else if (co2_sensors_high == 0) {
+    else if (co2_sensors_high == 0 && elapsed_time > 600) {
         Serial.print("\nIt is day, no high co2 levels. Transit to day.");
         new_state = "day";
     }
@@ -548,6 +556,7 @@ void high_co2_night_transitions(void) {
     String state_valve_pos_str = "";
     int temp_hour = 0;
     int co2_sensors_high = 0;
+    long new_time = 0;
     bool valve_move_locked = 0;
     bool state_valve_pos_file_present = 0;
 
@@ -594,6 +603,13 @@ void high_co2_night_transitions(void) {
 
     set_fanspeed(fanspeed_tmp);
     select_sensors();
+
+    new_time = (esp_timer_get_time())/1000000;
+    if (new_time > old_time) {          //Just in case that a reboot happened and old_time is not set
+        elapsed_time += new_time - old_time;
+        old_time = new_time;
+    }
+    Serial.print("\nElapsed time in high_co2_night state: " + String(elapsed_time) + " seconds");
 
     //Temp valve settings for individual valves starting with default settings for this state. Should read these from file and not hardcode them
     state_valve_pos_path = ("/json/settings_state_" + statemachine_state + ".json");
@@ -652,7 +668,7 @@ void high_co2_night_transitions(void) {
     }
     
     // Conditions for transition
-    if (co2_sensors_high == 0) {
+    if (co2_sensors_high == 0 && elapsed_time > 600) {
         Serial.print("\nIt is night, no high co2 levels. Transit to night.");
         new_state = "night";
     }
@@ -749,7 +765,7 @@ void high_rh_day_transitions(void) {
     }
 
     // Conditions for transition
-    if (rh_sensors_high == 0 || elapsed_time > 1800) {
+    if (rh_sensors_high == 0 && elapsed_time > 600 || elapsed_time > 1800) {
         Serial.print("\nIt's day with no high RH or time expired. Transit to day");
         new_state = "day";
         elapsed_time = 0; // Reset elapsed time after transition
@@ -847,7 +863,7 @@ void high_rh_night_transitions(void) {
     }
 
     // Conditions for transition
-    if (rh_sensors_high == 0 || elapsed_time > 1800) {
+    if (rh_sensors_high == 0 && elapsed_time > 600 || elapsed_time > 1800) {
         Serial.print("\nIt's night and RH is low enough. Transit to night.");
         new_state = "night";
         elapsed_time = 0; // Reset elapsed time after transition
