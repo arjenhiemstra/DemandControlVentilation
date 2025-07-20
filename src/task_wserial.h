@@ -6,7 +6,7 @@
 #include <freertos/task.h>
 #include <ESPAsyncWebServer.h>
 #include <AsyncTCP.h>
-#include <WebSerial.h>
+#include <MycilaWebSerial.h>
 
 //Other includes
 #include "globals.h"
