@@ -62,9 +62,13 @@ void task_mqtt_code(void * pvParameters) {
             
             //sprintf(txBuffer, "Update MQTT....");
             strcpy(txBuffer, "Update MQTT....");
-            //if(webserial_queue != 0) {
+
+            Serial.print("\nNumber of messages in queue waiting: " + String(uxQueueMessagesWaiting(webserial_queue)));
+            
+            if(webserial_queue != 0) {
                 xQueueSend(webserial_queue, txBuffer, 10);
-            //}
+            }
+            
             Serial.print("\nNumber of messages in queue waiting: " + String(uxQueueMessagesWaiting(webserial_queue)));
             
             read_mqtt_config();
