@@ -314,7 +314,7 @@ void night_transitions(void) {
     if (date_time_mutex != NULL) {
         if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             temp_hour = hourStr.toInt();
-            temp_day_of_week = dayOfWeek.toInt();
+            temp_day_of_week = dayOfWeek;
             xSemaphoreGive(date_time_mutex);
         }
     }
@@ -812,7 +812,7 @@ void high_rh_night_transitions(void) {
     if (date_time_mutex != NULL) {
         if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             temp_hour = hourStr.toInt();
-            temp_day_of_week = dayOfWeek.toInt();
+            temp_day_of_week = dayOfWeek;
             xSemaphoreGive(date_time_mutex);
         }
     }

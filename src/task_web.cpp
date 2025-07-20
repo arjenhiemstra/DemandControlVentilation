@@ -1,7 +1,7 @@
 #include "task_web.h"
 
 // Create AsyncWebServer object on port 80
-AsyncWebServer server(80);
+//AsyncWebServer server(80);
 
 //Variables for valvecontrol page
 const char* VALVE0_POSITION_MOVE = "valve0_position_move";
@@ -1443,7 +1443,13 @@ void Taskwebcode(void *pvParameters) {
 	});
 
 	// Start server
-	webSerial.begin(&server);
+	WebSerial.begin(&server);
 	server.begin();
-	vTaskDelete(NULL);
+	//vTaskDelete(NULL);
+
+	for(;;) { 
+		Serial.print("\nWebSerial task running...");
+        WebSerial.println("Message from task_wserial!");
+        vTaskDelay(10000);
+    } 
 }

@@ -10,6 +10,7 @@ TaskHandle_t task_valvectrl;
 TaskHandle_t h_Task_web;
 TaskHandle_t task_wifi;
 TaskHandle_t task_espnow;
+TaskHandle_t task_wserial;
 
 SemaphoreHandle_t sensor_config_file_mutex = NULL;              // Sensor configuration files
 SemaphoreHandle_t valve_position_file_mutex = NULL;             // Valve position file
@@ -41,7 +42,7 @@ SemaphoreHandle_t settings_state_temp_mutex = NULL;             // Temp state se
 QueueHandle_t sensor_queue;                                     // Handle for sensor queue data
 QueueHandle_t sensor_avg_queue;                                 // Handle for sensor queue data
 
-WebSerial webSerial;
+AsyncWebServer server(80);
 
 JsonDocument valve_control_data;                                // Global for valve control data
 JsonDocument wire_sensor_data;                                  // Global for bus0 sensor configuration

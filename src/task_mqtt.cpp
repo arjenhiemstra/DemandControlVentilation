@@ -55,7 +55,6 @@ void task_mqtt_code(void * pvParameters) {
         //Check if MQTT functions can run
         if (WiFi.waitForConnectResult() == WL_CONNECTED && ap_active_temp == 0 && mqtt_enable_str == "On" && mqtt_server_str != "" && mqtt_port_tmp != 0) {
             Serial.print("\nUpdate MQTT....");
-            webSerial.print("\nUpdate MQTT....");
             read_mqtt_config();
             publish_sensor_data();
             publish_avg_sensor_data();

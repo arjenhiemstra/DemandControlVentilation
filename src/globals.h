@@ -4,7 +4,8 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <RTClib.h>
-#include <MycilaWebSerial.h>
+#include <ESPAsyncWebServer.h>
+#include <AsyncTCP.h>
 
 #define I2C_SCL1 38                                                 // Wire I/O settings (SDA1/SCL1) and 
 #define I2C_SDA1 39
@@ -27,6 +28,7 @@ extern TaskHandle_t task_valvectrl;
 extern TaskHandle_t h_Task_web;
 extern TaskHandle_t task_wifi;
 extern TaskHandle_t task_espnow;
+extern TaskHandle_t task_wserial;
 
 extern SemaphoreHandle_t sensor_config_file_mutex;
 extern SemaphoreHandle_t valve_position_file_mutex;
@@ -58,7 +60,7 @@ extern SemaphoreHandle_t settings_state_temp_mutex;
 extern QueueHandle_t sensor_queue;
 extern QueueHandle_t sensor_avg_queue;
 
-extern WebSerial webSerial;
+extern AsyncWebServer server;
 
 extern JsonDocument valve_control_data;
 extern JsonDocument wire_sensor_data;

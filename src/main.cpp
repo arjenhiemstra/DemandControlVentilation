@@ -78,7 +78,8 @@ void setup() {
   start_task_statemachine();
   start_task_mqtt();
   start_task_neopixel();
-  start_task_system();
+  //start_task_system();
+  //start_task_wserial();
   
   vTaskDelay(60000);                //Only write to influxDB when all tasks are running
   //start_task_espnow();
