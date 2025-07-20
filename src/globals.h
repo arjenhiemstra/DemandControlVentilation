@@ -123,8 +123,8 @@ extern String dayOfWeek;
 extern String state;
 extern String fanspeed;
 
-extern long old_time;
-extern long elapsed_time;
+//extern long old_time;
+//extern long elapsed_time;
 
 extern bool lock_valve_move;
 extern bool pb_toggle;
