@@ -57,9 +57,7 @@ extern SemaphoreHandle_t settings_state_temp_mutex;
 
 extern QueueHandle_t sensor_queue;
 extern QueueHandle_t sensor_avg_queue;
-
-//extern AsyncWebServer server;
-//extern WebSerial webSerial;
+extern QueueHandle_t webserial_queue;
 
 extern JsonDocument valve_control_data;
 extern JsonDocument wire_sensor_data;

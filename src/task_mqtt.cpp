@@ -11,11 +11,15 @@ void task_mqtt_code(void * pvParameters) {
     for(;;) {
         
         bool ap_active_temp=0;
+        int mqtt_port_tmp = 0;
+        
+        char txBuffer[200];
+        int test = 1;
 
         String mqtt_enable_str;
         String mqtt_server_str;
         String mqtt_base_topic_str; 
-        int mqtt_port_tmp = 0;
+        
 
         //Read basic connection settings for MQTT to check if MQTT connection can be made
         if (settings_mqtt_mutex != NULL) {
@@ -55,6 +59,14 @@ void task_mqtt_code(void * pvParameters) {
         //Check if MQTT functions can run
         if (WiFi.waitForConnectResult() == WL_CONNECTED && ap_active_temp == 0 && mqtt_enable_str == "On" && mqtt_server_str != "" && mqtt_port_tmp != 0) {
             Serial.print("\nUpdate MQTT....");
+            
+            //sprintf(txBuffer, "Update MQTT....");
+            strcpy(txBuffer, "Update MQTT....");
+            //if(webserial_queue != 0) {
+                xQueueSend(webserial_queue, txBuffer, 10);
+            //}
+            Serial.print("\nNumber of messages in queue waiting: " + String(uxQueueMessagesWaiting(webserial_queue)));
+            
             read_mqtt_config();
             publish_sensor_data();
             publish_avg_sensor_data();
