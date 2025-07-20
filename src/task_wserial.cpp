@@ -21,9 +21,9 @@ void task_wserial_code(void * pvParameters) {
     for(;;) { 
         //Serial.print("\nWebSerial task running...");
         //webSerial.println("Message from task_wserial!");
-        if(xQueueReceive(webserial_queue, rxBuffer, 5) == pdTRUE) {
-            webSerial.print(rxBuffer);
-        }
+        //if(xQueueReceive(webserial_queue, rxBuffer, 5) == pdTRUE) {
+           // webSerial.print(rxBuffer);
+        //}
         vTaskDelay(1000);
     }   
 }
