@@ -11,6 +11,7 @@ void start_task_wserial(void) {
 void task_wserial_code(void * pvParameters) {
 
     char rxBuffer[200];
+    char lastRxBuffer[200] = {0};
     
     webSerial.onMessage([](const std::string& msg) { Serial.println(msg.c_str()); });
     webSerial.begin(&ws_server);
@@ -19,11 +20,9 @@ void task_wserial_code(void * pvParameters) {
     
     //Loop code for the task
     for(;;) { 
-        //Serial.print("\nWebSerial task running...");
-        //webSerial.println("Message from task_wserial!");
-        if(xQueueReceive(webserial_queue, rxBuffer, 5) == pdTRUE) {
+        if (xQueueReceive(webserial_queue, rxBuffer, 5) == pdTRUE) {
             String rxString = String(rxBuffer);
-            webSerial.print(rxString);
+            webSerial.println(rxString);
         }
         vTaskDelay(1000);
     }   
