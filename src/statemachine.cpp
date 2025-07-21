@@ -267,6 +267,7 @@ void day_transitions(void) {
     }
     else if (rh_sensors_high > 0) {
         new_state = "highrhday";
+        elapsed_time = 0;
     }
     else if (temp_hour >= 21) {
         Serial.print("\nIt's night. Transit to night.");        
@@ -376,6 +377,7 @@ void night_transitions(void) {
     }
     else if (rh_sensors_high > 0) {
         new_state = "highrhnight";
+        elapsed_time = 0;
     }
     else if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
         Serial.print("\nIt is after 8, before 21 and a weekday. Transit to day.");
@@ -457,8 +459,6 @@ void high_co2_day_transitions(void) {
 
     set_fanspeed(fanspeed_tmp);
     select_sensors();
-    elapsed_time = 0; //Reset elapsed time when entering this state
-    old_time = 0; //Reset old time when entering this state
 
     new_time = (esp_timer_get_time())/1000000;
     if (new_time > old_time) {          //Just in case that a reboot happened and old_time is not set
@@ -608,8 +608,6 @@ void high_co2_night_transitions(void) {
 
     set_fanspeed(fanspeed_tmp);
     select_sensors();
-    elapsed_time = 0; //Reset elapsed time when entering this state
-    old_time = 0; //Reset old time when entering this state
 
     new_time = (esp_timer_get_time())/1000000;
     if (new_time > old_time) {          //Just in case that a reboot happened and old_time is not set
@@ -749,8 +747,6 @@ void high_rh_day_transitions(void) {
 
     set_fanspeed(fanspeed_tmp);
     select_sensors();
-    elapsed_time = 0;                   //Reset elapsed time when entering this state
-    old_time = 0;                       //Reset old time when entering this state
 
     new_time = (esp_timer_get_time())/1000000;
     if (new_time > old_time) {          //Just in case that a reboot happened and old_time is not set
@@ -785,6 +781,7 @@ void high_rh_day_transitions(void) {
     else if (temp_hour >= 21) {
         Serial.print("\nIt's night but RH levels are still high and time not expired. Transit to high_rh_night");        
         new_state = "highrhnight";
+        elapsed_time = 0;
     }
     else {
         Serial.print("\nConditions have not changed, RH is still high, so remain in high_rh_day state");
@@ -849,8 +846,6 @@ void high_rh_night_transitions(void) {
 
     set_fanspeed(fanspeed_tmp);
     select_sensors();
-    elapsed_time = 0;                   //Reset elapsed time when entering this state
-    old_time = 0;                       //Reset old time when entering this state
 
     //If the statemachine is till in this state after 30 mins then RH cannot be lowered with ventilation
     //No mutex is required as only statemachine uses this variable
@@ -1014,8 +1009,6 @@ void valve_cycle_day_transitions(void) {
 
     set_fanspeed(fanspeed_tmp);
     select_sensors();
-    elapsed_time = 0;                   //Reset elapsed time when entering this state
-    old_time = 0;                       //Reset old time when entering this state
     
     if (valve_move_locked == 0) {
         valve_position_statemachine(statemachine_state);
@@ -1049,6 +1042,7 @@ void valve_cycle_day_transitions(void) {
     else if (rh_sensors_high > 0) {
         Serial.print("\nIt's valve_cycle_day and high RH is measured. Transit to high_rh_day state.");
         new_state = "highrhday";
+        elapsed_time = 0;
     }
     else if (co2_sensors_high > 0) {
         Serial.print("\nIt is valve_cycle_day and high CO2 levels are measured. Transit to high_co2_day");
@@ -1142,6 +1136,7 @@ void valve_cycle_night_transitions(void) {
     else if (rh_sensors_high > 0) {
         Serial.print("\nIt's valve_cycle_night and high RH. Transit to high_rh_night state.");
         new_state = "highrhnight";
+        elapsed_time = 0; // Reset elapsed time after transition
     }
     else if (co2_sensors_high > 0) {
         Serial.print("\nIt is valve_cycle_night and CO2 level is high. Transit to high_co2_night");
