@@ -12,14 +12,11 @@ void task_mqtt_code(void * pvParameters) {
         
         bool ap_active_temp=0;
         int mqtt_port_tmp = 0;
-        
-        char txBuffer[200];
-        int test = 1;
 
-        String mqtt_enable_str;
-        String mqtt_server_str;
-        String mqtt_base_topic_str; 
-        
+        String mqtt_enable_str = "";
+        String mqtt_server_str = "";
+        String mqtt_base_topic_str = "";
+        String message = "";
 
         //Read basic connection settings for MQTT to check if MQTT connection can be made
         if (settings_mqtt_mutex != NULL) {
@@ -41,36 +38,15 @@ void task_mqtt_code(void * pvParameters) {
 
         //If MQTT connection settings are changed then re-read config file
         if(mqtt_server_str == "" || mqtt_port_tmp == 0) {
-            //Serial.print("\nRead MQTT config file");
             read_mqtt_config();
         }
        
-        /*
-        Serial.print("\nMQTT connection settings:\t");
-        Serial.print(mqtt_enable_str);
-        Serial.print("\t");
-        Serial.print(mqtt_server_str);
-        Serial.print("\t");
-        Serial.print(mqtt_port_tmp);
-        Serial.print("\t");
-        Serial.print(mqtt_base_topic_str);
-        */
-
         //Check if MQTT functions can run
         if (WiFi.waitForConnectResult() == WL_CONNECTED && ap_active_temp == 0 && mqtt_enable_str == "On" && mqtt_server_str != "" && mqtt_port_tmp != 0) {
-            Serial.print("\nUpdate MQTT....");
             
-            //sprintf(txBuffer, "Update MQTT....");
-            strcpy(txBuffer, "Update MQTT....");
-
-            Serial.print("\nNumber of messages in queue waiting: " + String(uxQueueMessagesWaiting(webserial_queue)));
-            
-            if(webserial_queue != 0) {
-                xQueueSend(webserial_queue, txBuffer, 10);
-            }
-            
-            Serial.print("\nNumber of messages in queue waiting: " + String(uxQueueMessagesWaiting(webserial_queue)));
-            
+            message = "Update MQTT....";
+            print_message(message);
+                        
             read_mqtt_config();
             publish_sensor_data();
             publish_avg_sensor_data();
@@ -78,10 +54,10 @@ void task_mqtt_code(void * pvParameters) {
             publish_uptime();
             publish_state();
             publish_fanspeed();
-            //Serial.print("\nMQTT update done");
         }
         else {
-            Serial.print("\nNo WIFI connection, MQTT disabled or MQTT settings incomplete");
+            message = "No WIFI connection, MQTT disabled or MQTT settings incomplete";
+            print_message(message);
         }
         vTaskDelay(10000);
     }

@@ -115,6 +115,7 @@ String fanspeed = "";
 bool lock_valve_move = 0;                       // Variable for skipping valve move when already moving
 bool pb_toggle = false;
 bool ap_active = 0;
+bool debug_mode = true;
 
 //Data pins for 74HC595
 int clockPin1 = 11; // IO11 on ESP32-S3 and D13 on ESP32, connected to SH_CP (11) of 74HC595

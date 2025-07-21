@@ -7,6 +7,7 @@
 #include <freertos/queue.h>
 
 #include "mqtt.h"
+#include "general.h"
 
 // function declarations
 void start_task_mqtt(void);

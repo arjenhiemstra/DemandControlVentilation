@@ -129,6 +129,7 @@ extern String fanspeed;
 extern bool lock_valve_move;
 extern bool pb_toggle;
 extern bool ap_active;
+extern bool debug_mode;
 
 //Data pins for 74HC595
 extern int clockPin1; 

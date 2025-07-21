@@ -24,6 +24,7 @@ void task_wserial_code(void * pvParameters) {
             String rxString = String(rxBuffer);
             webSerial.println(rxString);
         }
+        //Serial.print("\nNumber of messages in queue waiting: " + String(uxQueueMessagesWaiting(webserial_queue)));
         vTaskDelay(1000);
     }   
 }

@@ -19,6 +19,7 @@ int rh_sensor_counter = 0;
 
 long old_time = 0;
 long elapsed_time = 0;
+
 struct CO2_Sensors {
         String valve;
         float co2_reading;
@@ -56,7 +57,6 @@ void run_statemachine(void) {
 
     Serial.print("\nRead sensor data from queue for statemachine.");
     if (xQueuePeek(sensor_queue, &statemachine_sensor_data, 0 ) == pdTRUE) {
-        
     }
     
     Serial.print("\nRead average sensor data from queue for statemachine.");
@@ -122,6 +122,8 @@ void run_statemachine(void) {
 
 void stopped_transitions(void) {
 
+    String message = "";
+
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
@@ -131,14 +133,16 @@ void stopped_transitions(void) {
     }
 
     //No further logic required because when start statemachine button is pushed the statemachine will go back to init state
-    Serial.print("\nStatemachine in stopped state. Push start statemachine button on the Valve Control web page to continue.");
-
+    message = "Statemachine in stopped state. Push start statemachine button on the Valve Control web page to continue.";
+    print_message(message);
 }
 
 void init_transitions(void) {
 
     String temp_day_of_week = "";
     String temp_fanspeed = "";
+    String message = "";
+    
     int temp_hour = 0;
 
     // Actions for this state
@@ -165,19 +169,25 @@ void init_transitions(void) {
         }
     }
 
-    set_fanspeed(temp_fanspeed);
+    message = "\nStatemachine initialized. Current time is " + hourStr + " and day of week is " + temp_day_of_week;
+    print_message(message);
 
+    set_fanspeed(temp_fanspeed);
+    
     // Conditions to transit to other state, only evalaution based on time and day of week
     if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
-        Serial.print("\nIt is after 8, before 21 and a weekday. Transit to day.");
+        message = "It is after 8, before 21 and a weekday. Transit to day.";
+        print_message(message);        
         new_state = "day";
     }
     else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday")) {
-        Serial.print("\nIt is after 9 and before 21 and weekend. Transit to day.");
+        message = "It is after 9 and before 21 and weekend. Transit to day.";
+        print_message(message);
         new_state = "day";
     }
     else {
-        Serial.print("\nIt's night. Transit to night.");
+        message = "It's night. Transit to night.";
+        print_message(message);
         new_state = "night";
     }
     
@@ -196,7 +206,8 @@ void day_transitions(void) {
     int rh_sensors_high = 0;
     bool valve_move_locked = 0;
     String fanspeed_tmp = "";
-    String statemachine_state = "day";    
+    String statemachine_state = "day";  
+    String message = "";  
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
@@ -242,25 +253,31 @@ void day_transitions(void) {
         valve_position_statemachine(statemachine_state);
     }
     else {
-        Serial.print("\nValves are locked for moving, will try again later");
+        message = "Valves are locked for moving, will try again later";
+        print_message(message);
     }
 
     for (int i = 0; i < co2_sensor_counter; i++) {
         if (co2_sensors[i].co2_reading > 1000) {
-            Serial.print("\nSensor" + String(i) + " which is located at " + String(co2_sensors[i].valve) + " has high CO2 reading. Transit to highco2day state");
+            message = "Sensor" + String(i) + " which is located at " + String(co2_sensors[i].valve) + " has high CO2 reading. Transit to highco2day state";
+            print_message(message);
             co2_sensors_high++;
         }
     }
 
     for (int i = 0; i < rh_sensor_counter; i++) {
         if (rh_sensors[i].rh_reading > 85) {
-            Serial.print("\nSensor" + String(i) + " which is located at " + String(rh_sensors[i].valve) + " has high RH reading. Transit to highrhday state");
+            message = "Sensor" + String(i) + " which is located at " + String(rh_sensors[i].valve) + " has high RH reading. Transit to highrhday state";
+            print_message(message); 
             rh_sensors_high++;
         }
     }
 
-    Serial.print("\nNumber of RH sensor with high reading: " + String(rh_sensors_high));
-    Serial.print("\nNumber of CO2 sensor with high reading: " + String(co2_sensors_high));
+    message = "\nNumber of sensors measure high CO2: " + String(co2_sensors_high);
+    print_message(message);
+    
+    message = "\nNumber of sensors measure high RH: " + String(rh_sensors_high);
+    print_message(message);
 
     if (co2_sensors_high > 0) {
         new_state = "highco2day";
@@ -270,20 +287,24 @@ void day_transitions(void) {
         elapsed_time = 0;
     }
     else if (temp_hour >= 21) {
-        Serial.print("\nIt's night. Transit to night.");        
+        message = "It's night. Transit to night."; 
+        print_message(message);       
         new_state = "night";
     }
     else if (cooking_times() == true) {
-        Serial.print("\nIt's day and cooking time. Transit to cooking state.");
+        message = "It's day and cooking time. Transit to cooking state.";
+        print_message(message);
         new_state = "cooking";
     }
     else if (valve_cycle_times_day() == true) {
-        Serial.print("\nIt's day and valve_cycle_time_day. Transit to valvecycleday state");
+        message = "It's day and valve_cycle_time_day. Transit to valvecycleday state";
+        print_message(message);
         new_state = "cyclingday";
     }
     //Manual high speed mode is ignored for now
     else {
-        Serial.print("\nConditions have not changed, it's still day");
+        message = "Conditions have not changed, it's still day";
+        print_message(message);
         new_state = "day";
     }
     
@@ -304,6 +325,7 @@ void night_transitions(void) {
     String statemachine_state = "night";
     String fanspeed_tmp = "";
     String temp_day_of_week = "";
+    String message = "";
     
     
     // Actions for this sate
@@ -351,25 +373,31 @@ void night_transitions(void) {
         valve_position_statemachine(statemachine_state);
     }
     else {
-        Serial.print("\nValves are locked for moving, will try again later");
+        message = "Valves are locked for moving, will try again later";
+        print_message(message);
     }
     
     for (int i = 0; i < co2_sensor_counter; i++) {
         if (co2_sensors[i].co2_reading > 1000) {
-            Serial.print("\nSensor" + String(i) + " which is located at " + String(co2_sensors[i].valve) + " has high CO2 reading. Transit to highco2day state");
+            message = "Sensor" + String(i) + " which is located at " + String(co2_sensors[i].valve) + " has high CO2 reading. Transit to highco2day state";
+            print_message(message);
             co2_sensors_high++;
         }
     }
 
     for (int i = 0; i < rh_sensor_counter; i++) {
         if (rh_sensors[i].rh_reading > 85) {
-            Serial.print("\nSensor" + String(i) + " which is located at " + String(rh_sensors[i].valve) + " has high RH reading. Transit to highrhday state");
+            message = "Sensor" + String(i) + " which is located at " + String(rh_sensors[i].valve) + " has high RH reading. Transit to highrhday state";
+            print_message(message);
             rh_sensors_high++;
         }
     }
 
-    Serial.print("\nNumber of sensors measure high CO2: " + String(co2_sensors_high) );
-    Serial.print("\nNumber of sensors measure high RH: " + String(rh_sensors_high) );
+    message = "\nNumber of sensors measure high CO2: " + String(co2_sensors_high);
+    print_message(message);
+    
+    message = "\nNumber of sensors measure high RH: " + String(rh_sensors_high);
+    print_message(message);
 
     // Conditions to transit to other state
     if (co2_sensors_high > 0) {
@@ -380,20 +408,24 @@ void night_transitions(void) {
         elapsed_time = 0;
     }
     else if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
-        Serial.print("\nIt is after 8, before 21 and a weekday. Transit to day.");
+        message = "It is after 8, before 21 and a weekday. Transit to day.";
+        print_message(message);
         new_state = "day";
     }
     else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday")) {
-        Serial.print("\nIt is after 9, before 21 and weekend. Transit to day");
+        message = "It is after 9, before 21 and weekend. Transit to day";
+        print_message(message);
         new_state = "day";
     }
     else if (valve_cycle_times_night() == true) {
-        Serial.print("\nIt's night and valve_cycle time. Transit to valve_cycle_night.");
+        message = "It's night and valve_cycle time. Transit to valve_cycle_night.";
+        print_message(message);
         new_state = "cyclingnight";
     }
     //Manual high speed mode is ignored for now
     else {
-        Serial.print("\nConditions have not changed, it's still night.");
+        message = "Conditions have not changed, it's still night.";
+        print_message(message);
         new_state = "night";
     }
     
@@ -412,6 +444,8 @@ void high_co2_day_transitions(void) {
     String temp_day_of_week = "";
     String state_valve_pos_path = "";
     String state_valve_pos_str = "";
+    String message = "";
+
     int temp_hour = 0;
     int co2_sensors_high = 0;
     long new_time = 0;
@@ -510,37 +544,45 @@ void high_co2_day_transitions(void) {
             settings_state_temp[co2_sensors[i].valve + "_position_state_temp"] = 4;
         }
         if (co2_sensors[i].co2_reading > 1000) {
-            Serial.print("\nSensor" + String(i) + " which is located at " + String(co2_sensors[i].valve) + " has high CO2 reading.");
+            message = "Sensor" + String(i) + " which is located at " + String(co2_sensors[i].valve) + " has high CO2 reading.";
+            print_message(message);
             co2_sensors_high++; 
         }
     }
 
-    Serial.print("\nElapsed time in " + statemachine_state + "state: " + String(elapsed_time) + " seconds");
-    Serial.print("\nNumber of sensors measure high CO2: " + String(co2_sensors_high) );
+    message = "Elapsed time in " + statemachine_state + "state: " + String(elapsed_time) + " seconds";
+    print_message(message);
+    message = "Number of sensors measure high CO2: " + String(co2_sensors_high);
+    print_message(message);
 
     if (valve_move_locked == 0) {    
         valve_position_statemachine("state_temp");
     }
     else {
-        Serial.print("\nValves are locked for moving, will try again later");
+        message = "Valves are locked for moving, will try again later";
+        print_message(message);
     }
     
     // Conditions for transition
     if (co2_sensors_high > 0 && temp_hour >= 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
-        Serial.print("\nIt is before 8, after 21 and a weekday. Transit to high_co2_night.");
+        message = "It is before 8, after 21 and a weekday. Transit to high_co2_night.";
+        print_message(message);
         new_state = "highco2night";
     }
     else if (co2_sensors_high > 0 && temp_hour >= 21 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday")) {
-        Serial.print("\nIt is after 9, before 21 and weekend. Transit to high_co2_night.");
+        message = "It is after 9, before 21 and weekend. Transit to high_co2_night.";
+        print_message(message);
         new_state = "highco2night";
     }
     else if (co2_sensors_high == 0 && elapsed_time > 600) {
-        Serial.print("\nIt is day, no high co2 levels. Transit to day.");
+        message = "It is day, no high co2 levels. Transit to day.";
+        print_message(message);
         new_state = "day";
         elapsed_time = 0;
     }
     else {
-        Serial.print("\nIt is day with high CO2 levels. Remain in highco2day state");
+        message = "It is day with high CO2 levels. Remain in highco2day state";
+        print_message(message);
         new_state = "highco2day";
     }
    
@@ -559,6 +601,8 @@ void high_co2_night_transitions(void) {
     String temp_day_of_week = "";
     String state_valve_pos_path = "";
     String state_valve_pos_str = "";
+    String message = "";
+
     int temp_hour = 0;
     int co2_sensors_high = 0;
     long new_time = 0;
@@ -662,32 +706,41 @@ void high_co2_night_transitions(void) {
         }
     }
 
-    Serial.print("\nElapsed time in " + statemachine_state + "state: " + String(elapsed_time) + " seconds");
-    Serial.print("\nNumber of sensors measure high CO2: " + String(co2_sensors_high) );
+    message = "Elapsed time in " + statemachine_state + "state: " + String(elapsed_time) + " seconds";
+    print_message(message);
+    message = "Number of sensors measure high CO2: " + String(co2_sensors_high);
+    print_message(message);
 
     if (valve_move_locked == 0) {    
         valve_position_statemachine("state_temp");
     }
     else {
-        Serial.print("\nValves are locked for moving.");
+        message = "Valves are locked for moving.";
+        print_message(message);
     }
     
     // Conditions for transition
     if (co2_sensors_high == 0 && elapsed_time > 600) {
-        Serial.print("\nIt is night, no high co2 levels. Transit to night.");
+        message = "It is night, no high co2 levels. Transit to night.";
+        print_message(message);
         new_state = "night";
         elapsed_time = 0;
     }
     else if (co2_sensors_high > 0 && temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
-        Serial.print("\nIt is after 8, before 21 and a weekday. Transit to high_co2_day.");
+        message = "It is after 8, before 21 and a weekday. Transit to high_co2_day.";
+        print_message(message);
         new_state = "highco2day";
+        elapsed_time = 0;
     }
     else if (co2_sensors_high > 0 && temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday")) {
-        Serial.print("\nIt is after 9, before 21 and weekend. Transit to high_co2_day.");
+        message = "It is after 9, before 21 and weekend. Transit to high_co2_day.";
+        print_message(message);
         new_state = "highco2day";
+        elapsed_time = 0;
     }
     else {
-        Serial.print("\nIt is night with high CO2 levels. Remain in highco2night state");
+        message = "It is night with high CO2 levels. Remain in highco2night state";
+        print_message(message);
         new_state = "highco2night";
     }
     
@@ -703,6 +756,8 @@ void high_rh_day_transitions(void) {
 
     String statemachine_state = "highrhday";
     String fanspeed_tmp = "high";
+    String message = "";
+
     int temp_hour = 0;
     int rh_sensors_high = 0;
     long new_time = 0;
@@ -765,26 +820,32 @@ void high_rh_day_transitions(void) {
     for (int i = 0; i < rh_sensor_counter; i++) {
         if (rh_sensors[i].rh_reading > 75) {
             rh_sensors_high++;
-            Serial.print("\nSensor" + String(i) + " which is located at " + String(rh_sensors[i].valve) + " has high RH reading.");
+            message = "Sensor" + String(i) + " which is located at " + String(rh_sensors[i].valve) + " has high RH reading.";
+            print_message(message);
         }
     }
 
-    Serial.print("\nNumber of sensors measure high RH: " + String(rh_sensors_high) );
-    Serial.print("\nElapsed time in " + statemachine_state + "state: " + String(elapsed_time) + " seconds");
+    message = "Number of sensors measure high RH: " + String(rh_sensors_high);
+    print_message(message);
+    message = "Elapsed time in " + statemachine_state + "state: " + String(elapsed_time) + " seconds";
+    print_message(message);
 
     // Conditions for transition
     if ((rh_sensors_high == 0 && elapsed_time > 600) || elapsed_time > 1800) {
-        Serial.print("\nIt's day with no high RH or time expired. Transit to day");
+        message = "It's day with no high RH or time expired. Transit to day";
+        print_message(message);
         new_state = "day";
         elapsed_time = 0;           //Reset elapsed time after transition
     }
     else if (temp_hour >= 21) {
-        Serial.print("\nIt's night but RH levels are still high and time not expired. Transit to high_rh_night");        
+        message = "It's night but RH levels are still high and time not expired. Transit to high_rh_night";
+        print_message(message);   
         new_state = "highrhnight";
         elapsed_time = 0;
     }
     else {
-        Serial.print("\nConditions have not changed, RH is still high, so remain in high_rh_day state");
+        message = "Conditions have not changed, RH is still high, so remain in high_rh_day state";
+        print_message(message);
         new_state = "highrhday";
     }
     
@@ -801,6 +862,8 @@ void high_rh_night_transitions(void) {
     String statemachine_state = "highrhnight";
     String fanspeed_tmp = "";
     String temp_day_of_week = "";
+    String message = "";
+
     int temp_hour = 0;
     int rh_sensors_high = 0;
     long new_time = 0;
@@ -859,38 +922,46 @@ void high_rh_night_transitions(void) {
         valve_position_statemachine(statemachine_state);
     }
     else {
-        Serial.print("\nValves are locked for moving, will try again later");
+        message = "Valves are locked for moving, will try again later";
+        print_message(message);
     }
 
     // High RH has been detected to come into this state. Iterate through RH sensors to see which sensor detects high RH. This state does not change valve positions
     for (int i = 0; i < rh_sensor_counter; i++) {
         if (rh_sensors[i].rh_reading > 75) {
             rh_sensors_high++;
-            Serial.print("\nSensor" + String(i) + " which is located at " + String(rh_sensors[i].valve) + " has high RH reading.");
+            message = "Sensor" + String(i) + " which is located at " + String(rh_sensors[i].valve) + " has high RH reading.";
+            print_message(message);
         }
     }
 
-    Serial.print("\nElapsed time in " + statemachine_state + "state: " + String(elapsed_time) + " seconds");
-    Serial.print("\nNumber of sensors measure high RH: " + String(rh_sensors_high) );
+    message = "Elapsed time in " + statemachine_state + "state: " + String(elapsed_time) + " seconds";
+    print_message(message);
+    message = "Number of sensors measure high RH: " + String(rh_sensors_high);
+    print_message(message);
 
     // Conditions for transition
     if (rh_sensors_high == 0 && elapsed_time > 600 || elapsed_time > 1800) {
-        Serial.print("\nIt's night and RH is low enough. Transit to night.");
+        message = "It's night and RH is low enough. Transit to night.";
+        print_message(message);
         new_state = "night";
         elapsed_time = 0; // Reset elapsed time after transition
     }
     else if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday" && elapsed_time > 1800)  {
-        Serial.print("\nIt is after 8, before 21 and a weekday but RH is still high. Transit to high_rh_day.");
+        message = "It is after 8, before 21 and a weekday but RH is still high. Transit to high_rh_day.";
+        print_message(message);
         new_state = "highrhday";
         elapsed_time = 0; // Reset elapsed time after transition
     }
     else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday" && elapsed_time > 1800)) {
-        Serial.print("\nIt is after 9, before 21 and weekend but RH is still high. Transit to high_rh_day ");
+        message = "It is after 9, before 21 and weekend but RH is still high. Transit to high_rh_day ";
+        print_message(message);
         new_state = "highrhday";
         elapsed_time = 0; // Reset elapsed time after transition
     }
     else {
-        Serial.print("\nConditions have not changed, RH is still high, so remain in high_rh_night state");
+        message = "Conditions have not changed, RH is still high, so remain in high_rh_night state";
+        print_message(message);
         new_state = "highrhnight";
     }
     
@@ -906,6 +977,8 @@ void cooking_transitions(void) {
 
     String statemachine_state = "cooking";
     String fanspeed_tmp = "";
+    String message = "";
+
     bool valve_move_locked = 0;
 
     // Actions for this sate
@@ -946,16 +1019,18 @@ void cooking_transitions(void) {
         valve_position_statemachine(statemachine_state);
     }
     else {
-        Serial.print("\nValves are locked for moving, will try again later");
+        message = "Valves are locked for moving, will try again later";
     }
 
     // Conditions for transition
     if (cooking_times() == false) {
-        Serial.print("\nIt's day and not cooking time. Transit to day");
+        message = "It's day and not cooking time. Transit to day";
+        print_message(message);
         new_state = "day";
     }
     else {
-        Serial.print("\nConditions have not changed, cooking time is not over so remain in cooking state");
+        message = "Conditions have not changed, cooking time is not over so remain in cooking state";
+        print_message(message);
         new_state = "cooking";
     }
     
@@ -971,6 +1046,8 @@ void valve_cycle_day_transitions(void) {
 
     String statemachine_state = "cyclingday";
     String fanspeed_tmp = "";
+    String message = "";
+
     bool valve_move_locked = 0;
     int co2_sensors_high = 0;
     int rh_sensors_high = 0;
@@ -1019,37 +1096,45 @@ void valve_cycle_day_transitions(void) {
 
     for (int i = 0; i < co2_sensor_counter; i++) {
         if (co2_sensors[i].co2_reading > 1000) {
-            Serial.print("\nSensor" + String(i) + " which is located at " + String(co2_sensors[i].valve) + " has high CO2 reading. Transit to highco2day state");
+            message = "Sensor" + String(i) + " which is located at " + String(co2_sensors[i].valve) + " has high CO2 reading. Transit to highco2day state";
+            print_message(message);
             co2_sensors_high++;
         }
     }
 
     for (int i = 0; i < rh_sensor_counter; i++) {
         if (rh_sensors[i].rh_reading > 75) {
-            Serial.print("\nSensor" + String(i) + " which is located at " + String(rh_sensors[i].valve) + " has high RH reading. Transit to highrhday state");
+            message = "Sensor" + String(i) + " which is located at " + String(rh_sensors[i].valve) + " has high RH reading. Transit to highrhday state";
+            print_message(message);
             rh_sensors_high++;
         }
     }
 
-    Serial.print("\nNumber of RH sensor with high reading: " + String(rh_sensors_high));
-    Serial.print("\nNumber of CO2 sensor with high reading: " + String(co2_sensors_high));
+    message = "Number of RH sensor with high reading: " + String(rh_sensors_high);
+    print_message(message);
+    message = "Number of CO2 sensor with high reading: " + String(co2_sensors_high);
+    print_message(message);
 
     // Conditions for transition
     if (valve_cycle_times_day() == false) {
-        Serial.print("\nIt's not valve cycle time. Transit to day");
+        message = "It's not valve cycle time. Transit to day";
+        print_message(message);
         new_state = "day";
     }
     else if (rh_sensors_high > 0) {
-        Serial.print("\nIt's valve_cycle_day and high RH is measured. Transit to high_rh_day state.");
+        message = "It's valve_cycle_day and high RH is measured. Transit to high_rh_day state.";
+        print_message(message);
         new_state = "highrhday";
         elapsed_time = 0;
     }
     else if (co2_sensors_high > 0) {
-        Serial.print("\nIt is valve_cycle_day and high CO2 levels are measured. Transit to high_co2_day");
+        message = "It is valve_cycle_day and high CO2 levels are measured. Transit to high_co2_day";
+        print_message(message);
         new_state = "highco2day";
     }
     else {
-        Serial.print("\nConditions have not changed, valve_cycle_day is still active, so remain in valve_cycle_day state");
+        message = "Conditions have not changed, valve_cycle_day is still active, so remain in valve_cycle_day state";
+        print_message(message);
         new_state = "cyclingday";
     }
     
@@ -1065,6 +1150,8 @@ void valve_cycle_night_transitions(void) {
 
     String statemachine_state = "cyclingnight";
     String fanspeed_tmp = "";
+    String message = "";
+
     bool valve_move_locked = 0;
     int co2_sensors_high = 0;
     int rh_sensors_high = 0;
@@ -1108,42 +1195,52 @@ void valve_cycle_night_transitions(void) {
         valve_position_statemachine(statemachine_state);
     }
     else {
-        Serial.print("\nValves are locked for moving, will try again later");
+        message = "Valves are locked for moving, will try again later";
+        print_message(message);
     }
 
     for (int i = 0; i < co2_sensor_counter; i++) {
         if (co2_sensors[i].co2_reading > 1000) {
-            Serial.print("\nSensor" + String(i) + " which is located at " + String(co2_sensors[i].valve) + " has high CO2 reading. Transit to highco2day state");
+            message = "Sensor" + String(i) + " which is located at " + String(co2_sensors[i].valve) + " has high CO2 reading. Transit to highco2day state";
+            print_message(message);
             co2_sensors_high++;
         }
     }
 
     for (int i = 0; i < rh_sensor_counter; i++) {
         if (rh_sensors[i].rh_reading > 75) {
-            Serial.print("\nSensor" + String(i) + " which is located at " + String(rh_sensors[i].valve) + " has high RH reading. Transit to highrhday state");
+            message = "Sensor" + String(i) + " which is located at " + String(rh_sensors[i].valve) + " has high RH reading. Transit to highrhday state";
+            print_message(message);
             rh_sensors_high++;
         }
     }
 
-    Serial.print("\nNumber of RH sensor with high reading: " + String(rh_sensors_high));
-    Serial.print("\nNumber of CO2 sensor with high reading: " + String(co2_sensors_high));
+    message = "Number of RH sensor with high reading: " + String(rh_sensors_high);
+    print_message(message);
+    message = "Number of CO2 sensor with high reading: " + String(co2_sensors_high);
+    print_message(message);
 
     // Conditions for transition
     if (valve_cycle_times_night() == false) {
-        Serial.print("\nIt's not valve_cycle time. Transit to night");
+        message = "It's not valve_cycle time. Transit to night";
+        print_message(message);
         new_state = "night";
     }
     else if (rh_sensors_high > 0) {
-        Serial.print("\nIt's valve_cycle_night and high RH. Transit to high_rh_night state.");
+        message = "It's valve_cycle_night and high RH. Transit to high_rh_night state.";
+        print_message(message);
         new_state = "highrhnight";
         elapsed_time = 0; // Reset elapsed time after transition
     }
     else if (co2_sensors_high > 0) {
-        Serial.print("\nIt is valve_cycle_night and CO2 level is high. Transit to high_co2_night");
+        message = "It is valve_cycle_night and CO2 level is high. Transit to high_co2_night";
+        print_message(message);
         new_state = "highco2night";
+        elapsed_time = 0; // Reset elapsed time after transition
     }
     else {
-        Serial.print("\nConditions have not changed, valve_cycle_day is still active, so remain in valve_cycle_night state");
+        message = "Conditions have not changed, valve_cycle_day is still active, so remain in valve_cycle_night state";
+        print_message(message);
         new_state = "cyclingnight";
     }
     
@@ -1160,6 +1257,8 @@ void manual_high_speed_transitions(void) {
 
     String statemachine_state = "manual_high_speed";
     String fanspeed = "high";
+    String message = "";
+
     bool valve_move_locked = 0;
 
     // Actions for this state
@@ -1184,7 +1283,8 @@ void manual_high_speed_transitions(void) {
         valve_position_statemachine(statemachine_state);
     }
     else {
-        Serial.print("\nValves are locked for moving, will try again later");
+        message = "Valves are locked for moving, will try again later";
+        print_message(message);
     }
 }
 
@@ -1200,6 +1300,7 @@ void select_sensors(void) {
     String rh_sensor_wire = "";
     String rh_sensor_wire1 = "";
     String valve = "";
+    String message = "";
 
     bool sensor_config1_file_present = 0;
     bool sensor_config2_file_present = 0;
@@ -1272,10 +1373,8 @@ void select_sensors(void) {
             co2_sensors[j].valve = valve;
             co2_sensors[j].co2_reading = sensor_data[0][i][2];
             
-            Serial.print("\nvalve: ");
-            Serial.print(co2_sensors[j].valve);
-            Serial.print("\t\t\tCO2 reading: ");
-            Serial.print(co2_sensors[j].co2_reading);
+            message = "valve: " + String(co2_sensors[j].valve) + ", CO2 reading: " + String(co2_sensors[j].co2_reading);
+            print_message(message);
             j++;
         }
         
@@ -1290,10 +1389,8 @@ void select_sensors(void) {
             co2_sensors[j].valve = valve;
             co2_sensors[j].co2_reading = sensor_data[1][i][2];
             
-            Serial.print("\nvalve: ");
-            Serial.print(co2_sensors[j].valve);
-            Serial.print("\t\t\tCO2 reading: ");
-            Serial.print(co2_sensors[j].co2_reading);
+            message = "valve: " + String(co2_sensors[j].valve) + ", CO2 reading: " + String(co2_sensors[j].co2_reading);
+            print_message(message);
             j++;
         }
         
@@ -1308,10 +1405,8 @@ void select_sensors(void) {
             rh_sensors[k].valve = valve;
             rh_sensors[k].rh_reading = sensor_data[0][i][1];
             
-            Serial.print("\nvalve: ");
-            Serial.print(rh_sensors[k].valve);
-            Serial.print("\t\t\tRH reading: ");
-            Serial.print(rh_sensors[k].rh_reading);
+            message = "valve: " + String(rh_sensors[k].valve) + ", RH reading: " + String(rh_sensors[k].rh_reading);
+            print_message(message);
             k++;
         }
         
@@ -1326,16 +1421,17 @@ void select_sensors(void) {
             rh_sensors[k].valve = valve;
             rh_sensors[k].rh_reading = sensor_data[1][i][1];
             
-            Serial.print("\nvalve: ");
-            Serial.print(rh_sensors[k].valve);
-            Serial.print("\t\t\tRH reading: ");
-            Serial.print(rh_sensors[k].rh_reading);
+            message = "valve: " + String(rh_sensors[k].valve) + ", RH reading: " + String(rh_sensors[k].rh_reading);
+            print_message(message);
             k++;
         }
     }
 
-    Serial.print("\nco2_sensor_counter: " + String(co2_sensor_counter));
-    Serial.print("\nrh_sensor_counter: " + String(rh_sensor_counter));
+    message = "co2_sensor_counter: " + String(co2_sensor_counter);
+    print_message(message);
+    
+    message = "\nrh_sensor_counter: " + String(rh_sensor_counter);
+    print_message(message);
 
     co2_sensor_counter = j;
     rh_sensor_counter = k;
