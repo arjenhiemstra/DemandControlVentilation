@@ -11,6 +11,7 @@ void task_neopixel_code(void * pvParameters) {
     int pixel = 0;
     int brightness = 64;
     bool temp_valve_move_lock = 0;
+    
     String temp_fanspeed = "";
     String temp_state = "";
 

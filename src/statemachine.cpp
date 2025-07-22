@@ -1,11 +1,11 @@
 /*
-- Multiple sensors can be used to determine the CO2 value. This is set in the sensor config files
+- Multiple sensors can be used to determine the CO2 or RH value. This is set in the sensor config files
 - Temperature is not used
 - RH can only be used in bathroom(s) since in general RH cannot be influenced by ventilation, only when there is a big change such as showering
 - CO2 can be measured for serveral rooms
     - If one room has high CO2 then it should be sufficinet to open a valve
     - If the fan inlet has high CO2 in daytime then fanspeed should go to high in day time
-    - If the fan inlet has high CO2 in the night then fanspeed should remain low and all valves to bedrooms open
+    - If the fan inlet has high CO2 in the night then fanspeed should go to medium and all valves to bedrooms open
 */
 
 #include "statemachine.h"
@@ -55,28 +55,34 @@ void init_statemachine(void) {
 
 void run_statemachine(void) {
 
-    Serial.print("\nRead sensor data from queue for statemachine.");
+    String message = "";
+
+    message = "Read sensor data from queue for statemachine.";
+    print_message(message);
+    
     if (xQueuePeek(sensor_queue, &statemachine_sensor_data, 0 ) == pdTRUE) {
     }
     
-    Serial.print("\nRead average sensor data from queue for statemachine.");
+    message = "Read average sensor data from queue for statemachine.";
+    print_message(message);
+
     if (xQueuePeek(sensor_avg_queue, &statemachine_avg_sensor_data, 0 ) == pdTRUE) {
-        Serial.print("\n\nBus\tSensor\tTemperature (°C)\tHumidity (%)\tCO2 (ppm)");
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 8; j++) {
-                Serial.print("\n");
-                Serial.print(i);
-                Serial.print("\t\t");
-                Serial.print(j);
-                Serial.print("\t");
-                for (int k = 0; k < 3; k++) {
-                    Serial.print(statemachine_avg_sensor_data[i][j][k]);
-                    Serial.print("\t\t");
-                }
-            }
-        }
+        //Serial.print("\n\nBus\tSensor\tTemperature (°C)\tHumidity (%)\tCO2 (ppm)");
+        //for (int i = 0; i < 2; i++) {
+            //for (int j = 0; j < 8; j++) {
+                //Serial.print("\n");
+                //Serial.print(i);
+                //Serial.print("\t\t");
+                //Serial.print(j);
+                //Serial.print("\t");
+                //for (int k = 0; k < 3; k++) {
+                    //Serial.print(statemachine_avg_sensor_data[i][j][k]);
+                    //Serial.print("\t\t");
+                //}
+            //}
+        //}
     }
-    Serial.print("\n");
+    //Serial.print("\n");
     
     if (state == "init") {
         init_transitions();
@@ -169,7 +175,7 @@ void init_transitions(void) {
         }
     }
 
-    message = "\nStatemachine initialized. It is after " + hourStr + ":00 and day of week is " + temp_day_of_week + "and fanspeed is " + temp_fanspeed;
+    message = "Statemachine initialized. It is after " + hourStr + ":00 and day of week is " + temp_day_of_week + " and fanspeed is " + temp_fanspeed;
     print_message(message);
     set_fanspeed(temp_fanspeed);
     
@@ -273,18 +279,18 @@ void day_transitions(void) {
         }
     }
 
-    message = "\nNumber of sensors measure high CO2: " + String(co2_sensors_high);
-    print_message(message);
-    
-    message = "\nNumber of sensors measure high RH: " + String(rh_sensors_high);
+    message = "Number of sensors measure high CO2: " + String(co2_sensors_high) + ". Number of sensors measure high RH: " + String(rh_sensors_high);
     print_message(message);
 
     if (co2_sensors_high > 0) {
         new_state = "highco2day";
+        elapsed_time = 0;
+        old_time = 0;
     }
     else if (rh_sensors_high > 0) {
         new_state = "highrhday";
         elapsed_time = 0;
+        old_time = 0;
     }
     else if (temp_hour >= 21) {
         message = "It's night. Transit to night."; 
@@ -393,19 +399,19 @@ void night_transitions(void) {
         }
     }
 
-    message = "\nNumber of sensors measure high CO2: " + String(co2_sensors_high);
-    print_message(message);
-    
-    message = "\nNumber of sensors measure high RH: " + String(rh_sensors_high);
+    message = "Number of sensors measure high CO2: " + String(co2_sensors_high) +  ". Number of sensors measure high RH: " + String(rh_sensors_high);
     print_message(message);
 
     // Conditions to transit to other state
     if (co2_sensors_high > 0) {
         new_state = "highco2night";
+        elapsed_time = 0;
+        old_time = 0;
     }
     else if (rh_sensors_high > 0) {
         new_state = "highrhnight";
         elapsed_time = 0;
+        old_time = 0;
     }
     else if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
         message = "It is after 8, before 21 and a weekday. Transit to day.";
@@ -439,18 +445,18 @@ void night_transitions(void) {
 
 void high_co2_day_transitions(void) {
 
+    int temp_hour = 0;
+    int co2_sensors_high = 0;
+    long new_time = 0;
+    bool valve_move_locked = 0;
+    bool state_valve_pos_file_present = 0;
+    
     String statemachine_state = "highco2day";
     String fanspeed_tmp = "";
     String temp_day_of_week = "";
     String state_valve_pos_path = "";
     String state_valve_pos_str = "";
     String message = "";
-
-    int temp_hour = 0;
-    int co2_sensors_high = 0;
-    long new_time = 0;
-    bool valve_move_locked = 0;
-    bool state_valve_pos_file_present = 0;
 
     JsonDocument state_valve_pos_doc;
 
@@ -566,17 +572,22 @@ void high_co2_day_transitions(void) {
         message = "It is before 8, after 21 and a weekday. Transit to high_co2_night.";
         print_message(message);
         new_state = "highco2night";
+        elapsed_time = 0;
+        old_time = 0;
     }
     else if (co2_sensors_high > 0 && temp_hour >= 21 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday")) {
         message = "It is after 9, before 21 and weekend. Transit to high_co2_night.";
         print_message(message);
         new_state = "highco2night";
+        elapsed_time = 0;
+        old_time = 0;
     }
     else if (co2_sensors_high == 0 && elapsed_time > 600) {
         message = "It is day, no high co2 levels. Transit to day.";
         print_message(message);
         new_state = "day";
         elapsed_time = 0;
+        old_time = 0;
     }
     else {
         message = "It is day with high CO2 levels. Remain in highco2day state";
@@ -721,18 +732,21 @@ void high_co2_night_transitions(void) {
         print_message(message);
         new_state = "night";
         elapsed_time = 0;
+        old_time = 0;
     }
     else if (co2_sensors_high > 0 && temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
         message = "It is after 8, before 21 and a weekday. Transit to high_co2_day.";
         print_message(message);
         new_state = "highco2day";
         elapsed_time = 0;
+        old_time = 0;
     }
     else if (co2_sensors_high > 0 && temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday")) {
         message = "It is after 9, before 21 and weekend. Transit to high_co2_day.";
         print_message(message);
         new_state = "highco2day";
         elapsed_time = 0;
+        old_time = 0;
     }
     else {
         message = "It is night with high CO2 levels. Remain in highco2night state";
@@ -829,13 +843,15 @@ void high_rh_day_transitions(void) {
         message = "It's day with no high RH or time expired. Transit to day";
         print_message(message);
         new_state = "day";
-        elapsed_time = 0;           //Reset elapsed time after transition
+        elapsed_time = 0;
+        old_time = 0;
     }
     else if (temp_hour >= 21) {
         message = "It's night but RH levels are still high and time not expired. Transit to high_rh_night";
         print_message(message);   
         new_state = "highrhnight";
         elapsed_time = 0;
+        old_time = 0;
     }
     else {
         message = "Conditions have not changed, RH is still high, so remain in high_rh_day state";
@@ -937,19 +953,22 @@ void high_rh_night_transitions(void) {
         message = "It's night and RH is low enough. Transit to night.";
         print_message(message);
         new_state = "night";
-        elapsed_time = 0; // Reset elapsed time after transition
+        elapsed_time = 0;
+        old_time = 0;
     }
     else if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday" && elapsed_time > 1800)  {
         message = "It is after 8, before 21 and a weekday but RH is still high. Transit to high_rh_day.";
         print_message(message);
         new_state = "highrhday";
-        elapsed_time = 0; // Reset elapsed time after transition
+        elapsed_time = 0;
+        old_time = 0;
     }
     else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday" && elapsed_time > 1800)) {
         message = "It is after 9, before 21 and weekend but RH is still high. Transit to high_rh_day ";
         print_message(message);
         new_state = "highrhday";
-        elapsed_time = 0; // Reset elapsed time after transition
+        elapsed_time = 0;
+        old_time = 0;
     }
     else {
         message = "Conditions have not changed, RH is still high, so remain in high_rh_night state";
@@ -1019,6 +1038,8 @@ void cooking_transitions(void) {
         message = "It's day and not cooking time. Transit to day";
         print_message(message);
         new_state = "day";
+        elapsed_time = 0;
+        old_time = 0;
     }
     else {
         message = "Conditions have not changed, cooking time is not over so remain in cooking state";
@@ -1116,11 +1137,14 @@ void valve_cycle_day_transitions(void) {
         print_message(message);
         new_state = "highrhday";
         elapsed_time = 0;
+        old_time = 0;
     }
     else if (co2_sensors_high > 0) {
         message = "It is valve_cycle_day and high CO2 levels are measured. Transit to high_co2_day";
         print_message(message);
         new_state = "highco2day";
+        elapsed_time = 0;
+        old_time = 0;
     }
     else {
         message = "Conditions have not changed, valve_cycle_day is still active, so remain in valve_cycle_day state";
@@ -1218,13 +1242,15 @@ void valve_cycle_night_transitions(void) {
         message = "It's valve_cycle_night and high RH. Transit to high_rh_night state.";
         print_message(message);
         new_state = "highrhnight";
-        elapsed_time = 0;                           // Reset elapsed time after transition
+        elapsed_time = 0;
+        old_time = 0;
     }
     else if (co2_sensors_high > 0) {
         message = "It is valve_cycle_night and CO2 level is high. Transit to high_co2_night";
         print_message(message);
         new_state = "highco2night";
-        elapsed_time = 0;                           // Reset elapsed time after transition
+        elapsed_time = 0;
+        old_time = 0;
     }
     else {
         message = "Conditions have not changed, valve_cycle_day is still active, so remain in valve_cycle_night state";

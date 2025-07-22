@@ -7,6 +7,7 @@
 #include <WiFi.h>
 
 #include "influxdb.h"
+#include "general.h"
 
 // function declarations
 void start_task_influxdb(void);

@@ -9,9 +9,10 @@ void task_influxdb_code(void * pvParameters)
 {
     for(;;) {
         
-        bool ap_active_temp=0;
+        bool ap_active_temp = 0;
         
-        String enable_influxdb_tmp;
+        String enable_influxdb_tmp = "";
+        String message = ""
         
         vTaskDelay(10000);
         
@@ -28,12 +29,11 @@ void task_influxdb_code(void * pvParameters)
                 xSemaphoreGive(settings_influxdb_mutex);
             }
         }
-        
-        //Serial.print("\nEnable Influxdb: ");
-        //Serial.print(enable_influxdb_tmp);
 
         if (WiFi.waitForConnectResult() == WL_CONNECTED && ap_active_temp == 0 && enable_influxdb_tmp == "On") {
-            Serial.print("\nWriting to InfluxDB...");
+            message = "Writing to InfluxDB...";
+            print_message(message);
+            
             write_sensor_data();
             write_avg_sensor_data();
             write_valve_position_data();
