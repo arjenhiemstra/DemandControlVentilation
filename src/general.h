@@ -7,5 +7,6 @@
 
 //Function definitions
 void print_message(String);
+String formatted_datetime(void);
 
 #endif

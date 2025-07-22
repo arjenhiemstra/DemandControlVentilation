@@ -1,7 +1,7 @@
 #include "task_wserial.h"
 
-AsyncWebServer ws_server(8080);
-WebSerial webSerial;
+//AsyncWebServer ws_server(8080);
+//WebSerial webSerial;
 
 void start_task_wserial(void) {
 
@@ -11,19 +11,22 @@ void start_task_wserial(void) {
 void task_wserial_code(void * pvParameters) {
 
     char rxBuffer[200];
-    char lastRxBuffer[200] = {0};
+    String datetime = formatted_datetime();
+    String rxString = "";
     
-    webSerial.onMessage([](const std::string& msg) { Serial.println(msg.c_str()); });
-    webSerial.begin(&ws_server);
-    webSerial.setBuffer(100);
-    ws_server.begin();
+    //webSerial.onMessage([](const std::string& msg) { Serial.println(msg.c_str()); });
+    //webSerial.begin(&ws_server);
+    //webSerial.setBuffer(100);
+    //ws_server.begin();
     
     //Loop code for the task
     for(;;) { 
-        if (xQueueReceive(webserial_queue, rxBuffer, 5) == pdTRUE) {
-            String rxString = String(rxBuffer);
-            webSerial.println(rxString);
+        if (xQueueReceive(webserial_queue, rxBuffer, 50) == pdPASS) {
+            rxString = "[" + datetime + "] " + (rxBuffer);
+            //webSerial.println(rxString);
+            Serial.print("\n[" + datetime + "] " + rxString);
         }
+
         //Serial.print("\nNumber of messages in queue waiting: " + String(uxQueueMessagesWaiting(webserial_queue)));
         vTaskDelay(1000);
     }   

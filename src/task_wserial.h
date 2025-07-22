@@ -10,6 +10,7 @@
 
 //Other includes
 #include "globals.h"
+#include "general.h"
 
 // function declarations
 void start_task_wserial(void);

@@ -139,11 +139,11 @@ void stopped_transitions(void) {
 
 void init_transitions(void) {
 
+    int temp_hour = 0;
+    
     String temp_day_of_week = "";
     String temp_fanspeed = "";
     String message = "";
-    
-    int temp_hour = 0;
 
     // Actions for this state
     if (statemachine_state_mutex != NULL) {
@@ -169,9 +169,8 @@ void init_transitions(void) {
         }
     }
 
-    message = "\nStatemachine initialized. Current time is " + hourStr + " and day of week is " + temp_day_of_week;
+    message = "\nStatemachine initialized. It is after " + hourStr + ":00 and day of week is " + temp_day_of_week + "and fanspeed is " + temp_fanspeed;
     print_message(message);
-
     set_fanspeed(temp_fanspeed);
     
     // Conditions to transit to other state, only evalaution based on time and day of week
@@ -186,7 +185,7 @@ void init_transitions(void) {
         new_state = "day";
     }
     else {
-        message = "It's night. Transit to night.";
+        message = "No conditions met for day, so transit to night.";
         print_message(message);
         new_state = "night";
     }
@@ -205,6 +204,7 @@ void day_transitions(void) {
     int co2_sensors_high = 0;
     int rh_sensors_high = 0;
     bool valve_move_locked = 0;
+    
     String fanspeed_tmp = "";
     String statemachine_state = "day";  
     String message = "";  
@@ -322,11 +322,11 @@ void night_transitions(void) {
     int co2_sensors_high = 0;
     int rh_sensors_high = 0;
     bool valve_move_locked = 0;
+
     String statemachine_state = "night";
     String fanspeed_tmp = "";
     String temp_day_of_week = "";
     String message = "";
-    
     
     // Actions for this sate
     if (statemachine_state_mutex != NULL) {
@@ -550,9 +550,7 @@ void high_co2_day_transitions(void) {
         }
     }
 
-    message = "Elapsed time in " + statemachine_state + "state: " + String(elapsed_time) + " seconds";
-    print_message(message);
-    message = "Number of sensors measure high CO2: " + String(co2_sensors_high);
+    message = "Number of sensors measure high CO2: " + String(co2_sensors_high) + ". Elapsed time in " + statemachine_state + "state: " + String(elapsed_time) + " seconds";
     print_message(message);
 
     if (valve_move_locked == 0) {    
@@ -706,9 +704,7 @@ void high_co2_night_transitions(void) {
         }
     }
 
-    message = "Elapsed time in " + statemachine_state + "state: " + String(elapsed_time) + " seconds";
-    print_message(message);
-    message = "Number of sensors measure high CO2: " + String(co2_sensors_high);
+    message = "Number of sensors measure high CO2: " + String(co2_sensors_high) + ". Elapsed time in " + statemachine_state + "state: " + String(elapsed_time) + " seconds";
     print_message(message);
 
     if (valve_move_locked == 0) {    
@@ -825,9 +821,7 @@ void high_rh_day_transitions(void) {
         }
     }
 
-    message = "Number of sensors measure high RH: " + String(rh_sensors_high);
-    print_message(message);
-    message = "Elapsed time in " + statemachine_state + "state: " + String(elapsed_time) + " seconds";
+    message = "Elapsed time in " + statemachine_state + "state: " + String(elapsed_time) + " seconds. Number of sensors measure high RH: " + String(rh_sensors_high);
     print_message(message);
 
     // Conditions for transition
@@ -935,9 +929,7 @@ void high_rh_night_transitions(void) {
         }
     }
 
-    message = "Elapsed time in " + statemachine_state + "state: " + String(elapsed_time) + " seconds";
-    print_message(message);
-    message = "Number of sensors measure high RH: " + String(rh_sensors_high);
+    message = "Elapsed time in " + statemachine_state + "state: " + String(elapsed_time) + " seconds. Number of sensors measure high RH: " + String(rh_sensors_high);
     print_message(message);
 
     // Conditions for transition
@@ -1110,9 +1102,7 @@ void valve_cycle_day_transitions(void) {
         }
     }
 
-    message = "Number of RH sensor with high reading: " + String(rh_sensors_high);
-    print_message(message);
-    message = "Number of CO2 sensor with high reading: " + String(co2_sensors_high);
+    message = "Number of RH sensor with high reading: " + String(rh_sensors_high) + ". Number of CO2 sensor with high reading: " + String(co2_sensors_high);
     print_message(message);
 
     // Conditions for transition
@@ -1215,9 +1205,7 @@ void valve_cycle_night_transitions(void) {
         }
     }
 
-    message = "Number of RH sensor with high reading: " + String(rh_sensors_high);
-    print_message(message);
-    message = "Number of CO2 sensor with high reading: " + String(co2_sensors_high);
+    message = "Number of RH sensor with high reading: " + String(rh_sensors_high) + ". Number of CO2 sensor with high reading: " + String(co2_sensors_high);
     print_message(message);
 
     // Conditions for transition
@@ -1230,13 +1218,13 @@ void valve_cycle_night_transitions(void) {
         message = "It's valve_cycle_night and high RH. Transit to high_rh_night state.";
         print_message(message);
         new_state = "highrhnight";
-        elapsed_time = 0; // Reset elapsed time after transition
+        elapsed_time = 0;                           // Reset elapsed time after transition
     }
     else if (co2_sensors_high > 0) {
         message = "It is valve_cycle_night and CO2 level is high. Transit to high_co2_night";
         print_message(message);
         new_state = "highco2night";
-        elapsed_time = 0; // Reset elapsed time after transition
+        elapsed_time = 0;                           // Reset elapsed time after transition
     }
     else {
         message = "Conditions have not changed, valve_cycle_day is still active, so remain in valve_cycle_night state";
@@ -1426,12 +1414,6 @@ void select_sensors(void) {
             k++;
         }
     }
-
-    message = "co2_sensor_counter: " + String(co2_sensor_counter);
-    print_message(message);
-    
-    message = "\nrh_sensor_counter: " + String(rh_sensor_counter);
-    print_message(message);
 
     co2_sensor_counter = j;
     rh_sensor_counter = k;
