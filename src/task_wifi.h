@@ -7,6 +7,7 @@
 #include <esp_wifi.h>
 
 #include "wifi_config.h"
+#include "general.h"
 
 // function declarations
 void start_task_wifi(void);
