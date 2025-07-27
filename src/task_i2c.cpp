@@ -12,7 +12,10 @@ void task_i2c_code(void * pvParameters)
     int rtc_time_multiplier = 0;
     int sync_time_multiplier = 0;
     int lcd_address_tmp = 0;
+    
     const TickType_t timedelay = 10;                     // main time delay im ms
+
+    String message = "";
 
     pinMode(pushButton_pin, INPUT);
     attachInterrupt(pushButton_pin, lcd_baclight_pb_isr, RISING);
@@ -45,25 +48,27 @@ void task_i2c_code(void * pvParameters)
         }
         
         if (rtc_time_multiplier == 2000) {             //Every 20 seconds
-            Serial.print("\nUpdate time....");
-            Serial.print("\nLocal time is: ");
-            String temp_time = current_time();
-            Serial.print(temp_time);
-            Serial.print("\nSystem uptime: ");
-            Serial.print(esp_timer_get_time()/1000000/60);
-            Serial.print(" min");
+            
+            message = "Local time is: " + current_time();
+            print_message(message);
+            
+            message = "System uptime: " + String(esp_timer_get_time()/1000000/60) + " min";
+            print_message(message);
+
             rtc_time_multiplier = 0;
         }
 
-        if (sync_time_multiplier == 360000) {         //Every hour
-            Serial.print("\nSync RTC with NTP server...");
+        if (sync_time_multiplier == 180000) {         //Every 30 mins
+            message = "Sync RTC with NTP server...";
+            print_message(message);
             sync_rtc_ntp();
             sync_time_multiplier = 0;
         }
 
         //When pushbutton is pushed, toggle will be true and function to display status is started
         if (pb_toggle == true) {
-            Serial.print("\nStart task display....");
+            message = "Pushbutton pressed. Start task display....";
+            print_message(message);
             pb_start_display();
         }
 

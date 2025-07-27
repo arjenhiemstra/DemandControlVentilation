@@ -5,8 +5,8 @@ String sensor_config_processor(const String& var) {
     const char* path1 = "/json/sensor_config1.json";
     const char* path2 = "/json/sensor_config2.json";
     const char* status;
-    bool sensor_config_file1_present;
-    bool sensor_config_file2_present;
+    bool sensor_config_file1_present = 0;
+    bool sensor_config_file2_present = 0;
    
     sensor_config_file1_present = check_file_exists(path1);
 
@@ -200,34 +200,42 @@ String sensor_config_processor(const String& var) {
 String status_processor(const String& var) {
 
     const char* path1 = "/json/valvepositions.json";    
-    bool status_valve_file_present;
+    bool status_valve_file_present = 0;
 
-    uint64_t uptime;
+    uint64_t uptime = 0;
     
-    String state_tmp;
-    String fanspeed_tmp;
-    String json1;
+    String state_tmp = "";
+    String fanspeed_tmp = "";
+    String json1 = "";
 
     JsonDocument doc1;
 
-    String yearStr_tmp;
-    String monthStr_tmp;
-    String dayStr_tmp;
-    String hourStr_tmp;
-    String minuteStr_tmp;
-    String secondStr_tmp;
-    String dayOfWeek_tmp;
-    String formattedTime;
+    String yearStr_tmp = "";
+    String monthStr_tmp = "";
+    String dayStr_tmp = "";
+    String hourStr_tmp = "";
+    String minuteStr_tmp = "";
+    String secondStr_tmp = "";
+    String dayOfWeek_tmp = "";
+    String formattedTime = "";
+    String message = "";
     
     if (valve_position_file_mutex != NULL) {
         if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             status_valve_file_present = check_file_exists(path1);
             if (status_valve_file_present == 1) {
                 json1 = read_config_file(path1);
-                deserializeJson(doc1, json1);
+                //deserializeJson(doc1, json1);
             }
             xSemaphoreGive(valve_position_file_mutex);
         }
+    }
+    
+    DeserializationError err = deserializeJson(doc1,json1);
+    if (err) {
+        message = "[ERROR] Failed to parse valvepositions.json: " + String(path1) + ": " + String(err.c_str());
+        print_message(message);
+        return "";
     }
 
     if (fanspeed_mutex != NULL) {
@@ -634,6 +642,7 @@ String settings_processor(const String& var) {
     String settings_statemachine_json = "";
     String settings_influxdb_json = "";
     String settings_rtc_json = "";
+    String message = "";
     
     JsonDocument settings_network_doc;
     JsonDocument settings_mqtt_doc;
@@ -649,10 +658,17 @@ String settings_processor(const String& var) {
             settings_network_file_present = check_file_exists(settings_network_path);
             if (settings_network_file_present == 1) {
                 settings_network_json = read_config_file(settings_network_path);
-                deserializeJson(settings_network_doc, settings_network_json);
+                //deserializeJson(settings_network_doc, settings_network_json);
             }
             xSemaphoreGive(settings_network_mutex);
         }
+    }
+    
+    DeserializationError err1 = deserializeJson(settings_network_doc, settings_network_json);
+    if (err1) {
+        message = "[ERROR] Failed to parse valvepositions.json: " + String(settings_network_path) + ": " + String(err1.c_str());
+        print_message(message);
+        return "";
     }
 
     if (settings_network_file_present == 1) {
@@ -689,10 +705,17 @@ String settings_processor(const String& var) {
             settings_mqtt_file_present = check_file_exists(settings_mqtt_path);
             if (settings_mqtt_file_present == 1) {
                 settings_mqtt_json = read_config_file(settings_mqtt_path);
-                deserializeJson(settings_mqtt_doc, settings_mqtt_json);
+                //deserializeJson(settings_mqtt_doc, settings_mqtt_json);
             }
             xSemaphoreGive(settings_mqtt_mutex);
         }
+    }
+    
+    DeserializationError err2 = deserializeJson(settings_mqtt_doc, settings_mqtt_json);
+    if (err2) {
+        message = "[ERROR] Failed to parse valvepositions.json: " + String(settings_mqtt_path) + ": " + String(err2.c_str());
+        print_message(message);
+        return "";
     }
 
     if (settings_mqtt_file_present == 1) {
@@ -721,10 +744,16 @@ String settings_processor(const String& var) {
             settings_i2c_file_present = check_file_exists(settings_i2c_path);
             if (settings_i2c_file_present == 1) {
                 settings_i2c_json = read_config_file(settings_i2c_path);
-                deserializeJson(settings_i2c_doc, settings_i2c_json);
+                //deserializeJson(settings_i2c_doc, settings_i2c_json);
             }
             xSemaphoreGive(settings_i2c_mutex);
         }
+    }
+    DeserializationError err3 = deserializeJson(settings_i2c_doc, settings_i2c_json);
+    if (err3) {
+        message = "[ERROR] Failed to parse valvepositions.json: " + String(settings_i2c_path) + ": " + String(err3.c_str());
+        print_message(message);
+        return "";
     }
 
     if (settings_i2c_file_present == 1) {
@@ -753,10 +782,16 @@ String settings_processor(const String& var) {
             settings_fan_file_present = check_file_exists(settings_fan_path);
             if (settings_fan_file_present == 1) {
                 settings_fan_json = read_config_file(settings_fan_path);
-                deserializeJson(settings_fan_doc, settings_fan_json);
+                //deserializeJson(settings_fan_doc, settings_fan_json);
             }
             xSemaphoreGive(settings_fan_mutex);
         }
+    }
+    DeserializationError err4 = deserializeJson(settings_fan_doc, settings_fan_json);
+    if (err4) {
+        message = "[ERROR] Failed to parse valvepositions.json: " + String(settings_fan_path) + ": " + String(err4.c_str());
+        print_message(message);
+        return "";
     }
 
     if (settings_fan_file_present == 1) {
@@ -791,10 +826,16 @@ String settings_processor(const String& var) {
             settings_statemachine_file_present = check_file_exists(settings_statemachine_path);
             if (settings_statemachine_file_present == 1) {
                 settings_statemachine_json = read_config_file(settings_statemachine_path);
-                deserializeJson(settings_statemachine_doc, settings_statemachine_json);
+                //deserializeJson(settings_statemachine_doc, settings_statemachine_json);
             }
             xSemaphoreGive(settings_statemachine_mutex);
         }
+    }
+    DeserializationError err5 = deserializeJson(settings_statemachine_doc, settings_statemachine_json);
+    if (err5) {
+        message = "[ERROR] Failed to parse valvepositions.json: " + String(settings_statemachine_path) + ": " + String(err5.c_str());
+        print_message(message);
+        return "";
     }
 
     if (settings_statemachine_file_present == 1) {
@@ -819,10 +860,16 @@ String settings_processor(const String& var) {
             settings_influxdb_file_present = check_file_exists(settings_influxdb_path);
             if (settings_influxdb_file_present == 1) {
                 settings_influxdb_json = read_config_file(settings_influxdb_path);
-                deserializeJson(settings_influxdb_doc, settings_influxdb_json);
+                //deserializeJson(settings_influxdb_doc, settings_influxdb_json);
             }
             xSemaphoreGive(settings_influxdb_mutex);
         }
+    }
+    DeserializationError err6 = deserializeJson(settings_influxdb_doc, settings_influxdb_json);
+    if (err6) {
+        message = "[ERROR] Failed to parse valvepositions.json: " + String(settings_influxdb_path) + ": " + String(err6.c_str());
+        print_message(message);
+        return "";
     }
 
     if (settings_influxdb_file_present == 1) {
@@ -853,10 +900,16 @@ String settings_processor(const String& var) {
             settings_rtc_file_present = check_file_exists(settings_rtc_path);
             if (settings_rtc_file_present == 1) {
                 settings_rtc_json = read_config_file(settings_rtc_path);
-                deserializeJson(settings_rtc_doc, settings_rtc_json);
+                //deserializeJson(settings_rtc_doc, settings_rtc_json);
             }
             xSemaphoreGive(settings_rtc_mutex);
         }
+    }
+    DeserializationError err7 = deserializeJson(settings_rtc_doc, settings_rtc_json);
+    if (err7) {
+        message = "[ERROR] Failed to parse valvepositions.json: " + String(settings_rtc_path) + ": " + String(err7.c_str());
+        print_message(message);
+        return "";
     }
 
     if (settings_rtc_file_present == 1) {

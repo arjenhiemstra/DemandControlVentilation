@@ -7,6 +7,7 @@
 
 #include "config_files.h"
 #include "globals.h"
+#include "general.h"
 
 //Function definitions
 String valvecontrol_processor(const String&);
@@ -14,5 +15,6 @@ String sensor_config_processor(const String&);
 String status_processor(const String&);
 String settings_processor(const String&);
 String settings_valve_state(const String&);
+
 
 #endif

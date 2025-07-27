@@ -9,6 +9,7 @@ void start_task_wifi(void) {
 void task_wifi_code(void * pvParameters) {
     
     String message = "";
+    String mac_message = "";
 
     for(;;) {
         
@@ -34,19 +35,21 @@ void task_wifi_code(void * pvParameters) {
         message = "IP Address: " + String(WiFi.localIP().toString()) + ", Subnetmask: " + String(WiFi.subnetMask().toString()) + ", Gateway IP: " + String(WiFi.gatewayIP().toString());
         print_message(message);
         
-        message = "Primary DNS: " + String(WiFi.dnsIP(0).toString()) + ", Secondary DNS: " + String(WiFi.dnsIP(1).toString());
-        print_message(message);
+        
 
         uint8_t baseMac[6];
         esp_err_t ret = esp_wifi_get_mac(WIFI_IF_STA, baseMac);
         
         if (ret == ESP_OK) {
-            message = "MAC: " + String(baseMac[0], HEX) + ":" + String(baseMac[1], HEX) + ":" + String(baseMac[2], HEX) + ":" + String(baseMac[3], HEX) + ":" + String(baseMac[4], HEX) + ":" + String(baseMac[5], HEX);
+            mac_message = ", MAC: " + String(baseMac[0], HEX) + ":" + String(baseMac[1], HEX) + ":" + String(baseMac[2], HEX) + ":" + String(baseMac[3], HEX) + ":" + String(baseMac[4], HEX) + ":" + String(baseMac[5], HEX);
+            message = "Primary DNS: " + String(WiFi.dnsIP(0).toString()) + ", Secondary DNS: " + String(WiFi.dnsIP(1).toString()) + mac_message;
             print_message(message);
             //Serial.printf("%02x:%02x:%02x:%02x:%02x:%02x", baseMac[0], baseMac[1], baseMac[2], baseMac[3], baseMac[4], baseMac[5]);
         } 
         else {
             message = "Failed to read MAC address";
+            print_message(message);
+            message = "Primary DNS: " + String(WiFi.dnsIP(0).toString()) + ", Secondary DNS: " + String(WiFi.dnsIP(1).toString());
             print_message(message);
         }
                 

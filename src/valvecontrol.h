@@ -6,6 +6,7 @@
 
 #include "config_files.h"
 #include "globals.h"
+#include "general.h"
 
 // function declarations
 void move_valve(void);

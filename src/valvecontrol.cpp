@@ -20,9 +20,12 @@ void move_valve(void) {
     const char* path = "/json/valvepositions.json";
     
     bool status_file_present = 0;
+    bool write_valve_position_file = false;
     
     String json = "";
     String new_valve_positions = "";
+    String message = "";
+
     JsonDocument doc;
 
     if (valve_control_data_mutex != NULL) {
@@ -44,24 +47,17 @@ void move_valve(void) {
             }
         }
 
-        deserializeJson(doc, json);
-  
-        String valve0_pos = doc[String("valve0")];
-        String valve1_pos = doc[String("valve1")];
-        String valve2_pos = doc[String("valve2")];
-        String valve3_pos = doc[String("valve3")];
-        String valve4_pos = doc[String("valve4")];
-        String valve5_pos = doc[String("valve5")];
-        String valve6_pos = doc[String("valve6")];
-        String valve7_pos = doc[String("valve7")];
-        String valve8_pos = doc[String("valve8")];
-        String valve9_pos = doc[String("valve9")];
-        String valve10_pos = doc[String("valve10")];
-        String valve11_pos = doc[String("valve11")];
+        DeserializationError err = deserializeJson(doc, json);
+        if (err) {
+            message = "Failed to parse valvepositions.json: ";
+            print_message(message);
+            return;
+        }
     }
 
     // Debug
-    Serial.print("\nStore new valve Position: " + String(store_valve_position) + ", Check valve position: " + String(check_valve_position));
+    message = "Store new valve Position: " + String(store_valve_position) + ", Check valve position: " + String(check_valve_position);
+    print_message(message);
 
     for(int i=0;i<12;i++) {
 
@@ -75,7 +71,8 @@ void move_valve(void) {
         }
         
         valve_pos = doc["valve"+String(i)];
-        Serial.print("\nvalve_number: " + String(valve_number) + ", position_change: " + String(valve_position_change) + ", direction: " + direction);
+        message = "valve_number: " + String(valve_number) + ", position_change: " + String(valve_position_change) + ", direction: " + direction;
+        print_message(message);
 
         // Assign the correct IO based on valve number
         if (valve_number < 6) {
@@ -93,7 +90,7 @@ void move_valve(void) {
         //Direction 1 is open valve
         //Position 0 is fully closed
         //Position 24 is fully open
-        if (check_valve_position == 1) {
+        /*if (check_valve_position == 1) {
             if(direction == 0 && (valve_pos - valve_position_change) <= 0) {
                 new_valve_position_change = valve_pos;
                 Serial.print ("\nCondition 1. Request move is: " + String(valve_position_change) + ". Current_position is: " + String(valve_pos) + ". Valve will move: " + String(new_valve_position_change) + ". Direction: " + String(direction));
@@ -124,6 +121,27 @@ void move_valve(void) {
         }
         else {
             Serial.print("\nError in valvecontrol. Position change outside valve range of 0 and 24");
+        }*/
+
+
+        if (check_valve_position == 1) {
+            if (direction == 0) { // Close
+                new_valve_position_change = min(valve_position_change, valve_pos);
+                new_valve_position = valve_pos - new_valve_position_change;
+            } else { // Open
+                new_valve_position_change = min(valve_position_change, 24 - valve_pos);
+                new_valve_position = valve_pos + new_valve_position_change;
+            }
+            message = "Request move: " + String(valve_position_change) + ", Current position: " + String(valve_pos) + ", Valve will move: " + String(new_valve_position_change) + ", Direction: " + (direction == 0 ? "close" : "open");
+            print_message(message);
+            valvecontrol(direction, new_valve_position_change, valve_number, dataPin, clockPin, latchPin);
+        } 
+        else if (check_valve_position == 0 && (valve_pos + valve_position_change) <= 24 && (valve_pos - valve_position_change) >= 0) {
+            valvecontrol(direction, valve_position_change, valve_number, dataPin, clockPin, latchPin);
+        } 
+        else {
+            message = "Error in valvecontrol. Position change outside valve range of 0 and 24";
+            print_message(message);
         }
 
         //Storing new valve positions only makes sense in combination with new calculated positions
@@ -135,14 +153,19 @@ void move_valve(void) {
     //Convert from JsonDocument to String
     serializeJson(doc, new_valve_positions);
 
-    Serial.print("\n");
-    //Serial.print(new_valve_positions);
-
     //Write status file only if required
     if (store_valve_position == 1) {
         if (valve_position_file_mutex != NULL) {
             if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
-                write_config_file(path, new_valve_positions);
+                write_valve_position_file = write_config_file(path, new_valve_positions);
+                if (write_valve_position_file == false) {
+                    message = "[ERROR] Failed to write valve positions to file: " + String(path);
+                    print_message(message);
+                } 
+                else {
+                    message = "Valve positions stored successfully in valvepositions.json";
+                    print_message(message);
+                }
                 xSemaphoreGive(valve_position_file_mutex);
             }
         }
@@ -230,7 +253,7 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
             break;
     }
 
-    //Direction is 0 (forwards or close)
+    //Direction 1 is open valve
     if (direction == 1 && position_change <= 24) {
         //Loop to run the number of cycles to make one turn * the number of turns to make requested_position_change
         for (j=0; j < (cycles * position_change); j++) {
@@ -248,7 +271,7 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
         all_outputs_off(dataPin, clockPin, latchPin);
     }
 
-    //Direction is 1 (backwards or open)
+    //Direction 0 is close valve
     else if (direction == 0 && position_change <= 24) {
         //Loop to run the number of cycles to make one turn * the number of turns to make requested_position_change
         for (j=0; j < (cycles*position_change); j++) {
@@ -312,6 +335,7 @@ Data structure for each JSON valve_control_data Structure
     String state_valve_pos_path = "";            //Must be String and not const char* because it is changed by the statemechine!!!
     String state_valve_pos_str = "";
     String actual_valve_pos_json = "";
+    String message = "";
 
     JsonDocument state_valve_pos_doc;
     JsonDocument actual_valve_pos_doc;
@@ -339,20 +363,29 @@ Data structure for each JSON valve_control_data Structure
         if (state_valve_pos_file_present == 1) {
             
             File file = LittleFS.open(state_valve_pos_path, "r");
-            while(file.available()) {
-                state_valve_pos_str = file.readString();
+            if (!file) {
+                message = "[ERROR] Failed to open file: " + state_valve_pos_path;
+                print_message(message);
+                return;
+            }
+            state_valve_pos_str = file.readString();
+            if (state_valve_pos_str.length() == 0) {
+                message = "[ERROR] File is empty: " + state_valve_pos_path;
+                print_message(message);
+                file.close();
+                return;
             }
             file.close();    
+        }
+        else {
+            message = "[ERROR] File does not exist: " + state_valve_pos_path;
+            return;
         }
     }
     
     //From string to JSONdoc
     deserializeJson(state_valve_pos_doc, state_valve_pos_str);
 
-    //Print to serial
-    Serial.print("\nValve position state in valvecontrol: \n");
-    serializeJsonPretty(state_valve_pos_doc, Serial);
-       
     status_file_present = check_file_exists(actual_valve_pos_path);
 
     if (valve_position_file_mutex != NULL) {
@@ -364,8 +397,13 @@ Data structure for each JSON valve_control_data Structure
         }
     }
     
-    deserializeJson(actual_valve_pos_doc, actual_valve_pos_json);
-
+    DeserializationError err = deserializeJson(actual_valve_pos_doc, actual_valve_pos_json);
+    if (err) {
+        message = "Failed to parse valvepositions.json: ";
+        print_message(message);
+        return;
+    }
+    
     for (i=0;i<12;i++) {
         
         valve_number = i;     

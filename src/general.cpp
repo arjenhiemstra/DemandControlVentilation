@@ -2,16 +2,13 @@
 
 void print_message(String message) {
     
-    char txBuffer[200];
+    char txBuffer[400];
 
     if (debug_mode == true) {
-        //Serial.print("\n" + message);
         strcpy(txBuffer, message.c_str());            
         if(webserial_queue != 0) {
-            if (xQueueSend(webserial_queue, txBuffer, 50)) {
-                //Serial.print("Message sent to webserial queue: ");
-                //Serial.println(txBuffer);
-            } else {
+            if (xQueueSend(webserial_queue, txBuffer, 50)) { } 
+            else {
                 Serial.println("Failed to send message to webserial queue.");
             }
         }

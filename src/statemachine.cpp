@@ -60,8 +60,7 @@ void run_statemachine(void) {
     message = "Read sensor data from queue for statemachine.";
     print_message(message);
     
-    if (xQueuePeek(sensor_queue, &statemachine_sensor_data, 0 ) == pdTRUE) {
-    }
+    if (xQueuePeek(sensor_queue, &statemachine_sensor_data, 0 ) == pdTRUE) { }
     
     message = "Read average sensor data from queue for statemachine.";
     print_message(message);
@@ -82,7 +81,6 @@ void run_statemachine(void) {
             //}
         //}
     }
-    //Serial.print("\n");
     
     if (state == "init") {
         init_transitions();
@@ -586,6 +584,8 @@ void high_co2_day_transitions(void) {
         message = "It is day, no high co2 levels. Transit to day.";
         print_message(message);
         new_state = "day";
+        elapsed_time = 0;
+        old_time = (esp_timer_get_time())/1000000;
     }
     else {
         message = "It is day with high CO2 levels. Remain in highco2day state";
@@ -730,6 +730,7 @@ void high_co2_night_transitions(void) {
         print_message(message);
         new_state = "night";
         elapsed_time = 0;
+        old_time = (esp_timer_get_time())/1000000;
     }
     else if (co2_sensors_high > 0 && temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
         message = "It is after 8, before 21 and a weekday. Transit to high_co2_day.";
@@ -840,6 +841,8 @@ void high_rh_day_transitions(void) {
         message = "It's day with no high RH or time expired. Transit to day";
         print_message(message);
         new_state = "day";
+        elapsed_time = 0;
+        old_time = (esp_timer_get_time())/1000000;
     }
     else if (temp_hour >= 21) {
         message = "It's night but RH levels are still high and time not expired. Transit to high_rh_night";
@@ -948,6 +951,8 @@ void high_rh_night_transitions(void) {
         message = "It's night and RH is low enough. Transit to night.";
         print_message(message);
         new_state = "night";
+        elapsed_time = 0;
+        old_time = (esp_timer_get_time())/1000000;
     }
     else if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday" && elapsed_time > 1800)  {
         message = "It is after 8, before 21 and a weekday but RH is still high. Transit to high_rh_day.";
@@ -1031,6 +1036,8 @@ void cooking_transitions(void) {
         message = "It's day and not cooking time. Transit to day";
         print_message(message);
         new_state = "day";
+        elapsed_time = 0;
+        old_time = (esp_timer_get_time())/1000000;
     }
     else {
         message = "Conditions have not changed, cooking time is not over so remain in cooking state";
@@ -1122,6 +1129,8 @@ void valve_cycle_day_transitions(void) {
         message = "It's not valve cycle time. Transit to day";
         print_message(message);
         new_state = "day";
+        elapsed_time = 0;
+        old_time = (esp_timer_get_time())/1000000;
     }
     else if (rh_sensors_high > 0) {
         message = "It's valve_cycle_day and high RH is measured. Transit to high_rh_day state.";
@@ -1228,6 +1237,8 @@ void valve_cycle_night_transitions(void) {
         message = "It's not valve_cycle time. Transit to night";
         print_message(message);
         new_state = "night";
+        elapsed_time = 0;
+        old_time = (esp_timer_get_time())/1000000;
     }
     else if (rh_sensors_high > 0) {
         message = "It's valve_cycle_night and high RH. Transit to high_rh_night state.";

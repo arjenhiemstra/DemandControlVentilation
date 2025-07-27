@@ -45,11 +45,11 @@ void setup() {
 
   //Init queues for sensors
   float temp[2][8][3];
-  char txBuffer[200];
+  char txBuffer[400];
   sensor_queue = xQueueCreate(1, sizeof(temp));
   sensor_avg_queue = xQueueCreate(1, sizeof(temp));
-  //webserial_queue = xQueueCreate(10, sizeof(txBuffer));
-  webserial_queue = xQueueCreate(20, 200);
+  webserial_queue = xQueueCreate(30, sizeof(txBuffer));
+  //webserial_queue = xQueueCreate(20, 200);
 
   if (webserial_queue == 0 || sensor_queue == 0 || sensor_avg_queue == 0)
   {
