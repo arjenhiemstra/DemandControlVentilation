@@ -9,6 +9,7 @@
 
 #include "globals.h"
 #include "config_files.h"
+#include "general.h"
 
 // function declarations
 void write_sensor_data(void);
