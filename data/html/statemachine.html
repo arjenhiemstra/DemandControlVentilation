@@ -39,6 +39,16 @@
         </div>
 
         <div class="content">  
+            <h4 class="content-subhead">General settings statemachine - %STATUS_STATEMACHINE_CONFIG%</h4>
+            <p>
+                <form class="pure-form pure-form-stacked" method="POST" action="/settings_statemachine">
+                    <fieldset>
+                        <div class="pure-g">
+                            
+                        </div>
+                    </fieldset>
+                </form>
+            </p>
             <h4 class="content-subhead">Day state valve settings - %STATUS_STATE_DAY_CONFIG%</h4>
             <p>
                 <form class="pure-form pure-form-stacked" method="POST" action="/settings_valve_day">
@@ -204,7 +214,7 @@
                 <form class="pure-form pure-form-stacked" method="POST" action="/settings_valve_highco2day">
                     <fieldset>
                         <div class="pure-g">
-                            <div class="pure-u-1 pure-u-md-1-5">
+                            <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="enable_state_highco2day">State:</label>
                                 <select id="enable_state_highco2day" name="enable_state_highco2day" id="enable_state_highco2day" class="pure-input-1-1">
                                     <option selected>%ENABLE_STATE_HIGHCO2DAY%</option>
@@ -212,7 +222,7 @@
                                     <option>Off</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-1-5">
+                            <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="state_highco2day_fanspeed">Fan speed:</label>
                                 <select id="state_highco2day_fanspeed" name="state_highco2day_fanspeed" id="state_highco2day_fanspeed" class="pure-input-1-1">
                                     <option selected>%STATE_HIGHCO2DAY_FANSPEED%</option>
@@ -221,17 +231,18 @@
                                     <option>High</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-1-5">
+                            <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="name_state_highco2day">Name:</label>
                                 <input type="text" value="%NAME_STATE_HIGHCO2DAY%" name="name_state_highco2day" id="name_state_highco2day" class="pure-input-1-1" />
                             </div>
-                            <div class="pure-u-1 pure-u-md-1-5">
+                            <div class="pure-u-1 pure-u-md-1-6"></div>
+                            <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="co2_low_state_highco2day">CO2 Low level:</label>
-                                <input type="number" value="%CO2_LOW_STATE_HIGHCO2DAY%" value="700" min="500" name="co2_low_state_highco2day" id="co2_low_state_highco2day" class="pure-input-1-1" />
+                                <input type="number" value="%CO2_LOW_STATE_HIGHCO2DAY%" value="700" min="500" name="co2_low_state_highco2day" id="co2_low_state_highco2day" class="pure-input-1-2" />
                             </div>
-                            <div class="pure-u-1 pure-u-md-1-5">
+                            <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="co2_high_state_highco2day">CO2 High level:</label>
-                                <input type="number" value="%CO2_HIGH_STATE_HIGHCO2DAY%" value="1000" min="500" name="co2_high_state_highco2day" id="co2_high_state_highco2day" class="pure-input-1-1" />
+                                <input type="number" value="%CO2_HIGH_STATE_HIGHCO2DAY%" value="1000" min="500" name="co2_high_state_highco2day" id="co2_high_state_highco2day" class="pure-input-1-2" />
                             </div>
                             <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="valve0_position_highco2day">Valve0:</label>
@@ -292,7 +303,7 @@
                 <form class="pure-form pure-form-stacked" method="POST" action="/settings_valve_highco2night">
                     <fieldset>
                         <div class="pure-g">
-                            <div class="pure-u-1 pure-u-md-1-5">
+                            <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="enable_state_highco2night">State:</label>
                                 <select id="enable_state_highco2night" name="enable_state_highco2night" id="enable_state_highco2night" class="pure-input-1-1">
                                     <option selected>%ENABLE_STATE_HIGHCO2NIGHT%</option>
@@ -300,7 +311,7 @@
                                     <option>Off</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-1-5">
+                            <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="state_highco2night_fanspeed">Fan speed:</label>
                                 <select id="state_highco2night_fanspeed" name="state_highco2night_fanspeed" id="state_highco2night_fanspeed" class="pure-input-1-1">
                                     <option selected>%STATE_HIGHCO2NIGHT_FANSPEED%</option>
@@ -309,17 +320,18 @@
                                     <option>High</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-1-5">
+                            <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="name_state_highco2night">Name:</label>
                                 <input type="text" value="%NAME_STATE_HIGHCO2NIGHT%" name="name_state_highco2night" id="name_state_highco2night" class="pure-input-1-1" />
                             </div>
-                            <div class="pure-u-1 pure-u-md-1-5">
+                            <div class="pure-u-1 pure-u-md-1-6"></div>
+                            <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="co2_low_state_highco2night">CO2 Low level:</label>
-                                <input type="number" value="%CO2_LOW_STATE_HIGHCO2NIGHT%" value="700" min="500" name="co2_low_state_highco2night" id="co2_low_state_highco2night" class="pure-input-1-1" />
+                                <input type="number" value="%CO2_LOW_STATE_HIGHCO2NIGHT%" value="700" min="500" name="co2_low_state_highco2night" id="co2_low_state_highco2night" class="pure-input-1-2" />
                             </div>
-                            <div class="pure-u-1 pure-u-md-1-5">
+                            <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="co2_high_state_highco2night">CO2 High level:</label>
-                                <input type="number" value="%CO2_HIGH_STATE_HIGHCO2NIGHT%" value="1000" min="500" name="co2_high_state_highco2night" id="co2_high_state_highco2night" class="pure-input-1-1" />
+                                <input type="number" value="%CO2_HIGH_STATE_HIGHCO2NIGHT%" value="1000" min="500" name="co2_high_state_highco2night" id="co2_high_state_highco2night" class="pure-input-1-2" />
                             </div>
                             <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="valve0_position_highco2night">Valve0:</label>
@@ -380,7 +392,7 @@
                 <form class="pure-form pure-form-stacked" method="POST" action="/settings_valve_highrhday">
                     <fieldset>
                         <div class="pure-g">
-                            <div class="pure-u-1 pure-u-md-1-5">
+                            <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="enable_state_highrhday">State:</label>
                                 <select id="enable_state_highrhday" name="enable_state_highrhday" id="enable_state_highrhday" class="pure-input-1-1">
                                     <option selected>%ENABLE_STATE_HIGHRHDAY%</option>
@@ -388,7 +400,7 @@
                                     <option>Off</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-1-5">
+                            <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="state_highrhday_fanspeed">Fan speed:</label>
                                 <select id="state_highhrday_fanspeed" name="state_highrhday_fanspeed" id="state_highrhday_fanspeed" class="pure-input-1-1">
                                     <option selected>%STATE_HIGHRHDAY_FANSPEED%</option>
@@ -397,17 +409,18 @@
                                     <option>High</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-1-5">
+                            <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="name_state_highrhday">Name:</label>
                                 <input type="text" value="%NAME_STATE_HIGHRHDAY%" name="name_state_highrhday" id="name_state_highrhday" class="pure-input-1-1" />
                             </div>
-                            <div class="pure-u-1 pure-u-md-1-5">
+                            <div class="pure-u-1 pure-u-md-1-6"></div>
+                            <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="rh_low_state_highrhday">RH Low level:</label>
-                                <input type="number" value="%RH_LOW_STATE_HIGHRHDAY%" value="75" max="100" name="rh_low_state_highrhday" id="rh_low_state_highrhday" class="pure-input-1-1" />
+                                <input type="number" value="%RH_LOW_STATE_HIGHRHDAY%" value="75" max="100" name="rh_low_state_highrhday" id="rh_low_state_highrhday" class="pure-input-1-2" />
                             </div>
-                            <div class="pure-u-1 pure-u-md-1-5">
+                            <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="rh_high_state_highrhday">RH High level:</label>
-                                <input type="number" value="%RH_HIGH_STATE_HIGHRHDAY%" value="85" min="100" name="rh_high_state_highrhday" id="rh_high_state_highrhday" class="pure-input-1-1" />
+                                <input type="number" value="%RH_HIGH_STATE_HIGHRHDAY%" value="85" min="100" name="rh_high_state_highrhday" id="rh_high_state_highrhday" class="pure-input-1-2" />
                             </div>
                             <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="valve0_position_highrhday">Valve0:</label>
@@ -468,7 +481,7 @@
                 <form class="pure-form pure-form-stacked" method="POST" action="/settings_valve_highrhnight">
                     <fieldset>
                         <div class="pure-g">
-                            <div class="pure-u-1 pure-u-md-1-5">
+                            <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="enable_state_highrhnight">State:</label>
                                 <select id="enable_state_highrhnight" name="enable_state_highrhnight" id="enable_state_highrhnight" class="pure-input-1-1">
                                     <option selected>%ENABLE_STATE_HIGHRHNIGHT%</option>
@@ -476,7 +489,7 @@
                                     <option>Off</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-1-5">
+                            <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="state_highrhnight_fanspeed">Fan speed:</label>
                                 <select id="state_highrhnight_fanspeed" name="state_highrhnight_fanspeed" id="state_highrhnight_fanspeed" class="pure-input-1-1">
                                     <option selected>%STATE_HIGHRHNIGHT_FANSPEED%</option>
@@ -485,17 +498,18 @@
                                     <option>High</option>
                                 </select>
                             </div>
-                            <div class="pure-u-1 pure-u-md-1-5">
+                            <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="name_state_highrhnight">Name:</label>
                                 <input type="text" value="%NAME_STATE_HIGHRHNIGHT%" name="name_state_highrhnight" id="name_state_highrhnight" class="pure-input-1-1" />
                             </div>
-                            <div class="pure-u-1 pure-u-md-1-5">
+                            <div class="pure-u-1 pure-u-md-1-6"></div>
+                            <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="rh_low_state_highrhnight">RH Low level:</label>
-                                <input type="number" value="%RH_LOW_STATE_HIGHRHNIGHT%" value="75" max="100" name="rh_low_state_highrhnight" id="rh_low_state_highrhnight" class="pure-input-1-1" />
+                                <input type="number" value="%RH_LOW_STATE_HIGHRHNIGHT%" value="75" max="100" name="rh_low_state_highrhnight" id="rh_low_state_highrhnight" class="pure-input-1-2" />
                             </div>
-                            <div class="pure-u-1 pure-u-md-1-5">
+                            <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="rh_high_state_highrhnight">RH High level:</label>
-                                <input type="number" value="%RH_HIGH_STATE_HIGHRHNIGHT%" value="85" max="100" name="rh_high_state_highrhnight" id="rh_high_state_highrhnight" class="pure-input-1-1" />
+                                <input type="number" value="%RH_HIGH_STATE_HIGHRHNIGHT%" value="85" max="100" name="rh_high_state_highrhnight" id="rh_high_state_highrhnight" class="pure-input-1-2" />
                             </div>
                             <div class="pure-u-1 pure-u-md-1-6">
                                 <label for="valve0_position_highrhnight">Valve0:</label>
