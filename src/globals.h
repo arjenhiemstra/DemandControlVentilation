@@ -43,6 +43,7 @@ extern SemaphoreHandle_t statemachine_state_mutex;
 extern SemaphoreHandle_t fanspeed_mutex;
 extern SemaphoreHandle_t lock_valve_move_mutex;
 extern SemaphoreHandle_t ap_active_mutex;
+//extern SemaphoreHandle_t webserial_url_mutex;
 
 extern SemaphoreHandle_t settings_state_day_mutex;
 extern SemaphoreHandle_t settings_state_night_mutex;
@@ -122,9 +123,6 @@ extern String dayOfWeek;
 
 extern String state;
 extern String fanspeed;
-
-//extern long old_time;
-//extern long elapsed_time;
 
 extern bool lock_valve_move;
 extern bool pb_toggle;

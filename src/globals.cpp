@@ -108,10 +108,6 @@ String dayOfWeek = "";
 String state = "";
 String fanspeed = "";
 
-//Used to check how long in RH high state (day or night)
-//long old_time;
-//long elapsed_time;
-
 bool lock_valve_move = 0;                       // Variable for skipping valve move when already moving
 bool pb_toggle = false;
 bool ap_active = 0;

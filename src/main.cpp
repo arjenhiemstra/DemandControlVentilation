@@ -49,7 +49,6 @@ void setup() {
   sensor_queue = xQueueCreate(1, sizeof(temp));
   sensor_avg_queue = xQueueCreate(1, sizeof(temp));
   webserial_queue = xQueueCreate(30, sizeof(txBuffer));
-  //webserial_queue = xQueueCreate(20, 200);
 
   if (webserial_queue == 0 || sensor_queue == 0 || sensor_avg_queue == 0)
   {

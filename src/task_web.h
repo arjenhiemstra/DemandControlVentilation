@@ -16,7 +16,6 @@
 
 // function declarations
 void startTaskwebcode(void);
-String processor(const String&);
 void Taskwebcode(void *pvParameters);
 
 #endif

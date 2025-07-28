@@ -10,11 +10,12 @@ void task_wifi_code(void * pvParameters) {
     
     String message = "";
     String mac_message = "";
+    //String webserial_url_tmp = "";
+
+    uint8_t baseMac[6];
 
     for(;;) {
-        
-        //Serial.print("\nAccess point mode active: " + ap_active);
-        
+               
         if (WiFi.status() != WL_CONNECTED && ap_active == 0) {
             message = "No Wifi connection. Trying to connect to Wifi.";
             print_message(message);
@@ -34,10 +35,22 @@ void task_wifi_code(void * pvParameters) {
 
         message = "IP Address: " + String(WiFi.localIP().toString()) + ", Subnetmask: " + String(WiFi.subnetMask().toString()) + ", Gateway IP: " + String(WiFi.gatewayIP().toString());
         print_message(message);
-        
-        
 
-        uint8_t baseMac[6];
+        //Update webserial URL
+        /*
+        webserial_url_tmp = "http://" + String(WiFi.localIP().toString()) + ":8080/webserial";
+        message = "Webserial URL: " + webserial_url_tmp;
+        print_message(message);
+
+        if (webserial_url_mutex != NULL) {
+            if(xSemaphoreTake(webserial_url_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+                webserial_url = webserial_url_tmp;
+                xSemaphoreGive(webserial_url_mutex);
+            }
+        }
+        */
+        
+        //Print network data
         esp_err_t ret = esp_wifi_get_mac(WIFI_IF_STA, baseMac);
         
         if (ret == ESP_OK) {
@@ -49,13 +62,33 @@ void task_wifi_code(void * pvParameters) {
         else {
             message = "Failed to read MAC address";
             print_message(message);
+            
             message = "Primary DNS: " + String(WiFi.dnsIP(0).toString()) + ", Secondary DNS: " + String(WiFi.dnsIP(1).toString());
             print_message(message);
         }
                 
         vTaskDelay(30000);
     }
-  
 }
 
+String create_webserial_url(void) {
 
+    String webserial_url;
+    String message;
+
+    webserial_url = "http://" + String(WiFi.localIP().toString()) + ":8080/webserial";
+    message = "Webserial URL: " + webserial_url;
+    print_message(message);
+    
+    return webserial_url;
+}
+
+/*
+WL_IDLE_STATUS (0): WiFi is in the process of initializing.
+WL_NO_SSID_AVAIL (1): No SSID (network name) is available.
+WL_SCAN_COMPLETED (2): The network scan is complete.
+WL_CONNECTED (3): Successfully connected to a WiFi network.
+WL_CONNECT_FAILED (4): Connection attempt failed (e.g., wrong password).
+WL_CONNECTION_LOST (5): Connection was lost after being established.
+WL_DISCONNECTED (6): Disconnected from the network.
+*/

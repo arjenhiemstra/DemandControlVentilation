@@ -350,6 +350,9 @@ void Taskwebcode(void *pvParameters) {
 	//Settings web pages processing
 	server.on("/settings", HTTP_GET, [](AsyncWebServerRequest *request) { request->send(LittleFS, "/html/settings.html", String(), false, settings_processor);	});
 
+	//Webserial handling
+	server.on("/web_serial", HTTP_GET, [](AsyncWebServerRequest *request) { request->send(LittleFS, "/html/web_serial.html", String(), false, webserial_processor);	});
+
 	//Reboot ESP32 button
 	server.on("/restart_esp32", HTTP_POST, [](AsyncWebServerRequest *request) {
 		request->send(LittleFS, "/html/settings.html", String(), false, settings_processor);
