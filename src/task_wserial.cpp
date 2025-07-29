@@ -10,14 +10,14 @@ void start_task_wserial(void) {
 
 void task_wserial_code(void * pvParameters) {
 
-    char rxBuffer[200];
+    char rxBuffer[400];
     String datetime = "";
     String rxString = "";
     String message = "";
     
     webSerial.onMessage([](const std::string& msg) { Serial.println(msg.c_str()); });
     webSerial.begin(&ws_server);
-    webSerial.setBuffer(100);
+    //webSerial.setBuffer(100);
     ws_server.begin();
     
     //Loop code for the task
@@ -29,8 +29,6 @@ void task_wserial_code(void * pvParameters) {
             Serial.print("\n" + message);
             webSerial.println(message);
         }
-        
-        //Serial.print("\nNumber of messages in queue waiting: " + String(uxQueueMessagesWaiting(webserial_queue)));
         vTaskDelay(1000);
     }   
 }
