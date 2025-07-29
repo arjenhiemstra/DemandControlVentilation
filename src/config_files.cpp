@@ -557,6 +557,7 @@ void valve_status_file_create() {
             if (file.print(default_valve_position_file) == 0) {
                 message = "[ERROR] Write failed: /json/valvepositions.json";
                 print_message(message);
+                return;
             } 
             else {
                 message = "Valve status file written";

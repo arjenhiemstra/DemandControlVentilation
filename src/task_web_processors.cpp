@@ -1054,6 +1054,10 @@ String settings_valve_state(const String& var) {
             return (settings_state_highco2day[String("state_highco2day_fanspeed")]);
         if(var == "NAME_STATE_HIGHCO2DAY")
             return (settings_state_highco2day[String("name_state_highco2day")]);
+        if(var == "CO2_LOW_STATE_HIGHCO2DAY")
+            return (settings_state_highco2day[String("co2_low_state_highco2day")]);
+        if(var == "CO2_HIGH_STATE_HIGHCO2DAY")
+            return (settings_state_highco2day[String("co2_high_state_highco2day")]);
         if(var == "VALVE0_POSITION_HIGHCO2DAY")
             return (settings_state_highco2day[String("valve0_position_highco2day")]);
         if(var == "VALVE1_POSITION_HIGHCO2DAY")
@@ -1098,6 +1102,10 @@ String settings_valve_state(const String& var) {
             return (settings_state_highco2night[String("state_highco2night_fanspeed")]);
         if(var == "NAME_STATE_HIGHCO2NIGHT")
             return (settings_state_highco2night[String("name_state_highco2night")]);
+        if(var == "CO2_LOW_STATE_HIGHCO2NIGHT")
+            return (settings_state_highco2night[String("co2_low_state_highco2night")]);
+        if(var == "CO2_HIGH_STATE_HIGHCO2NIGHT")
+            return (settings_state_highco2night[String("co2_high_state_highco2night")]);
         if(var == "VALVE0_POSITION_HIGHCO2NIGHT")
             return (settings_state_highco2night[String("valve0_position_highco2night")]);
         if(var == "VALVE1_POSITION_HIGHCO2NIGHT")
@@ -1142,6 +1150,10 @@ String settings_valve_state(const String& var) {
             return (settings_state_highrhday[String("state_highrhday_fanspeed")]);
         if(var == "NAME_STATE_HIGHRHDAY")
             return (settings_state_highrhday[String("name_state_highrhday")]);
+        if(var == "RH_LOW_STATE_HIGHRHDAY")
+            return (settings_state_highrhday[String("rh_low_state_highrhday")]);
+        if(var == "RH_HIGH_STATE_HIGHRHDAY")
+            return (settings_state_highrhday[String("rh_high_state_highrhday")]);
         if(var == "VALVE0_POSITION_HIGHRHDAY")
             return (settings_state_highrhday[String("valve0_position_highrhday")]);
         if(var == "VALVE1_POSITION_HIGHRHDAY")
@@ -1186,6 +1198,10 @@ String settings_valve_state(const String& var) {
             return (settings_state_highrhnight[String("state_highrhnight_fanspeed")]);
         if(var == "NAME_STATE_HIGHRHNIGHT")
             return (settings_state_highrhnight[String("name_state_highrhnight")]);
+        if(var == "RH_LOW_STATE_HIGHRHNIGHT")
+            return (settings_state_highrhnight[String("rh_low_state_highrhnight")]);
+        if(var == "RH_HIGH_STATE_HIGHRHNIGHT")
+            return (settings_state_highrhnight[String("rh_high_state_highrhnight")]);
         if(var == "VALVE0_POSITION_HIGHRHNIGHT")
             return (settings_state_highrhnight[String("valve0_position_highrhnight")]);
         if(var == "VALVE1_POSITION_HIGHRHNIGHT")
@@ -1230,6 +1246,14 @@ String settings_valve_state(const String& var) {
             return (settings_state_cooking[String("state_cooking_fanspeed")]);
         if(var == "NAME_STATE_COOKING")
             return (settings_state_cooking[String("name_state_cooking")]);
+        if(var == "START_HOUR_STATE_COOKING")
+            return (settings_state_cooking[String("start_hour_state_cooking")]);
+        if(var == "START_MIN_STATE_COOKING")
+            return (settings_state_cooking[String("start_min_state_cooking")]);
+        if(var == "STOP_HOUR_STATE_COOKING")
+            return (settings_state_cooking[String("stop_hour_state_cooking")]);
+        if(var == "STOP_MIN_STATE_COOKING")
+            return (settings_state_cooking[String("stop_min_state_cooking")]);
         if(var == "VALVE0_POSITION_COOKING")
             return (settings_state_cooking[String("valve0_position_cooking")]);
         if(var == "VALVE1_POSITION_COOKING")

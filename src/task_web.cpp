@@ -203,6 +203,8 @@ const char* STATUS_STATE_HIGHCO2DAY_CONFIG = "statemachine_valve_highco2day_conf
 const char* STATE_HIGHCO2DAY_FANSPEED = "state_highco2day_fanspeed";
 const char* ENABLE_STATE_HIGHCO2DAY = "enable_state_highco2day";
 const char* NAME_STATE_HIGHCO2DAY = "name_state_highco2day";
+const char* CO2_LOW_STATE_HIGHCO2DAY = "co2_low_state_highco2day";
+const char* CO2_HIGH_STATE_HIGHCO2DAY = "co2_high_state_highco2day";
 const char* VALVE0_POSITION_HIGHCO2DAY = "valve0_position_highco2day";
 const char* VALVE1_POSITION_HIGHCO2DAY = "valve1_position_highco2day";
 const char* VALVE2_POSITION_HIGHCO2DAY = "valve2_position_highco2day";
@@ -220,6 +222,8 @@ const char* STATUS_STATE_HIGHCO2NIGHT_CONFIG = "statemachine_valve_highco2night_
 const char* STATE_HIGHCO2NIGHT_FANSPEED = "state_highco2night_fanspeed";
 const char* ENABLE_STATE_HIGHCO2NIGHT = "enable_state_highco2night";
 const char* NAME_STATE_HIGHCO2NIGHT = "name_state_highco2night";
+const char* CO2_LOW_STATE_HIGHCO2NIGHT = "co2_low_state_highco2night";
+const char* CO2_HIGH_STATE_HIGHCO2NIGHT = "co2_high_state_highco2night";
 const char* VALVE0_POSITION_HIGHCO2NIGHT = "valve0_position_highco2night";
 const char* VALVE1_POSITION_HIGHCO2NIGHT = "valve1_position_highco2night";
 const char* VALVE2_POSITION_HIGHCO2NIGHT = "valve2_position_highco2night";
@@ -237,6 +241,8 @@ const char* STATUS_STATE_HIGHRHDAY_CONFIG = "statemachine_valve_highrhday_config
 const char* STATE_HIGHRHDAY_FANSPEED = "state_highrhday_fanspeed";
 const char* ENABLE_STATE_HIGHRHDAY = "enable_state_highrhday";
 const char* NAME_STATE_HIGHRHDAY = "name_state_highrhday";
+const char* RH_LOW_STATE_HIGHRHDAY = "rh_low_state_highrhday";
+const char* RH_HIGH_STATE_HIGHRHDAY = "rh_high_state_highrhday";
 const char* VALVE0_POSITION_HIGHRHDAY = "valve0_position_highrhday";
 const char* VALVE1_POSITION_HIGHRHDAY = "valve1_position_highrhday";
 const char* VALVE2_POSITION_HIGHRHDAY = "valve2_position_highrhday";
@@ -254,6 +260,8 @@ const char* STATUS_STATE_HIGHRHNIGHT_CONFIG = "statemachine_valve_highrhnight_co
 const char* STATE_HIGHRHNIGHT_FANSPEED = "state_highrhnight_fanspeed";
 const char* ENABLE_STATE_HIGHRHNIGHT = "enable_state_highrhnight";
 const char* NAME_STATE_HIGHRHNIGHT = "name_state_highrhnight";
+const char* RH_LOW_STATE_HIGHRHNIGHT = "rh_low_state_highrhnight";
+const char* RH_HIGH_STATE_HIGHRHNIGHT = "rh_high_state_highrhnight";
 const char* VALVE0_POSITION_HIGHRHNIGHT = "valve0_position_highrhnight";
 const char* VALVE1_POSITION_HIGHRHNIGHT = "valve1_position_highrhnight";
 const char* VALVE2_POSITION_HIGHRHNIGHT = "valve2_position_highrhnight";
@@ -271,6 +279,10 @@ const char* STATUS_STATE_COOKING_CONFIG = "statemachine_valve_cooking_config";
 const char* STATE_COOKING_FANSPEED = "state_cooking_fanspeed";
 const char* ENABLE_STATE_COOKING = "enable_state_cooking";
 const char* NAME_STATE_COOKING = "name_state_cooking";
+const char* START_HOUR_STATE_COOKING = "start_hour_state_cooking";
+const char* START_MIN_STATE_COOKING = "start_min_state_cooking";
+const char* STOP_HOUR_STATE_COOKING = "stop_hour_state_cooking";
+const char* STOP_MIN_STATE_COOKING =  "stop_min_state_cooking";
 const char* VALVE0_POSITION_COOKING = "valve0_position_cooking";
 const char* VALVE1_POSITION_COOKING = "valve1_position_cooking";
 const char* VALVE2_POSITION_COOKING = "valve2_position_cooking";
@@ -324,12 +336,6 @@ String valve0_direction,valve1_direction,valve2_direction,valve3_direction,valve
 String check_valve_position;            // True when check is required if valve moves within operating range
 String store_valve_position_in_file;    // True to enable storing of new position in valve position file
 
-JsonDocument settings_network_data;
-JsonDocument settings_mqtt_data;
-JsonDocument settings_i2c_data;
-JsonDocument settings_rtc_data;
-JsonDocument settings_influxdb_data;
-
 void startTaskwebcode(void) {
   	xTaskCreate(Taskwebcode, "Task_web", 10000, NULL, 9, &h_Task_web);
 }
@@ -361,105 +367,103 @@ void Taskwebcode(void *pvParameters) {
 
 	//Save settings from network settings
 	server.on("/settings_network", HTTP_POST, [](AsyncWebServerRequest *request) {
-		if (settings_network_mutex != NULL) {
-			if(xSemaphoreTake(settings_network_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-				int params = request->params();
-				for(int i=0;i<params;i++){
-					const AsyncWebParameter* p = request->getParam(i);
-					if(p->isPost()) {
-						if (p->name() == ENABLE_DHCP)
-							settings_network_data["enable_dhcp"] = p->value().c_str();;
-						if (p->name() == SSID)
-							settings_network_data["ssid"] = p->value().c_str();;
-						if (p->name() == WIFI_PASSWORD) 
-							settings_network_data["wifi_password"] = p->value().c_str();;
-						if (p->name() == IP_ADDRESS) 
-							settings_network_data["ip_address"] = p->value().c_str();;
-						if (p->name() == SUBNET_MASK)
-							settings_network_data["subnet_mask"] = p->value().c_str();;
-						if (p->name() == GATEWAY)
-							settings_network_data["gateway"] = p->value().c_str();;
-						if (p->name() == PRIMARY_DNS)
-							settings_network_data["primary_dns"] = p->value().c_str();;
-						if (p->name() == SECONDARY_DNS)
-							settings_network_data["secondary_dns"] = p->value().c_str();;
-					}
-				}
-				const char* path = "/json/settings_network.json";
-				String settings_network_str;
-				serializeJson(settings_network_data, settings_network_str);
-				write_config_file(path, settings_network_str);
-				xSemaphoreGive(settings_network_mutex);
+		
+		int params = request->params();
+		const char* path = "/json/settings_network.json";
+		String settings_network_str;
+		JsonDocument settings_network_data;
+		
+		for(int i=0;i<params;i++){
+			const AsyncWebParameter* p = request->getParam(i);
+			if(p->isPost()) {
+				if (p->name() == ENABLE_DHCP)
+					settings_network_data["enable_dhcp"] = p->value().c_str();;
+				if (p->name() == SSID)
+					settings_network_data["ssid"] = p->value().c_str();;
+				if (p->name() == WIFI_PASSWORD) 
+					settings_network_data["wifi_password"] = p->value().c_str();;
+				if (p->name() == IP_ADDRESS) 
+					settings_network_data["ip_address"] = p->value().c_str();;
+				if (p->name() == SUBNET_MASK)
+					settings_network_data["subnet_mask"] = p->value().c_str();;
+				if (p->name() == GATEWAY)
+					settings_network_data["gateway"] = p->value().c_str();;
+				if (p->name() == PRIMARY_DNS)
+					settings_network_data["primary_dns"] = p->value().c_str();;
+				if (p->name() == SECONDARY_DNS)
+					settings_network_data["secondary_dns"] = p->value().c_str();;
 			}
 		}
+		serializeJson(settings_network_data, settings_network_str);
+		write_config_file(path, settings_network_str);
 		request->send(LittleFS, "/html/settings.html", String(), false, settings_processor);
 	});
 
 	//Save settings from MQTT settings
 	server.on("/settings_mqtt", HTTP_POST, [](AsyncWebServerRequest *request) {
-		if (settings_mqtt_mutex != NULL) {
-			if(xSemaphoreTake(settings_mqtt_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-				int params = request->params();
-				for(int i=0;i<params;i++){
-					const AsyncWebParameter* p = request->getParam(i);
-					if(p->isPost()){
-						if (p->name() == STATUS_MQTT_CONFIG)
-							settings_mqtt_data["status_mqtt_config"] = p->value().c_str();
-						if (p->name() == ENABLE_MQTT)
-							settings_mqtt_data["enable_mqtt"] = p->value().c_str();
-						if (p->name() == MQTT_SERVER)
-							settings_mqtt_data["mqtt_server"] = p->value().c_str();
-						if (p->name() == MQTT_PORT)
-							settings_mqtt_data["mqtt_port"] = p->value().c_str();
-						if (p->name() == MQTT_BASE_TOPIC)
-							settings_mqtt_data["mqtt_base_topic"] = p->value().c_str();
-					}
-				}
-				const char* path = "/json/settings_mqtt.json";
-				String settings_mqtt_str;
-				serializeJson(settings_mqtt_data, settings_mqtt_str);
-				write_config_file(path, settings_mqtt_str);	
-				xSemaphoreGive(settings_mqtt_mutex);
+		
+		int params = request->params();
+		const char* path = "/json/settings_mqtt.json";
+		String settings_mqtt_str;
+		JsonDocument settings_mqtt_data;
+
+		for(int i=0;i<params;i++){
+			const AsyncWebParameter* p = request->getParam(i);
+			if(p->isPost()){
+				if (p->name() == STATUS_MQTT_CONFIG)
+					settings_mqtt_data["status_mqtt_config"] = p->value().c_str();
+				if (p->name() == ENABLE_MQTT)
+					settings_mqtt_data["enable_mqtt"] = p->value().c_str();
+				if (p->name() == MQTT_SERVER)
+					settings_mqtt_data["mqtt_server"] = p->value().c_str();
+				if (p->name() == MQTT_PORT)
+					settings_mqtt_data["mqtt_port"] = p->value().c_str();
+				if (p->name() == MQTT_BASE_TOPIC)
+					settings_mqtt_data["mqtt_base_topic"] = p->value().c_str();
 			}
 		}
+		serializeJson(settings_mqtt_data, settings_mqtt_str);
+		write_config_file(path, settings_mqtt_str);	
 		request->send(LittleFS, "/html/settings.html", String(), false, settings_processor);
 	});
 
 	//Save settings from I2C settings
 	server.on("/settings_i2c", HTTP_POST, [](AsyncWebServerRequest *request) {
-		if (settings_i2c_mutex != NULL) {
-			if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-				int params = request->params();
-				for(int i=0;i<params;i++){
-					const AsyncWebParameter* p = request->getParam(i);
-					if(p->isPost()){
-						if (p->name() == STATUS_I2C_CONFIG)
-							settings_i2c_data["status_i2c_config"] = p->value().c_str();;
-						if (p->name() == BUS0_MULTIPLEXER_ADDRESS)
-							settings_i2c_data["bus0_multiplexer_address"] = p->value().c_str();;
-						if (p->name() == BUS1_MULTIPLEXER_ADDRESS) 
-							settings_i2c_data["bus1_multiplexer_address"] = p->value().c_str();;
-						if (p->name() == ENABLE_LCD)
-							settings_i2c_data["enable_lcd"] = p->value().c_str();;
-						if (p->name() == DISPLAY_I2C_ADDRESS) 
-							settings_i2c_data["display_i2c_address"] = p->value().c_str();;
-					}
-				}
-				const char* path = "/json/settings_i2c.json";
-				String settings_i2c_str;
-				serializeJson(settings_i2c_data, settings_i2c_str);
-				write_config_file(path, settings_i2c_str);
-				xSemaphoreGive(settings_i2c_mutex);
+		
+		int params = request->params();
+		const char* path = "/json/settings_i2c.json";
+		String settings_i2c_str;
+		JsonDocument settings_i2c_data;
+
+		for(int i=0;i<params;i++){
+			const AsyncWebParameter* p = request->getParam(i);
+			if(p->isPost()){
+				if (p->name() == STATUS_I2C_CONFIG)
+					settings_i2c_data["status_i2c_config"] = p->value().c_str();;
+				if (p->name() == BUS0_MULTIPLEXER_ADDRESS)
+					settings_i2c_data["bus0_multiplexer_address"] = p->value().c_str();;
+				if (p->name() == BUS1_MULTIPLEXER_ADDRESS) 
+					settings_i2c_data["bus1_multiplexer_address"] = p->value().c_str();;
+				if (p->name() == ENABLE_LCD)
+					settings_i2c_data["enable_lcd"] = p->value().c_str();;
+				if (p->name() == DISPLAY_I2C_ADDRESS) 
+					settings_i2c_data["display_i2c_address"] = p->value().c_str();;
 			}
 		}
+		serializeJson(settings_i2c_data, settings_i2c_str);
+		write_config_file(path, settings_i2c_str);
 		request->send(LittleFS, "/html/settings.html", String(), false, settings_processor);
 	});
 
 	//Save settings from fan control settings
 	server.on("/settings_fan", HTTP_POST, [](AsyncWebServerRequest *request) {
+		
+		int params = request->params();
+		const char* path = "/json/settings_fan.json";
+		String settings_fan_str;
+		
 		if (settings_fan_mutex != NULL) {
 			if(xSemaphoreTake(settings_fan_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-				int params = request->params();
 				for(int i=0;i<params;i++){
 					const AsyncWebParameter* p = request->getParam(i);
 					if(p->isPost()){
@@ -481,18 +485,16 @@ void Taskwebcode(void *pvParameters) {
 							settings_fan_data["fan_control_url_low_speed"] = p->value().c_str();
 					}
 				}
-				const char* path = "/json/settings_fan.json";
-				String settings_fan_str;
-				serializeJson(settings_fan_data, settings_fan_str);
-				write_config_file(path, settings_fan_str);    
+				serializeJson(settings_fan_data, settings_fan_str);    
 				xSemaphoreGive(settings_fan_mutex);
 			}
 		}
+		write_config_file(path, settings_fan_str);
 		request->send(LittleFS, "/html/settings.html", String(), false, settings_processor);
 	});
 
 	//Save settings from statemachine settings
-	server.on("/settings_statemachine", HTTP_POST, [](AsyncWebServerRequest *request) {
+	/*server.on("/settings_statemachine", HTTP_POST, [](AsyncWebServerRequest *request) {
 		if (settings_statemachine_mutex != NULL) {
 			if(xSemaphoreTake(settings_statemachine_mutex, ( TickType_t ) 10 ) == pdTRUE) {
 				int params = request->params();
@@ -515,65 +517,60 @@ void Taskwebcode(void *pvParameters) {
 			}
 		}
 		request->send(LittleFS, "/html/settings.html", String(), false, settings_processor);
-	});
+	});*/
 
   	//Save settings from InfluxDB settings
 	server.on("/settings_influxdb", HTTP_POST, [](AsyncWebServerRequest *request) {
-		if (settings_influxdb_mutex != NULL) {
-			if(xSemaphoreTake(settings_influxdb_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-				int params = request->params();
-				for(int i=0;i<params;i++){
-					const AsyncWebParameter* p = request->getParam(i);
-					if(p->isPost()){
-						if (p->name() == STATUS_INFLUXDB_CONFIG)
-							settings_influxdb_data["status_influxdb_config"] = p->value().c_str();
-						if (p->name() == ENABLE_INFLUXDB)
-							settings_influxdb_data["enable_influxdb"] = p->value().c_str();
-						if (p->name() == INFLUXDB_URL)
-							settings_influxdb_data["influxdb_url"] = p->value().c_str();
-						if (p->name() == INFLUXDB_ORG)
-							settings_influxdb_data["influxdb_org"] = p->value().c_str();
-						if (p->name() == INFLUXDB_BUCKET)
-							settings_influxdb_data["influxdb_bucket"] = p->value().c_str();
-						if (p->name() == INFLUXDB_TOKEN)
-							settings_influxdb_data["influxdb_token"] = p->value().c_str();
-					}
-				}
-				const char* path = "/json/settings_influxdb.json";
-				String settings_influxdb_str;
-				serializeJson(settings_influxdb_data, settings_influxdb_str);
-				write_config_file(path, settings_influxdb_str);
-				xSemaphoreGive(settings_influxdb_mutex);
+		
+		int params = request->params();
+		const char* path = "/json/settings_influxdb.json";
+		String settings_influxdb_str;
+		JsonDocument settings_influxdb_data;
+				
+		for(int i=0;i<params;i++){
+			const AsyncWebParameter* p = request->getParam(i);
+			if(p->isPost()){
+				if (p->name() == STATUS_INFLUXDB_CONFIG)
+					settings_influxdb_data["status_influxdb_config"] = p->value().c_str();
+				if (p->name() == ENABLE_INFLUXDB)
+					settings_influxdb_data["enable_influxdb"] = p->value().c_str();
+				if (p->name() == INFLUXDB_URL)
+					settings_influxdb_data["influxdb_url"] = p->value().c_str();
+				if (p->name() == INFLUXDB_ORG)
+					settings_influxdb_data["influxdb_org"] = p->value().c_str();
+				if (p->name() == INFLUXDB_BUCKET)
+					settings_influxdb_data["influxdb_bucket"] = p->value().c_str();
+				if (p->name() == INFLUXDB_TOKEN)
+					settings_influxdb_data["influxdb_token"] = p->value().c_str();
 			}
 		}
+		serializeJson(settings_influxdb_data, settings_influxdb_str);
+		write_config_file(path, settings_influxdb_str);
 		request->send(LittleFS, "/html/settings.html", String(), false, settings_processor);
 	});
 
-	//Save settings from InfluxDB settings
+	//Save settings from RTC settings
 	server.on("/settings_rtc", HTTP_POST, [](AsyncWebServerRequest *request) {
-	if (settings_rtc_mutex != NULL) {
-		if(xSemaphoreTake(settings_rtc_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-			int params = request->params();
-			for(int i=0;i<params;i++){
-				const AsyncWebParameter* p = request->getParam(i);
-				if(p->isPost()){
-					if (p->name() == STATUS_RTC_CONFIG)
-						settings_rtc_data["status_rtc_config"] = p->value().c_str();
-					if (p->name() == TIMEZONE)
-						settings_rtc_data["timezone"] = p->value().c_str();
-					if (p->name() == NTP_SERVER) 
-						settings_rtc_data["ntp_server"] = p->value().c_str();
-				}
-			}
-			const char* path = "/json/settings_rtc.json";
-			String settings_rtc_str;
+	
+		int params = request->params();
+		const char* path = "/json/settings_rtc.json";
+		String settings_rtc_str;
+		JsonDocument settings_rtc_data;
 
-			serializeJson(settings_rtc_data, settings_rtc_str);
-			write_config_file(path, settings_rtc_str);
-					
-			xSemaphoreGive(settings_rtc_mutex);
+		for(int i=0;i<params;i++){
+			const AsyncWebParameter* p = request->getParam(i);
+			if(p->isPost()){
+				if (p->name() == STATUS_RTC_CONFIG)
+					settings_rtc_data["status_rtc_config"] = p->value().c_str();
+				if (p->name() == TIMEZONE)
+					settings_rtc_data["timezone"] = p->value().c_str();
+				if (p->name() == NTP_SERVER) 
+					settings_rtc_data["ntp_server"] = p->value().c_str();
 			}
 		}
+
+		serializeJson(settings_rtc_data, settings_rtc_str);
+		write_config_file(path, settings_rtc_str);	
 		request->send(LittleFS, "/html/settings.html", String(), false, settings_processor);
 	});
 
@@ -586,8 +583,10 @@ void Taskwebcode(void *pvParameters) {
 	//Response for POST action in webform valvecontrol manual move valves
 	server.on("/valvecontrol", HTTP_POST, [](AsyncWebServerRequest *request) {
 		if (valve_control_data_mutex != NULL) {
+			
+			int params = request->params();
+			
 			if(xSemaphoreTake(valve_control_data_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-				int params = request->params();
 				for(int i=0;i<params;i++){
 					const AsyncWebParameter* p = request->getParam(i);
 					if(p->isPost()) {
@@ -843,7 +842,11 @@ void Taskwebcode(void *pvParameters) {
   
   	//Write sensor config input to file
   	server.on("/sensorconfig1", HTTP_POST, [](AsyncWebServerRequest *request) {
+		
 		int params = request->params();
+		const char* path1 = "/json/sensor_config1.json";
+		String sensor_config1;
+
 		for(int i=0;i<params;i++){
 			const AsyncWebParameter* p = request->getParam(i);
 			if(p->isPost()){
@@ -929,8 +932,6 @@ void Taskwebcode(void *pvParameters) {
 					wire_sensor_data["wire_sensor7"]["co2"] = p->value().c_str();
 			}
 		}
-		const char* path1 = "/json/sensor_config1.json";
-		String sensor_config1;
 		serializeJson(wire_sensor_data, sensor_config1);
 		write_config_file(path1, sensor_config1);
 		request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
@@ -938,6 +939,9 @@ void Taskwebcode(void *pvParameters) {
   
 	server.on("/sensorconfig2", HTTP_POST, [](AsyncWebServerRequest *request) {
 		int params = request->params();
+		const char* path2 = "/json/sensor_config2.json";
+		String sensor_config2;
+		
 		for(int i=0;i<params;i++){
 			const AsyncWebParameter* p = request->getParam(i);
 			if(p->isPost()) {
@@ -1023,8 +1027,6 @@ void Taskwebcode(void *pvParameters) {
 				  	wire1_sensor_data["wire1_sensor7"]["co2"] = p->value().c_str();
 			}
 		}
-		const char* path2 = "/json/sensor_config2.json";
-		String sensor_config2;
 		serializeJson(wire1_sensor_data, sensor_config2);
 		write_config_file(path2, sensor_config2);
 		request->send(LittleFS, "/html/sensor_config.html", String(), false, sensor_config_processor);
@@ -1035,7 +1037,11 @@ void Taskwebcode(void *pvParameters) {
 
 	//Settings statemachine day
 	server.on("/settings_valve_day", HTTP_POST, [](AsyncWebServerRequest *request) {
+		
 		int params = request->params();
+		const char* path_day = "/json/settings_state_day.json";
+		String settings_state_day_str;
+
 		for(int i=0;i<params;i++) {
 			const AsyncWebParameter* p = request->getParam(i);
 			if(p->isPost()) {
@@ -1071,8 +1077,6 @@ void Taskwebcode(void *pvParameters) {
 					settings_state_day["valve11_position_day"] = p->value().c_str();
 			}
 		}
-		const char* path_day = "/json/settings_state_day.json";
-		String settings_state_day_str;
 		serializeJson(settings_state_day, settings_state_day_str);
 		write_config_file(path_day, settings_state_day_str);
 		request->send(LittleFS, "/html/statemachine.html", String(), false, settings_valve_state);
@@ -1080,46 +1084,46 @@ void Taskwebcode(void *pvParameters) {
 
 	//Settings statemachine night
 	server.on("/settings_valve_night", HTTP_POST, [](AsyncWebServerRequest *request) {
+		
 		int params = request->params();
+		const char* path_night = "/json/settings_state_night.json";
+		String settings_state_night_str;
+		
 		for(int i=0;i<params;i++){
 			const AsyncWebParameter* p = request->getParam(i);
 			if(p->isPost()){
 				if (p->name() == ENABLE_STATE_NIGHT) 
-				settings_state_night["enable_state_night"] = p->value().c_str();
+					settings_state_night["enable_state_night"] = p->value().c_str();
 				if (p->name() == STATE_NIGHT_FANSPEED)
-				settings_state_day["state_night_fanspeed"] = p->value().c_str();
+					settings_state_day["state_night_fanspeed"] = p->value().c_str();
 				if (p->name() == NAME_STATE_NIGHT) 
-				settings_state_night["name_state_night"] = p->value().c_str();
+					settings_state_night["name_state_night"] = p->value().c_str();
 				if (p->name() == VALVE0_POSITION_NIGHT)
-				settings_state_night["valve0_position_night"] = p->value().c_str();
+					settings_state_night["valve0_position_night"] = p->value().c_str();
 				if (p->name() ==  VALVE1_POSITION_NIGHT) 
-				settings_state_night["valve1_position_night"] = p->value().c_str();
+					settings_state_night["valve1_position_night"] = p->value().c_str();
 				if (p->name() ==  VALVE2_POSITION_NIGHT) 
-				settings_state_night["valve2_position_night"] = p->value().c_str();
+					settings_state_night["valve2_position_night"] = p->value().c_str();
 				if (p->name() ==  VALVE3_POSITION_NIGHT) 
-				settings_state_night["valve3_position_night"] = p->value().c_str();
+					settings_state_night["valve3_position_night"] = p->value().c_str();
 				if (p->name() ==  VALVE4_POSITION_NIGHT) 
-				settings_state_night["valve4_position_night"] = p->value().c_str();
+					settings_state_night["valve4_position_night"] = p->value().c_str();
 				if (p->name() ==  VALVE5_POSITION_NIGHT) 
-				settings_state_night["valve5_position_night"] = p->value().c_str();
+					settings_state_night["valve5_position_night"] = p->value().c_str();
 				if (p->name() ==  VALVE6_POSITION_NIGHT) 
-				settings_state_night["valve6_position_night"] = p->value().c_str();
+					settings_state_night["valve6_position_night"] = p->value().c_str();
 				if (p->name() ==  VALVE7_POSITION_NIGHT) 
-				settings_state_night["valve7_position_night"] = p->value().c_str();
+					settings_state_night["valve7_position_night"] = p->value().c_str();
 				if (p->name() ==  VALVE8_POSITION_NIGHT) 
-				settings_state_night["valve8_position_night"] = p->value().c_str();
+					settings_state_night["valve8_position_night"] = p->value().c_str();
 				if (p->name() ==  VALVE9_POSITION_NIGHT) 
-				settings_state_night["valve9_position_night"] = p->value().c_str();
+					settings_state_night["valve9_position_night"] = p->value().c_str();
 				if (p->name() ==  VALVE10_POSITION_NIGHT) 
-				settings_state_night["valve10_position_night"] = p->value().c_str();
+					settings_state_night["valve10_position_night"] = p->value().c_str();
 				if (p->name() ==  VALVE11_POSITION_NIGHT) 
-				settings_state_night["valve11_position_night"] = p->value().c_str();
+					settings_state_night["valve11_position_night"] = p->value().c_str();
 			}
 		}
-		
-		const char* path_night = "/json/settings_state_night.json";
-		String settings_state_night_str;
-
 		serializeJson(settings_state_night, settings_state_night_str);
 		write_config_file(path_night, settings_state_night_str);
 		request->send(LittleFS, "/html/statemachine.html", String(), false, settings_valve_state);
@@ -1127,7 +1131,11 @@ void Taskwebcode(void *pvParameters) {
 
 	//Settings statemachine highco2day
 	server.on("/settings_valve_highco2day", HTTP_POST, [](AsyncWebServerRequest *request) {
+		
 		int params = request->params();
+		const char* path_highco2day = "/json/settings_state_highco2day.json";
+		String settings_state_highco2day_str;
+
 		for(int i=0;i<params;i++){
 			const AsyncWebParameter* p = request->getParam(i);
 			if(p->isPost()){
@@ -1137,6 +1145,10 @@ void Taskwebcode(void *pvParameters) {
 					settings_state_highco2day["state_highco2day_fanspeed"] = p->value().c_str();
 				if (p->name() == NAME_STATE_HIGHCO2DAY) 
 					settings_state_highco2day["name_state_highco2day"] = p->value().c_str();
+				if (p->name() == CO2_LOW_STATE_HIGHCO2DAY) 
+					settings_state_highco2day["co2_low_state_highco2day"] = p->value().c_str();
+				if (p->name() == CO2_HIGH_STATE_HIGHCO2DAY) 
+					settings_state_highco2day["co2_high_state_highco2day"] = p->value().c_str();
 				if (p->name() == VALVE0_POSITION_HIGHCO2DAY)
 					settings_state_highco2day["valve0_position_highco2day"] = p->value().c_str();
 				if (p->name() ==  VALVE1_POSITION_HIGHCO2DAY) 
@@ -1163,20 +1175,18 @@ void Taskwebcode(void *pvParameters) {
 					settings_state_highco2day["valve11_position_highco2day"] = p->value().c_str();
 			}
 		}
-		const char* path_highco2day = "/json/settings_state_highco2day.json";
-		String settings_state_highco2day_str;
-
 		serializeJson(settings_state_highco2day, settings_state_highco2day_str);
 		write_config_file(path_highco2day, settings_state_highco2day_str);
-		Serial.print("\n\nSettings saved to file: ");
-		Serial.print(settings_state_highco2day_str);
-		Serial.print("\n\n");
 		request->send(LittleFS, "/html/statemachine.html", String(), false, settings_valve_state);
 	});
   
 	//Settings statemachine highco2night
 	server.on("/settings_valve_highco2night", HTTP_POST, [](AsyncWebServerRequest *request) {
+		
 		int params = request->params();
+		const char* path_highco2night = "/json/settings_state_highco2night.json";
+		String settings_state_highco2night_str;
+		
 		for(int i=0;i<params;i++){
 			const AsyncWebParameter* p = request->getParam(i);
 			if(p->isPost()){
@@ -1186,6 +1196,10 @@ void Taskwebcode(void *pvParameters) {
 					settings_state_highco2night["state_highco2night_fanspeed"] = p->value().c_str();
 				if (p->name() == NAME_STATE_HIGHCO2NIGHT) 
 					settings_state_highco2night["name_state_highco2night"] = p->value().c_str();
+				if (p->name() == CO2_LOW_STATE_HIGHCO2NIGHT) 
+					settings_state_highco2night["co2_low_state_highco2night"] = p->value().c_str();
+				if (p->name() == CO2_HIGH_STATE_HIGHCO2NIGHT) 
+					settings_state_highco2night["co2_high_state_highco2night"] = p->value().c_str();
 				if (p->name() == VALVE0_POSITION_HIGHCO2NIGHT)
 					settings_state_highco2night["valve0_position_highco2night"] = p->value().c_str();
 				if (p->name() ==  VALVE1_POSITION_HIGHCO2NIGHT) 
@@ -1212,8 +1226,6 @@ void Taskwebcode(void *pvParameters) {
 					settings_state_highco2night["valve11_position_highco2night"] = p->value().c_str();
 			}
 		}
-		const char* path_highco2night = "/json/settings_state_highco2night.json";
-		String settings_state_highco2night_str;
 		serializeJson(settings_state_highco2night, settings_state_highco2night_str);
 		write_config_file(path_highco2night, settings_state_highco2night_str);
 		request->send(LittleFS, "/html/statemachine.html", String(), false, settings_valve_state);
@@ -1221,7 +1233,11 @@ void Taskwebcode(void *pvParameters) {
 
 	//Settings statemachine highrhday
 	server.on("/settings_valve_highrhday", HTTP_POST, [](AsyncWebServerRequest *request) {
-    	int params = request->params();
+    	
+		int params = request->params();
+		const char* path_highrhday = "/json/settings_state_highrhday.json";
+		String settings_state_highrhday_str;
+		
     	for(int i=0;i<params;i++){
 			const AsyncWebParameter* p = request->getParam(i);
 			if(p->isPost()){
@@ -1231,6 +1247,10 @@ void Taskwebcode(void *pvParameters) {
 					settings_state_highrhday["state_highrhday_fanspeed"] = p->value().c_str();
 				if (p->name() == NAME_STATE_HIGHRHDAY) 
 					settings_state_highrhday["name_state_highrhday"] = p->value().c_str();
+				if (p->name() == RH_LOW_STATE_HIGHRHDAY) 
+					settings_state_highrhday["rh_low_state_highrhday"] = p->value().c_str();
+				if (p->name() == RH_HIGH_STATE_HIGHRHDAY) 
+					settings_state_highrhday["rh_high_state_highrhday"] = p->value().c_str();
 				if (p->name() == VALVE0_POSITION_HIGHRHDAY)
 					settings_state_highrhday["valve0_position_highrhday"] = p->value().c_str();
 				if (p->name() ==  VALVE1_POSITION_HIGHRHDAY) 
@@ -1257,8 +1277,6 @@ void Taskwebcode(void *pvParameters) {
 					settings_state_highrhday["valve11_position_highrhday"] = p->value().c_str();
 			}
 		}
-		const char* path_highrhday = "/json/settings_state_highrhday.json";
-		String settings_state_highrhday_str;
 		serializeJson(settings_state_highrhday, settings_state_highrhday_str);
 		write_config_file(path_highrhday, settings_state_highrhday_str);
 		request->send(LittleFS, "/html/statemachine.html", String(), false, settings_valve_state);
@@ -1266,7 +1284,11 @@ void Taskwebcode(void *pvParameters) {
 
 	//Settings statemachine highrhnight
 	server.on("/settings_valve_highrhnight", HTTP_POST, [](AsyncWebServerRequest *request) {
+		
 		int params = request->params();
+		const char* path_highrhnight = "/json/settings_state_highrhnight.json";
+		String settings_state_highrhnight_str;
+
 		for(int i=0;i<params;i++){
 			const AsyncWebParameter* p = request->getParam(i);
 			if(p->isPost()){
@@ -1276,6 +1298,10 @@ void Taskwebcode(void *pvParameters) {
 					settings_state_highrhnight["state_highrhnight_fanspeed"] = p->value().c_str();
 				if (p->name() == NAME_STATE_HIGHRHNIGHT) 
 					settings_state_highrhnight["name_state_highrhnight"] = p->value().c_str();
+				if (p->name() == RH_LOW_STATE_HIGHRHNIGHT) 
+					settings_state_highrhnight["rh_low_state_highrhnight"] = p->value().c_str();
+				if (p->name() == RH_HIGH_STATE_HIGHRHNIGHT) 
+					settings_state_highrhnight["rh_high_state_highrhnight"] = p->value().c_str();
 				if (p->name() == VALVE0_POSITION_HIGHRHNIGHT)
 					settings_state_highrhnight["valve0_position_highrhnight"] = p->value().c_str();
 				if (p->name() ==  VALVE1_POSITION_HIGHRHNIGHT) 
@@ -1302,9 +1328,6 @@ void Taskwebcode(void *pvParameters) {
 					settings_state_highrhnight["valve11_position_highrhnight"] = p->value().c_str();
 			}
 		}
-		const char* path_highrhnight = "/json/settings_state_highrhnight.json";
-		String settings_state_highrhnight_str;
-
 		serializeJson(settings_state_highrhnight, settings_state_highrhnight_str);
 		write_config_file(path_highrhnight, settings_state_highrhnight_str);
 		request->send(LittleFS, "/html/statemachine.html", String(), false, settings_valve_state);
@@ -1312,7 +1335,11 @@ void Taskwebcode(void *pvParameters) {
 
 	//Settings statemachine cooking
 	server.on("/settings_valve_cooking", HTTP_POST, [](AsyncWebServerRequest *request) {
+		
 		int params = request->params();
+		const char* path_cooking = "/json/settings_state_cooking.json";
+		String settings_state_cooking_str;
+
 		for(int i=0;i<params;i++){
 			const AsyncWebParameter* p = request->getParam(i);
 			if(p->isPost()){
@@ -1322,6 +1349,14 @@ void Taskwebcode(void *pvParameters) {
 					settings_state_cooking["state_cooking_fanspeed"] = p->value().c_str();
 				if (p->name() == NAME_STATE_COOKING) 
 					settings_state_cooking["name_state_cooking"] = p->value().c_str();
+				if (p->name() == START_HOUR_STATE_COOKING) 
+					settings_state_cooking["start_hour_state_cooking"] = p->value().c_str();
+				if (p->name() == START_MIN_STATE_COOKING) 
+					settings_state_cooking["start_min_state_cooking"] = p->value().c_str();
+				if (p->name() == STOP_HOUR_STATE_COOKING) 
+					settings_state_cooking["stop_hour_state_cooking"] = p->value().c_str();
+				if (p->name() == STOP_MIN_STATE_COOKING) 
+					settings_state_cooking["stop_min_state_cooking"] = p->value().c_str();
 				if (p->name() == VALVE0_POSITION_COOKING)
 					settings_state_cooking["valve0_position_cooking"] = p->value().c_str();
 				if (p->name() ==  VALVE1_POSITION_COOKING) 
@@ -1348,9 +1383,6 @@ void Taskwebcode(void *pvParameters) {
 					settings_state_cooking["valve11_position_cooking"] = p->value().c_str();
 			}
 		}
-		const char* path_cooking = "/json/settings_state_cooking.json";
-		String settings_state_cooking_str;
-
 		serializeJson(settings_state_cooking, settings_state_cooking_str);
 		write_config_file(path_cooking, settings_state_cooking_str);
 		request->send(LittleFS, "/html/statemachine.html", String(), false, settings_valve_state);
@@ -1358,7 +1390,11 @@ void Taskwebcode(void *pvParameters) {
 
 	//Settings statemachine valvecyclingday
 	server.on("/settings_valve_cyclingday", HTTP_POST, [](AsyncWebServerRequest *request) {
+		
 		int params = request->params();
+		const char* path_cyclingday = "/json/settings_state_cyclingday.json";
+		String settings_state_cyclingday_str;
+
 		for(int i=0;i<params;i++){
 			const AsyncWebParameter* p = request->getParam(i);
 			if(p->isPost()){
@@ -1394,8 +1430,6 @@ void Taskwebcode(void *pvParameters) {
 					settings_state_cyclingday["valve11_position_cyclingday"] = p->value().c_str();
 			}
 		}
-		const char* path_cyclingday = "/json/settings_state_cyclingday.json";
-		String settings_state_cyclingday_str;
 		serializeJson(settings_state_cyclingday, settings_state_cyclingday_str);
 		write_config_file(path_cyclingday, settings_state_cyclingday_str);
 		request->send(LittleFS, "/html/statemachine.html", String(), false, settings_valve_state);
@@ -1403,7 +1437,11 @@ void Taskwebcode(void *pvParameters) {
 
 	//Settings statemachine valvecyclingnight
 	server.on("/settings_valve_cyclingnight", HTTP_POST, [](AsyncWebServerRequest *request) {
+		
 		int params = request->params();
+		const char* path_cyclingnight = "/json/settings_state_cyclingnight.json";
+		String settings_state_cyclingnight_str;
+
 		for(int i=0;i<params;i++){
 			const AsyncWebParameter* p = request->getParam(i);
 			if(p->isPost()){
@@ -1439,8 +1477,6 @@ void Taskwebcode(void *pvParameters) {
 					settings_state_cyclingnight["valve11_position_cyclingnight"] = p->value().c_str();
 			}
 		}
-		const char* path_cyclingnight = "/json/settings_state_cyclingnight.json";
-		String settings_state_cyclingnight_str;
 		serializeJson(settings_state_cyclingnight, settings_state_cyclingnight_str);
 		write_config_file(path_cyclingnight, settings_state_cyclingnight_str);
 		request->send(LittleFS, "/html/statemachine.html", String(), false, settings_valve_state);
