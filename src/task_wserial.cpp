@@ -1,8 +1,8 @@
 #include "task_wserial.h"
 
 AsyncWebServer ws_server(8080);
-//WebSerial webSerial;
-WebSerial *webSerial = nullptr;
+WebSerial webSerial;
+//WebSerial *webSerial = nullptr;
 
 void start_task_wserial(void) {
 
@@ -16,14 +16,14 @@ void task_wserial_code(void * pvParameters) {
     String rxString = "";
     String message = "";
     
-    //webSerial.onMessage([](const std::string& msg) { Serial.println(msg.c_str()); });
-    //webSerial.begin(&ws_server);
-    //webSerial.setBuffer(100);
-    //ws_server.begin();  
+    webSerial.onMessage([](const std::string& msg) { Serial.println(msg.c_str()); });
+    webSerial.begin(&ws_server);
+    webSerial.setBuffer(100);
+    ws_server.begin();  
 
-    webSerial = new WebSerial();
-    webSerial->onMessage([](const std::string& msg) { Serial.println(msg.c_str()); });
-    webSerial->begin(&ws_server);
+    //webSerial = new WebSerial();
+    //webSerial->onMessage([](const std::string& msg) { Serial.println(msg.c_str()); });
+    //webSerial->begin(&ws_server);
         
     //Loop code for the task
     for(;;) { 
@@ -32,7 +32,7 @@ void task_wserial_code(void * pvParameters) {
             datetime = formatted_datetime();
             message = datetime + " - " + rxString;
             Serial.print("\n" + message);
-            webSerial->print("\n" + message);
+            webSerial.print("\n" + message);
         }
         vTaskDelay(500);
     }   
