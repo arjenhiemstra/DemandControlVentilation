@@ -4,33 +4,33 @@
 void read_time_settings(void) {
     
     bool settings_rtc_file_present = 0;
-    
     const char* path = "/json/settings_rtc.json";
 
     String settings_rtc_string = "";
     String message = "";
-    
     JsonDocument settings_rtc_doc;
 
     if (settings_rtc_mutex != NULL) {
         if(xSemaphoreTake(settings_rtc_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             settings_rtc_file_present = check_file_exists(path);
             if (settings_rtc_file_present == 1) {
-                // File file = LittleFS.open(path, "r");
-                // while(file.available()) {
-                //     settings_rtc_string = file.readString();
-                // }
-                // file.close();
                 settings_rtc_string = read_config_file(path);
             }
             xSemaphoreGive(settings_rtc_mutex);
         }
     }
-    DeserializationError err = deserializeJson(settings_rtc_doc, settings_rtc_string);
-    if (err) {
-        message = "[ERROR] Failed to parse valvepositions.json: " + String(path) + ": " + String(err.c_str());
+    if (settings_rtc_string == "") {
+        message = "[ERROR] String is empty or failed to read file";
         print_message(message);
         return;
+    }
+    else {
+        DeserializationError err = deserializeJson(settings_rtc_doc, settings_rtc_string);
+        if (err) {
+            message = "[ERROR] Failed to parse valvepositions.json: " + String(path) + ": " + String(err.c_str());
+            print_message(message);
+            return;
+        }
     }
     
     String ntp_server_tmp = settings_rtc_doc[String("ntp_server")];
@@ -49,34 +49,33 @@ void read_time_settings(void) {
 void read_influxdb_config(void) {
 
     bool settings_influxdb_file_present = 0;
-
     const char* path = "/json/settings_influxdb.json";
 
     String settings_influxdb_string = "";
     String message = "";
-    
     JsonDocument settings_influxdb_doc;
 
     if (settings_influxdb_mutex != NULL) {
         if(xSemaphoreTake(settings_influxdb_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             settings_influxdb_file_present = check_file_exists(path);
             if (settings_influxdb_file_present == 1) {
-                // File file = LittleFS.open(path, "r");
-                // while(file.available()) {
-                //     settings_influxdb_string = file.readString();
-                // }
-                // file.close();
                 settings_influxdb_string = read_config_file(path);
             }
             xSemaphoreGive(settings_influxdb_mutex);
         }
     }
-
-    DeserializationError err = deserializeJson(settings_influxdb_doc, settings_influxdb_string);
-    if (err) {
-        message = "[ERROR] Failed to parse valvepositions.json: " + String(path) + ": " + String(err.c_str());
+    if (settings_influxdb_string == "") {
+        message = "[ERROR] String is empty or failed to read file";
         print_message(message);
         return;
+    }
+    else {
+        DeserializationError err = deserializeJson(settings_influxdb_doc, settings_influxdb_string);
+        if (err) {
+            message = "[ERROR] Failed to parse valvepositions.json: " + String(path) + ": " + String(err.c_str());
+            print_message(message);
+            return;
+        }
     }
 
     String enable_influxdb_tmp = settings_influxdb_doc[String("enable_influxdb")];
@@ -87,8 +86,6 @@ void read_influxdb_config(void) {
 
     if (settings_influxdb_mutex != NULL) {
         if(xSemaphoreTake(settings_influxdb_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-                          
-            //Assign to global variable
             enable_influxdb = enable_influxdb_tmp;
             influxdb_url = influxdb_url_tmp;
             influxdb_org = influxdb_org_tmp;
@@ -103,33 +100,33 @@ void read_influxdb_config(void) {
 void read_i2c_config(void) {
 
     bool settings_i2c_file_present = 0;
-
     const char* path = "/json/settings_i2c.json";
     
     String settings_i2c_string = "";
     String message = "";
-
     JsonDocument settings_i2c_doc;
 
     if (settings_i2c_mutex != NULL) {
         if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             settings_i2c_file_present = check_file_exists(path);
             if (settings_i2c_file_present == 1) {
-                // File file = LittleFS.open(path, "r");
-                // while(file.available()) {
-                //     settings_i2c_string = file.readString();
-                // }
-                // file.close();
                 settings_i2c_string = read_config_file(path);
             }
             xSemaphoreGive(settings_i2c_mutex);
         }
     }
-    DeserializationError err = deserializeJson(settings_i2c_doc, settings_i2c_string);
-    if (err) {
-        message = "[ERROR] Failed to parse valvepositions.json: " + String(path) + ": " + String(err.c_str());
+    if (settings_i2c_string == "") {
+        message = "[ERROR] String is empty or failed to read file";
         print_message(message);
         return;
+    }
+    else {
+        DeserializationError err = deserializeJson(settings_i2c_doc, settings_i2c_string);
+        if (err) {
+            message = "[ERROR] Failed to parse valvepositions.json: " + String(path) + ": " + String(err.c_str());
+            print_message(message);
+            return;
+        }
     }
 
     int bus0_multiplexer_addr_tmp = settings_i2c_doc["bus0_multiplexer_address"];
@@ -152,34 +149,33 @@ void read_i2c_config(void) {
 void read_mqtt_config(void) {
 
     bool settings_mqtt_file_present = 0;
-
     const char* path = "/json/settings_mqtt.json";
     
     String settings_mqtt_string = "";
     String message = "";
-
     JsonDocument settings_mqtt_doc;
 
     if (settings_mqtt_mutex != NULL) {
         if(xSemaphoreTake(settings_mqtt_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             settings_mqtt_file_present = check_file_exists(path);
             if (settings_mqtt_file_present == 1) {
-                // File file = LittleFS.open(path, "r");
-                // while(file.available()) {
-                //     settings_mqtt_string = file.readString();
-                // }
-                // file.close();
                 settings_mqtt_string = read_config_file(path);
             }
             xSemaphoreGive(settings_mqtt_mutex);
         }
     }
-    
-    DeserializationError err = deserializeJson(settings_mqtt_doc, settings_mqtt_string);
-    if (err) {
-        message = "[ERROR] Failed to parse valvepositions.json: " + String(path) + ": " + String(err.c_str());
+    if (settings_mqtt_string == "") {
+        message = "[ERROR] String is empty or failed to read file";
         print_message(message);
         return;
+    }
+    else {
+        DeserializationError err = deserializeJson(settings_mqtt_doc, settings_mqtt_string);
+        if (err) {
+            message = "[ERROR] Failed to parse valvepositions.json: " + String(path) + ": " + String(err.c_str());
+            print_message(message);
+            return;
+        }
     }
 
     String enable_mqtt_tmp = settings_mqtt_doc[String("enable_mqtt")];
@@ -201,34 +197,33 @@ void read_mqtt_config(void) {
 void read_fan_config() {
     
     bool settings_fan_file_present = 0;
-
     const char* path = "/json/settings_fan.json";
 
     String settings_fan_string = "";
     String message = "";
-    
     JsonDocument settings_fan_doc;
 
     if (settings_fan_mutex != NULL) {
         if(xSemaphoreTake(settings_fan_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             settings_fan_file_present = check_file_exists(path);
             if (settings_fan_file_present == 1) {
-                // File file = LittleFS.open(path, "r");
-                // while(file.available()) {
-                //     settings_fan_string = file.readString();
-                // }
-                // file.close();
                 settings_fan_string = read_config_file(path);
             }
             xSemaphoreGive(settings_fan_mutex);
         }
     }
-    
-    DeserializationError err = deserializeJson(settings_fan_data, settings_fan_string);
-    if (err) {
-        message = "[ERROR] Failed to parse valvepositions.json: " + String(path) + ": " + String(err.c_str());
+    if (settings_fan_string == "") {
+        message = "[ERROR] String is empty or failed to read file";
         print_message(message);
         return;
+    }
+    else {
+        DeserializationError err = deserializeJson(settings_fan_data, settings_fan_string);
+        if (err) {
+            message = "[ERROR] Failed to parse valvepositions.json: " + String(path) + ": " + String(err.c_str());
+            print_message(message);
+            return;
+        }
     }
 }
 
@@ -249,44 +244,46 @@ void sensor_config_data_read() {
         if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             sensor_config1_file_present = check_file_exists(path1);
             if (sensor_config1_file_present == 1) {
-                // File file = LittleFS.open(path1, "r");
-                // while(file.available()) {
-                //     sensor_config1_string = file.readString();
-                // }
-                // file.close();
                 sensor_config1_string = read_config_file(path1);
             }
             xSemaphoreGive(sensor_config_file_mutex);
         }
     }
-
-    DeserializationError err1 = deserializeJson(wire_sensor_data, sensor_config1_string);
-    if (err1) {
-        message = "[ERROR] Failed to parse valvepositions.json: " + String(path1) + ": " + String(err1.c_str());
+    if (sensor_config1_string == "") {
+        message = "[ERROR] String is empty or failed to read file";
         print_message(message);
         return;
+    }
+    else {
+        DeserializationError err1 = deserializeJson(wire_sensor_data, sensor_config1_string);
+        if (err1) {
+            message = "[ERROR] Failed to parse valvepositions.json: " + String(path1) + ": " + String(err1.c_str());
+            print_message(message);
+            return;
+        }
     }
 	
     if (sensor_config_file_mutex != NULL) {
         if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             sensor_config2_file_present = check_file_exists(path2);
             if (sensor_config2_file_present == 1) {
-                // File file = LittleFS.open(path2, "r");
-                // while(file.available()) {
-                //     sensor_config2_string = file.readString();
-                // }
-                // file.close();
                 sensor_config2_string = read_config_file(path2);
             }
             xSemaphoreGive(sensor_config_file_mutex);
         }
     }
-    
-    DeserializationError err2 = deserializeJson(wire1_sensor_data, sensor_config2_string);
-    if (err2) {
-        message = "[ERROR] Failed to parse valvepositions.json: " + String(path2) + ": " + String(err2.c_str());
+    if (sensor_config2_string == "") {
+        message = "[ERROR] String is empty or failed to read file";
         print_message(message);
         return;
+    }
+    else {
+        DeserializationError err2 = deserializeJson(wire1_sensor_data, sensor_config2_string);
+        if (err2) {
+            message = "[ERROR] Failed to parse valvepositions.json: " + String(path2) + ": " + String(err2.c_str());
+            print_message(message);
+            return;
+        }
     }
 }
 
@@ -302,18 +299,6 @@ void valve_settings_config_read() {
     const char* settings_state_cooking_path = "/json/settings_state_cooking.json";
     const char* settings_state_cyclingday_path = "/json/settings_state_cyclingday.json";
     const char* settings_state_cyclingnight_path = "/json/settings_state_cyclingnight.json";
-
-    String settings_state_day_str;
-    String settings_state_night_str;
-    String settings_state_highco2day_str;
-    String settings_state_highco2night_str;
-    String settings_state_highrhday_str;
-    String settings_state_highrhnight_str;
-    String settings_state_cooking_str;
-    String settings_state_cyclingday_str;
-    String settings_state_cyclingnight_str;
-    String message = "";
-
     bool settings_state_day_present = 0;
     bool settings_state_night_present = 0;
     bool settings_state_highco2day_present = 0;
@@ -323,23 +308,34 @@ void valve_settings_config_read() {
     bool settings_state_cooking_present = 0;
     bool settings_state_cyclingday_present = 0;
     bool settings_state_cyclingnight_present = 0;
+    String settings_state_day_str = "";
+    String settings_state_night_str = "";
+    String settings_state_highco2day_str = "";
+    String settings_state_highco2night_str = "";
+    String settings_state_highrhday_str = "";
+    String settings_state_highrhnight_str = "";
+    String settings_state_cooking_str = "";
+    String settings_state_cyclingday_str = "";
+    String settings_state_cyclingnight_str = "";
+    String message = "";
     
     if (settings_state_day_mutex != NULL) {
         if(xSemaphoreTake(settings_state_day_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             settings_state_day_present = check_file_exists(settings_state_day_path);
             if (settings_state_day_present == 1) {
-                //File file = LittleFS.open(settings_state_day_path, "r");
-                //while(file.available()) {
-                  //  settings_state_day_str = file.readString();
-                //}
-                //file.close();
                 settings_state_day_str = read_config_file(settings_state_day_path);
-                
-                DeserializationError err = deserializeJson(settings_state_day, settings_state_day_str);
-                if (err) {
-                    message = "[ERROR] Failed to parse valvepositions.json: " + String(settings_state_day_path) + ": " + String(err.c_str());
+                if (settings_state_day_str == "") {
+                    message = "[ERROR] String is empty or failed to read file";
                     print_message(message);
                     return;
+                }
+                else {             
+                    DeserializationError err = deserializeJson(settings_state_day, settings_state_day_str);
+                    if (err) {
+                        message = "[ERROR] Failed to parse valvepositions.json: " + String(settings_state_day_path) + ": " + String(err.c_str());
+                        print_message(message);
+                        return;
+                    }
                 }
             }
             xSemaphoreGive(settings_state_day_mutex);
@@ -350,18 +346,19 @@ void valve_settings_config_read() {
         if(xSemaphoreTake(settings_state_night_mutex, ( TickType_t ) 100 ) == pdTRUE) { 
             settings_state_night_present = check_file_exists(settings_state_night_path);
             if (settings_state_night_present == 1) {
-                //File file = LittleFS.open(settings_state_night_path, "r");
-                //while(file.available()) {
-                    //settings_state_night_str = file.readString();
-                //}
-                //file.close();
                 settings_state_night_str = read_config_file(settings_state_night_path);
-                
-                DeserializationError err = deserializeJson(settings_state_night, settings_state_night_str);
-                if (err) {
-                    message = "[ERROR] Failed to parse valvepositions.json: " + String(settings_state_night_path) + ": " + String(err.c_str());
+                if (settings_state_night_str == "") {
+                    message = "[ERROR] String is empty or failed to read file";
                     print_message(message);
                     return;
+                }
+                else {
+                    DeserializationError err = deserializeJson(settings_state_night, settings_state_night_str);
+                    if (err) {
+                        message = "[ERROR] Failed to parse valvepositions.json: " + String(settings_state_night_path) + ": " + String(err.c_str());
+                        print_message(message);
+                        return;
+                    }
                 }
             }
             xSemaphoreGive(settings_state_night_mutex);
@@ -372,18 +369,19 @@ void valve_settings_config_read() {
         if(xSemaphoreTake(settings_state_highco2day_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             settings_state_highco2day_present = check_file_exists(settings_state_highco2day_path);
             if (settings_state_highco2day_present == 1) {
-                //File file = LittleFS.open(settings_state_highco2day_path, "r");
-                //while(file.available()) {
-                    //settings_state_highco2day_str = file.readString();
-                //}
-                //file.close();
                 settings_state_highco2day_str = read_config_file(settings_state_highco2day_path);
-                
-                DeserializationError err = deserializeJson(settings_state_highco2day, settings_state_highco2day_str);
-                if (err) {
-                    message = "[ERROR] Failed to parse valvepositions.json: " + String(settings_state_highco2day_path) + ": " + String(err.c_str());
+                if (settings_state_highco2day_str == "") {
+                    message = "[ERROR] String is empty or failed to read file";
                     print_message(message);
                     return;
+                }
+                else {
+                    DeserializationError err = deserializeJson(settings_state_highco2day, settings_state_highco2day_str);
+                    if (err) {
+                        message = "[ERROR] Failed to parse valvepositions.json: " + String(settings_state_highco2day_path) + ": " + String(err.c_str());
+                        print_message(message);
+                        return;
+                    }
                 }
             }
             xSemaphoreGive(settings_state_highco2day_mutex);
@@ -394,18 +392,19 @@ void valve_settings_config_read() {
         if(xSemaphoreTake(settings_state_highco2night_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             settings_state_highco2night_present = check_file_exists(settings_state_highco2night_path);
             if (settings_state_highco2night_present == 1) {
-                //File file = LittleFS.open(settings_state_highco2night_path, "r");
-                //while(file.available()) {
-                    //settings_state_highco2night_str = file.readString();
-                //}
-                //file.close();
                 settings_state_highco2night_str = read_config_file(settings_state_highco2night_path);
-                
-                DeserializationError err = deserializeJson(settings_state_highco2night, settings_state_highco2night_str);
-                if (err) {
-                    message = "[ERROR] Failed to parse valvepositions.json: " + String(settings_state_highco2night_path) + ": " + String(err.c_str());
+                if (settings_state_highco2night_str == "") {
+                    message = "[ERROR] String is empty or failed to read file";
                     print_message(message);
                     return;
+                }
+                else {
+                    DeserializationError err = deserializeJson(settings_state_highco2night, settings_state_highco2night_str);
+                    if (err) {
+                        message = "[ERROR] Failed to parse valvepositions.json: " + String(settings_state_highco2night_path) + ": " + String(err.c_str());
+                        print_message(message);
+                        return;
+                    }
                 }
             }
             xSemaphoreGive(settings_state_highco2night_mutex);
@@ -416,18 +415,19 @@ void valve_settings_config_read() {
         if(xSemaphoreTake(settings_state_highrhday_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             settings_state_highrhday_present = check_file_exists(settings_state_highrhday_path);
             if (settings_state_highrhday_present == 1) {
-                //File file = LittleFS.open(settings_state_highrhday_path, "r");
-                //while(file.available()) {
-                    //settings_state_highrhday_str = file.readString();
-                //}
-                //file.close();
                 settings_state_highrhday_str = read_config_file(settings_state_highrhday_path);
-                
-                DeserializationError err = deserializeJson(settings_state_highrhday, settings_state_highrhday_str);
-                if (err) {
-                    message = "[ERROR] Failed to parse valvepositions.json: " + String(settings_state_highrhday_path) + ": " + String(err.c_str());
+                if (settings_state_highrhday_str == "") {
+                    message = "[ERROR] String is empty or failed to read file";
                     print_message(message);
                     return;
+                }
+                else {           
+                    DeserializationError err = deserializeJson(settings_state_highrhday, settings_state_highrhday_str);
+                    if (err) {
+                        message = "[ERROR] Failed to parse valvepositions.json: " + String(settings_state_highrhday_path) + ": " + String(err.c_str());
+                        print_message(message);
+                        return;
+                    }
                 }
             }
             xSemaphoreGive(settings_state_highrhday_mutex);
@@ -436,23 +436,21 @@ void valve_settings_config_read() {
 
     if (settings_state_highrhnight_mutex != NULL) {
         if(xSemaphoreTake(settings_state_highrhnight_mutex, ( TickType_t ) 100 ) == pdTRUE) {
-            
             settings_state_highrhnight_present = check_file_exists(settings_state_highrhnight_path);
-
             if (settings_state_highrhnight_present == 1) {
-                //File file = LittleFS.open(settings_state_highrhnight_path, "r");
-
-                //while(file.available()) {
-                    //settings_state_highrhnight_str = file.readString();
-                //}
-                //file.close();
                 settings_state_highrhnight_str = read_config_file(settings_state_highrhnight_path);
-                
-                DeserializationError err = deserializeJson(settings_state_highrhnight, settings_state_highrhnight_str);
-                if (err) {
-                    message = "[ERROR] Failed to parse valvepositions.json: " + String(settings_state_highrhnight_path) + ": " + String(err.c_str());
+                if (settings_state_highrhnight_str == "") {
+                    message = "[ERROR] String is empty or failed to read file";
                     print_message(message);
                     return;
+                }
+                else {
+                    DeserializationError err = deserializeJson(settings_state_highrhnight, settings_state_highrhnight_str);
+                    if (err) {
+                        message = "[ERROR] Failed to parse valvepositions.json: " + String(settings_state_highrhnight_path) + ": " + String(err.c_str());
+                        print_message(message);
+                        return;
+                    }
                 }
             }
             xSemaphoreGive(settings_state_highrhnight_mutex);
@@ -461,23 +459,21 @@ void valve_settings_config_read() {
 
     if (settings_state_cooking_mutex != NULL) {
         if(xSemaphoreTake(settings_state_cooking_mutex, ( TickType_t ) 100 ) == pdTRUE) {
-            
             settings_state_cooking_present = check_file_exists(settings_state_cooking_path);
-
             if (settings_state_cooking_present == 1) {
-                //File file = LittleFS.open(settings_state_cooking_path, "r");
-
-                //while(file.available()) {
-                    //settings_state_cooking_str = file.readString();
-                //}
-                //file.close();
                 settings_state_cooking_str = read_config_file(settings_state_cooking_path);
-                
-                DeserializationError err = deserializeJson(settings_state_cooking, settings_state_cooking_str);
-                if (err) {
-                    message = "[ERROR] Failed to parse valvepositions.json: " + String(settings_state_cooking_path) + ": " + String(err.c_str());
+                if (settings_state_cooking_str == "") {
+                    message = "[ERROR] String is empty or failed to read file";
                     print_message(message);
                     return;
+                }
+                else {             
+                    DeserializationError err = deserializeJson(settings_state_cooking, settings_state_cooking_str);
+                    if (err) {
+                        message = "[ERROR] Failed to parse valvepositions.json: " + String(settings_state_cooking_path) + ": " + String(err.c_str());
+                        print_message(message);
+                        return;
+                    }
                 }
             }
             xSemaphoreGive(settings_state_cooking_mutex);
@@ -486,23 +482,21 @@ void valve_settings_config_read() {
 
     if (settings_state_cyclingday_mutex != NULL) {
         if(xSemaphoreTake(settings_state_cyclingday_mutex, ( TickType_t ) 100 ) == pdTRUE) {
-            
             settings_state_cyclingday_present = check_file_exists(settings_state_cyclingday_path);
-
             if (settings_state_cyclingday_present == 1) {
-                //File file = LittleFS.open(settings_state_cyclingday_path, "r");
-
-                //while(file.available()) {
-                    //settings_state_cyclingday_str = file.readString();
-                //}
-                //file.close();
                 settings_state_cyclingday_str = read_config_file(settings_state_cyclingday_path);
-
-                DeserializationError err = deserializeJson(settings_state_cyclingday, settings_state_cyclingday_str);
-                if (err) {
-                    message = "[ERROR] Failed to parse valvepositions.json: " + String(settings_state_cyclingday_path) + ": " + String(err.c_str());
+                if (settings_state_cooking_str == "") {
+                    message = "[ERROR] String is empty or failed to read file";
                     print_message(message);
                     return;
+                }
+                else {
+                    DeserializationError err = deserializeJson(settings_state_cyclingday, settings_state_cyclingday_str);
+                    if (err) {
+                        message = "[ERROR] Failed to parse valvepositions.json: " + String(settings_state_cyclingday_path) + ": " + String(err.c_str());
+                        print_message(message);
+                        return;
+                    }
                 }
             }
             xSemaphoreGive(settings_state_cyclingday_mutex);
@@ -511,23 +505,21 @@ void valve_settings_config_read() {
 
     if (settings_state_cyclingnight_mutex != NULL) {
         if(xSemaphoreTake(settings_state_cyclingnight_mutex, ( TickType_t ) 100 ) == pdTRUE) {
-            
             settings_state_cyclingnight_present = check_file_exists(settings_state_cyclingnight_path);
-
             if (settings_state_cyclingnight_present == 1) {
-                //File file = LittleFS.open(settings_state_cyclingnight_path, "r");
-
-                //while(file.available()) {
-                    //settings_state_cyclingnight_str = file.readString();
-                //}
-                //file.close();
                 settings_state_cyclingnight_str = read_config_file(settings_state_cyclingnight_path);
-                    
-                DeserializationError err = deserializeJson(settings_state_cyclingnight, settings_state_cyclingnight_str);
-                if (err) {
-                    message = "[ERROR] Failed to parse valvepositions.json: " + String(settings_state_cyclingnight_path) + ": " + String(err.c_str());
+                if (settings_state_cyclingnight_str == "") {
+                    message = "[ERROR] String is empty or failed to read file";
                     print_message(message);
                     return;
+                }
+                else {
+                    DeserializationError err = deserializeJson(settings_state_cyclingnight, settings_state_cyclingnight_str);
+                    if (err) {
+                        message = "[ERROR] Failed to parse valvepositions.json: " + String(settings_state_cyclingnight_path) + ": " + String(err.c_str());
+                        print_message(message);
+                        return;
+                    }
                 }
             }
             xSemaphoreGive(settings_state_cyclingnight_mutex);
@@ -538,10 +530,9 @@ void valve_settings_config_read() {
 //Write valve status file with all valve positions 0
 void valve_status_file_create() {
     
+    const char* default_valve_position_file;
     File file;
     String message = "";
-
-    const char* default_valve_position_file;
 
     default_valve_position_file = "{\"valve0\":0, \"valve1\":0, \"valve2\":0, \"valve3\":0, \"valve4\":0, \"valve5\":0, \"valve6\":0, \"valve7\":0, \"valve8\":0, \"valve9\":0, \"valve10\":0, \"valve11\":0}";  
 
@@ -585,7 +576,7 @@ void delete_file(const char* path) {
     }
     else {
         message = "[ERROR] Delete failed: " + String(path);
-
+        print_message(message);
     }
 }
 
@@ -603,7 +594,7 @@ bool check_file_exists(const char* path) {
 // Assumes presents of file was checked before calling this function.
 String read_config_file(const char* path) {
 
-    String valve_positions;
+    String string_from_file;
     String message = "";
 
     if (path == NULL) {
@@ -626,9 +617,9 @@ String read_config_file(const char* path) {
         return "";
     }
 
-    valve_positions = file.readString();
+    string_from_file = file.readString();
     file.close();
-    return valve_positions;
+    return string_from_file;
 
 }
 
