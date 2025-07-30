@@ -138,8 +138,8 @@ void write_avg_sensor_data(void) {
         if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             wire_sensor_data_temp = wire_sensor_data;
             wire1_sensor_data_temp = wire1_sensor_data;
+            xSemaphoreGive(sensor_config_file_mutex);
         }
-        xSemaphoreGive(sensor_config_file_mutex);
     }
     
     InfluxDBClient client(influxdb_url_tmp, influxdb_org_tmp, influxdb_bucket_tmp, influxdb_token_tmp);
@@ -219,8 +219,6 @@ void write_valve_position_data(void) {
     
     if (settings_influxdb_mutex != NULL) {
         if(xSemaphoreTake(settings_influxdb_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-                          
-            //Assign to global variable
             enable_influxdb_tmp = enable_influxdb;
             influxdb_url_tmp = influxdb_url;
             influxdb_org_tmp = influxdb_org;
