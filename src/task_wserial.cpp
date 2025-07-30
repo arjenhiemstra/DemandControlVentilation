@@ -1,7 +1,8 @@
 #include "task_wserial.h"
 
 AsyncWebServer ws_server(8080);
-WebSerial webSerial;
+//WebSerial webSerial;
+WebSerial *webSerial = nullptr;
 
 void start_task_wserial(void) {
 
@@ -15,11 +16,15 @@ void task_wserial_code(void * pvParameters) {
     String rxString = "";
     String message = "";
     
-    webSerial.onMessage([](const std::string& msg) { Serial.println(msg.c_str()); });
-    webSerial.begin(&ws_server);
+    //webSerial.onMessage([](const std::string& msg) { Serial.println(msg.c_str()); });
+    //webSerial.begin(&ws_server);
     //webSerial.setBuffer(100);
-    ws_server.begin();
-    
+    //ws_server.begin();  
+
+    webSerial = new WebSerial();
+    webSerial->onMessage([](const std::string& msg) { Serial.println(msg.c_str()); });
+    webSerial->begin(&ws_server);
+        
     //Loop code for the task
     for(;;) { 
         if (xQueueReceive(webserial_queue, rxBuffer, 50) == pdPASS) {
@@ -27,8 +32,8 @@ void task_wserial_code(void * pvParameters) {
             datetime = formatted_datetime();
             message = datetime + " - " + rxString;
             Serial.print("\n" + message);
-            webSerial.println(message);
+            webSerial->print("\n" + message);
         }
-        vTaskDelay(1000);
+        vTaskDelay(500);
     }   
 }

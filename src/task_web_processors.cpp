@@ -225,7 +225,6 @@ String status_processor(const String& var) {
             status_valve_file_present = check_file_exists(path1);
             if (status_valve_file_present == 1) {
                 json1 = read_config_file(path1);
-                //deserializeJson(doc1, json1);
             }
             xSemaphoreGive(valve_position_file_mutex);
         }

@@ -1,10 +1,7 @@
 #include "task_web.h"
 
-// Create AsyncWebServer object on port 80
+bool valve_move_locked;
 
-AsyncWebServer server(80);
-
-//Variables for valvecontrol page
 const char* VALVE0_POSITION_MOVE = "valve0_position_move";
 const char* VALVE0_DIRECTION = "valve0_direction";
 const char* VALVE1_POSITION_MOVE = "valve1_position_move";
@@ -330,11 +327,14 @@ const char* VALVE9_POSITION_CYCLINGNIGHT = "valve9_position_cyclingnight";
 const char* VALVE10_POSITION_CYCLINGNIGHT = "valve10_position_cyclingnight";
 const char* VALVE11_POSITION_CYCLINGNIGHT = "valve11_position_cyclingnight";
 
-bool valve_move_locked;
+String valve0_direction = "",valve1_direction = "",valve2_direction = "",valve3_direction = "",valve4_direction = "",valve5_direction = "";
+String valve6_direction = "",valve7_direction = "",valve8_direction = "",valve9_direction = "",valve10_direction = "",valve11_direction = "";
+String check_valve_position = "";            // True when check is required if valve moves within operating range
+String store_valve_position_in_file = "";    // True to enable storing of new position in valve position file
+String message = "";
 
-String valve0_direction,valve1_direction,valve2_direction,valve3_direction,valve4_direction,valve5_direction,valve6_direction,valve7_direction,valve8_direction,valve9_direction,valve10_direction,valve11_direction;
-String check_valve_position;            // True when check is required if valve moves within operating range
-String store_valve_position_in_file;    // True to enable storing of new position in valve position file
+// Create AsyncWebServer object on port 80
+AsyncWebServer server(80);
 
 void startTaskwebcode(void) {
   	xTaskCreate(Taskwebcode, "Task_web", 10000, NULL, 9, &h_Task_web);
@@ -342,6 +342,7 @@ void startTaskwebcode(void) {
 
 void Taskwebcode(void *pvParameters) {
 
+	//Main page
 	server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) { request->send(LittleFS, "/html/index.html", String(), false, status_processor); });
 
 	//Request for CSS file
@@ -784,7 +785,8 @@ void Taskwebcode(void *pvParameters) {
 			xTaskNotifyGive(xTaskGetHandle("task_valvectrl"));
 		}
 		else {
-			Serial.print("\nValves are locked for moving, try again");
+			message = "Valves are locked for moving, try again";
+			print_message(message);
 		}
 	});
 

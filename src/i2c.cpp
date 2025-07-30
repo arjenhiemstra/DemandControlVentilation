@@ -11,6 +11,7 @@ void read_sensors(void) {
     String sensor_type = "";
     String sensor_address = "";
     String sensor = "";
+    String message = "";
 
     int bus0_multiplexer_addr_tmp;
     int bus1_multiplexer_addr_tmp;
@@ -148,10 +149,12 @@ void read_sensors(void) {
         
                         error = SCD4X_1.readMeasurement(co2, temperature, humidity);
                         if (error) {
-                            Serial.print("Error trying to execute readMeasurement(): ");
+                            message = "[Error] Failed to execute readMeasurement().";
+                            print_message(message);
                         } 
                         else if (co2 == 0) {
-                            Serial.println("Invalid sample detected, skipping.");
+                            message = "[Error] Invalid sample detected, skipping.";
+                            print_message(message);
                         } 
                         else {
                             temp_sensor_data[bus][slot][0] = temperature;
@@ -173,10 +176,12 @@ void read_sensors(void) {
         
                         error = SCD4X_2.readMeasurement(co2, temperature, humidity);
                         if (error) {
-                            Serial.print("Error trying to execute readMeasurement(): ");
+                            message = "[Error] Failed to execute readMeasurement().";
+                            print_message(message);
                         } 
                         else if (co2 == 0) {
-                            Serial.println("Invalid sample detected, skipping.");
+                            message = "[Error] Invalid sample detected, skipping.";
+                            print_message(message);
                         } 
                         else {
                             temp_sensor_data[bus][slot][0] = temperature;
@@ -208,15 +213,18 @@ void read_sensors(void) {
     {
         if(sensor_queue !=NULL) {
             if (xQueueOverwrite(sensor_queue, &temp_sensor_data) != pdPASS){
-                Serial.println("\nNo queue space for sending data to queue.\n");
+                message = "[Error] Failed to send data to queue.";
+                print_message(message);
             }
         }
         else {
-            Serial.print("Send - Queue handle is NULL");
+            message = "[Error] Send data to queue - Queue handle is NULL";
+            print_message(message);
         }
     }
     else {
-        Serial.print("I2C communication problem");
+        message = "[Error] I2C communication problem";
+        print_message(message);
     }
 }
 
@@ -343,8 +351,9 @@ void display_valve_positions(void) {
     */
       
     const char* path = "/json/valvepositions.json";
-    bool status_file_present;
-    String json;
+    bool status_file_present = 0;
+    String json = "";
+    String message = "";
     JsonDocument doc;
 
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
@@ -355,69 +364,80 @@ void display_valve_positions(void) {
     if (valve_position_file_mutex != NULL) {
         if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             if (status_file_present == 1) {
-
                 json = read_config_file(path);
-                deserializeJson(doc, json);
+                //deserializeJson(doc, json);
             }
             xSemaphoreGive(valve_position_file_mutex);
         }
     }
-            
-    String valve0_pos = doc[String("valve0")];
-    String valve1_pos = doc[String("valve1")];
-    String valve2_pos = doc[String("valve2")];
-    String valve3_pos = doc[String("valve3")];
-    String valve4_pos = doc[String("valve4")];
-    String valve5_pos = doc[String("valve5")];
-    String valve6_pos = doc[String("valve6")];
-    String valve7_pos = doc[String("valve7")];
-    String valve8_pos = doc[String("valve8")];
-    String valve9_pos = doc[String("valve9")];
-    String valve10_pos = doc[String("valve10")];
-    String valve11_pos = doc[String("valve11")];
+    if (json == "") {
+        message = "[ERROR] String is empty or failed to read file";
+        print_message(message);
+        return;
+    }
+    else {
+        DeserializationError err = deserializeJson(doc, json);
+        if (err) {
+            message = "[ERROR] Failed to parse valvepositions.json: " + String(path) + ": " + String(err.c_str());
+            print_message(message);
+            return;
+        }
+                
+        String valve0_pos = doc[String("valve0")];
+        String valve1_pos = doc[String("valve1")];
+        String valve2_pos = doc[String("valve2")];
+        String valve3_pos = doc[String("valve3")];
+        String valve4_pos = doc[String("valve4")];
+        String valve5_pos = doc[String("valve5")];
+        String valve6_pos = doc[String("valve6")];
+        String valve7_pos = doc[String("valve7")];
+        String valve8_pos = doc[String("valve8")];
+        String valve9_pos = doc[String("valve9")];
+        String valve10_pos = doc[String("valve10")];
+        String valve11_pos = doc[String("valve11")];
 
-    lcd.setCursor(0,0);
-    lcd.print("v0:");
-    lcd.print(valve0_pos);
-    lcd.setCursor(7,0);
-    lcd.print("v1:");
-    lcd.print(valve1_pos);
-    lcd.setCursor(14,0);
-    lcd.print("v2:");
-    lcd.print(valve2_pos);
-    
-    lcd.setCursor(0,1);
-    lcd.print("v3:");
-    lcd.print(valve3_pos);
-    lcd.setCursor(7,1);
-    lcd.print("v4:");
-    lcd.print(valve4_pos);
-    lcd.setCursor(14,1);
-    lcd.print("v5:");
-    lcd.print(valve5_pos);
-    
-    lcd.setCursor(0,2);
-    lcd.print("v6:");
-    lcd.print(valve6_pos);
-    lcd.setCursor(7,2);
-    lcd.print("v7:");
-    lcd.print(valve7_pos);
-    lcd.setCursor(14,2);
-    lcd.print("v8:");
-    lcd.print(valve8_pos);
+        lcd.setCursor(0,0);
+        lcd.print("v0:");
+        lcd.print(valve0_pos);
+        lcd.setCursor(7,0);
+        lcd.print("v1:");
+        lcd.print(valve1_pos);
+        lcd.setCursor(14,0);
+        lcd.print("v2:");
+        lcd.print(valve2_pos);
+        
+        lcd.setCursor(0,1);
+        lcd.print("v3:");
+        lcd.print(valve3_pos);
+        lcd.setCursor(7,1);
+        lcd.print("v4:");
+        lcd.print(valve4_pos);
+        lcd.setCursor(14,1);
+        lcd.print("v5:");
+        lcd.print(valve5_pos);
+        
+        lcd.setCursor(0,2);
+        lcd.print("v6:");
+        lcd.print(valve6_pos);
+        lcd.setCursor(7,2);
+        lcd.print("v7:");
+        lcd.print(valve7_pos);
+        lcd.setCursor(14,2);
+        lcd.print("v8:");
+        lcd.print(valve8_pos);
 
-    lcd.setCursor(0,3);
-    lcd.print("v9:");
-    lcd.print(valve9_pos);
-    lcd.setCursor(6,3);
-    lcd.print("v10:");
-    lcd.print(valve10_pos);
-    lcd.setCursor(13,3);
-    lcd.print("v11:");
-    lcd.print(valve11_pos);
-    vTaskDelay(5000);
-    lcd.clear();
-    //lcd.noBacklight();
+        lcd.setCursor(0,3);
+        lcd.print("v9:");
+        lcd.print(valve9_pos);
+        lcd.setCursor(6,3);
+        lcd.print("v10:");
+        lcd.print(valve10_pos);
+        lcd.setCursor(13,3);
+        lcd.print("v11:");
+        lcd.print(valve11_pos);
+        vTaskDelay(5000);
+        lcd.clear();
+    }
     Wire1.endTransmission();
 }
 
@@ -522,7 +542,6 @@ String current_time(void) {
 
     if (date_time_mutex != NULL) {
         if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-
             yearStr = String(now.year(), DEC);
             monthStr = (now.month() < 10 ? "0" : "") + String(now.month(), DEC);
             dayStr = (now.day() < 10 ? "0" : "") + String(now.day(), DEC);
@@ -545,10 +564,12 @@ void sync_rtc_ntp(void) {
     char ntp_server_tmp[50];
     char timezone_tmp[50];
 
-    String ntp_server_str;
-    String timezone_str;
+    String ntp_server_str = "";
+    String timezone_str = "";
+    String message = "";
         
     RTC_DS3231 rtc;
+
     Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
     rtc.begin(&Wire);
 
@@ -567,12 +588,15 @@ void sync_rtc_ntp(void) {
     //configTzTime("CET-1CEST,M3.5.0,M10.5.0/3", "pool.ntp.org");
     configTzTime(timezone_tmp, ntp_server_tmp);
     if (!getLocalTime(&timeinfo)) {
-        Serial.println("Failed to obtain time");
+        message = "Failed to obtain time";
+        print_message(message);
         return;
     }
-    Serial.print("\nESP32 Time synchronized with NTP server.");
-    Serial.print("\nCurrent time: ");
-    Serial.print(&timeinfo, "%A, %B %d %Y %H:%M:%S");
+    else {
+        message = "ESP32 Time synchronized with NTP server.";
+        print_message(message);
+        //Serial.print(&timeinfo, "%A, %B %d %Y %H:%M:%S");
+    }
 
     // Sync the RTC with the NTP time
     rtc.adjust(DateTime(timeinfo.tm_year + 1900, timeinfo.tm_mon + 1, timeinfo.tm_mday, timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec));
