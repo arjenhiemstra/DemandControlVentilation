@@ -37,7 +37,7 @@ String formatted_datetime(void) {
         }
     }
     //temp_datetime =  + "/" + monthStr + "/" + dayStr + " - " + hourStr + ":" + minuteStr + ":" + secondStr;
-    temp_datetime = temp_year + "/" + temp_month + "/" + temp_day + " - " + temp_hour + ":" + temp_minute + ":" + temp_second;
+    temp_datetime = temp_year + "/" + temp_month + "/" + temp_day + "-" + temp_hour + ":" + temp_minute + ":" + temp_second;
     return temp_datetime;
 }
 

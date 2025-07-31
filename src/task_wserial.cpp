@@ -18,7 +18,7 @@ void task_wserial_code(void * pvParameters) {
     
     webSerial.onMessage([](const std::string& msg) { Serial.println(msg.c_str()); });
     webSerial.begin(&ws_server);
-    webSerial.setBuffer(100);
+    webSerial.setBuffer(500);
     ws_server.begin();  
 
     //webSerial = new WebSerial();

@@ -194,11 +194,13 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
     int pattern1[4] = { 0b00000101, 0b00001001, 0b00001010, 0b00000110 };
     int pattern2[4] = { 0b01010000, 0b10010000, 0b10100000, 0b01100000 };
 
+    String message = "";
+
     // Disable valve moving when valves are already moving
     if (lock_valve_move_mutex != NULL) {
         if(xSemaphoreTake(lock_valve_move_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
             lock_valve_move = 1;
-            Serial.print("\nValves are locked for moving");
+            //Serial.print("\nValves are locked for moving");
             xSemaphoreGive(lock_valve_move_mutex);
         }
     }
@@ -288,14 +290,15 @@ void valvecontrol(int direction, int position_change, int valve_number, int data
         all_outputs_off(dataPin, clockPin, latchPin);
     }
     else {
-        Serial.print("\nError in valvecontrol. Requested position change is: " + String(position_change) + ". Position change should be between 0 and 24");
+        message = "Error in valvecontrol. Requested position change is: " + String(position_change) + ". Position change should be between 0 and 24";
+        print_message(message);
     }
 
     // Enable valve moving
     if (lock_valve_move_mutex != NULL) {
         if(xSemaphoreTake(lock_valve_move_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
             lock_valve_move = 0;
-            Serial.print("\nValves are unlocked for moving");
+            //Serial.print("\nValves are unlocked for moving");
             xSemaphoreGive(lock_valve_move_mutex);
         }
     }
@@ -379,6 +382,7 @@ Data structure for each JSON valve_control_data Structure
         }
         else {
             message = "[ERROR] File does not exist: " + state_valve_pos_path;
+            print_message(message);
             return;
         }
     }
@@ -451,14 +455,17 @@ Data structure for each JSON valve_control_data Structure
 
     //finally the valves can be moved but function move_valve() should only be called if sum_move > 0
     if (sum_move > 0 ) {
-        Serial.print("\nValve move sum is > 0 (" + String(sum_move) + "). Call function to move valves.");
+        message = "Valve move sum is > 0 (" + String(sum_move) + "). Call function to move valves.";
+        print_message(message);
         move_valve();
     }
     else if (sum_move < 0) {
-        Serial.print("\nValve move sum is < 0 (" + String(sum_move) + "). This should not happen. Check your code.");
+        message = "Valve move sum is < 0 (" + String(sum_move) + "). This should not happen. Check your code.";
+        print_message(message);
     }
     else {
-        Serial.print("\nValve move sum is " + String(sum_move) + ". No valve movement required. Don't call function to move valves.");
+        message = "Valve move sum is " + String(sum_move) + ". No valve movement required. Don't call function to move valves.";
+        print_message(message);
     }
 }
 

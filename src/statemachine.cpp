@@ -1,11 +1,5 @@
 /*
-- Multiple sensors can be used to determine the CO2 or RH value. This is set in the sensor config files
-- Temperature is not used
-- RH can only be used in bathroom(s) since in general RH cannot be influenced by ventilation, only when there is a big change such as showering
-- CO2 can be measured for serveral rooms
-    - If one room has high CO2 then it should be sufficinet to open a valve
-    - If the fan inlet has high CO2 in daytime then fanspeed should go to high in day time
-    - If the fan inlet has high CO2 in the night then fanspeed should go to medium and all valves to bedrooms open
+Statemachine code
 */
 
 #include "statemachine.h"
@@ -194,6 +188,8 @@ void day_transitions(void) {
     int temp_minute = 0;
     int co2_sensors_high = 0;
     int rh_sensors_high = 0;
+    int rhhighlevel = 0;
+    int co2highlevel = 0;
     bool valve_move_locked = 0;
     
     String temp_fanspeed = "";
@@ -218,14 +214,6 @@ void day_transitions(void) {
         }
     }
 
-    if (settings_state_day_mutex != NULL) {
-        if(xSemaphoreTake(settings_state_day_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            String state_fanspeed = settings_state_day[String("state_day_fanspeed")];
-            temp_fanspeed = state_fanspeed;
-            xSemaphoreGive(settings_state_day_mutex);
-        }
-    }
-
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             fanspeed = temp_fanspeed;
@@ -240,11 +228,41 @@ void day_transitions(void) {
         }
     }
 
-    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + "and fanspeed is " + temp_fanspeed;
+    if (settings_state_day_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_day_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            String state_fanspeed = settings_state_day[String("state_day_fanspeed")];
+            temp_fanspeed = state_fanspeed;
+            xSemaphoreGive(settings_state_day_mutex);
+        }
+    }
+
+    //Read CO2 levels for transition to highCO2day state from global jsonDocument
+    if (settings_state_highco2day_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_highco2day_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            co2highlevel = settings_state_highco2day["co2_high_state_highco2day"];
+            xSemaphoreGive(settings_state_highco2day_mutex);
+        }
+    }
+
+    //Read RH levels for transition to highrhday state from global jsonDocument
+    if (settings_state_highrhday_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_highrhday_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            rhhighlevel = settings_state_highrhday["rh_high_state_highrhday"];
+            xSemaphoreGive(settings_state_highrhday_mutex);
+        }
+    }
+
+    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
     print_message(message);
     
     set_fanspeed(temp_fanspeed);
     select_sensors();
+
+    message = "High CO2 detection level: " + String(co2highlevel);
+    print_message(message);
+    
+    message = "High RH detection level: " + String(rhhighlevel);
+    print_message(message);
 
     if (valve_move_locked == 0) {
         valve_position_statemachine(statemachine_state);
@@ -255,7 +273,7 @@ void day_transitions(void) {
     }
 
     for (int i = 0; i < co2_sensor_counter; i++) {
-        if (co2_sensors[i].co2_reading > 1000) {
+        if (co2_sensors[i].co2_reading > co2highlevel) {
             message = "Sensor" + String(i) + " which is located at " + String(co2_sensors[i].valve) + " has high CO2 reading. Transit to highco2day state";
             print_message(message);
             co2_sensors_high++;
@@ -263,7 +281,7 @@ void day_transitions(void) {
     }
 
     for (int i = 0; i < rh_sensor_counter; i++) {
-        if (rh_sensors[i].rh_reading > 85) {
+        if (rh_sensors[i].rh_reading > rhhighlevel) {
             message = "Sensor" + String(i) + " which is located at " + String(rh_sensors[i].valve) + " has high RH reading. Transit to highrhday state";
             print_message(message); 
             rh_sensors_high++;
@@ -365,7 +383,7 @@ void night_transitions(void) {
         }
     }
 
-    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + "and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
     print_message(message);
 
     set_fanspeed(temp_fanspeed);
@@ -495,7 +513,7 @@ void high_co2_day_transitions(void) {
         }
     }
 
-    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + "and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
     print_message(message);
 
     set_fanspeed(temp_fanspeed);
@@ -662,7 +680,7 @@ void high_co2_night_transitions(void) {
         }
     }
 
-    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + "and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
     print_message(message);
 
     set_fanspeed(temp_fanspeed);
@@ -820,7 +838,7 @@ void high_rh_day_transitions(void) {
         }
     }
 
-    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + "and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
     print_message(message);
 
     set_fanspeed(temp_fanspeed);
@@ -932,7 +950,7 @@ void high_rh_night_transitions(void) {
         }
     }
 
-    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + "and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
     print_message(message);
 
     set_fanspeed(temp_fanspeed);
@@ -1054,7 +1072,7 @@ void cooking_transitions(void) {
         }
     }
    
-    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + "and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
     print_message(message);
 
     set_fanspeed(temp_fanspeed);
@@ -1142,7 +1160,7 @@ void valve_cycle_day_transitions(void) {
         }
     }
 
-    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + "and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
     print_message(message);
 
     set_fanspeed(temp_fanspeed);
@@ -1264,7 +1282,7 @@ void valve_cycle_night_transitions(void) {
         }
     }
 
-    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + "and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
     print_message(message);
 
     set_fanspeed(temp_fanspeed);
