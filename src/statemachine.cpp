@@ -10,7 +10,6 @@
 
 #include "statemachine.h"
 
-String new_state = "0";
 float statemachine_sensor_data[2][8][3];
 float statemachine_avg_sensor_data[2][8][3];
 
@@ -19,6 +18,9 @@ int rh_sensor_counter = 0;
 
 long old_time = 0;
 long elapsed_time = 0;
+
+String new_state = "";
+String temp_fanspeed = "Low";
 
 struct CO2_Sensors {
         String valve;
@@ -45,8 +47,7 @@ void init_statemachine(void) {
     
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            fanspeed = "Low";
-            temp_fanspeed = fanspeed;
+            fanspeed = temp_fanspeed;
             xSemaphoreGive(fanspeed_mutex);
         }
     }
