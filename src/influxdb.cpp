@@ -50,8 +50,8 @@ void write_sensor_data(void) {
     
         // Check server connection. Only write data when server is available.
         if (client.validateConnection()) {   
-            message = "Connection to influxDB validated. Writing sensor data to influxDB.";
-            print_message(message);
+            //message = "Connection to influxDB validated. Writing sensor data to influxDB.";
+            //print_message(message);
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 8; j++) {    
                     if (queue_sensor_data[i][j][0] > 0) {
@@ -138,8 +138,8 @@ void write_avg_sensor_data(void) {
         if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             wire_sensor_data_temp = wire_sensor_data;
             wire1_sensor_data_temp = wire1_sensor_data;
+            xSemaphoreGive(sensor_config_file_mutex);
         }
-        xSemaphoreGive(sensor_config_file_mutex);
     }
     
     InfluxDBClient client(influxdb_url_tmp, influxdb_org_tmp, influxdb_bucket_tmp, influxdb_token_tmp);
@@ -149,8 +149,8 @@ void write_avg_sensor_data(void) {
 
     if (xQueuePeek(sensor_avg_queue, &queue_avg_sensor_data, 0) == pdTRUE) {     
         if (client.validateConnection()) {    
-            message = "Connection to influxDB validated. Writing sensor data to influxDB.";
-            print_message(message);
+            //message = "Connection to influxDB validated. Writing sensor data to influxDB.";
+            //print_message(message);
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 8; j++) {           
                     if (queue_avg_sensor_data[i][j][0] > 0) {
@@ -219,8 +219,6 @@ void write_valve_position_data(void) {
     
     if (settings_influxdb_mutex != NULL) {
         if(xSemaphoreTake(settings_influxdb_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-                          
-            //Assign to global variable
             enable_influxdb_tmp = enable_influxdb;
             influxdb_url_tmp = influxdb_url;
             influxdb_org_tmp = influxdb_org;
@@ -251,8 +249,8 @@ void write_valve_position_data(void) {
         }
 
         if (client.validateConnection()) {    
-            message = "Connection to influxDB validated. Writing sensor data to influxDB.";
-            print_message(message);
+            //message = "Connection to influxDB validated. Writing sensor data to influxDB.";
+            //print_message(message);
             for(int i=0;i<12;i++) {
                 
                 valve_pos_temp = doc["valve"+String(i)];
@@ -310,9 +308,8 @@ void write_system_uptime(void) {
     uptime = (esp_timer_get_time())/1000000;        //in sec
     
     if (client.validateConnection()) {    
-        message = "Connection to influxDB validated. Writing sensor data to influxDB.";
-        print_message(message);
-        
+        //message = "Connection to influxDB validated. Writing sensor data to influxDB.";
+        //print_message(message);
         sensor.clearFields();
         sensor.clearTags();
         sensor.addField("uptime", uptime);
@@ -405,9 +402,8 @@ void write_state_info(void) {
     }
 
     if (client.validateConnection()) {    
-        message = "Connection to influxDB validated. Writing sensor data to influxDB.";
-        print_message(message);
-
+        //message = "Connection to influxDB validated. Writing sensor data to influxDB.";
+        //print_message(message);
         sensor.clearFields();
         sensor.clearTags();
         sensor.addField("state", temp_state_nr);
@@ -471,8 +467,8 @@ void write_fanspeed(void) {
     }
 
     if (client.validateConnection()) {    
-        message = "Connection to influxDB validated. Writing sensor data to influxDB.";
-        print_message(message);
+        //message = "Connection to influxDB validated. Writing sensor data to influxDB.";
+        //print_message(message);
         sensor.clearFields();
         sensor.clearTags();
         sensor.addField("fanspeed", temp_fanspeed_nr);
@@ -522,8 +518,8 @@ void write_heap_info(void) {
     Point sensor("System_stats");
 
     if (client.validateConnection()) {    
-        message = "Connection to influxDB validated. Writing sensor data to influxDB.";
-        print_message(message);
+        //message = "Connection to influxDB validated. Writing sensor data to influxDB.";
+        //print_message(message);
         sensor.clearFields();
         sensor.clearTags();
         sensor.addField("min_free_heap_size_ever", minimum_ever_free_heap_size);
