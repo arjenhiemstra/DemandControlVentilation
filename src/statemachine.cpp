@@ -214,6 +214,14 @@ void day_transitions(void) {
         }
     }
 
+    if (settings_state_day_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_day_mutex, ( TickType_t ) 100 ) == pdTRUE) {
+            String state_fanspeed = settings_state_day[String("state_day_fanspeed")];
+            temp_fanspeed = state_fanspeed;
+            xSemaphoreGive(settings_state_day_mutex);
+        }
+    }
+
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
             fanspeed = temp_fanspeed;
@@ -226,15 +234,7 @@ void day_transitions(void) {
             valve_move_locked = lock_valve_move;
             xSemaphoreGive(lock_valve_move_mutex);
         }
-    }
-
-    if (settings_state_day_mutex != NULL) {
-        if(xSemaphoreTake(settings_state_day_mutex, ( TickType_t ) 100 ) == pdTRUE) {
-            String state_fanspeed = settings_state_day[String("state_day_fanspeed")];
-            temp_fanspeed = state_fanspeed;
-            xSemaphoreGive(settings_state_day_mutex);
-        }
-    }
+    }   
 
     //Read CO2 levels for transition to highCO2day state from global jsonDocument
     if (settings_state_highco2day_mutex != NULL) {
