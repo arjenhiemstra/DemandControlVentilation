@@ -229,7 +229,7 @@ void day_transitions(void) {
     }
 
     if (settings_state_day_mutex != NULL) {
-        if(xSemaphoreTake(settings_state_day_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        if(xSemaphoreTake(settings_state_day_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             String state_fanspeed = settings_state_day[String("state_day_fanspeed")];
             temp_fanspeed = state_fanspeed;
             xSemaphoreGive(settings_state_day_mutex);
@@ -238,7 +238,7 @@ void day_transitions(void) {
 
     //Read CO2 levels for transition to highCO2day state from global jsonDocument
     if (settings_state_highco2day_mutex != NULL) {
-        if(xSemaphoreTake(settings_state_highco2day_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        if(xSemaphoreTake(settings_state_highco2day_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             co2highlevel = settings_state_highco2day["co2_high_state_highco2day"];
             xSemaphoreGive(settings_state_highco2day_mutex);
         }
@@ -246,7 +246,7 @@ void day_transitions(void) {
 
     //Read RH levels for transition to highrhday state from global jsonDocument
     if (settings_state_highrhday_mutex != NULL) {
-        if(xSemaphoreTake(settings_state_highrhday_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        if(xSemaphoreTake(settings_state_highrhday_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             rhhighlevel = settings_state_highrhday["rh_high_state_highrhday"];
             xSemaphoreGive(settings_state_highrhday_mutex);
         }
@@ -492,7 +492,7 @@ void high_co2_day_transitions(void) {
     }
 
     if (settings_state_highco2day_mutex != NULL) {
-        if(xSemaphoreTake(settings_state_highco2day_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        if(xSemaphoreTake(settings_state_highco2day_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             String state_fanspeed = settings_state_highco2day[String("state_highco2day_fanspeed")];
             temp_fanspeed = state_fanspeed;
             xSemaphoreGive(settings_state_highco2day_mutex);
@@ -697,7 +697,7 @@ void high_co2_night_transitions(void) {
     state_valve_pos_file_present = check_file_exists(state_valve_pos_path.c_str());
     
     if (settings_state_highco2night_mutex != NULL) {
-        if(xSemaphoreTake(settings_state_highco2night_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        if(xSemaphoreTake(settings_state_highco2night_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             if (state_valve_pos_file_present == 1) {
                 File file = LittleFS.open(state_valve_pos_path, "r");
                 while(file.available()) {
@@ -1413,7 +1413,7 @@ void select_sensors(void) {
     float sensor_data[2][8][3];
     
     if (sensor_config_file_mutex != NULL) {
-        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             sensor_config1_file_present = check_file_exists(path1);
             if (sensor_config1_file_present == 1) {
                 File file = LittleFS.open(path1, "r");
@@ -1428,7 +1428,7 @@ void select_sensors(void) {
     }
 
     if (sensor_config_file_mutex != NULL) {
-        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             sensor_config2_file_present = check_file_exists(path2);
             if (sensor_config2_file_present == 1) {
                 File file = LittleFS.open(path2, "r");
@@ -1447,7 +1447,7 @@ void select_sensors(void) {
 
     for (int i = 0; i < 16; i++) {
         if (sensor_config_file_mutex != NULL) {
-            if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 100 ) == pdTRUE) {
                 String co2_sensor_wire_temp = wire_sensor_data["wire_sensor"+String(i)]["co2"];
                 String co2_sensor_wire1_temp = wire1_sensor_data["wire1_sensor"+String(i)]["co2"];
                 String rh_sensor_wire_temp = wire_sensor_data["wire_sensor"+String(i)]["rh"];
@@ -1462,7 +1462,7 @@ void select_sensors(void) {
         }
         if (co2_sensor_wire == "On") {
             if (sensor_config_file_mutex != NULL) {
-                if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+                if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 100 ) == pdTRUE) {
                     String valve_temp = wire_sensor_data["wire_sensor"+String(i)]["valve"];
                     valve = valve_temp;
                     xSemaphoreGive(sensor_config_file_mutex);
@@ -1479,7 +1479,7 @@ void select_sensors(void) {
         
         if (co2_sensor_wire1 == "On") {
             if (sensor_config_file_mutex != NULL) {
-                if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+                if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 100 ) == pdTRUE) {
                     String valve_temp = wire1_sensor_data["wire1_sensor"+String(i)]["valve"];
                     valve = valve_temp;
                     xSemaphoreGive(sensor_config_file_mutex);
@@ -1495,7 +1495,7 @@ void select_sensors(void) {
         
         if (rh_sensor_wire == "On") {
             if (sensor_config_file_mutex != NULL) {
-                if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+                if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 100 ) == pdTRUE) {
                     String valve_temp = wire_sensor_data["wire_sensor"+String(i)]["valve"];
                     valve = valve_temp;
                     xSemaphoreGive(sensor_config_file_mutex);
@@ -1511,7 +1511,7 @@ void select_sensors(void) {
         
         if (rh_sensor_wire1 == "On") {
             if (sensor_config_file_mutex != NULL) {
-                if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+                if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 100 ) == pdTRUE) {
                     String valve_temp = wire1_sensor_data["wire1_sensor"+String(i)]["valve"];
                     valve = valve_temp;
                     xSemaphoreGive(sensor_config_file_mutex);
