@@ -11,7 +11,7 @@ void read_time_settings(void) {
     JsonDocument settings_rtc_doc;
 
     if (settings_rtc_mutex != NULL) {
-        if(xSemaphoreTake(settings_rtc_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        if(xSemaphoreTake(settings_rtc_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             settings_rtc_file_present = check_file_exists(path);
             if (settings_rtc_file_present == 1) {
                 settings_rtc_string = read_config_file(path);
@@ -56,7 +56,7 @@ void read_influxdb_config(void) {
     JsonDocument settings_influxdb_doc;
 
     if (settings_influxdb_mutex != NULL) {
-        if(xSemaphoreTake(settings_influxdb_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        if(xSemaphoreTake(settings_influxdb_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             settings_influxdb_file_present = check_file_exists(path);
             if (settings_influxdb_file_present == 1) {
                 settings_influxdb_string = read_config_file(path);
@@ -107,7 +107,7 @@ void read_i2c_config(void) {
     JsonDocument settings_i2c_doc;
 
     if (settings_i2c_mutex != NULL) {
-        if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             settings_i2c_file_present = check_file_exists(path);
             if (settings_i2c_file_present == 1) {
                 settings_i2c_string = read_config_file(path);
@@ -156,7 +156,7 @@ void read_mqtt_config(void) {
     JsonDocument settings_mqtt_doc;
 
     if (settings_mqtt_mutex != NULL) {
-        if(xSemaphoreTake(settings_mqtt_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        if(xSemaphoreTake(settings_mqtt_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             settings_mqtt_file_present = check_file_exists(path);
             if (settings_mqtt_file_present == 1) {
                 settings_mqtt_string = read_config_file(path);
@@ -204,7 +204,7 @@ void read_fan_config() {
     JsonDocument settings_fan_doc;
 
     if (settings_fan_mutex != NULL) {
-        if(xSemaphoreTake(settings_fan_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        if(xSemaphoreTake(settings_fan_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             settings_fan_file_present = check_file_exists(path);
             if (settings_fan_file_present == 1) {
                 settings_fan_string = read_config_file(path);
@@ -241,7 +241,7 @@ void sensor_config_data_read() {
     String message = "";
     
     if (sensor_config_file_mutex != NULL) {
-        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             sensor_config1_file_present = check_file_exists(path1);
             if (sensor_config1_file_present == 1) {
                 sensor_config1_string = read_config_file(path1);
@@ -264,7 +264,7 @@ void sensor_config_data_read() {
     }
 	
     if (sensor_config_file_mutex != NULL) {
-        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             sensor_config2_file_present = check_file_exists(path2);
             if (sensor_config2_file_present == 1) {
                 sensor_config2_string = read_config_file(path2);
@@ -537,7 +537,7 @@ void valve_status_file_create() {
     default_valve_position_file = "{\"valve0\":0, \"valve1\":0, \"valve2\":0, \"valve3\":0, \"valve4\":0, \"valve5\":0, \"valve6\":0, \"valve7\":0, \"valve8\":0, \"valve9\":0, \"valve10\":0, \"valve11\":0}";  
 
     if (valve_position_file_mutex != NULL) {
-        if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             file = LittleFS.open("/json/valvepositions.json", "w");
             if (!file) {
                 message = "[ERROR] Failed to open file for writing: /json/valvepositions.json";

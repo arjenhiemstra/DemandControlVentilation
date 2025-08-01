@@ -7,6 +7,8 @@ void read_sensors(void) {
  
     bool sensor_config_file_present = 0;
     float temp_sensor_data[2][8][3]= {0};
+    const char* path1 = "/json/sensor_config1.json";
+    const char* path2 = "/json/sensor_config2.json";
 
     String sensor_type = "";
     String sensor_address = "";
@@ -29,12 +31,10 @@ void read_sensors(void) {
         
         if (bus==0) {
             Wire.begin(I2C_SDA1, I2C_SCL1, 100000);
-            const char* path1 = "/json/sensor_config1.json";
             sensor_config_file_present = check_file_exists(path1);
         }
         if (bus==1) {
             Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
-            const char* path2 = "/json/sensor_config2.json";
             sensor_config_file_present = check_file_exists(path2);
         }
         
@@ -43,7 +43,7 @@ void read_sensors(void) {
                 if (bus==0) {
                     sensor = "wire_sensor" + String(slot);
                     if (sensor_config_file_mutex != NULL) {
-                        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+                        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 100 ) == pdTRUE) {
                             String sensor_type_temp = wire_sensor_data[sensor]["type"];
                             String sensor_address_temp = wire_sensor_data[sensor]["address"];
                             sensor_type = sensor_type_temp;
@@ -58,7 +58,7 @@ void read_sensors(void) {
                 if (bus==1) {
                     sensor = "wire1_sensor" + String(slot);
                     if (sensor_config_file_mutex != NULL) {
-                        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+                        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 100 ) == pdTRUE) {
                             String sensor_type_temp = wire1_sensor_data[sensor]["type"];
                             String sensor_address_temp = wire1_sensor_data[sensor]["address"];
                             sensor_type = sensor_type_temp;
@@ -258,7 +258,7 @@ void display_sensors(void) {
                 //Only display measurements if sensor is present, i.e. if temperature measurement is not zero
                 if (queue_sensor_data[bus][slot][0] != 0) {
                     if (sensor_config_file_mutex != NULL) {
-                        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+                        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 100 ) == pdTRUE) { 
                             if (bus == 0) {
                                 String valve_tmp = wire_sensor_data["wire_sensor" + String(slot)]["valve"];
                                 String location_tmp = wire_sensor_data["wire_sensor" + String(slot)]["location"];
@@ -362,7 +362,7 @@ void display_valve_positions(void) {
     status_file_present = check_file_exists(path);
 
     if (valve_position_file_mutex != NULL) {
-        if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             if (status_file_present == 1) {
                 json = read_config_file(path);
                 //deserializeJson(doc, json);
@@ -452,43 +452,57 @@ void display_time_and_date(void) {
     3 |	I   P   :   x   x   x   .   x   x   x   .   x   x   x   .   x   x   x
 */
 
-    int64_t uptime;
-    int display_i2c_addr_tmp;
+    int64_t uptime = 0;
+    int display_i2c_addr_tmp =0;
+    String temp_dayOfWeek = "";
+    String temp_dayStr = "";
+    String temp_monthStr = "";
+    String temp_yearStr = "";
+    String temp_hourStr = "";
+    String temp_minuteStr = "";
+    String temp_secondStr = "";
     
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
     lcd.init();
     lcd.backlight();
     if (date_time_mutex != NULL) {
         if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            lcd.setCursor(0,0);
-            lcd.print(dayOfWeek);
-            lcd.print(" ");
-
-            lcd.print(dayStr);
-            lcd.print("-");
-            lcd.print(monthStr);
-            lcd.print("-");
-            lcd.print(yearStr);
-            
-            lcd.setCursor(0,1);
-            lcd.print(hourStr);
-            lcd.print(":");
-            lcd.print(minuteStr);
-            lcd.print(":");
-            lcd.print(secondStr);  
-
+            temp_dayOfWeek = dayOfWeek;
+            temp_dayStr = dayStr;
+            temp_monthStr = monthStr;
+            temp_yearStr = yearStr;
+            temp_hourStr = hourStr;
+            temp_minuteStr = minuteStr;
+            temp_secondStr = secondStr;
             xSemaphoreGive(date_time_mutex);       
         }
-        
-        uptime = esp_timer_get_time();
-        lcd.setCursor(0,2);
-        lcd.print("Uptime: ");
-        lcd.print(uptime/1000000/60);         // in minutes
-        lcd.print(" min");
-        vTaskDelay(5000);
-        lcd.clear();
-        Wire1.endTransmission();
     }
+        
+    lcd.setCursor(0,0);
+    lcd.print(temp_dayOfWeek);
+    lcd.print(" ");
+    lcd.print(temp_dayStr);
+    lcd.print("-");
+    lcd.print(temp_monthStr);
+    lcd.print("-");
+    lcd.print(temp_yearStr);
+    
+    lcd.setCursor(0,1);
+    lcd.print(temp_hourStr);
+    lcd.print(":");
+    lcd.print(temp_minuteStr);
+    lcd.print(":");
+    lcd.print(temp_secondStr);
+    
+    uptime = esp_timer_get_time();
+    lcd.setCursor(0,2);
+    lcd.print("Uptime: ");
+    lcd.print(uptime/1000000/60);         // in minutes
+    lcd.print(" min");
+    vTaskDelay(5000);
+    lcd.clear();
+    
+    Wire1.endTransmission();
 }
 
 void display_state_fan(void) {
@@ -501,6 +515,8 @@ void display_state_fan(void) {
        2 |			
        3 |	
    */
+    String temp_state = "";
+    String temp_fanspeed = "";
 
     Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);     //Display is on Wire1 bus
     lcd.init();
@@ -510,20 +526,22 @@ void display_state_fan(void) {
     
     if (statemachine_state_mutex != NULL) {
         if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            lcd.print(state);
+            temp_state = state;
             xSemaphoreGive(statemachine_state_mutex);
         }
     }
-
+    lcd.print(state);
     lcd.setCursor(0,1);
     lcd.print("Fan speed: ");
+
     if (fanspeed_mutex != NULL) {
         if(xSemaphoreTake(fanspeed_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-            lcd.print(fanspeed);
+            temp_fanspeed = fanspeed;
             xSemaphoreGive(fanspeed_mutex);
         }
     }
 
+    lcd.print(fanspeed);
     vTaskDelay(5000);
     lcd.clear();
     Wire1.endTransmission();  
@@ -609,9 +627,11 @@ void IRAM_ATTR lcd_baclight_pb_isr() {
 
 void pb_start_display(void) {
 
-    pb_toggle = false;
-    String enable_lcd_tmp = "";
+    pb_toggle = false;      //global variable
+
     int display_i2c_addr_tmp;
+    String enable_lcd_tmp = "";
+    String message = "";
      
     //Only start display when enabled. Configured with global variable
     if (settings_i2c_mutex != NULL) {
@@ -623,13 +643,7 @@ void pb_start_display(void) {
     }
 
     if (enable_lcd_tmp == "On") {
-    
-        //LiquidCrystal_I2C lcd(39, LCD_COLUMNS, LCD_ROWS);
-        //Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
-        //lcd.init();
-        //lcd.backlight();
-        //Wire1.endTransmission();
-        
+           
         display_time_and_date();
         display_state_fan();
         display_sensors();
@@ -641,27 +655,25 @@ void pb_start_display(void) {
         Wire1.endTransmission();
     }
     else {
-        Serial.print("\nDisplay is not enabled in settings.");
+        message = "Display is not enabled in settings.";
+        print_message(message);
     }
 }
 
 void init_display_off(void) {
 
-    //int display_i2c_addr_tmp;
     String enable_lcd_tmp = "";
+    String message = "";
    
     //Only start display when enabled. Configured with global variable
     if (settings_i2c_mutex != NULL) {
         if(xSemaphoreTake(settings_i2c_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
             enable_lcd_tmp = enable_lcd;
-            //display_i2c_addr_tmp = display_i2c_addr;
             xSemaphoreGive(settings_i2c_mutex);
         }
     }
 
     if (enable_lcd_tmp == "On") {
-        //LiquidCrystal_I2C lcd(39, LCD_COLUMNS, LCD_ROWS);
-        //LiquidCrystal_I2C lcd(display_i2c_addr_tmp, LCD_COLUMNS, LCD_ROWS);
         Wire1.begin(I2C_SDA2, I2C_SCL2, 100000);
         lcd.init();
         lcd.clear();
@@ -669,6 +681,7 @@ void init_display_off(void) {
         Wire1.endTransmission();
     }
     else {
-        Serial.print("\nDisplay is not enabled in settings.");
+        message = "Display is not enabled in settings.";
+        print_message(message);
     }
 }
