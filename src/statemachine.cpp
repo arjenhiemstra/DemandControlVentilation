@@ -252,7 +252,7 @@ void day_transitions(void) {
         }
     }
 
-    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
     print_message(message);
     
     set_fanspeed(temp_fanspeed);
@@ -401,7 +401,7 @@ void night_transitions(void) {
         }
     }
 
-    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
     print_message(message);
 
     set_fanspeed(temp_fanspeed);
@@ -548,7 +548,7 @@ void high_co2_day_transitions(void) {
         }
     }
 
-    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
     print_message(message);
 
     set_fanspeed(temp_fanspeed);
@@ -726,7 +726,7 @@ void high_co2_night_transitions(void) {
         }
     }
 
-    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
     print_message(message);
 
     set_fanspeed(temp_fanspeed);
@@ -893,7 +893,7 @@ void high_rh_day_transitions(void) {
         }
     }
 
-    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
     print_message(message);
 
     set_fanspeed(temp_fanspeed);
@@ -1014,7 +1014,7 @@ void high_rh_night_transitions(void) {
         }
     }
 
-    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
     print_message(message);
 
     set_fanspeed(temp_fanspeed);
@@ -1136,7 +1136,7 @@ void cooking_transitions(void) {
         }
     }
    
-    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
     print_message(message);
 
     set_fanspeed(temp_fanspeed);
@@ -1242,7 +1242,7 @@ void valve_cycle_day_transitions(void) {
         }
     }
 
-    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
     print_message(message);
 
     set_fanspeed(temp_fanspeed);
@@ -1382,7 +1382,7 @@ void valve_cycle_night_transitions(void) {
         }
     }
 
-    message = "Statemachine in state " + statemachine_state + ", It is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
     print_message(message);
 
     set_fanspeed(temp_fanspeed);
