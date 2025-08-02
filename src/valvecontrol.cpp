@@ -11,11 +11,13 @@ void move_valve(void) {
     int valve_number = 0;
     int direction = 0;
     int valve_pos = 0;
+    
     int valve_position_change = 0;
     int new_valve_position_change = 0;
     int new_valve_position = 0;
     int store_valve_position = 0;
     int check_valve_position = 0;
+    int write_failed_counter = 0;
 
     const char* path = "/json/valvepositions.json";
     
@@ -25,11 +27,12 @@ void move_valve(void) {
     String json = "";
     String new_valve_positions = "";
     String message = "";
+    String temp_state = "";
 
     JsonDocument doc;
 
     if (valve_control_data_mutex != NULL) {
-        if(xSemaphoreTake(valve_control_data_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        if(xSemaphoreTake(valve_control_data_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             store_valve_position = valve_control_data["checks"][0];
             check_valve_position = valve_control_data["checks"][1];
             xSemaphoreGive(valve_control_data_mutex);
@@ -41,7 +44,7 @@ void move_valve(void) {
 
     if (status_file_present == 1) {
         if (valve_position_file_mutex != NULL) {
-            if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
+            if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 100 ) == pdTRUE) { 
                 json = read_config_file(path);
                 xSemaphoreGive(valve_position_file_mutex);
             }
@@ -55,6 +58,13 @@ void move_valve(void) {
         }
     }
 
+    if (statemachine_state_mutex != NULL) {
+        if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            temp_state = state;
+            xSemaphoreGive(statemachine_state_mutex);
+        }
+    }
+
     // Debug
     message = "Store new valve Position: " + String(store_valve_position) + ", Check valve position: " + String(check_valve_position);
     print_message(message);
@@ -62,7 +72,7 @@ void move_valve(void) {
     for(int i=0;i<12;i++) {
 
         if (valve_control_data_mutex != NULL) {
-            if(xSemaphoreTake(valve_control_data_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            if(xSemaphoreTake(valve_control_data_mutex, ( TickType_t ) 100 ) == pdTRUE) {
                 valve_number = valve_control_data["valve"+String(i)+"_data"][0];
                 valve_position_change = valve_control_data["valve"+String(i)+"_data"][1];
                 direction = valve_control_data["valve"+String(i)+"_data"][2];
@@ -156,11 +166,17 @@ void move_valve(void) {
     //Write status file only if required
     if (store_valve_position == 1) {
         if (valve_position_file_mutex != NULL) {
-            if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 10 ) == pdTRUE) { 
-                write_valve_position_file = write_config_file(path, new_valve_positions);
+            if(xSemaphoreTake(valve_position_file_mutex, ( TickType_t ) 100 ) == pdTRUE) { 
+                //keep repeating until success
+                while(write_valve_position_file == false && write_failed_counter <= 5) {
+                    write_valve_position_file = write_config_file(path, new_valve_positions);
+                    write_failed_counter++;
+                }
+                
                 if (write_valve_position_file == false) {
                     message = "[ERROR] Failed to write valve positions to file: " + String(path);
                     print_message(message);
+                    temp_state == "stopped";
                 } 
                 else {
                     message = "Valve positions stored successfully in valvepositions.json";
@@ -168,6 +184,13 @@ void move_valve(void) {
                 }
                 xSemaphoreGive(valve_position_file_mutex);
             }
+        }
+    }
+    
+    if (statemachine_state_mutex != NULL) {
+        if(xSemaphoreTake(statemachine_state_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+            state = temp_state;
+            xSemaphoreGive(statemachine_state_mutex);
         }
     }
 }
