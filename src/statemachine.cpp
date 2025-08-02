@@ -1,6 +1,4 @@
-/*
-Statemachine code
-*/
+/* Statemachine code */
 
 #include "statemachine.h"
 
@@ -190,6 +188,7 @@ void day_transitions(void) {
     int rh_sensors_high = 0;
     int rhhighlevel = 0;
     int co2highlevel = 0;
+    long new_time = 0;
     bool valve_move_locked = 0;
     
     String temp_fanspeed = "";
@@ -252,11 +251,17 @@ void day_transitions(void) {
         }
     }
 
-    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + ", fanspeed is " + temp_fanspeed + ", elapsed time: " + String(elapsed_time);
     print_message(message);
     
     set_fanspeed(temp_fanspeed);
     select_sensors();
+
+    new_time = (esp_timer_get_time())/1000000;
+    if (new_time > old_time) {          //Just in case that a reboot happened and old_time is not set
+        elapsed_time += new_time - old_time;
+        old_time = new_time;
+    }
 
     message = "High CO2 detection level: " + String(co2highlevel);
     print_message(message);
@@ -305,6 +310,8 @@ void day_transitions(void) {
         message = "It's night. Transit to night."; 
         print_message(message);       
         new_state = "night";
+        elapsed_time = 0;
+        old_time = (esp_timer_get_time())/1000000;
     }
     else if (cooking_times() == true) {
         message = "It's day and cooking time. Transit to cooking state.";
@@ -339,6 +346,7 @@ void night_transitions(void) {
     int rh_sensors_high = 0;
     int co2highlevel = 0;
     int rhhighlevel = 0;
+    long new_time = 0;
     bool valve_move_locked = 0;
 
     String statemachine_state = "night";
@@ -401,11 +409,17 @@ void night_transitions(void) {
         }
     }
 
-    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed + ", elapsed time: " + String(elapsed_time);
     print_message(message);
 
     set_fanspeed(temp_fanspeed);
     select_sensors();
+
+    new_time = (esp_timer_get_time())/1000000;
+    if (new_time > old_time) {          //Just in case that a reboot happened and old_time is not set
+        elapsed_time += new_time - old_time;
+        old_time = new_time;
+    }
 
     message = "High CO2 detection level: " + String(co2highlevel);
     print_message(message);
@@ -455,11 +469,15 @@ void night_transitions(void) {
         message = "It is after 8, before 21 and a weekday. Transit to day.";
         print_message(message);
         new_state = "day";
+        elapsed_time = 0;
+        old_time = (esp_timer_get_time())/1000000;
     }
     else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday")) {
         message = "It is after 9, before 21 and weekend. Transit to day";
         print_message(message);
         new_state = "day";
+        elapsed_time = 0;
+        old_time = (esp_timer_get_time())/1000000;
     }
     else if (valve_cycle_times_night() == true) {
         message = "It's night and valve_cycle time. Transit to valve_cycle_night.";
@@ -548,7 +566,7 @@ void high_co2_day_transitions(void) {
         }
     }
 
-    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed + ", elapsed time: " + String(elapsed_time);
     print_message(message);
 
     set_fanspeed(temp_fanspeed);
@@ -726,7 +744,7 @@ void high_co2_night_transitions(void) {
         }
     }
 
-    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed + ", elapsed time: " + String(elapsed_time);
     print_message(message);
 
     set_fanspeed(temp_fanspeed);
@@ -893,7 +911,7 @@ void high_rh_day_transitions(void) {
         }
     }
 
-    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed + ", elapsed time: " + String(elapsed_time);
     print_message(message);
 
     set_fanspeed(temp_fanspeed);
@@ -933,7 +951,7 @@ void high_rh_day_transitions(void) {
         old_time = (esp_timer_get_time())/1000000;
     }
     else if (temp_hour >= 21) {
-        message = "It's night but RH levels are still high and time not expired. Transit to high_rh_night";
+        message = "It's night but RH levels are still high and time is not expired. Transit to high_rh_night";
         print_message(message);   
         new_state = "highrhnight";
         elapsed_time = 0;
@@ -1014,7 +1032,7 @@ void high_rh_night_transitions(void) {
         }
     }
 
-    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed + ", elapsed time: " + String(elapsed_time);
     print_message(message);
 
     set_fanspeed(temp_fanspeed);
@@ -1136,7 +1154,7 @@ void cooking_transitions(void) {
         }
     }
    
-    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed + ", elapsed time: " + String(elapsed_time);
     print_message(message);
 
     set_fanspeed(temp_fanspeed);
@@ -1242,7 +1260,7 @@ void valve_cycle_day_transitions(void) {
         }
     }
 
-    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed + ", elapsed time: " + String(elapsed_time);
     print_message(message);
 
     set_fanspeed(temp_fanspeed);
@@ -1290,14 +1308,14 @@ void valve_cycle_day_transitions(void) {
         old_time = (esp_timer_get_time())/1000000;
     }
     else if (co2_sensors_high > 0) {
-        message = "It is valve_cycle_day and high CO2 levels are measured. Transit to high_co2_day";
+        message = "It is valve_cycle_day and high CO2 levels are measured. Transit to high_co2_day.";
         print_message(message);
         new_state = "highco2day";
         elapsed_time = 0;
         old_time = (esp_timer_get_time())/1000000;
     }
     else {
-        message = "Conditions have not changed, valve_cycle_day is still active, so remain in valve_cycle_day state";
+        message = "Conditions have not changed, valve_cycle_day is still active.";
         print_message(message);
         new_state = "cyclingday";
     }
@@ -1382,7 +1400,7 @@ void valve_cycle_night_transitions(void) {
         }
     }
 
-    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed;
+    message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed + ", elapsed time: " + String(elapsed_time);
     print_message(message);
 
     set_fanspeed(temp_fanspeed);
@@ -1438,7 +1456,7 @@ void valve_cycle_night_transitions(void) {
         old_time = (esp_timer_get_time())/1000000;
     }
     else {
-        message = "Conditions have not changed, valve_cycle_day is still active, so remain in valve_cycle_night state";
+        message = "Conditions have not changed, valve_cycle_day is still active.";
         print_message(message);
         new_state = "cyclingnight";
     }
