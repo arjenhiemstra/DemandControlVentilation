@@ -36,7 +36,7 @@ void write_sensor_data(void) {
     
     //Read setting for valve and valve name
     if (sensor_config_file_mutex != NULL) {
-        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             wire_sensor_data_temp = wire_sensor_data;
             wire1_sensor_data_temp = wire1_sensor_data;
             xSemaphoreGive(sensor_config_file_mutex);
@@ -135,7 +135,7 @@ void write_avg_sensor_data(void) {
 
     //Read setting for valve and valve name
     if (sensor_config_file_mutex != NULL) {
-        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        if(xSemaphoreTake(sensor_config_file_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             wire_sensor_data_temp = wire_sensor_data;
             wire1_sensor_data_temp = wire1_sensor_data;
             xSemaphoreGive(sensor_config_file_mutex);
