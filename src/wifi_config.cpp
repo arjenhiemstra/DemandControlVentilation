@@ -7,15 +7,13 @@
 void config_wifi(void) {
 
     const char* path = "/json/settings_network.json";
-    
     bool network_config_file_present = 0;
     
     String network_config_string;
-
     JsonDocument network_config;
 
     if (settings_network_mutex != NULL) {
-        if(xSemaphoreTake(settings_network_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+        if(xSemaphoreTake(settings_network_mutex, ( TickType_t ) 100 ) == pdTRUE) {
             network_config_file_present = check_file_exists(path);
             if (network_config_file_present == 1) {
                 File file = LittleFS.open(path, "r");
@@ -46,7 +44,7 @@ void config_wifi(void) {
                 return;
             }
             if (ap_active_mutex != NULL) {
-                if(xSemaphoreTake(ap_active_mutex, ( TickType_t ) 10 ) == pdTRUE) {
+                if(xSemaphoreTake(ap_active_mutex, ( TickType_t ) 100 ) == pdTRUE) {
                     ap_active = 0;
                     xSemaphoreGive(ap_active_mutex);
                 }

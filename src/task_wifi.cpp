@@ -10,7 +10,6 @@ void task_wifi_code(void * pvParameters) {
     
     String message = "";
     String mac_message = "";
-    //String webserial_url_tmp = "";
 
     uint8_t baseMac[6];
 
@@ -35,20 +34,6 @@ void task_wifi_code(void * pvParameters) {
 
         message = "IP Address: " + String(WiFi.localIP().toString()) + ", Subnetmask: " + String(WiFi.subnetMask().toString()) + ", Gateway IP: " + String(WiFi.gatewayIP().toString());
         print_message(message);
-
-        //Update webserial URL
-        /*
-        webserial_url_tmp = "http://" + String(WiFi.localIP().toString()) + ":8080/webserial";
-        message = "Webserial URL: " + webserial_url_tmp;
-        print_message(message);
-
-        if (webserial_url_mutex != NULL) {
-            if(xSemaphoreTake(webserial_url_mutex, ( TickType_t ) 10 ) == pdTRUE) {
-                webserial_url = webserial_url_tmp;
-                xSemaphoreGive(webserial_url_mutex);
-            }
-        }
-        */
         
         //Print network data
         esp_err_t ret = esp_wifi_get_mac(WIFI_IF_STA, baseMac);

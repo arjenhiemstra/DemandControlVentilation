@@ -291,12 +291,12 @@ void day_transitions(void) {
     message = "Number of sensors measure high CO2: " + String(co2_sensors_high) + ". Number of sensors measure high RH: " + String(rh_sensors_high);
     print_message(message);
 
-    if (co2_sensors_high > 0) {
+    if (co2_sensors_high > 0 && elapsed_time > 600) {
         new_state = "highco2day";
         elapsed_time = 0;
         old_time = (esp_timer_get_time())/1000000;
     }
-    else if (rh_sensors_high > 0) {
+    else if (rh_sensors_high > 0 && elapsed_time > 600) {
         new_state = "highrhday";
         elapsed_time = 0;
         old_time = (esp_timer_get_time())/1000000;
@@ -417,12 +417,12 @@ void night_transitions(void) {
     print_message(message);
 
     // Conditions to transit to other state
-    if (co2_sensors_high > 0) {
+    if (co2_sensors_high > 0 && elapsed_time > 600) {
         new_state = "highco2night";
         elapsed_time = 0;
         old_time = (esp_timer_get_time())/1000000;
     }
-    else if (rh_sensors_high > 0) {
+    else if (rh_sensors_high > 0 && elapsed_time > 600) {
         new_state = "highrhnight";
         elapsed_time = 0;
         old_time = (esp_timer_get_time())/1000000;
