@@ -4,6 +4,10 @@ bool cooking_times(void) {
 
     int temp_hour = 0;
     int temp_minute = 0;
+    int start_hour_state_cooking = 0;
+    int start_min_state_cooking = 0;
+    int stop_hour_state_cooking = 0;
+    int stop_min_state_cooking = 0;
 
     if (date_time_mutex != NULL) {
         if(xSemaphoreTake(date_time_mutex, ( TickType_t ) 10 ) == pdTRUE) {
@@ -13,9 +17,19 @@ bool cooking_times(void) {
         }
     }
 
-    if (temp_hour==17 && temp_minute > 20)
+    //Read RH levels for transition to highrhday state from global jsonDocument
+    if (settings_state_cooking_mutex != NULL) {
+        if(xSemaphoreTake(settings_state_cooking_mutex, ( TickType_t ) 100 ) == pdTRUE) {
+            start_hour_state_cooking = settings_state_cooking["start_hour_state_cooking"];
+            start_min_state_cooking = settings_state_cooking["start_min_state_cooking"];
+            stop_hour_state_cooking = settings_state_cooking["stop_hour_state_cooking"];
+            stop_min_state_cooking = settings_state_cooking["stop_min_state_cooking"];
+            xSemaphoreGive(settings_state_cooking_mutex);
+        }
+    }
+    if (temp_hour==start_hour_state_cooking && temp_minute > start_min_state_cooking)
         return true;
-    if (temp_hour==17 && temp_minute >= 58)
+    if (temp_hour==stop_hour_state_cooking && temp_minute >= stop_min_state_cooking)
         return false;
     else
         return false;

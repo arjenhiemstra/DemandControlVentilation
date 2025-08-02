@@ -366,6 +366,12 @@ void Taskwebcode(void *pvParameters) {
 		esp_restart();
 	});
 
+	//Download sensor_config1.json
+	server.on("/sensor_config1", HTTP_GET, [](AsyncWebServerRequest *request) {request->send(LittleFS, "/json/sensor_config1.json", "text/json");});
+
+	//Download sensor_config1.json
+	server.on("/sensor_config2", HTTP_GET, [](AsyncWebServerRequest *request) {request->send(LittleFS, "/json/sensor_config2.json", "text/json");});
+
 	//Save settings from network settings
 	server.on("/settings_network", HTTP_POST, [](AsyncWebServerRequest *request) {
 		
