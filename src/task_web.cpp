@@ -366,11 +366,25 @@ void Taskwebcode(void *pvParameters) {
 		esp_restart();
 	});
 
-	//Download sensor_config1.json
-	server.on("/sensor_config1", HTTP_GET, [](AsyncWebServerRequest *request) {request->send(LittleFS, "/json/sensor_config1.json", "text/json");});
-
-	//Download sensor_config1.json
-	server.on("/sensor_config2", HTTP_GET, [](AsyncWebServerRequest *request) {request->send(LittleFS, "/json/sensor_config2.json", "text/json");});
+	//Download JSON Config files
+	server.on("/sensor_config1", HTTP_GET, [](AsyncWebServerRequest *request) {request->send(LittleFS, "/json/sensor_config1.json", "text/json",true);});
+	server.on("/sensor_config2", HTTP_GET, [](AsyncWebServerRequest *request) {request->send(LittleFS, "/json/sensor_config2.json", "text/json",true);});
+	server.on("/settings_fan", HTTP_GET, [](AsyncWebServerRequest *request) {request->send(LittleFS, "/json/settings_fan.json", "text/json",true);});
+	server.on("/settings_i2c", HTTP_GET, [](AsyncWebServerRequest *request) {request->send(LittleFS, "/json/settings_i2c.json", "text/json",true);});
+	server.on("/settings_influxdb", HTTP_GET, [](AsyncWebServerRequest *request) {request->send(LittleFS, "/json/settings_influxdb.json", "text/json",true);});
+	server.on("/settings_mqtt", HTTP_GET, [](AsyncWebServerRequest *request) {request->send(LittleFS, "/json/settings_mqtt.json", "text/json",true);});
+	server.on("/settings_network", HTTP_GET, [](AsyncWebServerRequest *request) {request->send(LittleFS, "/json/settings_network.json", "text/json",true);});
+	server.on("/settings_rtc", HTTP_GET, [](AsyncWebServerRequest *request) {request->send(LittleFS, "/json/settings_rtc.json", "text/json",true);});
+	server.on("/settings_state_cooking", HTTP_GET, [](AsyncWebServerRequest *request) {request->send(LittleFS, "/json/settings_state_cooking.json", "text/json",true);});
+	server.on("/settings_state_cyclingday", HTTP_GET, [](AsyncWebServerRequest *request) {request->send(LittleFS, "/json/settings_state_cyclingday.json", "text/json",true);});
+	server.on("/settings_state_cyclingnight", HTTP_GET, [](AsyncWebServerRequest *request) {request->send(LittleFS, "/json/settings_state_cyclingnight.json", "text/json",true);});
+	server.on("/settings_state_day", HTTP_GET, [](AsyncWebServerRequest *request) {request->send(LittleFS, "/json/settings_state_day.json", "text/json",true);});
+	server.on("/settings_state_highco2day", HTTP_GET, [](AsyncWebServerRequest *request) {request->send(LittleFS, "/json/settings_state_highco2day.json", "text/json",true);});
+	server.on("/settings_state_highco2night", HTTP_GET, [](AsyncWebServerRequest *request) {request->send(LittleFS, "/json/settings_state_highco2night.json", "text/json",true);});
+	server.on("/settings_state_highrhday", HTTP_GET, [](AsyncWebServerRequest *request) {request->send(LittleFS, "/json/settings_state_highrhday.json", "text/json",true);});
+	server.on("/settings_state_highrhnight", HTTP_GET, [](AsyncWebServerRequest *request) {request->send(LittleFS, "/json/settings_state_highrhnight.json", "text/json",true);});
+	server.on("/settings_state_night", HTTP_GET, [](AsyncWebServerRequest *request) {request->send(LittleFS, "/json/settings_state_night.json", "text/json",true);});
+	server.on("/settings_statemachine", HTTP_GET, [](AsyncWebServerRequest *request) {request->send(LittleFS, "/json/settings_statemachine.json", "text/json",true);});
 
 	//Save settings from network settings
 	server.on("/settings_network", HTTP_POST, [](AsyncWebServerRequest *request) {
