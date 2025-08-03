@@ -7,12 +7,12 @@ void start_task_influxdb(void) {
 
 void task_influxdb_code(void * pvParameters)
 {
+    bool ap_active_temp = 0;
+        
+    String enable_influxdb_tmp = "";
+    String message = "";
+    
     for(;;) {
-        
-        bool ap_active_temp = 0;
-        
-        String enable_influxdb_tmp = "";
-        String message = "";
         
         vTaskDelay(10000);
         

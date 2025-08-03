@@ -8,16 +8,15 @@ void start_task_mqtt(void) {
 
 void task_mqtt_code(void * pvParameters) {
     
+    bool ap_active_temp=0;
+    int mqtt_port_tmp = 0;
+
+    String mqtt_enable_str = "";
+    String mqtt_server_str = "";
+    String mqtt_base_topic_str = "";
+    String message = "";
+    
     for(;;) {
-        
-        bool ap_active_temp=0;
-        int mqtt_port_tmp = 0;
-
-        String mqtt_enable_str = "";
-        String mqtt_server_str = "";
-        String mqtt_base_topic_str = "";
-        String message = "";
-
         //Read basic connection settings for MQTT to check if MQTT connection can be made
         if (settings_mqtt_mutex != NULL) {
             if(xSemaphoreTake(settings_mqtt_mutex, ( TickType_t ) 10 ) == pdTRUE) {

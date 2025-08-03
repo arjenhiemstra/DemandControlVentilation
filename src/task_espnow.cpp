@@ -11,7 +11,6 @@ void task_espnow_code(void * pvParameters) {
     uint8_t receiverMAC[] = {0x88, 0x13, 0xbf, 0x07, 0xb1, 0xec};  // Replace with receiver's MAC address
     String fanspeed_tmp;
     
-    //char fanspeed_char[] = "High Speed";
     char fanspeed_char[20];
 
     esp_now_init();
