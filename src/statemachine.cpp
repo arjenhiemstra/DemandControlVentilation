@@ -1027,7 +1027,7 @@ void high_rh_night_transitions(void) {
     //Read RH levels for transition to highrhday state from global jsonDocument
     if (settings_state_highrhnight_mutex != NULL) {
         if(xSemaphoreTake(settings_state_highrhnight_mutex, ( TickType_t ) 100 ) == pdTRUE) {
-            rhlowlevel = settings_state_highrhnight["rh_high_state_highrhnight"];
+            rhlowlevel = settings_state_highrhnight["rh_low_state_highrhnight"];
             xSemaphoreGive(settings_state_highrhnight_mutex);
         }
     }
