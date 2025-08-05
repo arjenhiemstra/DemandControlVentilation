@@ -188,6 +188,7 @@ void day_transitions(void) {
     int rh_sensors_high = 0;
     int rhhighlevel = 0;
     int co2highlevel = 0;
+    int min_state_time = 600;       //minimum time in seconds the statemachine should stay in this state
     long new_time = 0;
     bool valve_move_locked = 0;
     
@@ -293,12 +294,12 @@ void day_transitions(void) {
     message = "Number of sensors measure high CO2: " + String(co2_sensors_high) + ". Number of sensors measure high RH: " + String(rh_sensors_high);
     print_message(message);
 
-    if (co2_sensors_high > 0) {
+    if (co2_sensors_high > 0 && elapsed_time >= min_state_time) {
         new_state = "highco2day";
         elapsed_time = 0;
         old_time = (esp_timer_get_time())/1000000;
     }
-    else if (rh_sensors_high > 0) {
+    else if (rh_sensors_high > 0 && elapsed_time >= min_state_time) {
         new_state = "highrhday";
         elapsed_time = 0;
         old_time = (esp_timer_get_time())/1000000;
@@ -343,6 +344,7 @@ void night_transitions(void) {
     int rh_sensors_high = 0;
     int co2highlevel = 0;
     int rhhighlevel = 0;
+    int min_state_time = 600;       //minimum time in seconds the statemachine should stay in this state
     long new_time = 0;
     bool valve_move_locked = 0;
 
@@ -455,12 +457,12 @@ void night_transitions(void) {
     print_message(message);
 
     // Conditions to transit to other state
-    if (co2_sensors_high > 0) {
+    if (co2_sensors_high > 0 && elapsed_time >= min_state_time) {
         new_state = "highco2night";
         elapsed_time = 0;
         old_time = (esp_timer_get_time())/1000000;
     }
-    else if (rh_sensors_high > 0) {
+    else if (rh_sensors_high > 0 && elapsed_time >= min_state_time) {
         new_state = "highrhnight";
         elapsed_time = 0;
         old_time = (esp_timer_get_time())/1000000;
@@ -506,6 +508,7 @@ void high_co2_day_transitions(void) {
     int co2_sensors_high = 0;
     int co2highlevel = 0;
     int co2lowlevel = 0;
+    int min_state_time = 600;       //minimum time in seconds the statemachine should stay in this state
     long new_time = 0;
     bool valve_move_locked = 0;
     bool state_valve_pos_file_present = 0;
@@ -659,7 +662,7 @@ void high_co2_day_transitions(void) {
         elapsed_time = 0;
         old_time = (esp_timer_get_time())/1000000;
     }
-    else if (co2_sensors_high == 0 && elapsed_time > 600) {
+    else if (co2_sensors_high == 0  && elapsed_time >= min_state_time) {
         message = "It is day, no high co2 levels. Transit to day.";
         print_message(message);
         new_state = "day";
@@ -687,6 +690,7 @@ void high_co2_night_transitions(void) {
     int co2_sensors_high = 0;
     int co2highlevel = 0;
     int co2lowlevel = 0;
+    int min_state_time = 600;       //minimum time in seconds the statemachine should stay in this state
     long new_time = 0;
     bool valve_move_locked = 0;
     bool state_valve_pos_file_present = 0;
@@ -823,7 +827,7 @@ void high_co2_night_transitions(void) {
     }
     
     // Conditions for transition
-    if (co2_sensors_high == 0 && elapsed_time > 600) {
+    if (co2_sensors_high == 0  && elapsed_time >= min_state_time) {
         message = "It is night, no high co2 levels. Transit to night.";
         print_message(message);
         new_state = "night";
@@ -864,6 +868,8 @@ void high_rh_day_transitions(void) {
     int temp_minute = 0;
     int rh_sensors_high = 0;
     int rhlowlevel = 0;
+    int min_state_time = 600;       //minimum time in seconds the statemachine should stay in this state
+    int max_state_time = 1800;      //maximum time in seconds the statemachine should stay in this state (high RH cannot always be solved with ventilation)
     long new_time = 0;
     bool valve_move_locked = 0;
 
@@ -954,7 +960,7 @@ void high_rh_day_transitions(void) {
     print_message(message);
 
     // Conditions for transition
-    if ((rh_sensors_high == 0 && elapsed_time > 600) || elapsed_time > 1800) {
+    if ((rh_sensors_high == 0  && elapsed_time >= min_state_time) || elapsed_time >= max_state_time) {
         message = "It's day with no high RH or time expired. Transit to day";
         print_message(message);
         new_state = "day";
@@ -988,6 +994,8 @@ void high_rh_night_transitions(void) {
     int temp_minute = 0;
     int rh_sensors_high = 0;
     int rhlowlevel = 0;
+    int min_state_time = 600;       //minimum time in seconds the statemachine should stay in this state
+    int max_state_time = 1800;      //maximum time in seconds the statemachine should stay in this state (high RH cannot always be solved with ventilation)
     long new_time = 0;
     bool valve_move_locked = 0;
 
@@ -1081,21 +1089,21 @@ void high_rh_night_transitions(void) {
     print_message(message);
 
     // Conditions for transition
-    if (rh_sensors_high == 0 && elapsed_time > 600 || elapsed_time > 1800) {
+    if (rh_sensors_high == 0  && elapsed_time >= min_state_time || elapsed_time >= max_state_time) {
         message = "It's night and RH is low enough. Transit to night.";
         print_message(message);
         new_state = "night";
         elapsed_time = 0;
         old_time = (esp_timer_get_time())/1000000;
     }
-    else if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday" && elapsed_time > 1800)  {
+    else if (temp_hour >= 8 && temp_hour < 21 && temp_day_of_week != "Saturday" && temp_day_of_week != "Sunday")  {
         message = "It is after 8, before 21 and a weekday but RH is still high. Transit to high_rh_day.";
         print_message(message);
         new_state = "highrhday";
         elapsed_time = 0;
         old_time = (esp_timer_get_time())/1000000;
     }
-    else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday" && elapsed_time > 1800)) {
+    else if (temp_hour >= 9 && temp_hour < 21 && (temp_day_of_week == "Saturday" || temp_day_of_week == "Sunday")) {
         message = "It is after 9, before 21 and weekend but RH is still high. Transit to high_rh_day ";
         print_message(message);
         new_state = "highrhday";
@@ -1210,6 +1218,7 @@ void valve_cycle_day_transitions(void) {
     int temp_minute = 0;
     int co2highlevel = 0;
     int rhhighlevel = 0;
+    int min_state_time = 600;       //minimum time in seconds the statemachine should stay in this state
     long new_time = 0;
     bool valve_move_locked = 0;
 
@@ -1321,14 +1330,14 @@ void valve_cycle_day_transitions(void) {
         elapsed_time = 0;
         old_time = (esp_timer_get_time())/1000000;
     }
-    else if (rh_sensors_high > 0 && elapsed_time > 600) {
+    else if (rh_sensors_high > 0 && elapsed_time >= min_state_time) {
         message = "It's valve_cycle_day and high RH is measured. Transit to high_rh_day state.";
         print_message(message);
         new_state = "highrhday";
         elapsed_time = 0;
         old_time = (esp_timer_get_time())/1000000;
     }
-    else if (co2_sensors_high > 0 && elapsed_time > 600) {
+    else if (co2_sensors_high > 0 && elapsed_time >= min_state_time) {
         message = "It is valve_cycle_day and high CO2 levels are measured. Transit to high_co2_day.";
         print_message(message);
         new_state = "highco2day";
@@ -1357,6 +1366,7 @@ void valve_cycle_night_transitions(void) {
     int rh_sensors_high = 0;
     int co2highlevel = 0;
     int rhhighlevel = 0;
+    int min_state_time = 600;       //minimum time in seconds the statemachine should stay in this state
     long new_time = 0;
     bool valve_move_locked = 0;
 
@@ -1469,14 +1479,14 @@ void valve_cycle_night_transitions(void) {
         elapsed_time = 0;
         old_time = (esp_timer_get_time())/1000000;
     }
-    else if (rh_sensors_high > 0 && elapsed_time > 600) {
+    else if (rh_sensors_high > 0 && elapsed_time >= min_state_time) {
         message = "It's valve_cycle_night and high RH. Transit to high_rh_night state.";
         print_message(message);
         new_state = "highrhnight";
         elapsed_time = 0;
         old_time = (esp_timer_get_time())/1000000;
     }
-    else if (co2_sensors_high > 0 && elapsed_time > 600) {
+    else if (co2_sensors_high > 0 && elapsed_time >= min_state_time) {
         message = "It is valve_cycle_night and CO2 level is high. Transit to high_co2_night";
         print_message(message);
         new_state = "highco2night";
