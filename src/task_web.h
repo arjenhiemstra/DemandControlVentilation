@@ -1,4 +1,4 @@
-#ifndef TASK_WEB_H    // To make sure you don't declare the function more than once by including the header multiple times.
+#ifndef TASK_WEB_H // To make sure you don't declare the function more than once by including the header multiple times.
 #define TASK_WEB_H
 
 #include <Arduino.h>
@@ -14,11 +14,10 @@
 #include "task_web_processors.h"
 #include "globals.h"
 #include "general.h"
+#include "websocket.h"
 
 // function declarations
 void startTaskwebcode(void);
 void Taskwebcode(void *pvParameters);
 
 #endif
-
-
