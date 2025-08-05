@@ -263,10 +263,7 @@ void day_transitions(void) {
         old_time = new_time;
     }
 
-    message = "High CO2 detection level: " + String(co2highlevel);
-    print_message(message);
-    
-    message = "High RH detection level: " + String(rhhighlevel);
+    message = "High CO2 detection level: " + String(co2highlevel) + ". High RH detection level: " + String(rhhighlevel);
     print_message(message);
 
     if (valve_move_locked == 0) {
@@ -408,6 +405,9 @@ void night_transitions(void) {
             xSemaphoreGive(settings_state_highrhnight_mutex);
         }
     }
+
+    message = "High CO2 detection level: " + String(co2highlevel) + ". High RH detection level: " + String(rhhighlevel);
+    print_message(message);
 
     message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed + ", elapsed time: " + String(elapsed_time);
     print_message(message);
@@ -566,6 +566,9 @@ void high_co2_day_transitions(void) {
         }
     }
 
+    message = "High CO2 detection level: " + String(co2highlevel) + ". Low CO2 detection level: " + String(co2lowlevel);
+    print_message(message);  
+
     message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed + ", elapsed time: " + String(elapsed_time);
     print_message(message);
 
@@ -577,6 +580,8 @@ void high_co2_day_transitions(void) {
         elapsed_time += new_time - old_time;
         old_time = new_time;
     }
+
+    
     
     //Temp valve settings for individual valves starting with default settings for this state. Should read these from file and not hardcode them
     state_valve_pos_path = ("/json/settings_state_" + statemachine_state + ".json");
@@ -628,7 +633,7 @@ void high_co2_day_transitions(void) {
         }
     }
 
-    message = "Number of sensors measure high CO2: " + String(co2_sensors_high) + ". Elapsed time in " + statemachine_state + "state: " + String(elapsed_time) + " seconds";
+    message = "Number of sensors measure high CO2: " + String(co2_sensors_high);
     print_message(message);
 
     if (valve_move_locked == 0) {    
@@ -743,6 +748,9 @@ void high_co2_night_transitions(void) {
             xSemaphoreGive(settings_state_highco2night_mutex);
         }
     }
+    
+    message = "High CO2 detection level: " + String(co2highlevel) + ". Low CO2 detection level: " + String(co2lowlevel);
+    print_message(message);
 
     message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed + ", elapsed time: " + String(elapsed_time);
     print_message(message);
@@ -791,7 +799,7 @@ void high_co2_night_transitions(void) {
     // High CO2 has been detected to come into this state. Iterate through CO2 sensors to see which sensor detects high CO2. Valves with CO2 sensors are default 
     // set to 24 for this state. Valves with a CO2 value lower than 900 ppm will be closed to 4 to direct airflow to the rooms with high CO2 reading.
     for (int i = 0; i < co2_sensor_counter; i++) {
-        if (co2_sensors[i].co2_reading < co2lowlevel && co2_sensors[i].valve != "Fan inlet") {
+        if (co2_sensors[i].co2_reading <= co2lowlevel && co2_sensors[i].valve != "Fan inlet") {
             settings_state_temp[co2_sensors[i].valve + "_position_state_temp"] = 4;         //Set new valve settings for the room without high CO2 reading to 4
         }
         if (co2_sensors[i].co2_reading > co2highlevel && co2_sensors[i].valve != "Fan inlet") {
@@ -803,7 +811,7 @@ void high_co2_night_transitions(void) {
         }
     }
 
-    message = "Number of sensors measure high CO2: " + String(co2_sensors_high) + ". Elapsed time in " + statemachine_state + "state: " + String(elapsed_time) + " seconds";
+    message = "Number of sensors measure high CO2: " + String(co2_sensors_high);
     print_message(message);
 
     if (valve_move_locked == 0) {    
@@ -911,6 +919,9 @@ void high_rh_day_transitions(void) {
         }
     }
 
+    message = "Low RH detection level: " + String(rhlowlevel);
+    print_message(message);  
+
     message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed + ", elapsed time: " + String(elapsed_time);
     print_message(message);
 
@@ -939,7 +950,7 @@ void high_rh_day_transitions(void) {
         }
     }
 
-    message = "Elapsed time in " + statemachine_state + "state: " + String(elapsed_time) + " seconds. Number of sensors measure high RH: " + String(rh_sensors_high);
+    message = "Number of sensors measure high RH: " + String(rh_sensors_high);
     print_message(message);
 
     // Conditions for transition
@@ -1031,6 +1042,9 @@ void high_rh_night_transitions(void) {
             xSemaphoreGive(settings_state_highrhnight_mutex);
         }
     }
+    
+    message = "Low RH detection level: " + String(rhlowlevel);
+    print_message(message);
 
     message = "Statemachine in state " + statemachine_state + ", it is " + temp_day_of_week + " " + temp_hour + ":" + temp_minute + " and fanspeed is " + temp_fanspeed + ", elapsed time: " + String(elapsed_time);
     print_message(message);
@@ -1063,7 +1077,7 @@ void high_rh_night_transitions(void) {
         }
     }
 
-    message = "Elapsed time in " + statemachine_state + "state: " + String(elapsed_time) + " seconds. Number of sensors measure high RH: " + String(rh_sensors_high);
+    message = "Number of sensors measure high RH: " + String(rh_sensors_high);
     print_message(message);
 
     // Conditions for transition
@@ -1196,6 +1210,7 @@ void valve_cycle_day_transitions(void) {
     int temp_minute = 0;
     int co2highlevel = 0;
     int rhhighlevel = 0;
+    long new_time = 0;
     bool valve_move_locked = 0;
 
     String statemachine_state = "cyclingday";
@@ -1265,6 +1280,12 @@ void valve_cycle_day_transitions(void) {
 
     set_fanspeed(temp_fanspeed);
     select_sensors();
+
+    new_time = (esp_timer_get_time())/1000000;
+    if (new_time > old_time) {
+        elapsed_time += new_time - old_time;
+        old_time = new_time;
+    }
     
     if (valve_move_locked == 0) {
         valve_position_statemachine(statemachine_state);
@@ -1300,14 +1321,14 @@ void valve_cycle_day_transitions(void) {
         elapsed_time = 0;
         old_time = (esp_timer_get_time())/1000000;
     }
-    else if (rh_sensors_high > 0) {
+    else if (rh_sensors_high > 0 && elapsed_time > 600) {
         message = "It's valve_cycle_day and high RH is measured. Transit to high_rh_day state.";
         print_message(message);
         new_state = "highrhday";
         elapsed_time = 0;
         old_time = (esp_timer_get_time())/1000000;
     }
-    else if (co2_sensors_high > 0) {
+    else if (co2_sensors_high > 0 && elapsed_time > 600) {
         message = "It is valve_cycle_day and high CO2 levels are measured. Transit to high_co2_day.";
         print_message(message);
         new_state = "highco2day";
@@ -1336,6 +1357,7 @@ void valve_cycle_night_transitions(void) {
     int rh_sensors_high = 0;
     int co2highlevel = 0;
     int rhhighlevel = 0;
+    long new_time = 0;
     bool valve_move_locked = 0;
 
     String statemachine_state = "cyclingnight";
@@ -1405,6 +1427,12 @@ void valve_cycle_night_transitions(void) {
 
     set_fanspeed(temp_fanspeed);
     select_sensors();
+
+    new_time = (esp_timer_get_time())/1000000;
+    if (new_time > old_time) {
+        elapsed_time += new_time - old_time;
+        old_time = new_time;
+    }
     
     if (valve_move_locked == 0) {
         valve_position_statemachine(statemachine_state);
@@ -1441,14 +1469,14 @@ void valve_cycle_night_transitions(void) {
         elapsed_time = 0;
         old_time = (esp_timer_get_time())/1000000;
     }
-    else if (rh_sensors_high > 0) {
+    else if (rh_sensors_high > 0 && elapsed_time > 600) {
         message = "It's valve_cycle_night and high RH. Transit to high_rh_night state.";
         print_message(message);
         new_state = "highrhnight";
         elapsed_time = 0;
         old_time = (esp_timer_get_time())/1000000;
     }
-    else if (co2_sensors_high > 0) {
+    else if (co2_sensors_high > 0 && elapsed_time > 600) {
         message = "It is valve_cycle_night and CO2 level is high. Transit to high_co2_night";
         print_message(message);
         new_state = "highco2night";
