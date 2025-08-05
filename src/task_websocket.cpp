@@ -1,15 +1,15 @@
-#include "task_wserial.h"
+#include "task_websocket.h"
 
 AsyncWebServer ws_server(8080);
 WebSerial webSerial;
 //WebSerial *webSerial = nullptr;
 
-void start_task_wserial(void) {
+void start_task_websocket(void) {
 
-    xTaskCreate(task_wserial_code, "taskWserial", 10000, NULL, 1, &task_wserial);
+    xTaskCreate(task_websocket_code, "taskwebsocket", 10000, NULL, 1, &task_websocket);
 }
 
-void task_wserial_code(void * pvParameters) {
+void task_websocket_code(void * pvParameters) {
 
     char rxBuffer[400];
     String datetime = "";

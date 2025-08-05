@@ -1,5 +1,5 @@
-#ifndef TASK_WSERIAL_H    // To make sure you don't declare the function more than once by including the header multiple times.
-#define TASK_WSERIAL_H
+#ifndef TASK_WEBSOCKET_H    // To make sure you don't declare the function more than once by including the header multiple times.
+#define TASK_WEBSOCKET_H
 
 #include <Arduino.h>
 #include <freertos/FreeRTOS.h>
@@ -13,7 +13,7 @@
 #include "general.h"
 
 // function declarations
-void start_task_wserial(void);
-void task_wserial_code(void * pvParameters);
+void start_task_websocket(void);
+void task_websocket_code(void * pvParameters);
 
 #endif
