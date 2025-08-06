@@ -629,7 +629,7 @@ void high_co2_day_transitions(void) {
             //Set new valve settings for the room with high CO2 reading
             settings_state_temp[co2_sensors[i].valve + "_position_state_temp"] = 4;
         }
-        if (co2_sensors[i].co2_reading > co2highlevel) {
+        if (co2_sensors[i].co2_reading > co2lowlevel) {
             message = "Sensor" + String(i) + " which is located at " + String(co2_sensors[i].valve) + " has high CO2 reading.";
             print_message(message);
             co2_sensors_high++; 
@@ -810,7 +810,7 @@ void high_co2_night_transitions(void) {
             settings_state_temp[co2_sensors[i].valve + "_position_state_temp"] = 20;         //Set new valve settings for the room with high CO2 reading to 24
             Serial.print("\nSensor" + String(i) + " which is located at " + String(co2_sensors[i].valve) + " has high CO2 reading.");
         }
-        if (co2_sensors[i].co2_reading > co2highlevel) {
+        if (co2_sensors[i].co2_reading > co2lowlevel) {
             co2_sensors_high++;                                                              //No need to move valve but remains in highco2night
         }
     }
@@ -828,7 +828,7 @@ void high_co2_night_transitions(void) {
     
     // Conditions for transition
     if (co2_sensors_high == 0  && elapsed_time >= min_state_time) {
-        message = "It is night, no high co2 levels. Transit to night.";
+        message = "No high co2 levels. Transit to night.";
         print_message(message);
         new_state = "night";
         elapsed_time = 0;
